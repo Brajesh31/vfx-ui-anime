@@ -9,9 +9,30 @@ const CHROME = process.env.CHROME || ['/Applications/Google Chrome.app/Contents/
 const PORT = 9800 + Math.floor(Math.random() * 150), PROFILE = mkdtempSync(join(tmpdir(), 'skv-'));
 const chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${PORT}`, `--user-data-dir=${PROFILE}`, '--no-first-run', '--hide-scrollbars', 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-let targets;
-for (let i = 0; i < 60; i++) { try { targets = await (await fetch(`http://127.0.0.1:${PORT}/json`)).json(); if (Array.isArray(targets) && targets.some((t) => t.type === 'page')) break; } catch {} await sleep(200); }
-const ws = new WebSocket(targets.find((t) => t.type === 'page').webSocketDebuggerUrl);
+let pageTarget = null;
+for (let i = 0; i < 100 && !pageTarget; i++) {
+  try {
+    const response = await fetch(`http://127.0.0.1:${PORT}/json/list`);
+    if (response.ok) {
+      const targets = await response.json();
+      if (Array.isArray(targets)) pageTarget = targets.find((t) => t.type === 'page') || null;
+    }
+  } catch {}
+  if (!pageTarget) await sleep(150);
+}
+// Some Chromium builds do not publish the initial about:blank target until one is explicitly created.
+if (!pageTarget) {
+  try {
+    const response = await fetch(`http://127.0.0.1:${PORT}/json/new?about:blank`, { method: 'PUT' });
+    if (response.ok) pageTarget = await response.json();
+  } catch {}
+}
+if (!pageTarget?.webSocketDebuggerUrl) {
+  chrome.kill();
+  rmSync(PROFILE, { recursive: true, force: true });
+  throw new Error(`Chrome did not expose a page target on debugging port ${PORT}.`);
+}
+const ws = new WebSocket(pageTarget.webSocketDebuggerUrl);
 await new Promise((r) => ws.addEventListener('open', r, { once: true }));
 let id = 0; const pending = new Map(), logs = [];
 ws.addEventListener('message', (e) => { const m = JSON.parse(e.data); if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); } if (m.method === 'Runtime.exceptionThrown') logs.push('EXC ' + (m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text)); });
