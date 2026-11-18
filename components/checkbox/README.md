@@ -1,26 +1,35 @@
-# Checkbox component
+# Checkbox
 
-A native checkbox wrapped in a compact custom element.
+Tick it and two crescents swing round the box, crystals fly, the tick draws itself, a glint follows and ズザッ lands in dotted letters. Untick it and it goes out in a small puff.
 
-## Live demo
-Open [demo.html](demo.html) to test the component in the library's design system.
+## Run it
 
-## Installation
-Copy `index.js` and load the shared engine first:
-
-```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
-<script defer src="/components/checkbox/index.js"></script>
-<vfx-checkbox checked>Accept the terms</vfx-checkbox>
+```sh
+python3 -m http.server 8000     # from the repo folder
+# open http://localhost:8000/checkbox/
 ```
 
-## Component details
-- **Element:** `<vfx-checkbox>`
-- **Category:** Forms
-- **Runtime dependencies:** None
+## Use it
 
-## Accessibility
-Keep labels descriptive, preserve keyboard access, and test focus, form behavior, and screen-reader output in the browsers you support. The shared motion engine respects `prefers-reduced-motion`.
+```html
+<script src="checkbox.js"></script>
+<vfx-checkbox name="remember">Remember me</vfx-checkbox>
+```
 
-See the [component API overview](../../docs/COMPONENTS.md) for the public inventory and links to detailed guidance.
+```js
+el.addEventListener('change', () => console.log(el.checked));
+el.checked = true;    // from code: no effects
+```
+
+| attribute | what it sets | default |
+|---|---|---|
+| `checked` | ticked at the start | off |
+| `name`, `value` | sent with its form when ticked | value `on` |
+| `disabled` | can't be changed | off |
+
+- **The text inside is the label,** and clicking it ticks the box. Underneath is a real checkbox.
+- **Parts:** `::part(label)` and `::part(box)`.
+
+## Limits
+
+- No indeterminate state.
