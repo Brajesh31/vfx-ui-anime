@@ -18,7 +18,7 @@ For the complete, source-checked list of attributes, properties, methods, emitte
 | Progress | `<vfx-progress>` | `value`, `label` | None |
 | Rating | `<vfx-rating>` | `value` | `change` with `detail.value` |
 | Toast | `<vfx-toast>` | `message` | `vfx-toast` with `detail.message` |
-| Tooltip | `<vfx-tooltip>` | `text`, default slot | None |
+| Tooltip | `<vfx-tooltip>` | `text`, `placement`, default slot | None |
 
 All custom-element events shown above bubble and cross the Shadow DOM boundary. Events without a listed detail payload do not provide a documented custom payload.
 
