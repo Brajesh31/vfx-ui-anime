@@ -6,7 +6,7 @@ A radio group. The picked dot springs in, a fan of wedges goes off it, two puffs
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/radio/
+# open http://localhost:8000/components/radio/demo.html
 ```
 
 ## Use it
@@ -14,7 +14,7 @@ python3 -m http.server 8000     # from the repo folder
 List the choices as `<option>`s inside it:
 
 ```html
-<script src="radio.js"></script>
+<script src="index.js"></script>
 <vfx-radio label="Plan" name="plan">
   <option value="free" selected>Free</option>
   <option value="pro">Pro</option>
