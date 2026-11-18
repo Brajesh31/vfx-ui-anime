@@ -125,7 +125,7 @@ const WIRE = {
 };
 const fileUrl = (id) => new URL(`./components/${id}/index.js`, location.href).href;
 const coreBased = (id) => ['like', 'accordion', 'segmented', 'notification'].includes(id);
-const installSnippet = (id) => (coreBased(id) ? '<script src="https://brajesh31.github.io/vfx-ui-anime/core.js"></script>\\n' : '') + '<script src="https://brajesh31.github.io/vfx-ui-anime/components/' + id + '/index.js"></script>';
+const installSnippet = (id) => (coreBased(id) ? '<script src="https://brajesh31.github.io/vfx-ui-anime/core.js"></script>\n' : '') + '<script src="https://brajesh31.github.io/vfx-ui-anime/components/' + id + '/index.js"></script>';
 const prompt = (it) => [
   `Add the VFX UI Anime ${it.name.toLowerCase()} control to my app. ${coreBased(it.id) ? 'It uses the VFX UI Anime shared core.js engine.' : 'It is a self-contained JavaScript file with its own motion engine and artwork.'} It defines a <${it.tag}> element.`,
   `1. Get the file from ${fileUrl(it.id)} and save it in my project as ${it.id}.js. Do not rewrite it or split it up.`,
