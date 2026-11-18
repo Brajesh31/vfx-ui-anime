@@ -2,6 +2,7 @@
   const results = [];
   const failures = [];
   const errors = [];
+  const pendingTests = [];
 
   window.addEventListener("error", (event) => {
     errors.push(event.message || "Uncaught browser error");
@@ -13,8 +14,17 @@
 
   function test(name, run) {
     try {
-      run();
-      results.push({ name, status: "passed" });
+      const outcome = run();
+      if (outcome && typeof outcome.then === "function") {
+        pendingTests.push(Promise.resolve(outcome).then(() => {
+          results.push({ name, status: "passed" });
+        }).catch((error) => {
+          failures.push({ name, message: error?.message || String(error) });
+          results.push({ name, status: "failed", message: error?.message || String(error) });
+        }));
+      } else {
+        results.push({ name, status: "passed" });
+      }
     } catch (error) {
       failures.push({ name, message: error?.message || String(error) });
       results.push({ name, status: "failed", message: error?.message || String(error) });
@@ -190,7 +200,7 @@
     assert(second.value === "A", "Selecting one instance affected another instance.");
   });
 
-  test("tooltip exposes its description, opens on focus, dismisses with Escape, and reopens", () => {
+  test("tooltip exposes its description, opens on focus, dismisses with Escape, and reopens", async () => {
     const tooltip = document.createElement("vfx-tooltip");
     tooltip.setAttribute("text", "A helpful description");
     tooltip.textContent = "Focus trigger";
@@ -202,17 +212,20 @@
     assert(description.textContent === "A helpful description", "Tooltip text was not rendered.");
 
     trigger.focus();
+    await new Promise((resolve) => setTimeout(resolve, 220));
     assert(tooltip.matches(":focus-within"), "Tooltip trigger did not receive focus.");
     assert(description.hasAttribute("data-active"), "Trigger focus did not activate the tooltip element.");
     const focusVisibility = getComputedStyle(description).visibility;
     assert(focusVisibility === "visible", "Tooltip was not visible on focus. visibility=" + focusVisibility + ", active=" + description.hasAttribute("data-active") + ", display=" + getComputedStyle(description).display + ", opacity=" + getComputedStyle(description).opacity);
 
     const escape = fireKey(trigger, "Escape");
+    await new Promise((resolve) => setTimeout(resolve, 220));
     assert(escape.defaultPrevented, "Escape was not consumed.");
     assert(tooltip.hasAttribute("data-dismissed"), "Escape did not mark the tooltip as dismissed.");
     assert(getComputedStyle(description).visibility === "hidden", "Dismissed tooltip remained visible.");
 
     trigger.focus();
+    await new Promise((resolve) => setTimeout(resolve, 220));
     assert(!tooltip.hasAttribute("data-dismissed"), "Refocusing did not restore the tooltip.");
     assert(getComputedStyle(description).visibility === "visible", "Tooltip did not reopen on focus.");
   });
@@ -239,9 +252,12 @@
     assert(tooltip.getAttribute("data-placement") === "bottom", "Explicit bottom placement was not applied.");
   });
 
-  const passed = results.filter((result) => result.status === "passed").length;
-  const failed = results.filter((result) => result.status === "failed").length;
-  const report = { browser: navigator.userAgent, passed, failed, errors, results, failures };
-  document.body.dataset.browserTestStatus = failed || errors.length ? "failed" : "passed";
-  document.querySelector("#browser-test-results").textContent = JSON.stringify(report, null, 2);
+  const finish = () => {
+    const passed = results.filter((result) => result.status === "passed").length;
+    const failed = results.filter((result) => result.status === "failed").length;
+    const report = { browser: navigator.userAgent, passed, failed, errors, results, failures };
+    document.body.dataset.browserTestStatus = failed || errors.length ? "failed" : "passed";
+    document.querySelector("#browser-test-results").textContent = JSON.stringify(report, null, 2);
+  };
+  Promise.all(pendingTests).then(finish);
 })();
