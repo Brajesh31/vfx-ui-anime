@@ -147,7 +147,11 @@ for (const hook of [
   "independent radio components",
   "aria-describedby",
   "data-dismissed",
-  "Updated tooltip text"
+  "Updated tooltip text",
+  "Sakuga Like toggles semantic pressed state and emits change",
+  "Sakuga Accordion exposes and changes its disclosure state",
+  "Sakuga Segmented selects supplied options and emits value details",
+  "Sakuga Notification clears unread count and reports the new count"
 ]) {
   if (!browserTests.includes(hook)) errors.push("Chromium interaction test missing: " + hook);
 }
@@ -175,6 +179,13 @@ if (!api.includes("form reset") || !api.includes("required validity")) {
 }
 if (!api.includes("aria-describedby") || !api.includes("horizontal") && !api.includes("horizontally clamped")) {
   errors.push("Component API reference does not document tooltip accessibility and viewport behavior.");
+}
+
+
+try {
+  await execFileAsync(process.execPath, [join(root, "sakuga-vfx/tools/build.mjs"), "--check"], { cwd: root });
+} catch (error) {
+  errors.push("Sakuga component core snapshots are out of date. Run node sakuga-vfx/tools/build.mjs.");
 }
 
 if (errors.length) {
