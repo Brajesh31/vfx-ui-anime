@@ -30,7 +30,7 @@ el.value = 'hello';
 | `name` | sent with its form | none |
 | `disabled` | can't be typed in | off |
 
-- **Size:** 230 pixels wide; set `--sk-input-width` to change it. `::part(input)` reaches the input.
+- **Size:** 230 pixels wide; set `--vfx-input-width` to change it. `::part(input)` reaches the input.
 - In a password field the dust still follows the caret, measured over dots.
 
 ## Limits
