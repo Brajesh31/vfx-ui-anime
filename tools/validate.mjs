@@ -40,7 +40,7 @@ for (const name of names) {
 
 if (registry.components?.length !== names.length) errors.push("Registry must list all 15 components.");
 if (!core.includes("prefers-reduced-motion")) errors.push("Shared motion engine must respect reduced-motion preferences.");
-if (!html.includes('id="grid"') || !html.includes("class=\"card\"")) errors.push("Interactive component gallery markup is missing.");
+if (!html.includes('id="grid"') || !html.includes("card.className = 'card'")) errors.push("Interactive component gallery markup is missing.");
 if (!html.includes("./components/${it.id}/demo.html")) errors.push("Gallery component demo links are missing.");
 if (lowerHtml.includes("sakuga") || lowerHtml.includes("finktheartist")) errors.push("Public gallery contains third-party product branding.");
 if (!html.includes("prefers-reduced-motion")) errors.push("Gallery does not explain reduced-motion behaviour.");
