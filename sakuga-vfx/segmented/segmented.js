@@ -1,6 +1,7 @@
 // Sakuga Segmented: a compact tab-like choice group with springing selection and impact marks.
 (() => {
-const fx=window.SakugaFX,{Spring,at,squashy,burst,ticks,puff,sfx} = fx;
+function component(fx) {
+const {Spring,at,squashy,burst,ticks,puff,sfx} = fx;
 class SakugaSegmented extends fx.Base{
  static fromChildren=true; static delegates=true; static observedAttributes=['value','disabled'];
  static css=`
@@ -280,5 +281,7 @@ const api = window.SakugaFX = {
 };
 })();
 // <<< sakuga core
+component(window.SakugaFX);
+})();
 component(window.SakugaFX);
 })();
