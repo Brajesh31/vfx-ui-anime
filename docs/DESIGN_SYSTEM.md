@@ -1,7 +1,7 @@
 # 🎨 VFX UI Anime Design System
 
 > **Phase 2 deliverable · Visual design foundations**  
-> Status: documented design specification. The current website CSS and component implementations have not been changed by this phase.
+> Status: design guidance for the VFX UI Anime gallery and additional controls. The eleven standalone animated controls retain their source-backed visual system and embedded artwork.
 
 ## 1. Design intent
 
@@ -15,7 +15,7 @@ VFX UI Anime should feel like a precise interface with the energy of a hand-draw
 2. **Impact with restraint.** Use a focused visual accent for the important moment. Avoid making every interaction equally loud.
 3. **Ink, paper, and accent.** Use the current deep-ink and warm-paper identity, with violet, lavender, and pink for purposeful emphasis.
 4. **Plain at rest.** Idle controls should not animate continuously without a clear product reason.
-5. **Original visual language.** Create new illustrations and effects for this project. Do not transplant upstream source artwork or source assets.
+5. **Source-backed motion language.** Preserve the embedded impact artwork, hand-drawn effects, and painted Toggle frames in the eleven licensed animated controls. Create original artwork for any newly authored controls, and keep all required third-party notices.
 6. **Accessible by construction.** Preserve semantic controls, visible focus, readable contrast, and reduced-motion behavior.
 
 ## 2. Existing brand palette
@@ -59,7 +59,7 @@ For UI borders and focus indicators, test the actual adjacent colors and thickne
 
 ## 3. Typography
 
-The current project uses a system-first sans-serif stack. Keep that approach for the first design-system release. Do not add a remote font dependency simply to imitate a reference.
+The main gallery and additional VFX UI Anime controls use a system-first sans-serif stack. The eleven standalone animated controls retain their embedded typography and original system fallback stacks. Do not add a remote font dependency merely to approximate their appearance.
 
 | Role | Recommended treatment | Use |
 |---|---|---|
