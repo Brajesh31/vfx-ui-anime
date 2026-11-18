@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Sixty-one additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Sixty-six additional controls extend the same design and interaction language.
 
-**Current library: 72 component types and 73 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 77 component types and 78 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -87,6 +87,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Drawing Canvas | `<vfx-drawing-canvas>` | [components/drawing-canvas](components/drawing-canvas/) |
 | Color Palette | `<vfx-color-palette>` | [components/color-palette](components/color-palette/) |
 | Audio Player | `<vfx-audio-player>` | [components/audio-player](components/audio-player/) |
+| Video Player | `<vfx-video-player>` | [components/video-player](components/video-player/) |
+| Markdown Editor | `<vfx-markdown-editor>` | [components/markdown-editor](components/markdown-editor/) |
+| JSON Editor | `<vfx-json-editor>` | [components/json-editor](components/json-editor/) |
+| 3D Tilt Card | `<vfx-tilt-card>` | [components/tilt-card](components/tilt-card/) |
+| 3D Flip Card | `<vfx-flip-card>` | [components/flip-card](components/flip-card/) |
 
 Each component folder contains:
 
@@ -213,3 +218,11 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Heatmap and Treemap**: activity intensity and proportional category comparisons.
 - **Drawing Canvas and Color Palette**: pointer drawing, PNG export, and reusable color selection.
 - **Audio Player**: browser-native audio transport with seek and playback events.
+
+
+## Media and editor components
+
+- **Video Player**: custom play/pause wrapper around the native browser video element.
+- **Markdown Editor**: split writing and preview panel with escaped text formatting.
+- **JSON Editor**: two-pane JSON editor with validity checks and formatting.
+- **3D Tilt Card and 3D Flip Card**: pointer perspective and reversible 3D presentation.

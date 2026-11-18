@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Seventy-two dependency-free Web Component types with seventy-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Seventy-seven dependency-free Web Component types with seventy-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -134,3 +134,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Drawing Canvas: components/drawing-canvas/, <vfx-drawing-canvas>. Pointer drawing canvas with clear and PNG export.
 - Color Palette: components/color-palette/, <vfx-color-palette>. Selectable color swatches and copy action.
 - Audio Player: components/audio-player/, <vfx-audio-player>. Custom audio transport with seek and playback state.
+
+
+## Media and editor components
+- Video Player: components/video-player/, <vfx-video-player>. Custom video wrapper with play/pause control.
+- Markdown Editor: components/markdown-editor/, <vfx-markdown-editor>. Split Markdown editor with safe formatted preview.
+- JSON Editor: components/json-editor/, <vfx-json-editor>. JSON editing with validation and formatting.
+- 3D Tilt Card: components/tilt-card/, <vfx-tilt-card>. Pointer-reactive 3D perspective card.
+- 3D Flip Card: components/flip-card/, <vfx-flip-card>. Front/back 3D flip interaction.

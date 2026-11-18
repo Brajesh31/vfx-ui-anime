@@ -1452,6 +1452,106 @@
         }
       ],
       "docs": "Load the standalone component file. See components/audio-player/README.md."
+    },
+    {
+      "name": "video-player",
+      "type": "registry:file",
+      "title": "VFX UI Anime Video Player",
+      "description": "Custom video wrapper with play/pause control. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "video-player",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/video-player/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/video-player.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/video-player/README.md."
+    },
+    {
+      "name": "markdown-editor",
+      "type": "registry:file",
+      "title": "VFX UI Anime Markdown Editor",
+      "description": "Split Markdown editor with safe formatted preview. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "markdown-editor",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/markdown-editor/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/markdown-editor.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/markdown-editor/README.md."
+    },
+    {
+      "name": "json-editor",
+      "type": "registry:file",
+      "title": "VFX UI Anime JSON Editor",
+      "description": "JSON editing with validation and formatting. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "json-editor",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/json-editor/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/json-editor.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/json-editor/README.md."
+    },
+    {
+      "name": "tilt-card",
+      "type": "registry:file",
+      "title": "VFX UI Anime 3D Tilt Card",
+      "description": "Pointer-reactive 3D perspective card. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "tilt-card",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/tilt-card/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/tilt-card.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/tilt-card/README.md."
+    },
+    {
+      "name": "flip-card",
+      "type": "registry:file",
+      "title": "VFX UI Anime 3D Flip Card",
+      "description": "Front/back 3D flip interaction. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "flip-card",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/flip-card/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/flip-card.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/flip-card/README.md."
     }
   ]
 }

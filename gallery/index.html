@@ -122,6 +122,11 @@
 <script src="../components/drawing-canvas/index.js"></script>
 <script src="../components/color-palette/index.js"></script>
 <script src="../components/audio-player/index.js"></script>
+<script src="../components/video-player/index.js"></script>
+<script src="../components/markdown-editor/index.js"></script>
+<script src="../components/json-editor/index.js"></script>
+<script src="../components/tilt-card/index.js"></script>
+<script src="../components/flip-card/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -199,7 +204,12 @@ const ITEMS = [
   { id: 'treemap', name: 'Treemap', tag: 'vfx-treemap', how: 'Proportional category tile map.', html: '<vfx-treemap items="app::App::42|web::Web::26|ops::Ops::20|data::Data::12"></vfx-treemap>', wide: true },
   { id: 'drawing-canvas', name: 'Drawing Canvas', tag: 'vfx-drawing-canvas', how: 'Pointer drawing canvas with clear and PNG export.', html: '<vfx-drawing-canvas></vfx-drawing-canvas>', wide: true },
   { id: 'color-palette', name: 'Color Palette', tag: 'vfx-color-palette', how: 'Selectable color swatches and copy action.', html: '<vfx-color-palette title="Brand palette"></vfx-color-palette>', wide: true },
-  { id: 'audio-player', name: 'Audio Player', tag: 'vfx-audio-player', how: 'Custom audio transport with seek and playback state.', html: '<vfx-audio-player title="Demo audio" artist="Add a media source"></vfx-audio-player>' }
+  { id: 'audio-player', name: 'Audio Player', tag: 'vfx-audio-player', how: 'Custom audio transport with seek and playback state.', html: '<vfx-audio-player title="Demo audio" artist="Add a media source"></vfx-audio-player>' },
+  { id: 'video-player', name: 'Video Player', tag: 'vfx-video-player', how: 'Custom video wrapper with play/pause control.', html: '<vfx-video-player></vfx-video-player>', wide: true },
+  { id: 'markdown-editor', name: 'Markdown Editor', tag: 'vfx-markdown-editor', how: 'Split Markdown editor with safe formatted preview.', html: '<vfx-markdown-editor></vfx-markdown-editor>', wide: true },
+  { id: 'json-editor', name: 'JSON Editor', tag: 'vfx-json-editor', how: 'JSON editing with validation and formatting.', html: '<vfx-json-editor></vfx-json-editor>', wide: true },
+  { id: 'tilt-card', name: '3D Tilt Card', tag: 'vfx-tilt-card', how: 'Pointer-reactive 3D perspective card.', html: '<vfx-tilt-card title="3D perspective" description="Move your pointer to tilt"></vfx-tilt-card>' },
+  { id: 'flip-card', name: '3D Flip Card', tag: 'vfx-flip-card', how: 'Front/back 3D flip interaction.', html: '<vfx-flip-card front="Question" back="Answer"></vfx-flip-card>' }
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
 const WIRE = {
@@ -319,6 +329,11 @@ const WIRE = {
   'drawing-canvas': ['Use <vfx-drawing-canvas></vfx-drawing-canvas> as a self-contained custom element.', 'Pointer drawing canvas with clear and PNG export. See components/drawing-canvas/README.md for details.'],
   'color-palette': ['Use <vfx-color-palette></vfx-color-palette> as a self-contained custom element.', 'Selectable color swatches and copy action. See components/color-palette/README.md for details.'],
   'audio-player': ['Use <vfx-audio-player></vfx-audio-player> as a self-contained custom element.', 'Custom audio transport with seek and playback state. See components/audio-player/README.md for details.'],
+  'video-player': ['Use <vfx-video-player></vfx-video-player> as a standalone custom element.', 'Custom video wrapper with play/pause control. See components/video-player/README.md for API and limitations.'],
+  'markdown-editor': ['Use <vfx-markdown-editor></vfx-markdown-editor> as a standalone custom element.', 'Split Markdown editor with safe formatted preview. See components/markdown-editor/README.md for API and limitations.'],
+  'json-editor': ['Use <vfx-json-editor></vfx-json-editor> as a standalone custom element.', 'JSON editing with validation and formatting. See components/json-editor/README.md for API and limitations.'],
+  'tilt-card': ['Use <vfx-tilt-card></vfx-tilt-card> as a standalone custom element.', 'Pointer-reactive 3D perspective card. See components/tilt-card/README.md for API and limitations.'],
+  'flip-card': ['Use <vfx-flip-card></vfx-flip-card> as a standalone custom element.', 'Front/back 3D flip interaction. See components/flip-card/README.md for API and limitations.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -398,6 +413,10 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-drawing-canvas') el.addEventListener('clear', () => say('Canvas cleared'));
   else if (it.tag === 'vfx-color-palette') el.addEventListener('change', e => say('Color: ' + e.detail.value));
   else if (it.tag === 'vfx-audio-player') { el.addEventListener('play', () => say('Audio playing')); el.addEventListener('pause', () => say('Audio paused')); }
+  else if (it.tag === 'vfx-video-player') { el.addEventListener('play', () => say('Video playing')); el.addEventListener('pause', () => say('Video paused')); }
+  else if (it.tag === 'vfx-markdown-editor') el.addEventListener('input', () => say('Markdown updated'));
+  else if (it.tag === 'vfx-json-editor') el.addEventListener('change', e => say(e.detail.valid ? 'Valid JSON' : 'Invalid JSON'));
+  else if (it.tag === 'vfx-flip-card') el.addEventListener('change', e => say(e.detail.flipped ? 'Card flipped' : 'Card returned'));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.
