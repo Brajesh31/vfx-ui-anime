@@ -75,7 +75,7 @@
       <section class="demo">
         <h2>🔘 Radio selection</h2>
         <p>Options are comma-separated. Read the selected string through <code>value</code>.</p>
-        <div class="stage"><vfx-radio id="size" options="Small,Medium,Large" value="Medium"></vfx-radio></div>
+        <div class="stage"><vfx-radio id="size" label="Size" name="size" required options="Small,Medium,Large" value="Medium"></vfx-radio></div>
       </section>
 
       <section class="demo">
@@ -86,8 +86,10 @@
 
       <section class="demo">
         <h2>🗂️ Tabs and host state</h2>
-        <p>The custom element selects a tab. The host application supplies the associated content.</p>
-        <div class="stage"><vfx-tabs id="sections" items="Overview,Features,Details"></vfx-tabs></div>
+        <p>Use Left/Right Arrow keys, Home and End. Vertical tabs also support Up/Down Arrow keys. The host application supplies the associated content.</p>
+        <div class="stage"><vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details" orientation="horizontal"></vfx-tabs></div>
+        <p>Vertical variation:</p>
+        <div class="stage"><vfx-tabs id="vertical-sections" label="Vertical sections" items="First,Second,Third" orientation="vertical"></vfx-tabs></div>
         <p id="tab-panel" class="status-panel" aria-live="polite">Overview content is controlled by this host page.</p>
       </section>
 
@@ -123,7 +125,7 @@
     </div>
 
     <aside class="note">
-      <strong>Implementation note:</strong> This page demonstrates component events and host-side UI updates. It is not a certification of full form-associated custom element behavior, complete tab accessibility, screen-reader support or cross-browser compatibility. Review the <a href="../docs/COMPONENT_API_REFERENCE.md">detailed API reference</a> and <a href="../docs/ACCESSIBILITY.md">accessibility limitations</a> before production use.
+      <strong>Implementation note:</strong> This page demonstrates component events and host-side UI updates. It is not a certification of full form-associated custom element behavior, linked tabpanel accessibility, screen-reader support or cross-browser compatibility. Review the <a href="../docs/COMPONENT_API_REFERENCE.md">detailed API reference</a> and <a href="../docs/ACCESSIBILITY.md">accessibility limitations</a> before production use.
     </aside>
   </main>
 
