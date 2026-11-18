@@ -1,1 +1,156 @@
-(() => {if(customElements.get("vfx-radio"))return;class VFXRadio extends HTMLElement{static formAssociated=true;constructor(){super();this.attachShadow({mode:"open"});this.internals=this.attachInternals?.();this.shadowRoot.innerHTML=`<style>:host{display:flex;gap:.8rem;flex-wrap:wrap}label{display:flex;align-items:center;gap:.35rem;cursor:pointer;font-size:.9rem}input{accent-color:var(--vfx-violet)}</style><div role="radiogroup"></div>`;this.group=this.shadowRoot.querySelector("div");}connectedCallback(){this.render();}static get observedAttributes(){return["options","value","name"]}attributeChangedCallback(){if(this.isConnected)this.render()}get value(){return this.group.querySelector("input:checked")?.value||""}set value(v){const i=[...this.group.querySelectorAll("input")].find(x=>x.value===v);if(i)i.checked=true;this.sync()}render(){const opts=(this.getAttribute("options")||"Option A,Option B").split(",").map(s=>s.trim()).filter(Boolean);this.group.replaceChildren();opts.forEach((v,i)=>{const l=document.createElement("label"),r=document.createElement("input");r.type="radio";r.name="vfx-radio";r.value=v;r.checked=v===(this.getAttribute("value")||opts[0]);r.addEventListener("change",()=>{this.sync();window.VFXAnime?.impact(this,"spark",.5);this.dispatchEvent(new Event("change",{bubbles:true,composed:true}));});l.append(r,document.createTextNode(v));this.group.append(l);});this.sync()}sync(){this.internals?.setFormValue(this.value);}}customElements.define("vfx-radio",VFXRadio);})();
+(() => {
+  if (customElements.get("vfx-radio")) return;
+
+  let instanceCount = 0;
+
+  class VFXRadio extends HTMLElement {
+    static formAssociated = true;
+
+    static get observedAttributes() {
+      return ["options", "value", "name", "disabled", "required", "label"];
+    }
+
+    constructor() {
+      super();
+      this.instanceId = ++instanceCount;
+      this.internals = this.attachInternals?.();
+      this.attachShadow({ mode: "open" });
+      this.shadowRoot.innerHTML = `
+        <style>
+          :host { display: flex; gap: .8rem; flex-wrap: wrap; }
+          :host([disabled]) { opacity: .6; }
+          label {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            cursor: pointer;
+            font-size: .9rem;
+          }
+          :host([disabled]) label { cursor: not-allowed; }
+          input { accent-color: var(--vfx-violet, #6557d9); }
+          input:focus-visible {
+            outline: 2px solid var(--vfx-pink, #ff5f9e);
+            outline-offset: 3px;
+          }
+        </style>
+        <div role="radiogroup" aria-label="Choose an option"></div>
+      `;
+      this.group = this.shadowRoot.querySelector('[role="radiogroup"]');
+    }
+
+    connectedCallback() {
+      this.render();
+      this.defaultValue = this.value;
+    }
+
+    attributeChangedCallback() {
+      if (this.isConnected) this.render();
+    }
+
+    get options() {
+      return (this.getAttribute("options") || "Option A,Option B")
+        .split(",")
+        .map((option) => option.trim())
+        .filter(Boolean);
+    }
+
+    get value() {
+      return this.group.querySelector('input[type="radio"]:checked')?.value || "";
+    }
+
+    set value(nextValue) {
+      const value = String(nextValue ?? "");
+      if (this.options.includes(value)) this.setAttribute("value", value);
+    }
+
+    get disabled() {
+      return this.hasAttribute("disabled");
+    }
+
+    get required() {
+      return this.hasAttribute("required");
+    }
+
+    render() {
+      const options = this.options;
+      const requestedValue = this.getAttribute("value");
+      const selectedValue = options.includes(requestedValue)
+        ? requestedValue
+        : (options[0] || "");
+      const name = this.getAttribute("name") || `vfx-radio-${this.instanceId}`;
+
+      this.group.setAttribute("aria-label", this.getAttribute("label") || "Choose an option");
+      this.group.setAttribute("aria-required", String(this.required));
+      this.group.setAttribute("aria-disabled", String(this.disabled));
+      this.group.replaceChildren();
+
+      options.forEach((option) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+
+        input.type = "radio";
+        input.name = name;
+        input.value = option;
+        input.checked = option === selectedValue;
+        input.disabled = this.disabled;
+        input.required = this.required;
+
+        input.addEventListener("change", () => {
+          this.sync();
+          window.VFXAnime?.impact(this, "spark", 0.5);
+          this.dispatchEvent(new Event("change", {
+            bubbles: true,
+            composed: true
+          }));
+        });
+
+        label.append(input, document.createTextNode(option));
+        this.group.append(label);
+      });
+
+      this.sync();
+    }
+
+    sync() {
+      const selected = this.value;
+      this.internals?.setFormValue(this.disabled || !selected ? null : selected);
+
+      if (!this.internals) return;
+
+      if (!this.disabled && this.required && !selected) {
+        const anchor = this.group.querySelector("input");
+        if (anchor) {
+          this.internals.setValidity(
+            { valueMissing: true },
+            "Please select an option.",
+            anchor
+          );
+        } else {
+          this.internals.setValidity({ valueMissing: true }, "Please select an option.");
+        }
+      } else {
+        this.internals.setValidity({});
+      }
+    }
+
+    formDisabledCallback(disabled) {
+      this.toggleAttribute("disabled", disabled);
+      this.sync();
+    }
+
+    formResetCallback() {
+      const resetValue = this.defaultValue || this.options[0] || "";
+      const inputs = [...this.group.querySelectorAll('input[type="radio"]')];
+      inputs.forEach((input) => {
+        input.checked = input.value === resetValue;
+      });
+      this.sync();
+    }
+
+    formStateRestoreCallback(state) {
+      this.value = String(state ?? "");
+    }
+  }
+
+  customElements.define("vfx-radio", VFXRadio);
+})();
