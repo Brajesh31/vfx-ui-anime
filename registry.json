@@ -1,11 +1,10 @@
 {
-  "$schema": "https://json.schemastore.org/package",
-  "name": "vfx-ui-anime",
-  "version": "1.0.0",
-  "description": "Anime-inspired native Web Components with a shared motion engine.",
-  "homepage": "https://github.com/Brajesh31/vfx-ui-anime",
-  "license": "MIT",
-  "components": [
+  "name":"vfx-ui-anime",
+  "version":"1.0.0",
+  "description":"Anime-inspired native Web Components with a shared motion engine.",
+  "homepage":"https://github.com/Brajesh31/vfx-ui-anime",
+  "license":"MIT",
+  "components":[
     {"name":"button","tag":"vfx-button","file":"components/button.js","dependencies":["core.js"]},
     {"name":"toggle","tag":"vfx-toggle","file":"components/toggle.js","dependencies":["core.js"]},
     {"name":"slider","tag":"vfx-slider","file":"components/slider.js","dependencies":["core.js"]},
