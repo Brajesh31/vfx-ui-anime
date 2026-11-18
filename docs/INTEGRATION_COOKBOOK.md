@@ -87,7 +87,7 @@ document.addEventListener("change", (event) => {
 
 ## 4. Keep application state in the host
 
-Custom elements provide interaction primitives. They do not replace your application state model or automatically coordinate related panels and data.
+Custom elements provide interaction primitives, but they do not replace your application state model. Tabs manage their own linked panel visibility; the host application remains responsible for supplying the panel content and managing broader application state.
 
 ### Slider to progress
 
