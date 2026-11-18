@@ -76,6 +76,10 @@ Each component is a JavaScript custom element that uses the shared core. The cor
 
 Open the [runnable integration cookbook](examples/integration-cookbook.html) to see all eleven components wired to host-page state and events. The accompanying [integration cookbook guide](docs/INTEGRATION_COOKBOOK.md) includes vanilla JavaScript, React, Vue and Angular patterns, plus form and accessibility cautions.
 
+## 💬 Accessible tooltips
+
+The tooltip now links its trigger to the hint with `aria-describedby`, supports Escape dismissal, updates when its text changes, and automatically positions itself above or below the trigger while staying inside horizontal viewport bounds. Use `placement="top"`, `placement="bottom"`, or the default `placement="auto"`.
+
 ## 🎨 Theme tokens
 
 Override `--vfx-ink`, `--vfx-paper`, `--vfx-lavender`, `--vfx-violet` and `--vfx-pink` in your stylesheet.
