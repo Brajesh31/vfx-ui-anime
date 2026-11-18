@@ -124,6 +124,8 @@ const WIRE = {
   notification: ['Use <vfx-notification count="3"></vfx-notification> to show unread notifications.', 'Activate the bell to clear the unread count.'],
 };
 const fileUrl = (id) => new URL(`./components/${id}/index.js`, location.href).href;
+const coreBased = (id) => ['like', 'accordion', 'segmented', 'notification'].includes(id);
+const installSnippet = (id) => (coreBased(id) ? '<script src="https://brajesh31.github.io/vfx-ui-anime/core.js"></script>\\n' : '') + '<script src="https://brajesh31.github.io/vfx-ui-anime/components/' + id + '/index.js"></script>';
 const prompt = (it) => [
   `Add the vfx ${it.name.toLowerCase()} to my app. It is a single JavaScript file with no dependencies that defines a <${it.tag}> element.`,
   `1. Get the file from ${fileUrl(it.id)} and save it in my project as ${it.id}.js. Do not rewrite it or split it up.`,
@@ -141,7 +143,7 @@ for (const it of ITEMS) {
   card.innerHTML = `<h2>${it.name}<span>&lt;${it.tag}&gt;</span></h2><p class="how">${it.how}</p><div class="stage">${it.html}</div><p class="said" aria-live="polite"></p>
     <div class="acts"><a class="pill" href="./components/${it.id}/demo.html">Docs and demo</a><button class="pill" type="button" data-copy="cmd">Copy install</button><button class="pill" type="button" data-copy="prompt">Copy a prompt for your agent</button></div>`;
   const said = card.querySelector('.said');
-  card.querySelector('[data-copy=cmd]').addEventListener('click', (e) => copy(`<script src="https://brajesh31.github.io/vfx-ui-anime/components/${it.id}/index.js"></script>`, e.currentTarget, said));
+  card.querySelector('[data-copy=cmd]').addEventListener('click', (e) => copy(installSnippet(it.id), e.currentTarget, said));
   card.querySelector('[data-copy=prompt]').addEventListener('click', (e) => copy(prompt(it), e.currentTarget, said));
   grid.append(card);
   const el = card.querySelector(it.tag), say = (t) => { said.textContent = t; };   // the one line under each control that says what happened
