@@ -127,9 +127,9 @@ const fileUrl = (id) => new URL(`./components/${id}/index.js`, location.href).hr
 const coreBased = (id) => ['like', 'accordion', 'segmented', 'notification'].includes(id);
 const installSnippet = (id) => (coreBased(id) ? '<script src="https://brajesh31.github.io/vfx-ui-anime/core.js"></script>\\n' : '') + '<script src="https://brajesh31.github.io/vfx-ui-anime/components/' + id + '/index.js"></script>';
 const prompt = (it) => [
-  `Add the vfx ${it.name.toLowerCase()} to my app. It is a single JavaScript file with no dependencies that defines a <${it.tag}> element.`,
+  `Add the VFX UI Anime ${it.name.toLowerCase()} control to my app. ${coreBased(it.id) ? 'It uses the VFX UI Anime shared core.js engine.' : 'It is a self-contained JavaScript file with its own motion engine and artwork.'} It defines a <${it.tag}> element.`,
   `1. Get the file from ${fileUrl(it.id)} and save it in my project as ${it.id}.js. Do not rewrite it or split it up.`,
-  `2. Load it with a plain script tag (not type="module").`,
+  `2. Load it with a plain script tag (not type="module"). ${coreBased(it.id) ? "Load core.js before the component file." : "No separate runtime script is needed."}`,
   ...WIRE[it.id].map((l, i) => `${i + 3}. ${l}`),
   `${WIRE[it.id].length + 3}. Its effects are drawn on one fixed canvas over the page, so they can fly outside the control. They switch off for prefers-reduced-motion. Its colours are --vfx-* CSS variables.`,
   `When you are done, show me where you put it and what listens to it. If something about it needs to look different, tell me instead of editing the effects.`,
