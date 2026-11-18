@@ -33,7 +33,7 @@ The browser APIs used by the implementation include Custom Elements, Shadow DOM,
 | `<vfx-progress>` | `components/progress.js` | `value`, `label` | None |
 | `<vfx-rating>` | `components/rating.js` | `value` | `change` with `detail.value` |
 | `<vfx-toast>` | `components/toast.js` | `message` | `vfx-toast` with `detail.message` |
-| `<vfx-tooltip>` | `components/tooltip.js` | `text` and default slot | None |
+| `<vfx-tooltip>` | `components/tooltip.js` | `text`, `placement` and default slot | None |
 
 Events emitted by a component are dispatched with `bubbles: true` and `composed: true`, unless otherwise stated below. They can therefore be listened for on an ancestor outside the component's Shadow DOM.
 
