@@ -199,7 +199,7 @@ const ITEMS = [
   { id: 'guided-tour', name: 'Guided Tour', tag: 'vfx-guided-tour', how: 'Launch the tour, navigate its steps, and dismiss with Escape.', html: '<button class="demo-tour-target" type="button" style="padding:10px 14px;border:2px solid #241d48;border-radius:10px;background:#ffe2ef;font-weight:800">Tour target</button><vfx-guided-tour steps=".demo-tour-target::Welcome::This is the highlighted area of your page.|body::Explore::Use Next or the arrow keys to continue."></vfx-guided-tour><button type="button" data-demo="tour-start">Start tour</button>' },
   { id: 'stopwatch', name: 'Stopwatch', tag: 'vfx-stopwatch', how: 'Start, stop, record lap splits, and reset the elapsed time.', html: '<vfx-stopwatch></vfx-stopwatch>' },
   { id: 'emoji-picker', name: 'Emoji Picker', tag: 'vfx-emoji-picker', how: 'Search and select an emoji from the curated collection.', html: '<vfx-emoji-picker value="✨"></vfx-emoji-picker>' },
-  { id: 'copy-code', name: 'Copy Code Block', tag: 'vfx-copy-code', how: 'Inspect line numbers and copy the code sample.', html: '<vfx-copy-code language="js">const greeting = "Hello, world!";\nconsole.log(greeting);</vfx-copy-code>' }];
+  { id: 'copy-code', name: 'Copy Code Block', tag: 'vfx-copy-code', how: 'Inspect line numbers and copy the code sample.', html: '<vfx-copy-code language="js">const greeting = "Hello, world!";\nconsole.log(greeting);</vfx-copy-code>' },
   { id: 'bar-chart', name: 'Bar Chart', tag: 'vfx-bar-chart', how: 'Responsive SVG bar chart with interactive bars.', html: '<vfx-bar-chart title="Monthly signups" labels="Jan,Feb,Mar,Apr,May,Jun" values="18,32,24,48,38,64"></vfx-bar-chart>', wide: true },
   { id: 'donut-chart', name: 'Donut Chart', tag: 'vfx-donut-chart', how: 'Proportional SVG donut chart with legend.', html: '<vfx-donut-chart title="Traffic sources" labels="Direct,Search,Social,Other" values="45,30,15,10"></vfx-donut-chart>', wide: true },
   { id: 'sparkline', name: 'Sparkline', tag: 'vfx-sparkline', how: 'Inline SVG trend sparkline.', html: '<vfx-sparkline label="Weekly trend" values="4,7,5,9,8,13,11,16"></vfx-sparkline>' },
@@ -220,6 +220,7 @@ const ITEMS = [
   { id: 'scroll-reveal', name: 'Scroll Reveal', tag: 'vfx-scroll-reveal', how: 'Viewport-triggered content reveal with observer cleanup.', html: '<vfx-scroll-reveal><article style="padding:22px;border-radius:12px;background:#f0edff"><h3>Reveal on scroll</h3><p>Scroll this card into view.</p></article></vfx-scroll-reveal>', wide: true },
   { id: 'animated-counter', name: 'Animated Counter', tag: 'vfx-animated-counter', how: 'Animated numeric counter with completion event.', html: '<vfx-animated-counter value="12500" label="Downloads"></vfx-animated-counter>' },
   { id: 'confetti-button', name: 'Confetti Button', tag: 'vfx-confetti-button', how: 'VFX celebration button with burst and shard effects.', html: '<vfx-confetti-button label="Celebrate release"></vfx-confetti-button>' }
+];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
 const WIRE = {
