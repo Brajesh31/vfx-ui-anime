@@ -82,14 +82,13 @@
             border-bottom-color: var(--vfx-ink, #211b43);
           }
 
-          :host([data-active]) .tip,
-          :host(:focus-within) .tip {
+          .tip[data-active] {
             opacity: 1;
             visibility: visible;
             transform: translate(-50%, 0);
           }
 
-          :host([data-dismissed]) .tip {
+          .tip[data-dismissed] {
             opacity: 0;
             visibility: hidden;
           }
@@ -109,17 +108,18 @@
       this.tip.id = `vfx-tooltip-description-${this.instanceId}`;
       this.trigger.setAttribute("aria-describedby", this.tip.id);
 
-      this.handlePointerEnter = () => { this.removeAttribute("data-dismissed"); this.setAttribute("data-active", ""); };
-      this.handlePointerLeave = () => { if (!this.matches(":focus-within")) this.removeAttribute("data-active"); this.removeAttribute("data-dismissed"); };
-      this.handleFocusIn = () => { this.removeAttribute("data-dismissed"); this.setAttribute("data-active", ""); };
-      this.handleFocusOut = () => { if (!this.matches(":focus-within") && !this.matches(":hover")) this.removeAttribute("data-active"); };
+      this.handlePointerEnter = () => { this.removeAttribute("data-dismissed"); this.tip.removeAttribute("data-dismissed"); this.tip.setAttribute("data-active", ""); };
+      this.handlePointerLeave = () => { if (!this.matches(":focus-within")) this.tip.removeAttribute("data-active"); this.removeAttribute("data-dismissed"); this.tip.removeAttribute("data-dismissed"); };
+      this.handleFocusIn = () => { this.removeAttribute("data-dismissed"); this.tip.removeAttribute("data-dismissed"); this.tip.setAttribute("data-active", ""); };
+      this.handleFocusOut = () => { if (!this.matches(":focus-within") && !this.matches(":hover")) this.tip.removeAttribute("data-active"); };
       this.handleKeyDown = (event) => {
         if (event.key !== "Escape") return;
         if (!this.matches(":hover") && !this.matches(":focus-within")) return;
 
         event.preventDefault();
         this.setAttribute("data-dismissed", "");
-        this.removeAttribute("data-active");
+        this.tip.setAttribute("data-dismissed", "");
+        this.tip.removeAttribute("data-active");
         this.trigger.blur();
       };
       this.handleViewportChange = () => this.updatePlacement();
