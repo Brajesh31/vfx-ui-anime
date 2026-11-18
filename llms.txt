@@ -1,40 +1,45 @@
 # VFX UI Anime
 
-> A dependency-free collection of expressive native Web Components.
+> Fifteen expressive native Web Components, including eleven source-backed animated controls and four additional VFX UI Anime controls.
 
 ## Project map
-- `index.html`: branded, searchable component gallery.
-- `core.js`: shared motion and canvas effects engine.
-- `styles.css`: design tokens and product presentation.
-- `showcase.js`: catalog search and category filters.
+- `index.html`: interactive component gallery with live controls and per-component usage prompts.
+- `core.js`: additional VFX UI Anime effects engine used by Like, Accordion, Segmented, and Notification.
+- `styles.css`: VFX UI Anime design tokens and product presentation.
 - `components/<name>/index.js`: individual component implementation.
 - `components/<name>/demo.html`: standalone live preview.
-- `components/<name>/README.md`: component-specific usage notes.
-- `docs/COMPONENTS.md`: component inventory.
-- `docs/COMPONENT_API_REFERENCE.md`: API and event details.
+- `components/<name>/README.md`: component-specific API, behaviour, and limitations.
+- `docs/COMPONENTS.md`: component inventory and engine architecture.
+- `docs/COMPONENT_API_REFERENCE.md`: attributes, properties, events, and methods.
 - `tests/browser.html`: browser test fixture.
 - `tools/validate.mjs`: repository validation.
 
-## Component folders
-- `components/button/`: `<vfx-button>` component.
-- `components/toggle/`: `<vfx-toggle>` component.
-- `components/slider/`: `<vfx-slider>` component.
-- `components/checkbox/`: `<vfx-checkbox>` component.
-- `components/radio/`: `<vfx-radio>` component.
-- `components/input/`: `<vfx-input>` component.
-- `components/tabs/`: `<vfx-tabs>` component.
-- `components/progress/`: `<vfx-progress>` component.
-- `components/rating/`: `<vfx-rating>` component.
-- `components/toast/`: `<vfx-toast>` component.
-- `components/tooltip/`: `<vfx-tooltip>` component.
-- `components/like/`: `<vfx-like>` component.
-- `components/accordion/`: `<vfx-accordion>` component.
-- `components/segmented/`: `<vfx-segmented>` component.
-- `components/notification/`: `<vfx-notification>` component.
+## Standalone animated controls
+The following eleven controls include their own spring/effect engine and artwork. They do not depend on `core.js`.
+- `components/button/`: `<vfx-button>`
+- `components/toggle/`: `<vfx-toggle>`
+- `components/slider/`: `<vfx-slider>`
+- `components/checkbox/`: `<vfx-checkbox>`
+- `components/radio/`: `<vfx-radio>`
+- `components/input/`: `<vfx-input>`
+- `components/tabs/`: `<vfx-tabs>`
+- `components/progress/`: `<vfx-progress>`
+- `components/rating/`: `<vfx-rating>`
+- `components/toast/`: `<vfx-toast>`
+- `components/tooltip/`: `<vfx-tooltip>`
+
+Their embedded runtime is exposed as `window.VFXAnimeFX`. The Toggle contains its 43-frame painted animation in the component file.
+
+## Additional VFX UI Anime controls
+These four controls use `core.js`, which exposes `window.VFXAnime`.
+- `components/like/`: `<vfx-like>`
+- `components/accordion/`: `<vfx-accordion>`
+- `components/segmented/`: `<vfx-segmented>`
+- `components/notification/`: `<vfx-notification>`
 
 ## Integration rules
-1. Load `core.js` before component scripts.
-2. Preserve native semantics and keyboard access.
-3. Follow each component's README and demo.
+1. For Button through Tooltip, load each required component script directly.
+2. For Like, Accordion, Segmented, or Notification, load `core.js` first.
+3. Follow each component's README and demo for its exact API.
 4. Respect `prefers-reduced-motion`.
-5. Verify browser behavior before making compatibility claims.
+5. Verify browser behaviour before making compatibility claims.
