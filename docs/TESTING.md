@@ -42,22 +42,9 @@ The suite currently targets Chromium only. It does not prove screen-reader inter
 
 ## Browser matrix
 
-| Browser | Status |
-|---|---|
-| Chromium | Not yet formally certified |
-| Firefox | Not tested |
-| Safari macOS | Not tested |
-| Safari iOS | Not tested |
-| Chrome Android | Not tested |
-| Screen readers | Not audited |
-
-Do not convert this table to a passing matrix until the checks have actually been performed.
-
-## Browser matrix
-
 | Browser | Automated interaction suite | Manual / assistive-technology audit |
 |---|---|---|
-| Chromium | Headless suite in GitHub Actions | Not formally certified |
+| Chromium | 9 headless interaction checks in GitHub Actions | Not formally certified |
 | Firefox | Not tested | Not tested |
 | Safari macOS | Not tested | Not tested |
 | Safari iOS | Not tested | Not tested |
