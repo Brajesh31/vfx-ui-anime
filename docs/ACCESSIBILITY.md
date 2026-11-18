@@ -1,52 +1,69 @@
 # ♿ Accessibility and compatibility
 
-## Implemented in the current source
+This page describes the accessibility behaviour implemented in the current component source. It is not a claim of WCAG conformance or completed assistive-technology certification.
 
-- Native button, checkbox, radio, range and text input elements are used internally where practical.
-- Focusable controls retain native browser keyboard behavior where native elements are used.
-- Switch state is exposed with `role="switch"` and `aria-checked`.
-- Progress exposes current and min/max values.
-- `<vfx-tabs>` exposes a named tablist, tabs and linked tabpanels. Each tab has `aria-controls`, and its panel points back with `aria-labelledby`.
-- Inactive tabpanels are hidden. The active panel is keyboard-focusable, and panel content is supplied through named slots that match tab labels.
-- Horizontal tabs support Left/Right Arrow keys. Vertical tabs support Up/Down Arrow keys. Both orientations support Home and End.
-- `<vfx-radio>` uses native radio inputs with a per-instance group name when no name is supplied. Browser-native radio keyboard behavior is retained within the group.
-- `<vfx-tooltip>` connects its focusable trigger to the tooltip description with `aria-describedby`.
-- Tooltip can appear through keyboard focus and can be dismissed with Escape.
-- Toast uses a polite live status region.
-- Canvas is marked `aria-hidden="true"` and does not capture pointer input.
-- Canvas particles are disabled when `prefers-reduced-motion: reduce` is active.
+## Implemented semantics
 
-Automated interaction suites exercise the tab, radio and tooltip behaviors in Chromium, Firefox and WebKit. WebKit coverage is not equivalent to testing shipping Safari on macOS or iOS. These implementation details and passing browser assertions are not a claim of formal WCAG conformance or completed assistive-technology testing.
+### Eleven standalone animated controls
+
+- **Button:** renders a native button in Shadow DOM. The text in its default slot provides the visible and accessible label. Native button keyboard activation is retained.
+- **Toggle:** renders a button with `role="switch"`, an accessible label, and an `aria-checked` state.
+- **Slider:** renders a native `input type="range"` with an accessible label and native range keyboard behaviour.
+- **Checkbox:** renders a native checkbox inside a label. The text in the default slot labels the control.
+- **Radio:** renders native radio inputs in a labelled `radiogroup`. Child `option` elements provide the choices. Native radio keyboard behaviour is retained.
+- **Input:** renders a native text-like input with an `aria-label`, placeholder, and supported autocomplete value.
+- **Tabs:** renders a labelled `tablist` containing buttons with `role="tab"`, `aria-selected`, and roving tab index. Left/Right Arrow keys move between tabs. Home and End move to the first/last tab.
+- **Progress:** exposes `role="progressbar"`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, and an accessible label.
+- **Rating:** renders a labelled `radiogroup` with five radio-role buttons, `aria-checked`, accessible star labels, and arrow-key selection.
+- **Toast:** exposes the message through a `role="status"` region and provides a labelled close button.
+- **Tooltip:** renders a `role="tooltip"` element connected to its trigger by `aria-describedby`. It can open on hover, focus, and tap, and Escape dismisses it.
+
+### Four additional VFX UI Anime controls
+
+- **Like:** uses a native button with `aria-pressed` to expose the pressed state.
+- **Accordion:** uses a native button with `aria-expanded` and `aria-controls`. Its panel is a `role="region"` labelled by the trigger.
+- **Segmented:** exposes a labelled `radiogroup` containing radio-role buttons with `aria-checked`, roving tab index, arrow-key navigation, and Home/End support.
+- **Notification:** uses a native button with an accessible label that includes the unread count. The decorative bell SVG is hidden from assistive technology.
+
+## Decorative effects and motion
+
+- Animation canvases and decorative SVG artwork are marked `aria-hidden="true"`.
+- Canvas effects do not receive pointer input.
+- The eleven standalone animated controls check `prefers-reduced-motion` in their embedded effect runtime.
+- The four additional controls include reduced-motion CSS rules for their transitions and decorative motion.
+- The animation layer is supplementary. Do not use it as the only way to communicate success, error, selection, or progress.
 
 ## Known gaps and constraints
 
-- `<vfx-tabs>` creates the tabpanel wrappers and relationships, but the host must provide meaningful panel content using child elements whose `slot` name exactly matches a tab label. A tab without matching content has an empty panel.
-- Radio labels are supplied as comma-separated options, so commas cannot appear inside an option label.
-- Custom form-associated controls depend on `ElementInternals` support. Form submission, required validity, reset and disabled-fieldset behavior must be tested in target browsers.
-- `<vfx-input>` does not proxy the complete native constraint-validation API.
-- Tooltip placement responds to viewport space, clamps horizontally and recalculates after resize/scroll. Explicit `top` or `bottom` placement is available.
-- The fixed canvas can overlap dialogs and sticky UI visually.
-- No formal screen-reader audit has been completed.
-- Firefox and WebKit headless interaction coverage exists, but shipping Safari on macOS/iOS and real-device testing have not yet been completed.
+- **Tabs does not manage panels.** It renders the tab list only. It does not create `tabpanel` elements, set `aria-controls`, or connect external panel content. The host application must show the matching content and provide its own accessible relationships.
+- **Radio reads its child `option` elements once when it connects.** Replace the element to change its option list after connection.
+- **Input has limited native validation parity.** It does not pass through the complete native constraint-validation API or provide invalid-state styling.
+- **Rating is always five whole stars.** It does not support half-stars or a configurable maximum.
+- **Tooltip always opens above its trigger.** It does not flip to another side when there is insufficient room.
+- **Notification clears the unread count when its button is activated.** It does not provide a full notifications menu or announcement queue.
+- **Canvas layers can visually overlap dialogs, sticky headers, and other overlays.**
+- **Form behaviour varies by component.** Test actual submission, reset, disabled, and required states in the browsers your application supports.
+- No completed screen-reader audit is recorded in this repository.
 
 ## Release QA checklist
 
 - [ ] Keyboard-only navigation through all controls.
-- [ ] Tabs: Left/Right Arrow keys in horizontal orientation.
-- [ ] Tabs: Up/Down Arrow keys in vertical orientation.
-- [ ] Tabs: Home and End keys, selection event, `aria-controls`/`aria-labelledby` references, and active/inactive panel visibility.
-- [ ] Tabs: confirm each named slot matches its label and that focus can move from the tablist into the active panel.
-- [ ] Radio groups: Tab entry, arrow-key selection, Space activation and independent groups.
-- [ ] Radio groups: configured name, required state, disabled state and form reset.
-- [ ] Tooltips: verify `aria-describedby` announces the hint on focus.
-- [ ] Tooltips: verify Escape dismissal and reappearance after pointer leave/refocus.
-- [ ] Tooltips: test auto-flip near the top/bottom edges, horizontal clamping near both sides, resize and scroll.
-- [ ] NVDA + Firefox and Chrome.\n- [ ] Real Safari macOS/iOS testing, including VoiceOver.
-- [ ] VoiceOver + Safari on macOS and iOS.
-- [ ] TalkBack + Chrome on Android.
-- [ ] Reduced-motion enabled and disabled.
-- [ ] 200% zoom and narrow viewport.
-- [ ] Form submit, reset, disabled fieldset and required states.
-- [ ] Dialog, popover and sticky-header stacking behavior.
+- [ ] Verify Toggle exposes its current switch state.
+- [ ] Verify Checkbox and Radio expose native checked state.
+- [ ] Verify Slider can be changed with keyboard and touch.
+- [ ] Verify Tabs arrow-key navigation, Home/End, and host-managed panel changes.
+- [ ] Provide accessible panel headings and relationships for Tabs in the host application.
+- [ ] Verify Rating radio semantics and keyboard selection.
+- [ ] Verify Progress value changes are announced appropriately for the product context.
+- [ ] Verify Toast status announcements and close-button name.
+- [ ] Verify Tooltip description is announced on focus and Escape dismisses it.
+- [ ] Verify Accordion expanded state and trigger/panel relationships.
+- [ ] Verify Segmented selection and keyboard navigation.
+- [ ] Verify Like pressed state and Notification accessible count label.
+- [ ] Test reduced-motion enabled and disabled.
+- [ ] Test at 200% zoom and narrow viewports.
+- [ ] Test form submission, reset, required state, and disabled fieldsets where applicable.
+- [ ] Test with NVDA, VoiceOver, and TalkBack on their supported browser/platform combinations.
+- [ ] Test dialog, popover, and sticky-header stacking behaviour.
 
-Do not describe the project as fully accessible until these checks are completed and gaps are addressed.
+Do not describe the project as fully accessible until these checks are completed and any discovered gaps are addressed.
