@@ -8,6 +8,7 @@ const execFileAsync = promisify(execFile);
 const root = process.cwd();
 const required = [
   "README.md", "LICENSE", "core.js", "styles.css", "index.html", "llms.txt", "registry.json",
+  "tests/browser.html", "tests/browser-interactions.js", "tools/run-browser-tests.mjs",
   "docs/COMPONENTS.md", "docs/COMPONENT_API_REFERENCE.md", "docs/ARCHITECTURE.md",
   "docs/ACCESSIBILITY.md", "docs/INSTALLATION.md", "docs/TESTING.md",
   "components/button.js", "components/toggle.js", "components/slider.js", "components/checkbox.js",
@@ -94,6 +95,26 @@ for (const hook of [
   if (!tooltip.includes(hook)) errors.push(`Tooltip accessibility/positioning hook missing: ${hook}`);
 }
 
+const browserTests = await read("tests/browser-interactions.js");
+for (const hook of [
+  "tabs expose reciprocal tab and tabpanel relationships",
+  "horizontal tabs activate on click and Arrow/Home/End keys",
+  "vertical tabs use Up/Down keys",
+  "new FormData(form)",
+  "form.checkValidity()",
+  "independent radio components",
+  "aria-describedby",
+  "data-dismissed",
+  "Updated tooltip text"
+]) {
+  if (!browserTests.includes(hook)) errors.push("Chromium interaction test missing: " + hook);
+}
+
+const browserRunner = await read("tools/run-browser-tests.mjs");
+if (!browserRunner.includes("--headless=new") || !browserRunner.includes("--dump-dom")) {
+  errors.push("Browser test runner must execute Chromium in headless mode and collect its test report.");
+}
+
 const api = await read("docs/COMPONENT_API_REFERENCE.md");
 if (!api.includes("orientation=\"vertical\"") || !api.includes("Up/Down Arrow keys")) {
   errors.push("Component API reference does not document vertical tabs keyboard navigation.");
@@ -113,5 +134,5 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Validation passed: ${required.length} required paths, 11 registrations, gallery script loading, reduced-motion support, and tabs/panel/radio/tooltip regression hooks.`);
+console.log(`Validation passed: ${required.length} required paths, 11 registrations, gallery script loading, reduced-motion support, and tabs/panel/radio/tooltip regression hooks and Chromium interaction test coverage.`);
 console.log("Static validation only. Run manual/browser QA before claiming runtime or accessibility certification.");
