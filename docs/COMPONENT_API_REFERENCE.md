@@ -152,13 +152,16 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 - `required` marks the internal radio choices as required.
 - `label` supplies the accessible name for the radiogroup.
 
-**Property**
-- `value`: string getter/setter. The setter selects a matching option and synchronizes the form value.
+**Properties**
+- `value`: string getter/setter. The setter selects a matching option and synchronizes the form value. For a required group, setting an empty string clears the selection.
+- `disabled`: boolean getter/setter reflected to the `disabled` attribute. The getter also reports disabled-fieldset state.
+- `required`: boolean getter/setter reflected to the `required` attribute.
 
 **Interaction and event**
 - Uses native radio inputs, preserving the browser's built-in radio selection and keyboard behavior within the group.
 - Emits `change`, without a custom detail payload, after the selected option changes.
-- Uses `ElementInternals.setFormValue()` when available. The component also implements form reset, disabled-state and state-restore callbacks.
+- Uses `ElementInternals.setFormValue()` and `setValidity()` when available. The component saves its initial value and implements form reset, disabled-state and state-restore callbacks.
+- Updates the host `value` attribute when a user selects an option, keeping the property and rendered state synchronized.
 
 ```html
 <vfx-radio
