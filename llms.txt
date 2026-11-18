@@ -9,9 +9,9 @@
 - `components/toggle.js`: vfx-toggle.
 - `components/slider.js`: vfx-slider.
 - `components/checkbox.js`: vfx-checkbox.
-- `components/radio.js`: vfx-radio.
+- `components/radio.js`: vfx-radio with labeled, named, required and disabled group support.
 - `components/input.js`: vfx-input.
-- `components/tabs.js`: vfx-tabs.
+- `components/tabs.js`: vfx-tabs with horizontal/vertical orientation and arrow/Home/End keyboard navigation.
 - `components/progress.js`: vfx-progress.
 - `components/rating.js`: vfx-rating.
 - `components/toast.js`: vfx-toast.
