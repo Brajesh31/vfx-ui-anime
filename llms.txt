@@ -15,7 +15,7 @@
 - `components/progress.js`: vfx-progress.
 - `components/rating.js`: vfx-rating.
 - `components/toast.js`: vfx-toast.
-- `components/tooltip.js`: vfx-tooltip.
+- `components/tooltip.js`: vfx-tooltip with `aria-describedby`, Escape dismissal, dynamic text, automatic top/bottom placement and horizontal viewport clamping.
 - `docs/COMPONENTS.md`: component inventory and concise API overview.
 - `docs/COMPONENT_API_REFERENCE.md`: detailed attributes, properties, methods, events, payloads and implementation limitations.
 - `docs/INTEGRATIONS.md`: framework integration boundaries and high-level setup notes.
