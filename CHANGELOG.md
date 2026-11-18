@@ -7,7 +7,7 @@ All notable project changes are documented here.
 ### Added
 - Horizontal and vertical tab orientation with roving focus, arrow-key navigation, and Home/End navigation.
 - Accessible tablist labeling and a programmatic `value` property setter.
-- Radio group labels, configured names, disabled/required handling, form reset/disabled/state-restore callbacks, and native radio keyboard behavior.
+- Radio group labels, configured names, disabled/required properties, form value synchronization, reset/disabled/state-restore callbacks, and native radio keyboard behavior.
 - Static regression assertions for the new tab and radio implementation hooks.
 
 ### Changed
