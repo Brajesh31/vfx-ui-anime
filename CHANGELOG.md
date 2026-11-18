@@ -12,6 +12,7 @@ All notable project changes are documented here.
 - Accessible, viewport-aware tooltips with `aria-describedby`, dynamic text, Escape dismissal, auto top/bottom placement and horizontal clamping.
 - Static regression assertions for tab, radio and tooltip implementation hooks, plus runtime JavaScript syntax parsing.
 - Dependency-free Chromium browser interaction suite covering tabs, radio group form behavior and tooltip focus/dismissal states.
+- Optional CI-only Playwright compatibility run executes the same interaction suite in Firefox and WebKit without adding a saved project dependency.
 
 ### Changed
 - Updated the gallery, component API reference, integration cookbook, accessibility guide and QA checklist for the new controls.
