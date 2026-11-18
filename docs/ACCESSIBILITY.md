@@ -9,7 +9,8 @@
 - `<vfx-tabs>` exposes a tablist with one tab stop, `aria-selected` state, and roving focus.
 - Horizontal tabs support Left/Right Arrow keys. Vertical tabs support Up/Down Arrow keys. Both orientations support Home and End.
 - `<vfx-radio>` uses native radio inputs with a per-instance group name when no name is supplied. Browser-native radio keyboard behavior is retained within the group.
-- Tooltip can appear through keyboard focus.
+- `<vfx-tooltip>` connects its focusable trigger to the tooltip description with `aria-describedby`.
+- Tooltip can appear through keyboard focus and can be dismissed with Escape.
 - Toast uses a polite live status region.
 - Canvas is marked `aria-hidden="true"` and does not capture pointer input.
 - Canvas particles are disabled when `prefers-reduced-motion: reduce` is active.
@@ -22,7 +23,7 @@ These are source-level implementation details. They are not a claim of formal WC
 - Radio labels are supplied as comma-separated options, so commas cannot appear inside an option label.
 - Custom form-associated controls depend on `ElementInternals` support. Form submission, required validity, reset and disabled-fieldset behavior must be tested in target browsers.
 - `<vfx-input>` does not proxy the complete native constraint-validation API.
-- Tooltip placement does not account for viewport edges, and the trigger is not connected to the tooltip with `aria-describedby`.
+- Tooltip placement responds to viewport space, clamps horizontally and recalculates after resize/scroll. Explicit `top` or `bottom` placement is available.
 - The fixed canvas can overlap dialogs and sticky UI visually.
 - No formal screen-reader audit has been completed.
 - Cross-browser and real-device testing has not yet been completed.
@@ -35,6 +36,9 @@ These are source-level implementation details. They are not a claim of formal WC
 - [ ] Tabs: Home and End keys, selection event and host-managed panel updates.
 - [ ] Radio groups: Tab entry, arrow-key selection, Space activation and independent groups.
 - [ ] Radio groups: configured name, required state, disabled state and form reset.
+- [ ] Tooltips: verify `aria-describedby` announces the hint on focus.
+- [ ] Tooltips: verify Escape dismissal and reappearance after pointer leave/refocus.
+- [ ] Tooltips: test auto-flip near the top/bottom edges, horizontal clamping near both sides, resize and scroll.
 - [ ] NVDA + Firefox and Chrome.
 - [ ] VoiceOver + Safari on macOS and iOS.
 - [ ] TalkBack + Chrome on Android.
