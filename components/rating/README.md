@@ -6,13 +6,13 @@ Five stars that pop in one after another. The last one lit gets a fan of wedges,
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/rating/
+# open http://localhost:8000/components/rating/demo.html
 ```
 
 ## Use it
 
 ```html
-<script src="rating.js"></script>
+<script src="index.js"></script>
 <vfx-rating label="Rate this recipe" name="stars"></vfx-rating>
 ```
 
