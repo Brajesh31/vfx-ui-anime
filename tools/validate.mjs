@@ -16,6 +16,17 @@ const required = [
   "components/rating.js", "components/toast.js", "components/tooltip.js"
 ];
 
+
+const upstreamRequired = [
+  "sakuga-interactions.js",
+  "sakuga-vfx/button/button.js", "sakuga-vfx/toggle/toggle.js",
+  "sakuga-vfx/slider/slider.js", "sakuga-vfx/checkbox/checkbox.js",
+  "sakuga-vfx/radio/radio.js", "sakuga-vfx/input/input.js",
+  "sakuga-vfx/tabs/tabs.js", "sakuga-vfx/progress/progress.js",
+  "sakuga-vfx/rating/rating.js", "sakuga-vfx/toast/toast.js",
+  "sakuga-vfx/tooltip/tooltip.js"
+];
+
 const errors = [];
 
 for (const file of required) {
@@ -27,9 +38,30 @@ for (const file of required) {
 }
 
 const read = (path) => readFile(join(root, path), "utf8");
+
+for (const file of upstreamRequired) {
+  try { await access(join(root, file)); }
+  catch { errors.push(`Missing Sakuga showcase file: ${file}`); }
+}
+
 const html = await read("index.html");
 const core = await read("core.js");
 const registry = JSON.parse(await read("registry.json"));
+
+
+for (const tag of [
+  "sakuga-button", "sakuga-toggle", "sakuga-slider", "sakuga-checkbox",
+  "sakuga-radio", "sakuga-input", "sakuga-tabs", "sakuga-progress",
+  "sakuga-rating", "sakuga-toast", "sakuga-tooltip"
+]) {
+  if (!html.includes(tag)) errors.push(`Sakuga homepage demo missing: ${tag}`);
+}
+if (!html.includes('src="sakuga-interactions.js"')) {
+  errors.push("Homepage does not load Sakuga host-page interaction wiring.");
+}
+if (!html.includes('src="sakuga-vfx/button/button.js"')) {
+  errors.push("Homepage does not load the original Sakuga component scripts.");
+}
 
 if (!html.includes("<main") || !html.includes("vfx-button")) {
   errors.push("Gallery markup is incomplete.");
