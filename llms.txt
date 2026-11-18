@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Fifty-two dependency-free Web Component types with fifty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Fifty-seven dependency-free Web Component types with fifty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -102,3 +102,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Transfer List: `components/transfer-list/` `<vfx-transfer-list>`, dual-list selection and bulk movement.
 - Split Pane: `components/split-pane/` `<vfx-split-pane>`, accessible pointer and keyboard resizing.
 - Lightbox Gallery: `components/lightbox-gallery/` `<vfx-lightbox-gallery>`, modal image browsing and keyboard navigation.
+
+
+## Productivity and creative controls
+- Password Field: `components/password-field/` `<vfx-password-field>`, reveal/hide, heuristic strength meter, and form association.
+- Date Range Picker: `components/date-range-picker/` `<vfx-date-range-picker>`, validated start/end dates and quick ranges.
+- Notification Center: `components/notification-center/` `<vfx-notification-center>`, unread inbox, read/dismiss actions, and filtering.
+- Rich Text Editor: `components/rich-text-editor/` `<vfx-rich-text-editor>`, inline formatting, lists, undo/redo, and sanitized HTML.
+- Gradient Picker: `components/gradient-picker/` `<vfx-gradient-picker>`, two-color CSS gradient editor and presets.

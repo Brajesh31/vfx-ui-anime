@@ -1052,6 +1052,106 @@
         }
       ],
       "docs": "Load /components/lightbox-gallery/index.js with a plain script tag. See components/lightbox-gallery/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "password-field",
+      "type": "registry:file",
+      "title": "VFX UI Anime Password Field",
+      "description": "A password field with show/hide control, rule hints, heuristic strength meter, and form support. One file, no dependencies, defines <vfx-password-field>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "password-field",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/password-field/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/password-field.js"
+        }
+      ],
+      "docs": "Load /components/password-field/index.js with a plain script tag. See components/password-field/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "date-range-picker",
+      "type": "registry:file",
+      "title": "VFX UI Anime Date Range Picker",
+      "description": "A constrained start/end date picker with quick presets, chronological validation, and form support. One file, no dependencies, defines <vfx-date-range-picker>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "date-range-picker",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/date-range-picker/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/date-range-picker.js"
+        }
+      ],
+      "docs": "Load /components/date-range-picker/index.js with a plain script tag. See components/date-range-picker/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "notification-center",
+      "type": "registry:file",
+      "title": "VFX UI Anime Notification Center",
+      "description": "A local notification inbox with unread filtering, mark-read, bulk mark-read, dismiss, and state events. One file, no dependencies, defines <vfx-notification-center>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "notification-center",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/notification-center/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/notification-center.js"
+        }
+      ],
+      "docs": "Load /components/notification-center/index.js with a plain script tag. See components/notification-center/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "rich-text-editor",
+      "type": "registry:file",
+      "title": "VFX UI Anime Rich Text Editor",
+      "description": "A lightweight rich text editor with inline formatting, lists, undo/redo, word count, and sanitized HTML value. One file, no dependencies, defines <vfx-rich-text-editor>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "rich-text-editor",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/rich-text-editor/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/rich-text-editor.js"
+        }
+      ],
+      "docs": "Load /components/rich-text-editor/index.js with a plain script tag. See components/rich-text-editor/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "gradient-picker",
+      "type": "registry:file",
+      "title": "VFX UI Anime Gradient Picker",
+      "description": "A two-color linear gradient editor with adjustable angle, live preview, presets, and form support. One file, no dependencies, defines <vfx-gradient-picker>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "gradient-picker",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/gradient-picker/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/gradient-picker.js"
+        }
+      ],
+      "docs": "Load /components/gradient-picker/index.js with a plain script tag. See components/gradient-picker/README.md for attributes, methods, events, keyboard behavior, and limits."
     }
   ]
 }

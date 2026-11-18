@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Forty-one additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Forty-six additional controls extend the same design and interaction language.
 
-**Current library: 52 component types and 53 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 57 component types and 58 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -67,6 +67,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Transfer List | `<vfx-transfer-list>` | [components/transfer-list](components/transfer-list/) |
 | Split Pane | `<vfx-split-pane>` | [components/split-pane](components/split-pane/) |
 | Lightbox Gallery | `<vfx-lightbox-gallery>` | [components/lightbox-gallery](components/lightbox-gallery/) |
+| Password Field | `<vfx-password-field>` | [components/password-field](components/password-field/) |
+| Date Range Picker | `<vfx-date-range-picker>` | [components/date-range-picker](components/date-range-picker/) |
+| Notification Center | `<vfx-notification-center>` | [components/notification-center](components/notification-center/) |
+| Rich Text Editor | `<vfx-rich-text-editor>` | [components/rich-text-editor](components/rich-text-editor/) |
+| Gradient Picker | `<vfx-gradient-picker>` | [components/gradient-picker](components/gradient-picker/) |
 
 Each component folder contains:
 
@@ -162,3 +167,12 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Transfer List**: dual-list selection with individual and bulk movement.
 - **Split Pane**: pointer and keyboard resizing for side-by-side or stacked layouts.
 - **Lightbox Gallery**: thumbnail grid, native modal viewer, captions, and keyboard image navigation.
+
+
+## Productivity and creative controls
+
+- **Password Field**: reveal/hide control, rule hints, and live heuristic strength indicator.
+- **Date Range Picker**: constrained start/end selection, quick presets, and form submission.
+- **Notification Center**: unread filters, read actions, bulk read, and dismiss behavior.
+- **Rich Text Editor**: inline formatting, lists, undo/redo, word count, and sanitized HTML value.
+- **Gradient Picker**: two-color gradient editing, angle adjustment, live CSS preview, and presets.

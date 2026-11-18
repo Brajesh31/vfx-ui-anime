@@ -102,6 +102,11 @@
 <script src="../components/transfer-list/index.js"></script>
 <script src="../components/split-pane/index.js"></script>
 <script src="../components/lightbox-gallery/index.js"></script>
+<script src="../components/password-field/index.js"></script>
+<script src="../components/date-range-picker/index.js"></script>
+<script src="../components/notification-center/index.js"></script>
+<script src="../components/rich-text-editor/index.js"></script>
+<script src="../components/gradient-picker/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -159,7 +164,12 @@ const ITEMS = [
   { id: 'time-picker', name: 'Time Picker', tag: 'vfx-time-picker', how: 'Choose a time, use quick presets, or nudge it by 15 minutes.', html: '<vfx-time-picker value="09:30" step="15" presets="08:00|09:00|12:00|13:30|17:00"></vfx-time-picker>' },
   { id: 'transfer-list', name: 'Transfer List', tag: 'vfx-transfer-list', how: 'Select items on either side and move them between lists.', html: '<vfx-transfer-list items="react::React|vue::Vue|svelte::Svelte|solid::Solid|angular::Angular|astro::Astro" value="vue,astro"></vfx-transfer-list>', wide: true },
   { id: 'split-pane', name: 'Split Pane', tag: 'vfx-split-pane', how: 'Drag the divider or focus it and use the arrow keys to resize.', html: '<vfx-split-pane value="42"><section slot="primary"><h3 style="margin:0 0 8px">Editor</h3><p style="margin:0;color:#8580b0">Write your content in the primary pane.</p></section><aside slot="secondary"><h3 style="margin:0 0 8px">Preview</h3><p style="margin:0;color:#8580b0">See a live preview in the secondary pane.</p></aside></vfx-split-pane>', wide: true },
-  { id: 'lightbox-gallery', name: 'Lightbox Gallery', tag: 'vfx-lightbox-gallery', how: 'Open a thumbnail, navigate the viewer, and close with Escape.', html: '<vfx-lightbox-gallery items="First light::|Soft focus::|Afterglow::|Final frame::"></vfx-lightbox-gallery>', wide: true }
+  { id: 'lightbox-gallery', name: 'Lightbox Gallery', tag: 'vfx-lightbox-gallery', how: 'Open a thumbnail, navigate the viewer, and close with Escape.', html: '<vfx-lightbox-gallery items="First light::|Soft focus::|Afterglow::|Final frame::"></vfx-lightbox-gallery>', wide: true },
+  { id: 'password-field', name: 'Password Field', tag: 'vfx-password-field', how: 'Enter a password, inspect the strength hints, and reveal or hide it.', html: '<vfx-password-field label="Account password" placeholder="Create a password" minlength="10"></vfx-password-field>' },
+  { id: 'date-range-picker', name: 'Date Range Picker', tag: 'vfx-date-range-picker', how: 'Choose start and end dates or use a quick range preset.', html: '<vfx-date-range-picker label="Booking period"></vfx-date-range-picker>' },
+  { id: 'notification-center', name: 'Notification Center', tag: 'vfx-notification-center', how: 'Filter unread updates, mark notifications read, or dismiss them.', html: '<vfx-notification-center items="welcome::Welcome aboard::Your workspace is ready.::unread|review::Review complete::Your latest build passed review.::read|mention::You were mentioned::A teammate mentioned you.::unread"></vfx-notification-center>', wide: true },
+  { id: 'rich-text-editor', name: 'Rich Text Editor', tag: 'vfx-rich-text-editor', how: 'Format text, create lists, undo changes, and inspect the word count.', html: '<vfx-rich-text-editor placeholder="Write a project description…"></vfx-rich-text-editor>', wide: true },
+  { id: 'gradient-picker', name: 'Gradient Picker', tag: 'vfx-gradient-picker', how: 'Adjust two colors and direction, or apply a preset gradient.', html: '<vfx-gradient-picker from="#ff5fa8" to="#8f8df7" angle="135"></vfx-gradient-picker>' }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -260,6 +270,11 @@ const WIRE = {
   'transfer-list': ['Use <vfx-transfer-list name="frameworks" items="react::React|vue::Vue|svelte::Svelte" value="vue"></vfx-transfer-list>.', 'Read or set value as an array of IDs. Use moveToSelected(all?) and moveToAvailable(all?). Listen for change with selected IDs and item objects.'],
   'split-pane': ['Use <vfx-split-pane value="42"><section slot="primary">Editor</section><aside slot="secondary">Preview</aside></vfx-split-pane>.', 'Set value as the primary pane percentage. orientation="vertical" places panes side by side; horizontal stacks them. Listen for input and change. The separator supports arrow keys and Home/End.'],
   'lightbox-gallery': ['Use <vfx-lightbox-gallery items="City::/images/city.jpg|Forest::/images/forest.jpg"></vfx-lightbox-gallery>. Entries are label::imageURL; omit URL for a stylized placeholder.', 'Use open(index), close(), next(), and previous(). Listen for open, change, and close. Escape and Left/Right Arrow work in the native modal viewer.'],
+  'password-field': ['Use <vfx-password-field name="password" label="Account password" minlength="10"></vfx-password-field>.', 'Read or set value and inspect strength (0–4). Listen for input and change. The strength meter is a heuristic only. Never send raw passwords to analytics.'],
+  'date-range-picker': ['Use <vfx-date-range-picker name="booking" label="Booking period"></vfx-date-range-picker>. Optional start, end, min, and max attributes initialize or constrain the range.', 'Read or set value as {start,end}, inspect valid, and call preset("7"), preset("30"), or preset("month"). Listen for change and invalid. Form data is start/end.'],
+  'notification-center': ['Use <vfx-notification-center items="welcome::Welcome::Your workspace is ready.::unread|review::Review complete::Build passed.::read"></vfx-notification-center>. Entries use id::title::message::readState::time.', 'Read items and unreadCount. Call markRead(id), markAllRead(), or dismiss(id). Listen for read, read-all, dismiss, and change. State is local until connected to a store.'],
+  'rich-text-editor': ['Use <vfx-rich-text-editor name="description" placeholder="Write something…"></vfx-rich-text-editor>.', 'Read or set value as sanitized HTML, read text as plain text, and call focus(). Listen for input with HTML, text, and word count. Validate output again on your server.'],
+  'gradient-picker': ['Use <vfx-gradient-picker name="background" from="#ff5fa8" to="#8f8df7" angle="135"></vfx-gradient-picker>.', 'Read or set from, to, angle, and CSS value. Listen for change. copy-request emits the CSS for the host app to copy if appropriate.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -322,6 +337,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-transfer-list') el.addEventListener('change', e => say(e.detail.value.length + ' selected'));
   else if (it.tag === 'vfx-split-pane') el.addEventListener('change', e => say('Primary pane: ' + Math.round(e.detail.value) + '%'));
   else if (it.tag === 'vfx-lightbox-gallery') el.addEventListener('change', e => say('Viewing: ' + e.detail.item.label));
+  else if (it.tag === 'vfx-password-field') el.addEventListener('input', e => say('Strength score: ' + e.detail.strength + '/4'));
+  else if (it.tag === 'vfx-date-range-picker') el.addEventListener('change', e => say(e.detail.start + ' → ' + e.detail.end));
+  else if (it.tag === 'vfx-notification-center') el.addEventListener('change', e => say(e.detail.unreadCount + ' unread'));
+  else if (it.tag === 'vfx-rich-text-editor') el.addEventListener('input', e => say(e.detail.words + ' words'));
+  else if (it.tag === 'vfx-gradient-picker') el.addEventListener('change', e => say(e.detail.angle + '° gradient'));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.
