@@ -92,6 +92,11 @@
 <script src="../components/timeline/index.js"></script>
 <script src="../components/radial-menu/index.js"></script>
 <script src="../components/image-cropper/index.js"></script>
+<script src="../components/kanban/index.js"></script>
+<script src="../components/data-grid/index.js"></script>
+<script src="../components/tree-view/index.js"></script>
+<script src="../components/signature-pad/index.js"></script>
+<script src="../components/before-after/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -139,7 +144,12 @@ const ITEMS = [
   { id: 'carousel', name: 'Carousel', tag: 'vfx-carousel', how: 'Swipe slides, use arrows, dots, or keyboard navigation.', html: '<vfx-carousel slides="Impact|Momentum|Afterglow|Final frame"></vfx-carousel>', wide: true },
   { id: 'timeline', name: 'Timeline', tag: 'vfx-timeline', how: 'Choose a milestone or move through the sequence with arrow keys.', html: '<vfx-timeline items="Discover::Map the problem::01 / PLAN|Build::Create the solution::02 / MAKE|Launch::Ship and learn::03 / SHIP"></vfx-timeline>', wide: true },
   { id: 'radial-menu', name: 'Radial Menu', tag: 'vfx-radial-menu', how: 'Open the action wheel and choose an item around its center.', html: '<vfx-radial-menu items="Create|Edit|Share|Preview|Export|Settings"></vfx-radial-menu>' },
-  { id: 'image-cropper', name: 'Image Cropper', tag: 'vfx-image-cropper', how: 'Load a local image, move or resize the crop frame, then export a PNG.', html: '<vfx-image-cropper></vfx-image-cropper>', wide: true }
+  { id: 'image-cropper', name: 'Image Cropper', tag: 'vfx-image-cropper', how: 'Load a local image, move or resize the crop frame, then export a PNG.', html: '<vfx-image-cropper></vfx-image-cropper>', wide: true },
+  { id: 'kanban', name: 'Kanban Board', tag: 'vfx-kanban', how: 'Move cards between workflow lanes by drag-and-drop or lane selectors.', html: '<vfx-kanban lanes="Backlog|In progress|Done" items="brief::Write the brief::0|prototype::Build a prototype::1|release::Ship v1::2"></vfx-kanban>', wide: true },
+  { id: 'data-grid', name: 'Data Grid', tag: 'vfx-data-grid', how: 'Filter, sort, select rows, and move between pages.', html: '<vfx-data-grid columns="name:Name|role:Role|status:Status" rows="1::Mika::Designer::Active|2::Ren::Engineer::Review|3::Yuki::Product::Active|4::Aki::Artist::Done|5::Haru::Developer::Active|6::Sora::Researcher::Review" page-size="4"></vfx-data-grid>', wide: true },
+  { id: 'tree-view', name: 'Tree View', tag: 'vfx-tree-view', how: 'Expand project folders and navigate the hierarchy with arrow keys.', html: '<vfx-tree-view items="root::Project::-|docs::Documents::root|brief::Brief.md::docs|src::Source::root|app::App.js::src|assets::Assets::root|logo::logo.svg::assets"></vfx-tree-view>' },
+  { id: 'signature-pad', name: 'Signature Pad', tag: 'vfx-signature-pad', how: 'Draw with mouse, finger, or stylus. Undo strokes or export a PNG.', html: '<vfx-signature-pad></vfx-signature-pad>', wide: true },
+  { id: 'before-after', name: 'Before and After', tag: 'vfx-before-after', how: 'Drag the split line or use arrow keys to compare both states.', html: '<vfx-before-after before-label="Original" after-label="Enhanced"></vfx-before-after>', wide: true }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -230,6 +240,11 @@ const WIRE = {
   timeline: ['Use <vfx-timeline items="Discover::Map the problem::01 / PLAN|Build::Create the solution::02 / MAKE"></vfx-timeline>. Each entry is title::description::date.', 'Read or set activeIndex, or call select(index). Listen for select with detail.index, title, desc, and date. Arrow Up/Down changes the active milestone.'],
   'radial-menu': ['Use <vfx-radial-menu items="Create|Edit|Share|Export"></vfx-radial-menu> for up to eight actions.', 'Call show() or hide(), or listen for select with detail.index and label. The menu emits intent only, wire that event to the actual action. Escape closes it.'],
   'image-cropper': ['Use <vfx-image-cropper></vfx-image-cropper> for a local image crop workflow. Choose or drop a File, then reposition or resize the crop window.', 'Listen for image-load, crop, and error. The crop event carries a PNG Blob, object URL, width, and height. exportCrop() returns a Promise<Blob>; the component does not upload images.'],
+  kanban: ['Use <vfx-kanban lanes="Backlog|In progress|Done" items="task-1::Write brief::0|task-2::Build prototype::1"></vfx-kanban>. Items use id::title::laneIndex.', 'Read cards or set cards with objects. Call move(id, laneIndex) or addCard(title, laneIndex, id). Listen for change and add. Touch users can change the lane with each card selector.'],
+  'data-grid': ['Use <vfx-data-grid columns="name:Name|role:Role" rows="1::Mika::Designer|2::Ren::Engineer" page-size="4"></vfx-data-grid>. Row data fields follow the column order after the id.', 'Set rows with an array of objects, read selectedRows, and set page or call goTo(page). Listen for filter, sort, selection, and page-change. Sorting and filtering run locally.'],
+  'tree-view': ['Use <vfx-tree-view items="root::Project::-|docs::Documents::root|brief::Brief.md::docs"></vfx-tree-view>. Each entry is id::label::parentId; use - for roots.', 'Listen for select and toggle. Use select(id), toggle(id), expandAll(), and collapseAll(). Arrow keys navigate the visible hierarchy.'],
+  'signature-pad': ['Use <vfx-signature-pad></vfx-signature-pad> for mouse, stylus, and touch drawing.', 'Read hasSignature, call undo() or clear(), and await exportPNG() for a PNG Blob. Listen for change, undo, clear, and export.'],
+  'before-after': ['Use <vfx-before-after before-src="/before.jpg" after-src="/after.jpg" before-label="Original" after-label="Enhanced"></vfx-before-after>. Without sources it uses stylized placeholders.', 'Read or set value from 0 to 100. Listen for input while moving and change when committed. Keyboard control is provided by a native range input.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -282,6 +297,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-timeline') el.addEventListener('select', e => say('Milestone: ' + e.detail.title));
   else if (it.tag === 'vfx-radial-menu') el.addEventListener('select', e => say('Action: ' + e.detail.label));
   else if (it.tag === 'vfx-image-cropper') { el.addEventListener('image-load', e => say('Loaded: ' + e.detail.name)); el.addEventListener('crop', e => say('PNG crop: ' + e.detail.width + ' × ' + e.detail.height)); }
+  else if (it.tag === 'vfx-kanban') el.addEventListener('change', e => say(e.detail.card.title + ' → ' + el._laneNames[e.detail.to]));
+  else if (it.tag === 'vfx-data-grid') { el.addEventListener('sort', e => say('Sorted by ' + e.detail.key)); el.addEventListener('selection', e => say(e.detail.ids.length + ' row(s) selected')); }
+  else if (it.tag === 'vfx-tree-view') el.addEventListener('select', e => say('Selected: ' + e.detail.label));
+  else if (it.tag === 'vfx-signature-pad') { el.addEventListener('change', e => say(e.detail.strokes + ' stroke(s)')); el.addEventListener('clear', () => say('Signature cleared')); }
+  else if (it.tag === 'vfx-before-after') el.addEventListener('input', e => say('Comparison: ' + e.detail.value + '%'));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

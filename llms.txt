@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Forty-two dependency-free Web Component types with forty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Forty-seven dependency-free Web Component types with forty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -86,3 +86,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Timeline: `components/timeline/` `<vfx-timeline>`, selectable milestone sequence.
 - Radial Menu: `components/radial-menu/` `<vfx-radial-menu>`, expanding action wheel.
 - Image Cropper: `components/image-cropper/` `<vfx-image-cropper>`, browser-local crop and PNG export.
+
+
+## Workflow and data components
+- Kanban Board: `components/kanban/` `<vfx-kanban>`, draggable tasks with accessible lane selectors.
+- Data Grid: `components/data-grid/` `<vfx-data-grid>`, local filter, sorting, selection, and paging.
+- Tree View: `components/tree-view/` `<vfx-tree-view>`, expandable hierarchy and keyboard navigation.
+- Signature Pad: `components/signature-pad/` `<vfx-signature-pad>`, touch/pen/mouse drawing and PNG export.
+- Before and After: `components/before-after/` `<vfx-before-after>`, native range-driven image comparison.

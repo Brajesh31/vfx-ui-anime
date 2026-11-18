@@ -852,6 +852,106 @@
         }
       ],
       "docs": "Load /components/image-cropper/index.js with a plain script tag. See components/image-cropper/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "kanban",
+      "type": "registry:file",
+      "title": "VFX UI Anime Kanban Board",
+      "description": "A three-lane task board with native drag-and-drop, accessible lane selectors, card movement methods, and change events. One file, no dependencies, defines <vfx-kanban>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "kanban",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/kanban/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/kanban.js"
+        }
+      ],
+      "docs": "Load /components/kanban/index.js with a plain script tag. See components/kanban/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "data-grid",
+      "type": "registry:file",
+      "title": "VFX UI Anime Data Grid",
+      "description": "A client-side data grid with text filtering, sortable columns, row selection, and pagination. One file, no dependencies, defines <vfx-data-grid>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "data-grid",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/data-grid/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/data-grid.js"
+        }
+      ],
+      "docs": "Load /components/data-grid/index.js with a plain script tag. See components/data-grid/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "tree-view",
+      "type": "registry:file",
+      "title": "VFX UI Anime Tree View",
+      "description": "An expandable hierarchical tree with selectable nodes, folder toggles, and arrow-key navigation. One file, no dependencies, defines <vfx-tree-view>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "tree-view",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/tree-view/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/tree-view.js"
+        }
+      ],
+      "docs": "Load /components/tree-view/index.js with a plain script tag. See components/tree-view/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "signature-pad",
+      "type": "registry:file",
+      "title": "VFX UI Anime Signature Pad",
+      "description": "A touch, pen, and mouse signature canvas with undo, clear, and PNG Blob export. One file, no dependencies, defines <vfx-signature-pad>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "signature-pad",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/signature-pad/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/signature-pad.js"
+        }
+      ],
+      "docs": "Load /components/signature-pad/index.js with a plain script tag. See components/signature-pad/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "before-after",
+      "type": "registry:file",
+      "title": "VFX UI Anime Before and After",
+      "description": "A before-and-after image comparison with a native range slider, custom labels, and optional image sources. One file, no dependencies, defines <vfx-before-after>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "before-after",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/before-after/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/before-after.js"
+        }
+      ],
+      "docs": "Load /components/before-after/index.js with a plain script tag. See components/before-after/README.md for attributes, methods, events, keyboard behavior, and limits."
     }
   ]
 }

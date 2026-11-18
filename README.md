@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Thirty-one additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Thirty-six additional controls extend the same design and interaction language.
 
-**Current library: 42 component types and 43 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 47 component types and 48 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -57,6 +57,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Timeline | `<vfx-timeline>` | [components/timeline](components/timeline/) |
 | Radial Menu | `<vfx-radial-menu>` | [components/radial-menu](components/radial-menu/) |
 | Image Cropper | `<vfx-image-cropper>` | [components/image-cropper](components/image-cropper/) |
+| Kanban Board | `<vfx-kanban>` | [components/kanban](components/kanban/) |
+| Data Grid | `<vfx-data-grid>` | [components/data-grid](components/data-grid/) |
+| Tree View | `<vfx-tree-view>` | [components/tree-view](components/tree-view/) |
+| Signature Pad | `<vfx-signature-pad>` | [components/signature-pad](components/signature-pad/) |
+| Before and After | `<vfx-before-after>` | [components/before-after](components/before-after/) |
 
 Each component folder contains:
 
@@ -134,3 +139,12 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Timeline**: selectable milestones with a chronological rail and active-step semantics.
 - **Radial Menu**: a compact action wheel with expanding controls and keyboard navigation.
 - **Image Cropper**: local image loading, zoom, quarter-turn rotation, a movable/resizable crop frame, and PNG export. Images remain in the browser.
+
+
+## Workflow and data components
+
+- **Kanban Board**: three-lane task board with drag-and-drop, lane selectors, and change events.
+- **Data Grid**: client-side filtering, sortable columns, row selection, and pagination.
+- **Tree View**: expandable hierarchy with selection and arrow-key navigation.
+- **Signature Pad**: pointer-based drawing with undo, clear, and PNG export.
+- **Before and After**: adjustable visual comparison slider with optional image sources.
