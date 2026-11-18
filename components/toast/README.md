@@ -6,13 +6,13 @@ A notification that streaks in from the left as a smear, with speed lines behind
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/toast/
+# open http://localhost:8000/components/toast/demo.html
 ```
 
 ## Use it
 
 ```html
-<script src="toast.js"></script>
+<script src="index.js"></script>
 <vfx-toast style="position: fixed; left: 24px; bottom: 24px"></vfx-toast>
 ```
 
