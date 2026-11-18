@@ -6,13 +6,13 @@ A help button whose hint springs out of it like a speech bubble, with puffs eith
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/tooltip/
+# open http://localhost:8000/components/tooltip/demo.html
 ```
 
 ## Use it
 
 ```html
-<script src="tooltip.js"></script>
+<script src="index.js"></script>
 <vfx-tooltip text="We only use this to send your receipt." label="Why we ask"></vfx-tooltip>
 <vfx-tooltip text="Keyboard shortcuts">i</vfx-tooltip>
 ```
