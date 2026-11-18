@@ -152,6 +152,20 @@ The repository includes a byte-for-byte snapshot of [finktheartist/sakuga-vfx](h
 
 Snapshot source revision: `c3dabb173928a3ad2372183103caf2e6f50953d0`.
 
+
+## ✨ Four additional Sakuga originals
+
+The homepage now includes four new custom elements built with the same Sakuga spring-and-canvas animation engine:
+
+| Component | Element | Interaction |
+|---|---|---|
+| Like | `<sakuga-like>` | Heart pop, impact burst, crystal shards and glint |
+| Accordion | `<sakuga-accordion>` | Disclosure state, springing chevron and opening impact |
+| Segmented | `<sakuga-segmented>` | Selectable options with spring presses and manga impact |
+| Notification | `<sakuga-notification>` | Ringing bell, impact sparks and unread-count clearing |
+
+Each component has its own file under `sakuga-vfx/<component>/`. They are included in `sakuga-vfx/tools/build.mjs` so the shared core can be kept in sync. The new examples are wired on the homepage through `sakuga-extra-interactions.js`.
+
 ## 📄 License
 
 MIT. See [LICENSE](LICENSE).
