@@ -17,7 +17,7 @@ python3 -m http.server 8000     # from the repo folder
 
 ## Use it
 
-`button.js` is the whole component: one file, no dependencies.
+`index.js` is the whole component: one file, no dependencies.
 
 ```html
 <script src="button.js"></script>
