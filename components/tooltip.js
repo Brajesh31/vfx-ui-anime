@@ -129,8 +129,8 @@
       this.updateText();
       this.addEventListener("pointerenter", this.handlePointerEnter);
       this.addEventListener("pointerleave", this.handlePointerLeave);
-      this.addEventListener("focusin", this.handleFocusIn);
-      this.addEventListener("focusout", this.handleFocusOut);
+      this.trigger.addEventListener("focus", this.handleFocusIn);
+      this.trigger.addEventListener("blur", this.handleFocusOut);
       this.addEventListener("keydown", this.handleKeyDown);
       window.addEventListener("resize", this.handleViewportChange, { passive: true });
       window.addEventListener("scroll", this.handleViewportChange, true);
@@ -147,8 +147,8 @@
     disconnectedCallback() {
       this.removeEventListener("pointerenter", this.handlePointerEnter);
       this.removeEventListener("pointerleave", this.handlePointerLeave);
-      this.removeEventListener("focusin", this.handleFocusIn);
-      this.removeEventListener("focusout", this.handleFocusOut);
+      this.trigger.removeEventListener("focus", this.handleFocusIn);
+      this.trigger.removeEventListener("blur", this.handleFocusOut);
       this.removeEventListener("keydown", this.handleKeyDown);
       window.removeEventListener("resize", this.handleViewportChange);
       window.removeEventListener("scroll", this.handleViewportChange, true);
