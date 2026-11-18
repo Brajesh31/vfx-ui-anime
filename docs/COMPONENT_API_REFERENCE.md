@@ -312,14 +312,35 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 
 **Tag:** `<vfx-tooltip>`
 
-**Attribute:** `text`, defaulting to "Helpful information". The default slot is the visible trigger content.
+**Attributes**
+- `text`: tooltip text. Defaults to "Helpful information" and updates live when the attribute changes.
+- `placement`: `auto` (default), `top`, or `bottom`. Explicit values request a fixed side; `auto` chooses the side with available room.
 
-**Behavior**
-- The trigger is a focusable span.
-- The hint becomes visible while the host is hovered or while focus is within the host.
-- The hint element has `role="tooltip"`.
+**Content and accessibility**
+- The default slot renders the trigger content.
+- The trigger is keyboard-focusable and is connected to the tooltip through an `aria-describedby` relationship.
+- The tooltip element has a unique ID and `role="tooltip"`.
+- The hint appears on hover and while focus is within the host.
+- Pressing `Escape` dismisses the visible hint. Moving the pointer away or focusing the trigger again allows it to appear again.
 
-**Limitations:** There are no public `show()` or `hide()` methods. The text attribute is read when the component is constructed/connected, not observed for live updates. Placement is fixed above the trigger and does not perform viewport collision detection. The current implementation does not connect the trigger to the hint with `aria-describedby`.
+**Viewport behavior**
+- In `auto` mode, the tooltip prefers above the trigger and flips below when the space above is insufficient and more space is available below.
+- The tooltip is horizontally clamped to an 8px viewport margin. Its arrow is shifted to keep pointing toward the trigger.
+- Position is recalculated on window resize, scroll, and observed size changes.
+- The tooltip wraps long content and limits its width to the smaller of 16rem or the available viewport width minus 2rem.
+- The tooltip transition is disabled when `prefers-reduced-motion: reduce` is active.
+
+```html
+<vfx-tooltip text="A longer helpful explanation" placement="auto">
+  Hover or focus for details
+</vfx-tooltip>
+
+<vfx-tooltip text="This hint is requested below the trigger" placement="bottom">
+  Bottom placement
+</vfx-tooltip>
+```
+
+**Limitations:** The component supplies the tooltip description but does not make an otherwise non-interactive trigger meaningful by itself. Use concise text and do not place interactive controls inside the tooltip. Automated source checks do not replace browser/assistive-technology verification of the `aria-describedby` relationship, Escape behavior, and edge placement.
 
 ## Shared motion engine: `window.VFXAnime`
 
