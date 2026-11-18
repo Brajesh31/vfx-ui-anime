@@ -20,7 +20,7 @@ This roadmap describes intended work, not completed features.
 - [x] Full tabs and tabpanel relationship within the component shadow tree, with named slots for host-authored content.
 
 ## 🔧 Next engineering priorities
-- [ ] Browser-based interaction tests in Chromium.
+- [x] Dependency-free headless Chromium interaction tests in GitHub Actions for tabs, radio groups and tooltips.
 - [ ] Firefox and Safari compatibility testing.
 - [ ] Complete form-associated custom element lifecycle and consistent validity behavior across target browsers.
 - [ ] Toast queue and dismissal controls.
