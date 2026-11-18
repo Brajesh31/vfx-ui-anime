@@ -203,7 +203,9 @@
 
     trigger.focus();
     assert(tooltip.matches(":focus-within"), "Tooltip trigger did not receive focus.");
-    assert(getComputedStyle(description).visibility === "visible", "Tooltip was not visible on focus.");
+    assert(tooltip.hasAttribute("data-active"), "Trigger focus did not set data-active.");
+    const focusVisibility = getComputedStyle(description).visibility;
+    assert(focusVisibility === "visible", "Tooltip was not visible on focus. visibility=" + focusVisibility + ", active=" + tooltip.hasAttribute("data-active") + ", display=" + getComputedStyle(description).display + ", opacity=" + getComputedStyle(description).opacity);
 
     const escape = fireKey(trigger, "Escape");
     assert(escape.defaultPrevented, "Escape was not consumed.");
