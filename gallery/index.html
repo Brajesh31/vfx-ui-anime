@@ -69,6 +69,14 @@
 <script src="../components/dialog/index.js"></script>
 <script src="../components/file-upload/index.js"></script>
 <script src="../components/color-picker/index.js"></script>
+<script src="../components/accordion/index.js"></script>
+<script src="../components/segmented/index.js"></script>
+<script src="../components/otp/index.js"></script>
+<script src="../components/tag-input/index.js"></script>
+<script src="../components/pagination/index.js"></script>
+<script src="../components/alert/index.js"></script>
+<script src="../components/drawer/index.js"></script>
+<script src="../components/skeleton/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -93,7 +101,15 @@ const ITEMS = [
   { id: 'menu', name: 'Menu', tag: 'vfx-menu', how: 'Open the actions menu and use keyboard navigation.', html: '<vfx-menu label="Project actions" items="Rename|Duplicate|Move to folder|Archive|Delete project"></vfx-menu>' },
   { id: 'dialog', name: 'Dialog', tag: 'vfx-dialog', how: 'Open the modal, then confirm, cancel, or press Escape.', html: '<vfx-dialog title="Publish changes" confirm-label="Publish"><span slot="trigger">Review changes</span><p>This will make your approved changes visible to everyone who can access the project.</p></vfx-dialog>' },
   { id: 'file-upload', name: 'File upload', tag: 'vfx-file-upload', how: 'Drop files into the area or activate it to browse.', html: '<vfx-file-upload label="Drop files here" multiple accept=".png,.jpg,.pdf" max-size="10"></vfx-file-upload>', wide: true },
-  { id: 'color-picker', name: 'Color picker', tag: 'vfx-color-picker', how: 'Choose a color and inspect the hexadecimal value.', html: '<vfx-color-picker label="Accent color" value="#ff5fa8"></vfx-color-picker>' }
+  { id: 'color-picker', name: 'Color picker', tag: 'vfx-color-picker', how: 'Choose a color and inspect the hexadecimal value.', html: '<vfx-color-picker label="Accent color" value="#ff5fa8"></vfx-color-picker>' },
+  { id: 'accordion', name: 'Accordion', tag: 'vfx-accordion', how: 'Try the control and inspect its interaction.', html: '<vfx-accordion><details open><summary>What is VFX UI Anime?</summary><p>Anime-inspired interface components.</p></details><details><summary>Is it dependency-free?</summary><p>Yes, standalone web components.</p></details></vfx-accordion>' },
+  { id: 'segmented', name: 'Segmented', tag: 'vfx-segmented', how: 'Try the control and inspect its interaction.', html: '<vfx-segmented label="View" options="Overview|Activity|Settings" value="Overview"></vfx-segmented>' },
+  { id: 'otp', name: 'Otp', tag: 'vfx-otp', how: 'Try the control and inspect its interaction.', html: '<vfx-otp label="Verification code" length="6"></vfx-otp>' },
+  { id: 'tag-input', name: 'Tag Input', tag: 'vfx-tag-input', how: 'Try the control and inspect its interaction.', html: '<vfx-tag-input label="Technologies" value="React,TypeScript"></vfx-tag-input>' },
+  { id: 'pagination', name: 'Pagination', tag: 'vfx-pagination', how: 'Try the control and inspect its interaction.', html: '<vfx-pagination page="2" pages="7"></vfx-pagination>' },
+  { id: 'alert', name: 'Alert', tag: 'vfx-alert', how: 'Try the control and inspect its interaction.', html: '<vfx-alert tone="success" dismissible>Changes saved successfully.</vfx-alert>' },
+  { id: 'drawer', name: 'Drawer', tag: 'vfx-drawer', how: 'Try the control and inspect its interaction.', html: '<vfx-drawer title="Quick settings"><span slot="trigger">Open settings</span><p>Adjust your workspace preferences here.</p></vfx-drawer>' },
+  { id: 'skeleton', name: 'Skeleton', tag: 'vfx-skeleton', how: 'Try the control and inspect its interaction.', html: '<vfx-skeleton variant="card"></vfx-skeleton>' }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -161,6 +177,14 @@ const WIRE = {
     'Read el.files for the currently selected File objects. Listen for change; event.detail.files contains the updated list.',
     'The dropzone supports pointer, drag-and-drop and keyboard activation. With a name attribute selected files are added to form data.'
   ],
+  'accordion': ["Use <vfx-accordion> with native details and summary children.","Listen for change when a section opens or closes. Add single to allow only one open section."],
+  'segmented': ["Use <vfx-segmented label=\"View\" options=\"Overview|Activity|Settings\" value=\"Overview\"></vfx-segmented>.","Read value and listen for change."],
+  'otp': ["Use <vfx-otp label=\"Verification code\" length=\"6\"></vfx-otp>.","Read value. Listen for input while entering and complete when all digits are filled. Paste is supported."],
+  'tag-input': ["Use <vfx-tag-input label=\"Technologies\" value=\"React,TypeScript\"></vfx-tag-input>.","Press Enter to add a tag. Listen for change and read value."],
+  'pagination': ["Use <vfx-pagination page=\"1\" pages=\"7\"></vfx-pagination>.","Listen for change. Its detail contains page and pages."],
+  'alert': ["Use <vfx-alert tone=\"success\" dismissible>Saved.</vfx-alert>.","Use tone=\"error\" for an alert role. Listen for dismiss."],
+  'drawer': ["Use <vfx-drawer title=\"Settings\"><span slot=\"trigger\">Open</span>Panel content</vfx-drawer>.","Listen for open and close. It uses a native dialog."],
+  'skeleton': ["Use <vfx-skeleton variant=\"card\"></vfx-skeleton>.","Variants include text, avatar and card. Replace the placeholder with real content after loading."],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',

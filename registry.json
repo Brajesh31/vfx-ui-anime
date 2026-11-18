@@ -392,6 +392,166 @@
         }
       ],
       "docs": "VFX UI Anime Color Picker is a standalone custom element. Load /components/color-picker/index.js with a plain script tag (not a module). See components/color-picker/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "accordion",
+      "type": "registry:file",
+      "title": "VFX UI Anime accordion",
+      "description": "Standalone accordion control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "accordion",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/accordion/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/accordion.js"
+        }
+      ],
+      "docs": "Load /components/accordion/index.js with a plain script tag. See components/accordion/README.md."
+    },
+    {
+      "name": "segmented",
+      "type": "registry:file",
+      "title": "VFX UI Anime segmented",
+      "description": "Standalone segmented control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "segmented",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/segmented/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/segmented.js"
+        }
+      ],
+      "docs": "Load /components/segmented/index.js with a plain script tag. See components/segmented/README.md."
+    },
+    {
+      "name": "otp",
+      "type": "registry:file",
+      "title": "VFX UI Anime otp",
+      "description": "Standalone otp control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "otp",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/otp/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/otp.js"
+        }
+      ],
+      "docs": "Load /components/otp/index.js with a plain script tag. See components/otp/README.md."
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:file",
+      "title": "VFX UI Anime tag-input",
+      "description": "Standalone tag-input control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "tag-input",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/tag-input/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/tag-input.js"
+        }
+      ],
+      "docs": "Load /components/tag-input/index.js with a plain script tag. See components/tag-input/README.md."
+    },
+    {
+      "name": "pagination",
+      "type": "registry:file",
+      "title": "VFX UI Anime pagination",
+      "description": "Standalone pagination control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "pagination",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/pagination/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/pagination.js"
+        }
+      ],
+      "docs": "Load /components/pagination/index.js with a plain script tag. See components/pagination/README.md."
+    },
+    {
+      "name": "alert",
+      "type": "registry:file",
+      "title": "VFX UI Anime alert",
+      "description": "Standalone alert control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "alert",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/alert/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/alert.js"
+        }
+      ],
+      "docs": "Load /components/alert/index.js with a plain script tag. See components/alert/README.md."
+    },
+    {
+      "name": "drawer",
+      "type": "registry:file",
+      "title": "VFX UI Anime drawer",
+      "description": "Standalone drawer control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "drawer",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/drawer/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/drawer.js"
+        }
+      ],
+      "docs": "Load /components/drawer/index.js with a plain script tag. See components/drawer/README.md."
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:file",
+      "title": "VFX UI Anime skeleton",
+      "description": "Standalone skeleton control in the VFX UI Anime style.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "skeleton",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/skeleton/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/skeleton.js"
+        }
+      ],
+      "docs": "Load /components/skeleton/index.js with a plain script tag. See components/skeleton/README.md."
     }
   ]
 }
