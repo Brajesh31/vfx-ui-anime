@@ -70,6 +70,23 @@ for (const hook of [
   if (!radio.includes(hook)) errors.push(`Radio accessibility/form hook missing: ${hook}`);
 }
 
+const tooltip = await read("components/tooltip.js");
+for (const hook of [
+  '["text", "placement"]',
+  'setAttribute("aria-describedby", this.tip.id)',
+  'role="tooltip"',
+  'this.matches(":hover")',
+  'event.key !== "Escape"',
+  'window.addEventListener("resize"',
+  'window.addEventListener("scroll"',
+  'setAttribute("data-placement", placement)',
+  'this.tip.style.setProperty("--vfx-tooltip-arrow-left"',
+  'prefers-reduced-motion: reduce',
+  '<slot></slot>'
+]) {
+  if (!tooltip.includes(hook)) errors.push(`Tooltip accessibility/positioning hook missing: ${hook}`);
+}
+
 const api = await read("docs/COMPONENT_API_REFERENCE.md");
 if (!api.includes("orientation=\"vertical\"") || !api.includes("Up/Down Arrow keys")) {
   errors.push("Component API reference does not document vertical tabs keyboard navigation.");
@@ -77,11 +94,14 @@ if (!api.includes("orientation=\"vertical\"") || !api.includes("Up/Down Arrow ke
 if (!api.includes("form reset") || !api.includes("required validity")) {
   errors.push("Component API reference does not document radio form behavior.");
 }
+if (!api.includes("aria-describedby") || !api.includes("horizontal") && !api.includes("horizontally clamped")) {
+  errors.push("Component API reference does not document tooltip accessibility and viewport behavior.");
+}
 
 if (errors.length) {
   console.error("Validation failed:\n- " + errors.join("\n- "));
   process.exit(1);
 }
 
-console.log(`Validation passed: ${required.length} required paths, 11 registrations, gallery script loading, reduced-motion support and tabs/radio regression hooks.`);
+console.log(`Validation passed: ${required.length} required paths, 11 registrations, gallery script loading, reduced-motion support, and tabs/radio/tooltip regression hooks.`);
 console.log("Static validation only. Run manual/browser QA before claiming runtime or accessibility certification.");
