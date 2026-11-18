@@ -82,8 +82,8 @@
             border-bottom-color: var(--vfx-ink, #211b43);
           }
 
-          :host(:hover:not([data-dismissed])) .tip,
-          :host(:focus-within:not([data-dismissed])) .tip {
+          :host(:hover) .tip,
+          :host(:focus-within) .tip {
             opacity: 1;
             visibility: visible;
             transform: translate(-50%, 0);
