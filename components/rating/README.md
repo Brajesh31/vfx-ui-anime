@@ -1,24 +1,36 @@
-# Rating component
+# Rating
 
-A five-step rating control with interactive stars.
+Five stars that pop in one after another. The last one lit gets a fan of wedges, a glint and a hollow ポン; five stars gets a burst behind it as well.
 
-## Live demo
-Open [demo.html](demo.html) to test the component in the library's design system.
+## Run it
 
-## Installation
-```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
-<script defer src="/components/rating/index.js"></script>
-<vfx-rating value="3"></vfx-rating>
+```sh
+python3 -m http.server 8000     # from the repo folder
+# open http://localhost:8000/rating/
 ```
 
-## Component details
-- **Element:** `<vfx-rating>`
-- **Category:** Feedback
-- **Runtime dependencies:** None
+## Use it
 
-## Accessibility
-Keep labels descriptive, preserve keyboard access, and test focus, form behavior, and screen-reader output in the browsers you support. The shared motion engine respects `prefers-reduced-motion`.
+```html
+<script src="rating.js"></script>
+<vfx-rating label="Rate this recipe" name="stars"></vfx-rating>
+```
 
-See the [component API overview](../../docs/COMPONENTS.md) for the public inventory and links to detailed guidance.
+```js
+el.addEventListener('change', () => console.log(el.value));   // 0 to 5
+el.value = 3;   // from code: no effects
+```
+
+| attribute | what it sets | default |
+|---|---|---|
+| `label` | what a screen reader calls the group | Rating |
+| `value` | 0 to 5 | 0 |
+| `name` | sent with its form (nothing when 0) | none |
+| `disabled` | can't be changed | off |
+
+- **Clicking the lit star again clears it** to 0.
+- **It is a radio group of five buttons,** and the arrow keys move the score.
+
+## Limits
+
+- Always five stars. No half stars.
