@@ -107,7 +107,7 @@ Custom elements provide interaction primitives. They do not replace your applica
 ### Tabs to host content
 
 ```html
-<vfx-tabs id="sections" items="Overview,Features,Details"></vfx-tabs>
+<vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details" orientation="horizontal"></vfx-tabs>
 <section id="tab-content" aria-live="polite">Overview content</section>
 <script>
   const tabs = document.querySelector("#sections");
@@ -124,7 +124,7 @@ Custom elements provide interaction primitives. They do not replace your applica
 </script>
 ```
 
-This example connects selected values to content, but it does not complete the WAI-ARIA tabs pattern. The current `vfx-tabs` component does not create tabpanels or implement roving keyboard navigation. A production application must supply accessible tab/panel relationships and keyboard behavior or use a fully accessible tabs implementation.
+The selector now implements roving focus and automatic activation: use Left/Right Arrow keys for horizontal tabs, Up/Down Arrow keys for vertical tabs, and Home/End for the first/last tab. This example still does not complete the WAI-ARIA tabs pattern because the component does not create tabpanels or link buttons to panel elements. A production application must supply accessible tab/panel relationships and panel visibility.
 
 ### Toast from application code
 
@@ -247,9 +247,9 @@ Respect reduced motion in host-authored animations too. The core suppresses canv
 The current source is not a drop-in replacement for every native form control:
 - Form-associated elements use `ElementInternals` opportunistically. Browser behavior must be tested, including submit, reset, disabled fieldsets and validity.
 - The checkbox wrapper does not expose a `name` API in the current implementation.
-- The radio wrapper uses a fixed internal input name and does not implement full arrow-key navigation.
+- The radio wrapper uses native radio inputs and the browser's radio keyboard behavior. Test independent groups, configured names, form submission, required validity, reset and disabled fieldsets in target browsers.
 - The input wrapper does not proxy the complete native constraint-validation API.
-- Tabs do not implement linked tabpanels or the complete keyboard pattern.
+- Tabs implement keyboard navigation and roving focus, but do not create linked tabpanels or manage panel visibility.
 - Tooltip placement does not collision-check viewport edges and the trigger is not connected to the tooltip with `aria-describedby`.
 - Rating uses separate native buttons and does not implement arrow-key rating navigation.
 
