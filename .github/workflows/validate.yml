@@ -27,3 +27,6 @@ jobs:
         run: |
           npm test
           npm run check
+
+      - name: Run headless Chromium interaction tests
+        run: npm run test:browser
