@@ -101,7 +101,7 @@ npm run check
 python3 -m http.server 8000
 ```
 
-The checks validate required files, component registrations and key accessibility hooks. Run `npm run test:browser` for headless Chromium interaction tests covering tabs, radio groups and tooltips. The browser suite adds no project dependency and does not replace cross-browser or screen-reader QA.
+The checks validate required files, component registrations and key accessibility hooks. Run `npm run test:browser` for Chromium interaction tests. `npm run test:cross-browser` runs the same suite in Firefox and WebKit after installing the optional temporary Playwright test tooling. WebKit is not a substitute for real Safari or screen-reader QA. No test package is saved as a project dependency.
 
 ## 📚 Documentation
 
