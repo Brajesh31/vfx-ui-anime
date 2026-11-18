@@ -145,7 +145,7 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 
 **Attributes:** `options`, `value`, `name`, `disabled`, `required`, `label`.
 - `options` is a comma-separated string. The default is `Option A,Option B`.
-- `value` selects a matching option. When no valid value is provided, the first option is selected.
+- `value` selects a matching option. When no valid value is provided, the first option is selected unless `required` is present, in which case the group starts unselected so required validity can be checked.
 - `name` is applied to the internal native radio inputs and is also the custom element's form field name.
 - When `name` is omitted, an instance-specific internal group name is generated so each component remains its own radio group.
 - `disabled` disables the internal inputs. Disabled fieldsets are handled through the form-associated disabled callback.
