@@ -8,13 +8,13 @@ The 43 frames were painted with GPT Image (through Higgsfield) from a sheet of t
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/toggle/
+# open http://localhost:8000/components/toggle/demo.html
 ```
 
 ## Use it
 
 ```html
-<script src="toggle.js"></script>
+<script src="index.js"></script>
 <vfx-toggle label="Notifications"></vfx-toggle>
 <vfx-toggle label="Dark mode" checked name="dark"></vfx-toggle>
 ```
@@ -38,7 +38,7 @@ el.flip();            // from code, with the animation
 
 ## The frames
 
-`toggle/frames.webp` is the sheet (8 across, 300 by 325 pixels each, 346 KB). `node tools/build.mjs` writes it into `index.js`. The originals were 480 by 520; they were halved here, which is still twice the size they are shown at.
+The 43 painted animation frames are embedded in this component's `index.js` file. No external sprite sheet or asset request is needed.
 
 ## Limits
 
