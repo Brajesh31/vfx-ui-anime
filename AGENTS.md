@@ -20,7 +20,7 @@ VFX UI Anime is an independent, dependency-free Web Components library. It is no
 7. Do not copy proprietary artwork, logos or source files from reference projects.
 8. Keep all generated effects decorative and hidden from assistive technology.
 9. Be explicit about incomplete form behavior and accessibility limitations.
-10. Run `npm test`, `npm run check` and `npm run test:browser`. Manually test the affected interaction where a browser session is available before reporting completion.
+10. Run `npm test`, `npm run check` and `npm run test:browser`. When cross-browser behavior changes, also run `npm run test:cross-browser` after installing optional Playwright tooling without saving dependencies. Manually test Safari and assistive technology where Apple/browser sessions are available.
 
 ## Change completion report
 State files changed, public API changes, checks actually run, checks not run and remaining limitations.
