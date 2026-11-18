@@ -1,26 +1,41 @@
-# Radio component
+# Radio
 
-A named radio group with required and disabled states.
+A radio group. The picked dot springs in, a fan of wedges goes off it, two puffs drift away, and a hollow ポン pops up beside it.
 
-## Live demo
-Open [demo.html](demo.html) to test the component in the library's design system.
+## Run it
 
-## Installation
-Copy `index.js` and load the shared engine first:
-
-```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
-<script defer src="/components/radio/index.js"></script>
-<vfx-radio label="Plan" name="plan" options="Free,Pro,Studio" value="Pro"></vfx-radio>
+```sh
+python3 -m http.server 8000     # from the repo folder
+# open http://localhost:8000/radio/
 ```
 
-## Component details
-- **Element:** `<vfx-radio>`
-- **Category:** Forms
-- **Runtime dependencies:** None
+## Use it
 
-## Accessibility
-Keep labels descriptive, preserve keyboard access, and test focus, form behavior, and screen-reader output in the browsers you support. The shared motion engine respects `prefers-reduced-motion`.
+List the choices as `<option>`s inside it:
 
-See the [component API overview](../../docs/COMPONENTS.md) for the public inventory and links to detailed guidance.
+```html
+<script src="radio.js"></script>
+<vfx-radio label="Plan" name="plan">
+  <option value="free" selected>Free</option>
+  <option value="pro">Pro</option>
+</vfx-radio>
+```
+
+```js
+el.addEventListener('change', () => console.log(el.value));
+el.value = 'pro';     // from code: no effects
+```
+
+| attribute | what it sets | default |
+|---|---|---|
+| `label` | what a screen reader calls the group | Options |
+| `value` | which one is picked (overrides `selected` on the options) | the `selected` option |
+| `name` | sent with its form | none |
+| `disabled` | can't be changed | off |
+
+- **The options are read once,** when it first appears. Changing them afterwards does nothing; replace the element instead.
+- **Underneath are real radio inputs,** so the arrow keys move between them.
+
+## Limits
+
+- One column only.
