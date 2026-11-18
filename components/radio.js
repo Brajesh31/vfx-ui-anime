@@ -144,7 +144,7 @@
     formResetCallback() {
       if (this.defaultValue) this.setAttribute("value", this.defaultValue);
       else this.removeAttribute("value");
-      this.render();
+      this.sync();
     }
 
     formStateRestoreCallback(state) {
