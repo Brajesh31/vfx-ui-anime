@@ -220,13 +220,22 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 - `orientation="horizontal"` (default) uses Left/Right Arrow keys. `orientation="vertical"` uses Up/Down Arrow keys.
 - `label` sets the accessible name of the tablist.
 
+**Panel content**
+- Add one child element for each tab panel. Set its `slot` attribute to exactly match the corresponding tab label.
+- The component creates the panel wrapper and its ARIA relationship. The child content remains normal light-DOM HTML.
+- More than one child may use the same slot name. They are rendered together in that tabpanel.
+- A tab without a matching slotted child still has a linked, but empty, tabpanel. Provide a matching panel for every item.
+
 **Property**
 - `value`: string getter/setter. The getter returns the selected value, falling back to the first item; the setter selects a matching item.
 - `orientation`: read-only string getter that returns `horizontal` or `vertical`.
 
-**Keyboard and event behavior**
+**ARIA, keyboard and event behavior**
+- The component renders a named `tablist`, tabs with `role="tab"`, and panels with `role="tabpanel"`.
+- Each tab's `aria-controls` points to its panel. Each panel's `aria-labelledby` points back to its tab. Both ends are generated in the same shadow tree.
+- Inactive panels are hidden. The selected panel is exposed and has `tabindex="0"` so keyboard users can move from the tablist into its content.
 - Exactly one tab is in the tab order. Other tabs use `tabindex="-1"`.
-- Arrow keys move focus and selection, wrapping at either end.
+- Arrow keys move focus and selection, wrapping at either end. Horizontal tabs use Left/Right; vertical tabs use Up/Down.
 - `Home` selects/focuses the first tab. `End` selects/focuses the last tab.
 - Selection follows focus (automatic activation).
 - User selection emits `change` with `event.detail.value`. Programmatic `value` changes do not emit the event.
@@ -237,7 +246,20 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
   label="Content sections"
   items="Overview,Features,Details"
   orientation="horizontal"
-></vfx-tabs>
+>
+  <section slot="Overview">
+    <h2>Overview</h2>
+    <p>Introductory content.</p>
+  </section>
+  <section slot="Features">
+    <h2>Features</h2>
+    <p>Feature content.</p>
+  </section>
+  <section slot="Details">
+    <h2>Details</h2>
+    <p>Additional details.</p>
+  </section>
+</vfx-tabs>
 <script>
   document.querySelector("#sections").addEventListener("change", (event) => {
     console.log("Selected tab:", event.detail.value);
@@ -245,7 +267,7 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 </script>
 ```
 
-**Limitations:** The component renders the tab selector only. It does not create linked tabpanels, control host panel visibility, or add `aria-controls`/panel relationships. The host application must connect the selected value to accessible panel content. Browser and assistive-technology testing is still required.
+**Limitations:** The component manages tab and tabpanel semantics, ID relationships and selected-panel visibility. The host application remains responsible for supplying meaningful panel content through matching named slots. Browser and assistive-technology testing is still required.
 
 ## 8. Progress
 
