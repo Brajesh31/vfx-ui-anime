@@ -16,7 +16,7 @@ This roadmap describes intended work, not completed features.
 - [x] Radio group accessible labels, configured names, required/disabled properties and form lifecycle callbacks.
 - [x] Static regression checks and JavaScript syntax parsing for runtime scripts.
 - [x] Tooltip trigger-to-description relationship, dynamic text updates and Escape dismissal.
-- [x] Tooltip automatic top/bottom placement, horizontal viewport clamping and resize/scroll recalculation.
+- [x] Tooltip automatic top/bottom placement, horizontal viewport clamping and resize/scroll recalculation.\n- [x] Full tabs and tabpanel relationship within the component shadow tree, with named slots for host-authored content.
 
 ## 🔧 Next engineering priorities
 - [ ] Browser-based interaction tests in Chromium.
