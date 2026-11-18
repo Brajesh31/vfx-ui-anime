@@ -19,7 +19,7 @@
     .demo p { color: #77718e; line-height: 1.5; }
     .stage { display: flex; min-height: 58px; align-items: center; gap: .85rem; flex-wrap: wrap; padding-top: .6rem; }
     .stage vfx-slider, .stage vfx-progress, .stage vfx-tabs { width: 100%; max-width: 100%; }
-    .status-panel { min-height: 3.5rem; padding: .9rem 1rem; background: #f3f0ff; border: 1px solid #e6e2f5; border-radius: 12px; }
+    .tab-content { padding: .9rem 1rem; background: #f3f0ff; border: 1px solid #e6e2f5; border-radius: 12px; line-height: 1.55; }
     .event-log { max-height: 12rem; overflow: auto; padding-left: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
     .note { margin-top: 2rem; padding: 1rem 1.1rem; border-left: 4px solid var(--vfx-violet, #6557d9); background: #f3f0ff; border-radius: 8px; }
     code { overflow-wrap: anywhere; }
@@ -86,11 +86,10 @@
 
       <section class="demo">
         <h2>🗂️ Tabs and host state</h2>
-        <p>Use Left/Right Arrow keys, Home and End. Vertical tabs also support Up/Down Arrow keys. The host application supplies the associated content.</p>
-        <div class="stage"><vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details" orientation="horizontal"></vfx-tabs></div>
+        <p>Use Left/Right Arrow keys, Home and End. Vertical tabs also support Up/Down Arrow keys. Add one child panel per item with a <code>slot</code> name that exactly matches its tab label.</p>
+        <div class="stage"><vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details" orientation="horizontal"><div class="tab-content" slot="Overview"><strong>Overview</strong><p>The component links this panel to its tab and hides it when another tab is selected.</p></div><div class="tab-content" slot="Features"><strong>Features</strong><p>Panel content remains ordinary HTML authored by the host application.</p></div><div class="tab-content" slot="Details"><strong>Details</strong><p>Tab and panel IDs, relationships and visibility are managed by the component.</p></div></vfx-tabs></div>
         <p>Vertical variation:</p>
-        <div class="stage"><vfx-tabs id="vertical-sections" label="Vertical sections" items="First,Second,Third" orientation="vertical"></vfx-tabs></div>
-        <p id="tab-panel" class="status-panel" aria-live="polite">Overview content is controlled by this host page.</p>
+        <div class="stage"><vfx-tabs id="vertical-sections" label="Vertical sections" items="First,Second,Third" orientation="vertical"><div class="tab-content" slot="First">First panel content.</div><div class="tab-content" slot="Second">Second panel content.</div><div class="tab-content" slot="Third">Third panel content.</div></vfx-tabs></div>
       </section>
 
       <section class="demo">
@@ -125,7 +124,7 @@
     </div>
 
     <aside class="note">
-      <strong>Implementation note:</strong> This page demonstrates component events and host-side UI updates. It is not a certification of full form-associated custom element behavior, linked tabpanel accessibility, screen-reader support or cross-browser compatibility. Review the <a href="../docs/COMPONENT_API_REFERENCE.md">detailed API reference</a> and <a href="../docs/ACCESSIBILITY.md">accessibility limitations</a> before production use.
+      <strong>Implementation note:</strong> This page demonstrates component events, linked tabpanels and host-side UI updates. It is not a certification of full form-associated custom element behavior, screen-reader support or cross-browser compatibility. Review the <a href="../docs/COMPONENT_API_REFERENCE.md">detailed API reference</a> and <a href="../docs/ACCESSIBILITY.md">accessibility limitations</a> before production use.
     </aside>
   </main>
 
@@ -160,8 +159,8 @@
             const selected = event.detail?.value || control.value;
             const descriptions = {
               Overview: "Overview content is controlled by this host page.",
-              Features: "The host page can render any content for the selected feature.",
-              Details: "Keep the tab panel and its accessibility relationships in the host application."
+              Features: "Feature panel content is authored as a named slot in the host page.",
+              Details: "The component manages the linked tabpanel relationship."
             };
             document.querySelector("#tab-panel").textContent = descriptions[selected] || selected;
             addLog("Tabs: selected = " + selected);
