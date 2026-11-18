@@ -88,10 +88,13 @@ The checks validate required files, component registrations and key accessibilit
 - [Testing strategy](docs/TESTING.md)
 - [Accessibility notes](docs/ACCESSIBILITY.md)
 - [Deployment](docs/DEPLOYMENT.md)
+- [Framework integrations](docs/INTEGRATIONS.md)
+- [Release checklist](docs/RELEASE.md)
 - [Roadmap](ROADMAP.md)
 - [Changelog](CHANGELOG.md)
 - [AI agent guide](llms.txt)
 - [Agent skill](skills/vfx-ui-anime/SKILL.md)
+- [Agent instructions](AGENTS.md)
 
 ## 🗺️ Project status
 
