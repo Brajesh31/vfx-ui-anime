@@ -11,6 +11,7 @@ All notable project changes are documented here.
 - Radio group labels, configured names, disabled/required properties, form value synchronization, reset/disabled/state-restore callbacks, and native radio keyboard behavior.
 - Accessible, viewport-aware tooltips with `aria-describedby`, dynamic text, Escape dismissal, auto top/bottom placement and horizontal clamping.
 - Static regression assertions for tab, radio and tooltip implementation hooks, plus runtime JavaScript syntax parsing.
+- Dependency-free Chromium browser interaction suite covering tabs, radio group form behavior and tooltip focus/dismissal states.
 
 ### Changed
 - Updated the gallery, component API reference, integration cookbook, accessibility guide and QA checklist for the new controls.
