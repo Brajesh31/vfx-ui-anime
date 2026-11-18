@@ -100,7 +100,7 @@
             }
           }
         </style>
-        <span class="trigger" tabindex="0"></span>
+        <span class="trigger" tabindex="0"><slot></slot></span>
         <span class="tip" role="tooltip"></span>
       `;
 
