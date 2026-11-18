@@ -110,7 +110,6 @@ const WIRE = {
   tooltip: ['Use <vfx-tooltip text="..." label="..."></vfx-tooltip> next to the thing it explains. text is the hint; label is what a screen reader calls the button ("Help" by default).',
     'It opens on hover, focus and tap, and Escape closes it. Whatever is inside the element replaces the "?" on the button.'],
 };
-const SKILL = { url: new URL('../skills/vfx-ui-anime/SKILL.md', location.href).href, install: `npx skills add ${REPO}` };
 const fileUrl = (id) => new URL(`../components/${id}/index.js`, location.href).href;
 const prompt = (it) => [
   `Add the VFX UI Anime ${it.name.toLowerCase()} to my app. It is a single JavaScript file with no dependencies that defines a <${it.tag}> element.`,
@@ -120,9 +119,7 @@ const prompt = (it) => [
   `${WIRE[it.id].length + 3}. Its effects are drawn on one fixed canvas over the page, so they can fly outside the control. They switch off for prefers-reduced-motion. Its colours are --vfx-* CSS variables.`,
   `When you are done, show me where you put it and what listens to it. If something about it needs to look different, tell me instead of editing the effects.`,
   ``,
-  `These components were made with my vfx-ui-anime skill: ${SKILL.url}`,
-  ``,
-  `Preserve the original effects and behavior. Do not redraw or simplify the component.`,
+  `Use the README in components/${it.id}/ as the API reference. Keep the original interaction behavior, timing, and artwork. Do not redraw or simplify the component.`,
 ].join('\n');
 
 const grid = document.getElementById('grid');

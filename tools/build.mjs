@@ -1,5 +1,5 @@
 // Stamp core.js into every component file, and the toggle's frames into toggle.js, so each file works on its own.
-//   node tools/build.mjs          (run it after editing core.js or toggle/frames.webp)
+//   node tools/build.mjs          (run it after editing core.js or components/toggle/frames.webp)
 //   node tools/build.mjs --check  (exits 1 if any file is out of date, and changes nothing)
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -20,7 +20,7 @@ for (const n of NAMES) {
   const file = join(root, 'components', n, 'index.js'), was = readFileSync(file, 'utf8');
   let src = between(was, 'vfx core', core, file);
   if (n === 'toggle') src = between(src, 'frames', `const SHEET = '${sheet}';`, file);
-  if (src !== was) { stale++; if (!check) writeFileSync(file, src); console.log(`${check ? 'stale' : 'wrote'} ${n}/${n}.js`); }
+  if (src !== was) { stale++; if (!check) writeFileSync(file, src); console.log(`${check ? 'stale' : 'wrote'} components/${n}/index.js`); }
 }
 
 if (check && stale) process.exit(1);

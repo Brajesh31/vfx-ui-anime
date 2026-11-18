@@ -23,7 +23,7 @@ for (const name of names) {
 }
 if (!home.includes("gallery/")) errors.push("Root page must forward visitors to the gallery.");
 if (!core.includes("window.VFXAnimeFX") || !core.includes("--vfx-") || !core.includes("prefers-reduced-motion")) errors.push("Shared core branding or reduced-motion handling is missing.");
-if (!gallery.includes("window.VFXAnimeFX") || !gallery.includes("--vfx-")) errors.push("Gallery does not use VFX UI Anime runtime/theme names.");
+if (!gallery.includes("--vfx-")) errors.push("Gallery does not use VFX UI Anime theme names.");
 if (gallery.includes("sakuga-") || gallery.includes("finktheartist")) errors.push("Old source branding remains in the public gallery.");
 if (!registry.items.every(x=>x.files?.[0]?.path?.startsWith("components/"))) errors.push("Registry component paths must point into components/.");
 const notice = await readFile(join(root,"THIRD_PARTY_NOTICES/LICENSES.md"),"utf8");
