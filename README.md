@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Twenty-six additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Thirty-one additional controls extend the same design and interaction language.
 
-**Current library: 37 component types and 38 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 42 component types and 43 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -52,6 +52,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Command Palette | `<vfx-command-palette>` | [components/command-palette](components/command-palette/) |
 | Context Menu | `<vfx-context-menu>` | [components/context-menu](components/context-menu/) |
 | Combobox | `<vfx-combobox>` | [components/combobox](components/combobox/) |
+| Drag and Drop | `<vfx-drag-drop>` | [components/drag-drop](components/drag-drop/) |
+| Carousel | `<vfx-carousel>` | [components/carousel](components/carousel/) |
+| Timeline | `<vfx-timeline>` | [components/timeline](components/timeline/) |
+| Radial Menu | `<vfx-radial-menu>` | [components/radial-menu](components/radial-menu/) |
+| Image Cropper | `<vfx-image-cropper>` | [components/image-cropper](components/image-cropper/) |
 
 Each component folder contains:
 
@@ -120,3 +125,12 @@ Each component includes a standalone implementation, isolated demo, and API docu
 - **Combobox**: editable option filtering, keyboard navigation, and form association.
 
 Each ships with a standalone source file, isolated demo, and dedicated API/accessibility reference.
+
+
+## Creative workflow components
+
+- **Drag and Drop**: reorderable lists with mouse drag, touch-friendly move controls, and Alt+Arrow keyboard support.
+- **Carousel**: swipe, arrow, dot, and keyboard navigation with explicit active-slide state.
+- **Timeline**: selectable milestones with a chronological rail and active-step semantics.
+- **Radial Menu**: a compact action wheel with expanding controls and keyboard navigation.
+- **Image Cropper**: local image loading, zoom, quarter-turn rotation, a movable/resizable crop frame, and PNG export. Images remain in the browser.

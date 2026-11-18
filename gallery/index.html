@@ -87,6 +87,11 @@
 <script src="../components/command-palette/index.js"></script>
 <script src="../components/context-menu/index.js"></script>
 <script src="../components/combobox/index.js"></script>
+<script src="../components/drag-drop/index.js"></script>
+<script src="../components/carousel/index.js"></script>
+<script src="../components/timeline/index.js"></script>
+<script src="../components/radial-menu/index.js"></script>
+<script src="../components/image-cropper/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -129,7 +134,12 @@ const ITEMS = [
   { id: 'date-picker', name: 'Date Picker', tag: 'vfx-date-picker', how: 'Open the calendar popover and choose a date.', html: '<vfx-date-picker label="Launch date"></vfx-date-picker>' },
   { id: 'command-palette', name: 'Command Palette', tag: 'vfx-command-palette', how: 'Open the launcher or press Ctrl / ⌘ + K, then filter commands.', html: '<div style="display:grid;justify-items:center;gap:12px"><button class="pill" type="button" data-demo="palette-open">Open command palette</button><vfx-command-palette commands="Create project|Open recent file|Search components|Toggle appearance|View shortcuts"></vfx-command-palette></div>' },
   { id: 'context-menu', name: 'Context Menu', tag: 'vfx-context-menu', how: 'Right-click the surface or use Shift+F10 to open actions.', html: '<vfx-context-menu items="Open|Copy link|Rename|Duplicate|Archive|Delete"><div tabindex="0" style="display:grid;place-items:center;min-height:125px;padding:18px;border:2px dashed #8580b0;border-radius:14px;background:#faf9ff;font-weight:800">Right-click this surface</div></vfx-context-menu>' },
-  { id: 'combobox', name: 'Combobox', tag: 'vfx-combobox', how: 'Type to filter options, then move and commit with the keyboard.', html: '<vfx-combobox label="Framework" placeholder="Search frameworks"><option value="react">React</option><option value="vue">Vue</option><option value="svelte">Svelte</option><option value="solid">Solid</option><option value="angular">Angular</option></vfx-combobox>' }
+  { id: 'combobox', name: 'Combobox', tag: 'vfx-combobox', how: 'Type to filter options, then move and commit with the keyboard.', html: '<vfx-combobox label="Framework" placeholder="Search frameworks"><option value="react">React</option><option value="vue">Vue</option><option value="svelte">Svelte</option><option value="solid">Solid</option><option value="angular">Angular</option></vfx-combobox>' },
+  { id: 'drag-drop', name: 'Drag and Drop', tag: 'vfx-drag-drop', how: 'Reorder with drag-and-drop, arrow buttons, or Alt + Arrow keys.', html: '<vfx-drag-drop items="Research|Prototype|Build|Launch"></vfx-drag-drop>', wide: true },
+  { id: 'carousel', name: 'Carousel', tag: 'vfx-carousel', how: 'Swipe slides, use arrows, dots, or keyboard navigation.', html: '<vfx-carousel slides="Impact|Momentum|Afterglow|Final frame"></vfx-carousel>', wide: true },
+  { id: 'timeline', name: 'Timeline', tag: 'vfx-timeline', how: 'Choose a milestone or move through the sequence with arrow keys.', html: '<vfx-timeline items="Discover::Map the problem::01 / PLAN|Build::Create the solution::02 / MAKE|Launch::Ship and learn::03 / SHIP"></vfx-timeline>', wide: true },
+  { id: 'radial-menu', name: 'Radial Menu', tag: 'vfx-radial-menu', how: 'Open the action wheel and choose an item around its center.', html: '<vfx-radial-menu items="Create|Edit|Share|Preview|Export|Settings"></vfx-radial-menu>' },
+  { id: 'image-cropper', name: 'Image Cropper', tag: 'vfx-image-cropper', how: 'Load a local image, move or resize the crop frame, then export a PNG.', html: '<vfx-image-cropper></vfx-image-cropper>', wide: true }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -215,6 +225,11 @@ const WIRE = {
   'command-palette': ['Use <vfx-command-palette commands="New file|Open project|Search"></vfx-command-palette> and call show() from your own launcher button.', 'Ctrl+K or ⌘+K opens it. Typing filters commands; Arrow Up/Down moves, Enter selects, Escape closes. Listen for select with detail.index and detail.label.'],
   'context-menu': ['Wrap the target surface in <vfx-context-menu items="Open|Rename|Delete">...</vfx-context-menu>.', 'Right-click or press Shift+F10 to open. Listen for select with detail.index, label, normalized value, and danger. Escape closes.'],
   combobox: ['Provide child option elements inside <vfx-combobox label="Framework">...</vfx-combobox>. It supports editable filtering and a committed option value.', 'Read or set value. Listen for input while filtering and change after selection. Arrow Up/Down navigates, Enter commits, Escape closes; a name attribute enables form submission.'],
+  'drag-drop': ['Use <vfx-drag-drop items="Research|Prototype|Launch"></vfx-drag-drop> for an ordered list. The items property accepts or returns an array.', 'Listen for change with detail.items, detail.from, and detail.to. Call move(from, to) to reorder programmatically. Up and Down controls work on touch; Alt+ArrowUp/Down also moves the focused row.'],
+  carousel: ['Use <vfx-carousel slides="Impact|Momentum|Afterglow"></vfx-carousel>. Slides are pipe-separated labels.', 'Read or set activeIndex, or call goTo(index), next(), and previous(). Listen for change with detail.index, total, and slide. Arrow keys and horizontal swipes also navigate.'],
+  timeline: ['Use <vfx-timeline items="Discover::Map the problem::01 / PLAN|Build::Create the solution::02 / MAKE"></vfx-timeline>. Each entry is title::description::date.', 'Read or set activeIndex, or call select(index). Listen for select with detail.index, title, desc, and date. Arrow Up/Down changes the active milestone.'],
+  'radial-menu': ['Use <vfx-radial-menu items="Create|Edit|Share|Export"></vfx-radial-menu> for up to eight actions.', 'Call show() or hide(), or listen for select with detail.index and label. The menu emits intent only, wire that event to the actual action. Escape closes it.'],
+  'image-cropper': ['Use <vfx-image-cropper></vfx-image-cropper> for a local image crop workflow. Choose or drop a File, then reposition or resize the crop window.', 'Listen for image-load, crop, and error. The crop event carries a PNG Blob, object URL, width, and height. exportCrop() returns a Promise<Blob>; the component does not upload images.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -262,6 +277,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-command-palette') { card.querySelector('[data-demo=palette-open]').addEventListener('click', () => el.show()); el.addEventListener('select', e => say('Command: ' + e.detail.label)); }
   else if (it.tag === 'vfx-context-menu') el.addEventListener('select', e => say('Action: ' + e.detail.label));
   else if (it.tag === 'vfx-combobox') { el.addEventListener('change', e => say('Selected: ' + e.detail.label)); el.addEventListener('input', e => say('Filtering: ' + e.detail.query)); }
+  else if (it.tag === 'vfx-drag-drop') el.addEventListener('change', e => say('Order: ' + e.detail.items.join(' → ')));
+  else if (it.tag === 'vfx-carousel') el.addEventListener('change', e => say('Slide ' + (e.detail.index + 1) + ': ' + e.detail.slide));
+  else if (it.tag === 'vfx-timeline') el.addEventListener('select', e => say('Milestone: ' + e.detail.title));
+  else if (it.tag === 'vfx-radial-menu') el.addEventListener('select', e => say('Action: ' + e.detail.label));
+  else if (it.tag === 'vfx-image-cropper') { el.addEventListener('image-load', e => say('Loaded: ' + e.detail.name)); el.addEventListener('crop', e => say('PNG crop: ' + e.detail.width + ' × ' + e.detail.height)); }
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

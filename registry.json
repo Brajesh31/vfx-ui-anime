@@ -752,6 +752,106 @@
         }
       ],
       "docs": "Load /components/combobox/index.js with a plain script tag. See components/combobox/README.md."
+    },
+    {
+      "name": "drag-drop",
+      "type": "registry:file",
+      "title": "VFX UI Anime Drag and Drop",
+      "description": "A reorderable list with native drag-and-drop, touch-friendly Up and Down controls, keyboard movement, and ordered change events. One file, no dependencies, defines <vfx-drag-drop>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "drag-drop",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/drag-drop/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/drag-drop.js"
+        }
+      ],
+      "docs": "Load /components/drag-drop/index.js with a plain script tag. See components/drag-drop/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "carousel",
+      "type": "registry:file",
+      "title": "VFX UI Anime Carousel",
+      "description": "A manually controlled carousel with swipe gestures, arrow buttons, slide indicators, and keyboard navigation. One file, no dependencies, defines <vfx-carousel>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "carousel",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/carousel/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/carousel.js"
+        }
+      ],
+      "docs": "Load /components/carousel/index.js with a plain script tag. See components/carousel/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "timeline",
+      "type": "registry:file",
+      "title": "VFX UI Anime Timeline",
+      "description": "An accessible milestone timeline with an active step, keyboard navigation, and selection events. One file, no dependencies, defines <vfx-timeline>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "timeline",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/timeline/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/timeline.js"
+        }
+      ],
+      "docs": "Load /components/timeline/index.js with a plain script tag. See components/timeline/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "radial-menu",
+      "type": "registry:file",
+      "title": "VFX UI Anime Radial Menu",
+      "description": "A compact radial action launcher with animated expansion, keyboard movement, and explicit selection events. One file, no dependencies, defines <vfx-radial-menu>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "radial-menu",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/radial-menu/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/radial-menu.js"
+        }
+      ],
+      "docs": "Load /components/radial-menu/index.js with a plain script tag. See components/radial-menu/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "image-cropper",
+      "type": "registry:file",
+      "title": "VFX UI Anime Image Cropper",
+      "description": "A browser-local image cropper with zoom, quarter-turn rotation, a movable and resizable crop frame, and PNG export. One file, no dependencies, defines <vfx-image-cropper>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "image-cropper",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/image-cropper/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/image-cropper.js"
+        }
+      ],
+      "docs": "Load /components/image-cropper/index.js with a plain script tag. See components/image-cropper/README.md for attributes, methods, events, keyboard behavior, and limits."
     }
   ]
 }

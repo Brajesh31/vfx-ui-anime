@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Thirty-seven dependency-free Web Component types with thirty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Forty-two dependency-free Web Component types with forty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -78,3 +78,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Command Palette: `components/command-palette/` `<vfx-command-palette>`, Ctrl/⌘+K command launcher.
 - Context Menu: `components/context-menu/` `<vfx-context-menu>`, pointer-anchored and keyboard-triggered action menu.
 - Combobox: `components/combobox/` `<vfx-combobox>`, editable filterable option selection.
+
+
+## Creative workflow components
+- Drag and Drop: `components/drag-drop/` `<vfx-drag-drop>`, native reorder plus touch and keyboard controls.
+- Carousel: `components/carousel/` `<vfx-carousel>`, swipe, arrow, dot, and keyboard navigation.
+- Timeline: `components/timeline/` `<vfx-timeline>`, selectable milestone sequence.
+- Radial Menu: `components/radial-menu/` `<vfx-radial-menu>`, expanding action wheel.
+- Image Cropper: `components/image-cropper/` `<vfx-image-cropper>`, browser-local crop and PNG export.
