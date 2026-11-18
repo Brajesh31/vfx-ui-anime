@@ -10,7 +10,7 @@
    .panel{height:0;overflow:hidden;transition:height .28s cubic-bezier(.2,.8,.2,1)}.inner{padding:0 1rem 1rem;color:var(--vfx-muted,#77718e);font-size:.9rem;line-height:1.65}
    @media(prefers-reduced-motion:reduce){.panel,.chevron{transition:none}}
   </style><button type="button" aria-expanded="false"><span></span><svg class="chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m4 7 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="panel" hidden><div class="inner"><slot></slot></div></div>`;
-   this.button=this.shadowRoot.querySelector("button");this.panel=this.shadowRoot.querySelector(".panel");this.inner=this.shadowRoot.querySelector(".inner");this.labelNode=this.shadowRoot.querySelector("button span");this.panel.id="vfx-accordion-panel-"+this.key;this.button.setAttribute("aria-controls",this.panel.id);
+   this.button=this.shadowRoot.querySelector("button");this.panel=this.shadowRoot.querySelector(".panel");this.inner=this.shadowRoot.querySelector(".inner");this.labelNode=this.shadowRoot.querySelector("button span");this.button.id="vfx-accordion-trigger-"+this.key;this.panel.id="vfx-accordion-panel-"+this.key;this.button.setAttribute("aria-controls",this.panel.id);this.panel.setAttribute("role","region");this.panel.setAttribute("aria-labelledby",this.button.id);
    this.button.addEventListener("click",()=>{if(!this.hasAttribute("disabled"))this.open=!this.open});
   }
   connectedCallback(){this.sync(false);if(typeof ResizeObserver!=="undefined"){this.ro=new ResizeObserver(()=>this.syncHeight());this.ro.observe(this.inner)}}
