@@ -117,6 +117,11 @@
 <script src="../components/sparkline/index.js"></script>
 <script src="../components/kpi-card/index.js"></script>
 <script src="../components/gauge/index.js"></script>
+<script src="../components/heatmap/index.js"></script>
+<script src="../components/treemap/index.js"></script>
+<script src="../components/drawing-canvas/index.js"></script>
+<script src="../components/color-palette/index.js"></script>
+<script src="../components/audio-player/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -189,7 +194,12 @@ const ITEMS = [
   { id: 'donut-chart', name: 'Donut Chart', tag: 'vfx-donut-chart', how: 'Proportional SVG donut chart with legend.', html: '<vfx-donut-chart title="Traffic sources" labels="Direct,Search,Social,Other" values="45,30,15,10"></vfx-donut-chart>', wide: true },
   { id: 'sparkline', name: 'Sparkline', tag: 'vfx-sparkline', how: 'Inline SVG trend sparkline.', html: '<vfx-sparkline label="Weekly trend" values="4,7,5,9,8,13,11,16"></vfx-sparkline>' },
   { id: 'kpi-card', name: 'KPI Card', tag: 'vfx-kpi-card', how: 'Compact dashboard metric tile.', html: '<vfx-kpi-card label="Active users" value="12,480" delta="+12.8%"></vfx-kpi-card>', wide: true },
-  { id: 'gauge', name: 'Gauge', tag: 'vfx-gauge', how: 'Semicircular metric gauge.', html: '<vfx-gauge label="Completion" value="72" max="100"></vfx-gauge>', wide: true }
+  { id: 'gauge', name: 'Gauge', tag: 'vfx-gauge', how: 'Semicircular metric gauge.', html: '<vfx-gauge label="Completion" value="72" max="100"></vfx-gauge>', wide: true },
+  { id: 'heatmap', name: 'Heatmap', tag: 'vfx-heatmap', how: 'Seven-column activity intensity grid.', html: '<vfx-heatmap title="Weekly activity"></vfx-heatmap>', wide: true },
+  { id: 'treemap', name: 'Treemap', tag: 'vfx-treemap', how: 'Proportional category tile map.', html: '<vfx-treemap items="app::App::42|web::Web::26|ops::Ops::20|data::Data::12"></vfx-treemap>', wide: true },
+  { id: 'drawing-canvas', name: 'Drawing Canvas', tag: 'vfx-drawing-canvas', how: 'Pointer drawing canvas with clear and PNG export.', html: '<vfx-drawing-canvas></vfx-drawing-canvas>', wide: true },
+  { id: 'color-palette', name: 'Color Palette', tag: 'vfx-color-palette', how: 'Selectable color swatches and copy action.', html: '<vfx-color-palette title="Brand palette"></vfx-color-palette>', wide: true },
+  { id: 'audio-player', name: 'Audio Player', tag: 'vfx-audio-player', how: 'Custom audio transport with seek and playback state.', html: '<vfx-audio-player title="Demo audio" artist="Add a media source"></vfx-audio-player>' }
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
 const WIRE = {
@@ -304,6 +314,11 @@ const WIRE = {
   'sparkline': ['Use <vfx-sparkline></vfx-sparkline> as a self-contained custom element.', 'Inline SVG trend sparkline. See components/sparkline/README.md for attributes and events.'],
   'kpi-card': ['Use <vfx-kpi-card></vfx-kpi-card> as a self-contained custom element.', 'Compact dashboard metric tile. See components/kpi-card/README.md for attributes and events.'],
   'gauge': ['Use <vfx-gauge></vfx-gauge> as a self-contained custom element.', 'Semicircular metric gauge. See components/gauge/README.md for attributes and events.'],
+  'heatmap': ['Use <vfx-heatmap></vfx-heatmap> as a self-contained custom element.', 'Seven-column activity intensity grid. See components/heatmap/README.md for details.'],
+  'treemap': ['Use <vfx-treemap></vfx-treemap> as a self-contained custom element.', 'Proportional category tile map. See components/treemap/README.md for details.'],
+  'drawing-canvas': ['Use <vfx-drawing-canvas></vfx-drawing-canvas> as a self-contained custom element.', 'Pointer drawing canvas with clear and PNG export. See components/drawing-canvas/README.md for details.'],
+  'color-palette': ['Use <vfx-color-palette></vfx-color-palette> as a self-contained custom element.', 'Selectable color swatches and copy action. See components/color-palette/README.md for details.'],
+  'audio-player': ['Use <vfx-audio-player></vfx-audio-player> as a self-contained custom element.', 'Custom audio transport with seek and playback state. See components/audio-player/README.md for details.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -378,6 +393,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-copy-code') { el.addEventListener('copy', () => say('Code copied')); el.addEventListener('copy-error', () => say('Copy unavailable')); }
   else if (it.tag === 'vfx-bar-chart') el.addEventListener('select', e => say(e.detail.label + ': ' + e.detail.value));
   else if (it.tag === 'vfx-gauge') el.addEventListener('change', e => say('Gauge: ' + Math.round(e.detail.percent) + '%'));
+  else if (it.tag === 'vfx-heatmap') el.addEventListener('select', e => say('Cell ' + (e.detail.index + 1) + ' · level ' + e.detail.level));
+  else if (it.tag === 'vfx-treemap') el.addEventListener('select', e => say('Selected ' + e.detail.label + ': ' + e.detail.value));
+  else if (it.tag === 'vfx-drawing-canvas') el.addEventListener('clear', () => say('Canvas cleared'));
+  else if (it.tag === 'vfx-color-palette') el.addEventListener('change', e => say('Color: ' + e.detail.value));
+  else if (it.tag === 'vfx-audio-player') { el.addEventListener('play', () => say('Audio playing')); el.addEventListener('pause', () => say('Audio paused')); }
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

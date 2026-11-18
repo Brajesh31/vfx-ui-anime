@@ -1352,6 +1352,106 @@
         }
       ],
       "docs": "Load the standalone component file. See components/gauge/README.md."
+    },
+    {
+      "name": "heatmap",
+      "type": "registry:file",
+      "title": "VFX UI Anime Heatmap",
+      "description": "Seven-column activity intensity grid. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "heatmap",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/heatmap/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/heatmap.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/heatmap/README.md."
+    },
+    {
+      "name": "treemap",
+      "type": "registry:file",
+      "title": "VFX UI Anime Treemap",
+      "description": "Proportional category tile map. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "treemap",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/treemap/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/treemap.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/treemap/README.md."
+    },
+    {
+      "name": "drawing-canvas",
+      "type": "registry:file",
+      "title": "VFX UI Anime Drawing Canvas",
+      "description": "Pointer drawing canvas with clear and PNG export. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "drawing-canvas",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/drawing-canvas/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/drawing-canvas.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/drawing-canvas/README.md."
+    },
+    {
+      "name": "color-palette",
+      "type": "registry:file",
+      "title": "VFX UI Anime Color Palette",
+      "description": "Selectable color swatches and copy action. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "color-palette",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/color-palette/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/color-palette.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/color-palette/README.md."
+    },
+    {
+      "name": "audio-player",
+      "type": "registry:file",
+      "title": "VFX UI Anime Audio Player",
+      "description": "Custom audio transport with seek and playback state. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "audio-player",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/audio-player/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/audio-player.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/audio-player/README.md."
     }
   ]
 }

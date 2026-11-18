@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Sixty-seven dependency-free Web Component types with sixty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Seventy-two dependency-free Web Component types with seventy-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -126,3 +126,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Sparkline: components/sparkline/, <vfx-sparkline>. Inline SVG trend sparkline.
 - KPI Card: components/kpi-card/, <vfx-kpi-card>. Compact dashboard metric tile.
 - Gauge: components/gauge/, <vfx-gauge>. Semicircular metric gauge.
+
+
+## Data visualization and creative tools
+- Heatmap: components/heatmap/, <vfx-heatmap>. Seven-column activity intensity grid.
+- Treemap: components/treemap/, <vfx-treemap>. Proportional category tile map.
+- Drawing Canvas: components/drawing-canvas/, <vfx-drawing-canvas>. Pointer drawing canvas with clear and PNG export.
+- Color Palette: components/color-palette/, <vfx-color-palette>. Selectable color swatches and copy action.
+- Audio Player: components/audio-player/, <vfx-audio-player>. Custom audio transport with seek and playback state.

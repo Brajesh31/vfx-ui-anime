@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Fifty-six additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Sixty-one additional controls extend the same design and interaction language.
 
-**Current library: 67 component types and 68 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 72 component types and 73 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -82,6 +82,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Sparkline | `<vfx-sparkline>` | [components/sparkline](components/sparkline/) |
 | KPI Card | `<vfx-kpi-card>` | [components/kpi-card](components/kpi-card/) |
 | Gauge | `<vfx-gauge>` | [components/gauge](components/gauge/) |
+| Heatmap | `<vfx-heatmap>` | [components/heatmap](components/heatmap/) |
+| Treemap | `<vfx-treemap>` | [components/treemap](components/treemap/) |
+| Drawing Canvas | `<vfx-drawing-canvas>` | [components/drawing-canvas](components/drawing-canvas/) |
+| Color Palette | `<vfx-color-palette>` | [components/color-palette](components/color-palette/) |
+| Audio Player | `<vfx-audio-player>` | [components/audio-player](components/audio-player/) |
 
 Each component folder contains:
 
@@ -201,3 +206,10 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 
 - **Bar Chart, Donut Chart, Sparkline**: dependency-free SVG data visualizations.
 - **KPI Card and Gauge**: dashboard metrics and progress indicators.
+
+
+## Data visualization and creative tools
+
+- **Heatmap and Treemap**: activity intensity and proportional category comparisons.
+- **Drawing Canvas and Color Palette**: pointer drawing, PNG export, and reusable color selection.
+- **Audio Player**: browser-native audio transport with seek and playback events.
