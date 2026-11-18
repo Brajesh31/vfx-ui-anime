@@ -8,10 +8,11 @@ All notable project changes are documented here.
 - Horizontal and vertical tab orientation with roving focus, arrow-key navigation, and Home/End navigation.
 - Accessible tablist labeling and a programmatic `value` property setter.
 - Radio group labels, configured names, disabled/required properties, form value synchronization, reset/disabled/state-restore callbacks, and native radio keyboard behavior.
-- Static regression assertions for the new tab and radio implementation hooks.
+- Accessible, viewport-aware tooltips with `aria-describedby`, dynamic text, Escape dismissal, auto top/bottom placement and horizontal clamping.
+- Static regression assertions for tab, radio and tooltip implementation hooks, plus runtime JavaScript syntax parsing.
 
 ### Changed
-- Updated the gallery, component API reference, integration cookbook and accessibility test checklist for the new controls.
+- Updated the gallery, component API reference, integration cookbook, accessibility guide and QA checklist for the new controls.
 
 ## [1.0.0] - 2026-11-18
 ### Added
