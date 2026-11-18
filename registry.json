@@ -10,99 +10,77 @@
       "tag": "vfx-button",
       "file": "components/button/index.js",
       "demo": "components/button/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "toggle",
       "tag": "vfx-toggle",
       "file": "components/toggle/index.js",
       "demo": "components/toggle/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "slider",
       "tag": "vfx-slider",
       "file": "components/slider/index.js",
       "demo": "components/slider/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "checkbox",
       "tag": "vfx-checkbox",
       "file": "components/checkbox/index.js",
       "demo": "components/checkbox/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "radio",
       "tag": "vfx-radio",
       "file": "components/radio/index.js",
       "demo": "components/radio/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "input",
       "tag": "vfx-input",
       "file": "components/input/index.js",
       "demo": "components/input/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "tabs",
       "tag": "vfx-tabs",
       "file": "components/tabs/index.js",
       "demo": "components/tabs/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "progress",
       "tag": "vfx-progress",
       "file": "components/progress/index.js",
       "demo": "components/progress/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "rating",
       "tag": "vfx-rating",
       "file": "components/rating/index.js",
       "demo": "components/rating/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "toast",
       "tag": "vfx-toast",
       "file": "components/toast/index.js",
       "demo": "components/toast/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "tooltip",
       "tag": "vfx-tooltip",
       "file": "components/tooltip/index.js",
       "demo": "components/tooltip/demo.html",
-      "dependencies": [
-        "core.js"
-      ]
+      "dependencies": []
     },
     {
       "name": "like",
