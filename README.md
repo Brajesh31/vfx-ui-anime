@@ -1,4 +1,4 @@
- <p align="center"><img src="assets/brand-mark.svg" width="88" alt="VFX UI Anime brand mark"></p>
+<p align="center"><img src="assets/brand-mark.svg" width="88" alt="VFX UI Anime brand mark"></p>
 
 # ✨ VFX UI Anime
 
@@ -39,7 +39,7 @@ The static website is published through GitHub Pages. The workflow validates the
 
 **Live website:** https://brajesh31.github.io/vfx-ui-anime/
 
-[View the latest successful deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44239706083) · [Open repository Pages settings](https://github.com/Brajesh31/vfx-ui-anime/settings/pages)
+[View deployment workflow and latest runs](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/deploy-pages.yml) · [Open repository Pages settings](https://github.com/Brajesh31/vfx-ui-anime/settings/pages)
 
 See [Deployment](docs/DEPLOYMENT.md) for hosting details and troubleshooting.
 
