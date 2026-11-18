@@ -31,7 +31,15 @@
 | Toast | `<vfx-toast>` | Temporary status message |
 | Tooltip | `<vfx-tooltip>` | Contextual hint |
 
-## 🚀 Run the gallery
+## 🌐 Live demo
+
+The static gallery is configured for GitHub Pages deployment:
+
+**https://brajesh31.github.io/vfx-ui-anime/**
+
+Every push to `main` runs validation and publishes the repository through the GitHub Pages workflow. The first deployment requires GitHub Pages to be enabled with **Settings → Pages → Source: GitHub Actions**.
+
+## 🚀 Run the gallery locally
 
 No package install or build step is required.
 
