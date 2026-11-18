@@ -131,6 +131,16 @@ The checks validate required files, component registrations and key accessibilit
 
 The first public implementation includes eleven components and a static gallery. Browser compatibility, real-device performance, screen-reader behavior and advanced form integration still need a dedicated QA pass. See [known limitations](docs/ACCESSIBILITY.md) and [roadmap](ROADMAP.md).
 
+
+## 🎬 Original Sakuga interactions on the homepage
+
+The homepage now includes a live showcase powered by the preserved upstream `sakuga-*` components. Try the primary and secondary buttons, toggle, checkbox, radio group, text input, slider, tabs, rating, progress, toast and tooltip directly in the main playground.
+
+- The original components are loaded from `sakuga-vfx/`, not redrawn or approximated.
+- The primary button demo calls `done()` only after its demo action completes, so its success check remains distinct from the click impact.
+- Progress, toast and other controls are wired through `sakuga-interactions.js`.
+- [Open the full original Sakuga gallery](sakuga-vfx/gallery/).
+
 ## 🎴 Exact Sakuga VFX collection
 
 The repository includes a byte-for-byte snapshot of [finktheartist/sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) under [`sakuga-vfx/`](sakuga-vfx/). This preserves the original button, checkbox, toggle, slider, radio, input, tabs, progress, rating, toast and tooltip implementations, the interactive gallery, sound-effect artwork, toggle animation frames, component demos, registry, skill files and authoring tools.
