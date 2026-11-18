@@ -4,7 +4,7 @@
 
 VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Sixteen additional controls extend the same design and interaction language.
 
-**Current library: 27 component types and 28 live gallery demos.** The 28 demos include primary and secondary Button examples.
+**Current library: 32 component types and 28 live gallery demos.** The 28 demos include primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -93,3 +93,14 @@ The public project name is **VFX UI Anime**. Component tags use the `vfx-*` pref
 ## ⚖️ Licensing and attribution
 
 The eleven adapted original component implementations and associated artwork retain the upstream MIT copyright and permission terms in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md). The eight additional controls were independently authored for VFX UI Anime. The root [LICENSE](LICENSE) applies to the repository's own contributions and does not replace third-party terms.
+
+
+## Additional components in this release
+
+- **Badge**: status labels with animated updates and optional pulse.
+- **Avatar**: portraits, initials fallback, and presence states.
+- **Chip**: selectable and removable tokens.
+- **Breadcrumb**: semantic navigation trails.
+- **Stepper**: bounded quantity input with keyboard and form support.
+
+Each component includes a standalone implementation, isolated demo, and API documentation under `components/<name>/`.

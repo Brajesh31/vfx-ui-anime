@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Twenty-seven dependency-free Web Component types with twenty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Thirty-two dependency-free Web Component types with thirty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -62,3 +62,11 @@ Repository: https://github.com/Brajesh31/vfx-ui-anime
 
 ## Verification
 Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` before packaging.
+
+
+## Additional interactive components
+- Badge: `components/badge/` `<vfx-badge>`, status markers and pulse.
+- Avatar: `components/avatar/` `<vfx-avatar>`, portraits, initials fallback and presence.
+- Chip: `components/chip/` `<vfx-chip>`, selectable and removable tokens.
+- Breadcrumb: `components/breadcrumb/` `<vfx-breadcrumb>`, semantic navigation trails.
+- Stepper: `components/stepper/` `<vfx-stepper>`, bounded quantity control with keyboard and form support.

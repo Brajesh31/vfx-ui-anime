@@ -41,7 +41,7 @@
   <header>
     <div>
       <h1>VFX UI Anime</h1>
-      <p class="lede">Twenty-seven component types with spring-driven reactions, manga impact effects, keyboard behavior, and standalone, dependency-free implementations.</p>
+      <p class="lede">Thirty-two component types with spring-driven reactions, manga impact effects, keyboard behavior, and standalone, dependency-free implementations.</p>
       <p class="links">
         <a class="pill" href="https://github.com/Brajesh31/vfx-ui-anime" target="_blank" rel="noopener">The repo on GitHub <span aria-hidden="true">&#8599;</span></a>
         </p>
@@ -77,6 +77,11 @@
 <script src="../components/alert/index.js"></script>
 <script src="../components/drawer/index.js"></script>
 <script src="../components/skeleton/index.js"></script>
+<script src="../components/badge/index.js"></script>
+<script src="../components/avatar/index.js"></script>
+<script src="../components/chip/index.js"></script>
+<script src="../components/breadcrumb/index.js"></script>
+<script src="../components/stepper/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -110,6 +115,11 @@ const ITEMS = [
   { id: 'alert', name: 'Alert', tag: 'vfx-alert', how: 'Try the control and inspect its interaction.', html: '<vfx-alert tone="success" dismissible>Changes saved successfully.</vfx-alert>' },
   { id: 'drawer', name: 'Drawer', tag: 'vfx-drawer', how: 'Try the control and inspect its interaction.', html: '<vfx-drawer title="Quick settings"><span slot="trigger">Open settings</span><p>Adjust your workspace preferences here.</p></vfx-drawer>' },
   { id: 'skeleton', name: 'Skeleton', tag: 'vfx-skeleton', how: 'Try the control and inspect its interaction.', html: '<vfx-skeleton variant="card"></vfx-skeleton>' }
+  { id: 'badge', name: 'Badge', tag: 'vfx-badge', how: 'Change its status and watch the marker react.', html: '<div style="display:grid;justify-items:center;gap:14px"><vfx-badge status="success" pulse>Deployed</vfx-badge><button class="pill" type="button" data-demo="badge-cycle">Change status</button></div>' },
+  { id: 'avatar', name: 'Avatar', tag: 'vfx-avatar', how: 'Cycle the presence indicator; initials remain as the image fallback.', html: '<div style="display:grid;justify-items:center;gap:14px"><vfx-avatar name="Brajesh Kumar" status="online" size="xl"></vfx-avatar><button class="pill" type="button" data-demo="avatar-cycle">Cycle presence</button></div>' },
+  { id: 'chip', name: 'Chip', tag: 'vfx-chip', how: 'Select tokens or dismiss the removable one.', html: '<div style="display:flex;gap:9px;flex-wrap:wrap;justify-content:center"><vfx-chip selected>Anime</vfx-chip><vfx-chip>Motion</vfx-chip><vfx-chip removable label="Remove me"></vfx-chip></div>' },
+  { id: 'breadcrumb', name: 'Breadcrumb', tag: 'vfx-breadcrumb', how: 'Activate an ancestor to see the directional trail.', html: '<vfx-breadcrumb><a href="#home">Home</a><a href="#library">Library</a><span>Effects</span></vfx-breadcrumb>' },
+  { id: 'stepper', name: 'Stepper', tag: 'vfx-stepper', how: 'Use the buttons or arrow keys to change the bounded value.', html: '<vfx-stepper label="Quantity" value="3" min="0" max="12"></vfx-stepper>' }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -185,6 +195,11 @@ const WIRE = {
   'alert': ["Use <vfx-alert tone=\"success\" dismissible>Saved.</vfx-alert>.","Use tone=\"error\" for an alert role. Listen for dismiss."],
   'drawer': ["Use <vfx-drawer title=\"Settings\"><span slot=\"trigger\">Open</span>Panel content</vfx-drawer>.","Listen for open and close. It uses a native dialog."],
   'skeleton': ["Use <vfx-skeleton variant=\"card\"></vfx-skeleton>.","Variants include text, avatar and card. Replace the placeholder with real content after loading."],
+  badge: ['Use <vfx-badge status="success" pulse>Deployed</vfx-badge> for a compact status marker. Supported statuses are success, warning, error, info, and neutral.', 'Update the status attribute to animate a state change. The label attribute overrides the element text; pulse enables a restrained presence pulse. The element exposes role="status".'],
+  avatar: ['Use <vfx-avatar name="Brajesh Kumar" status="online" size="large"></vfx-avatar>. Add src for a portrait image; initials remain the fallback.', 'Read the name, src, status, and size attributes. A failed image emits image-error and falls back to initials. Presence values are online, busy, away, and offline.'],
+  chip: ['Use <vfx-chip selected>Anime</vfx-chip> for a selectable token, and add removable for a separate dismiss button.', 'Listen for change with detail.selected. Listen for remove with detail.label. The disabled attribute prevents both actions; selected reflects aria-pressed.'],
+  breadcrumb: ['Use <vfx-breadcrumb> with ancestor anchors followed by a final non-link current page element.', 'Listen for navigate; its detail contains index, label, and href. The final crumb receives aria-current="page" and is not navigable.'],
+  stepper: ['Use <vfx-stepper name="quantity" label="Quantity" value="2" min="0" max="10" step="1"></vfx-stepper>.', 'Read or set value. Listen for change with detail.value. Arrow keys adjust the value; Home and End jump to the bounds. The element participates in FormData when named.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -222,6 +237,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-menu') el.addEventListener('select', (e) => say(`Action: ${e.detail.label}`));
   else if (it.tag === 'vfx-dialog') { el.addEventListener('confirm', () => say('Confirmed')); el.addEventListener('close', (e) => { if (e.detail.returnValue !== 'confirm') say(`Closed: ${e.detail.returnValue}`); }); }
   else if (it.tag === 'vfx-file-upload') el.addEventListener('change', (e) => say(`${e.detail.files.length} file(s) selected`));
+  else if (it.tag === 'vfx-badge') { const states = ['success','warning','error','info','neutral']; let i = 0; card.querySelector('[data-demo=badge-cycle]').addEventListener('click', () => { el.setAttribute('status', states[++i % states.length]); say('Status: ' + states[i % states.length]); }); }
+  else if (it.tag === 'vfx-avatar') { const states = ['online','busy','away','offline']; let i = 0; card.querySelector('[data-demo=avatar-cycle]').addEventListener('click', () => { el.setAttribute('status', states[++i % states.length]); say('Presence: ' + states[i % states.length]); }); }
+  else if (it.tag === 'vfx-chip') card.querySelectorAll('vfx-chip').forEach(chip => { chip.addEventListener('change', e => say(chip.textContent.trim() + ': ' + (e.detail.selected ? 'selected' : 'cleared'))); chip.addEventListener('remove', e => say('Removed: ' + e.detail.label)); });
+  else if (it.tag === 'vfx-breadcrumb') el.addEventListener('navigate', e => say('Navigation: ' + e.detail.label));
+  else if (it.tag === 'vfx-stepper') el.addEventListener('change', e => say('Quantity: ' + e.detail.value));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

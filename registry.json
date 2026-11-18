@@ -552,6 +552,106 @@
         }
       ],
       "docs": "Load /components/skeleton/index.js with a plain script tag. See components/skeleton/README.md."
+    },
+    {
+      "name": "badge",
+      "type": "registry:file",
+      "title": "VFX UI Anime Badge",
+      "description": "Compact status marker with a spring reaction, optional pulse and animated status changes.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "badge",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/badge/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/badge.js"
+        }
+      ],
+      "docs": "Load /components/badge/index.js with a plain script tag. See components/badge/README.md."
+    },
+    {
+      "name": "avatar",
+      "type": "registry:file",
+      "title": "VFX UI Anime Avatar",
+      "description": "Portrait and initials avatar with image fallback, presence status and spring entrance.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "avatar",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/avatar/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/avatar.js"
+        }
+      ],
+      "docs": "Load /components/avatar/index.js with a plain script tag. See components/avatar/README.md."
+    },
+    {
+      "name": "chip",
+      "type": "registry:file",
+      "title": "VFX UI Anime Chip",
+      "description": "Selectable and removable token with independent actions and spring-driven impact feedback.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "chip",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/chip/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/chip.js"
+        }
+      ],
+      "docs": "Load /components/chip/index.js with a plain script tag. See components/chip/README.md."
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:file",
+      "title": "VFX UI Anime Breadcrumb",
+      "description": "Semantic breadcrumb navigation with current-page handling and directional motion accents.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "breadcrumb",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/breadcrumb/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/breadcrumb.js"
+        }
+      ],
+      "docs": "Load /components/breadcrumb/index.js with a plain script tag. See components/breadcrumb/README.md."
+    },
+    {
+      "name": "stepper",
+      "type": "registry:file",
+      "title": "VFX UI Anime Stepper",
+      "description": "Bounded, form-associated quantity stepper with keyboard controls and directional VFX reactions.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "stepper",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/stepper/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/stepper.js"
+        }
+      ],
+      "docs": "Load /components/stepper/index.js with a plain script tag. See components/stepper/README.md."
     }
   ]
 }
