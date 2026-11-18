@@ -1,6 +1,10 @@
+<p align="center"><img src="assets/brand-mark.svg" width="88" alt="VFX UI Anime brand mark"></p>
+
 # ✨ VFX UI Anime
 
 **Anime-inspired motion for everyday interface controls.** VFX UI Anime is a small, dependency-free Web Components library. It adds expressive feedback to buttons, toggles, sliders, forms and common interface patterns using native browser primitives and a shared canvas effects layer.
+
+<p align="center"><img src="assets/hero-illustration.svg" alt="Original abstract anime impact illustration" width="100%"></p>
 
 > Independent implementation inspired by the broader idea of expressive anime-style UI motion. This project is not affiliated with or endorsed by the Sakuga VFX reference project.
 
@@ -39,8 +43,6 @@ python3 -m http.server 8000
 
 Open [http://localhost:8000](http://localhost:8000).
 
-You can also use any static HTTP server. Opening the HTML directly with `file://` is not recommended because browser security and module behavior vary.
-
 ## 📦 Use a component
 
 Load the shared engine before the component scripts:
@@ -49,49 +51,14 @@ Load the shared engine before the component scripts:
 <link rel="stylesheet" href="styles.css">
 <script defer src="core.js"></script>
 <script defer src="components/button.js"></script>
-
 <vfx-button>Launch</vfx-button>
 ```
 
-Each component is a standalone JavaScript file once the shared core is loaded. The core creates one page-level canvas and exposes `window.VFXAnime` for effect helpers.
-
-### Toggle
-
-```html
-<script defer src="core.js"></script>
-<script defer src="components/toggle.js"></script>
-<vfx-toggle label="Email updates" name="updates"></vfx-toggle>
-``
-
-### Slider
-
-```html
-<script defer src="core.js"></script>
-<script defer src="components/slider.js"></script>
-<vfx-slider min="0" max="100" value="42"></vfx-slider>
-``
-
-### Progress
-
-```html
-<script defer src="core.js"></script>
-<script defer src="components/progress.js"></script>
-<vfx-progress value="68" label="Upload progress"></vfx-progress>
-``
-
-See [Component API](docs/COMPONENTS.md) for attributes, properties and events.
+Each component is a standalone JavaScript file once the shared core is loaded. The core creates one page-level canvas and exposes `window.VFXAnime` for effect helpers. See [Installation](docs/INSTALLATION.md) and [Component API](docs/COMPONENTS.md).
 
 ## 🎨 Theme tokens
 
-Override these CSS custom properties in your own stylesheet:
-
-| Token | Default | Usage |
-|---|---|---|
-| `--vfx-ink` | `#211b43` | Text and outlines |
-| `--vfx-paper` | `#fffdfb` | Page surface |
-| `--vfx-lavender` | `#aaa5ff` | Motion shadow |
-| `--vfx-violet` | `#6557d9` | Primary accent |
-| `--vfx-pink` | `#ff5f9e` | Impact accent |
+Override `--vfx-ink`, `--vfx-paper`, `--vfx-lavender`, `--vfx-violet` and `--vfx-pink` in your stylesheet.
 
 ## ♿ Accessibility and motion
 
@@ -104,20 +71,21 @@ This is an initial implementation. Do not assume complete form-associated custom
 
 ## 🧰 Development
 
-There is no bundler. Serve the repository locally, edit the component files, then run:
-
 ```bash
 npm test
 npm run check
+python3 -m http.server 8000
 ```
 
 The checks validate required files, component registrations and key accessibility hooks. They are static checks, not a substitute for browser-based interaction tests.
 
 ## 📚 Documentation
 
+- [Installation](docs/INSTALLATION.md)
 - [Component API](docs/COMPONENTS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Development guide](docs/DEVELOPMENT.md)
+- [Testing strategy](docs/TESTING.md)
 - [Accessibility notes](docs/ACCESSIBILITY.md)
 - [Deployment](docs/DEPLOYMENT.md)
 - [Roadmap](ROADMAP.md)
