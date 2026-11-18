@@ -74,7 +74,7 @@ const api = await read("docs/COMPONENT_API_REFERENCE.md");
 if (!api.includes("orientation=\"vertical\"") || !api.includes("ArrowDown")) {
   errors.push("Component API reference does not document vertical tabs keyboard navigation.");
 }
-if (!api.includes("formResetCallback") || !api.includes("required")) {
+if (!api.includes("form reset") || !api.includes("required validity")) {
   errors.push("Component API reference does not document radio form behavior.");
 }
 
