@@ -112,9 +112,9 @@
       </section>
 
       <section class="demo">
-        <h2>💬 Tooltip</h2>
-        <p>The hint appears on hover and while keyboard focus is within the component.</p>
-        <div class="stage"><vfx-tooltip text="This text comes from the text attribute">Hover or focus me</vfx-tooltip></div>
+        <h2>💬 Accessible, viewport-aware tooltip</h2>
+        <p>The trigger references its hint with <code>aria-describedby</code>. Press Escape to dismiss, then move away or refocus to reopen it. Automatic placement flips above/below and clamps horizontally.</p>
+        <div class="stage"><vfx-tooltip text="A longer tooltip description that wraps within the viewport and stays inside the visible screen area." placement="auto">Auto placement</vfx-tooltip><vfx-tooltip text="This tooltip is explicitly placed below its trigger." placement="bottom">Bottom placement</vfx-tooltip></div>
       </section>
 
       <section class="demo">
