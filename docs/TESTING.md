@@ -18,9 +18,9 @@ The browser suite exercises:
 - Radio groups: native input configuration, required validity, selected form values in `FormData`, form reset, disabled state and independent groups.
 - Tooltips: `aria-describedby`, keyboard focus visibility, Escape dismissal, reopening, live text updates, automatic placement and horizontal viewport bounds.
 
-The suite currently targets Chromium only. It does not prove screen-reader interoperability, full WCAG conformance, or behavior in Firefox, Safari, iOS or Android. The GitHub validation workflow runs this suite after the static checks.
+The GitHub validation workflow runs the same nine interaction checks in Chromium, Firefox and WebKit. The Firefox and WebKit runner uses a temporary Playwright installation in CI only; it is not a project runtime or saved development dependency. WebKit is an engine-level compatibility signal, not proof of parity with shipping Safari on macOS or iOS. These tests do not prove screen-reader interoperability or full WCAG conformance.
 
-## Manual smoke test
+## Firefox and WebKit compatibility suite\n\nAfter installing the temporary test-only tooling and browser binaries, run `npm run test:cross-browser`. The runner launches Firefox and WebKit headlessly and executes the same component interaction page used by Chromium.\n\nFor local execution, install the test tool without changing project manifests: `npm install --no-save --no-package-lock playwright`, then run `npx playwright install firefox webkit`, followed by `npm run test:cross-browser`. This is optional QA tooling, not a production dependency.\n\nThe WebKit result must not be described as a completed Safari macOS/iOS test. Safari still requires real Safari runs on Apple platforms, including VoiceOver checks.\n\n## Manual smoke test
 
 1. Serve the repository root over HTTP.
 2. Open the gallery in a current Chromium-based browser.
@@ -45,8 +45,8 @@ The suite currently targets Chromium only. It does not prove screen-reader inter
 | Browser | Automated interaction suite | Manual / assistive-technology audit |
 |---|---|---|
 | Chromium | 9 headless interaction checks in GitHub Actions | Not formally certified |
-| Firefox | Not tested | Not tested |
-| Safari macOS | Not tested | Not tested |
+| Firefox | 9 headless interaction checks in GitHub Actions | Not formally certified |
+| WebKit engine | 9 headless interaction checks in GitHub Actions | Not equivalent to Safari certification |\n| Safari macOS | Not tested | Not tested |
 | Safari iOS | Not tested | Not tested |
 | Chrome Android | Not tested | Not tested |
 | Screen readers | Not automated | Not audited |
