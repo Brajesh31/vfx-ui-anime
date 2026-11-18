@@ -20,7 +20,9 @@ For the complete, source-checked list of attributes, properties, methods, emitte
 | Toast | `<vfx-toast>` | `message` | `vfx-toast` with `detail.message` |
 | Tooltip | `<vfx-tooltip>` | `text`, `placement`, default slot | None |
 
-Tabs use named child slots whose names match the tab labels. The component generates linked `tab`/`tabpanel` semantics and manages panel visibility.\n\nAll custom-element events shown above bubble and cross the Shadow DOM boundary. Events without a listed detail payload do not provide a documented custom payload.
+Tabs use named child slots whose names match the tab labels. The component generates linked `tab`/`tabpanel` semantics and manages panel visibility.
+
+All custom-element events shown above bubble and cross the Shadow DOM boundary. Events without a listed detail payload do not provide a documented custom payload.
 
 ## Shared engine
 
