@@ -6,7 +6,8 @@
 - Focusable controls retain native browser keyboard behavior where native elements are used.
 - Switch state is exposed with `role="switch"` and `aria-checked`.
 - Progress exposes current and min/max values.
-- `<vfx-tabs>` exposes a tablist with one tab stop, `aria-selected` state, and roving focus.
+- `<vfx-tabs>` exposes a named tablist, tabs and linked tabpanels. Each tab has `aria-controls`, and its panel points back with `aria-labelledby`.
+- Inactive tabpanels are hidden. The active panel is keyboard-focusable, and panel content is supplied through named slots that match tab labels.
 - Horizontal tabs support Left/Right Arrow keys. Vertical tabs support Up/Down Arrow keys. Both orientations support Home and End.
 - `<vfx-radio>` uses native radio inputs with a per-instance group name when no name is supplied. Browser-native radio keyboard behavior is retained within the group.
 - `<vfx-tooltip>` connects its focusable trigger to the tooltip description with `aria-describedby`.
@@ -19,7 +20,7 @@ These are source-level implementation details. They are not a claim of formal WC
 
 ## Known gaps and constraints
 
-- `<vfx-tabs>` does not create linked tabpanels, panel IDs, `aria-controls` relationships or manage panel visibility. The host application must supply accessible panels and connect them to selection.
+- `<vfx-tabs>` creates the tabpanel wrappers and relationships, but the host must provide meaningful panel content using child elements whose `slot` name exactly matches a tab label. A tab without matching content has an empty panel.
 - Radio labels are supplied as comma-separated options, so commas cannot appear inside an option label.
 - Custom form-associated controls depend on `ElementInternals` support. Form submission, required validity, reset and disabled-fieldset behavior must be tested in target browsers.
 - `<vfx-input>` does not proxy the complete native constraint-validation API.
@@ -33,7 +34,8 @@ These are source-level implementation details. They are not a claim of formal WC
 - [ ] Keyboard-only navigation through all controls.
 - [ ] Tabs: Left/Right Arrow keys in horizontal orientation.
 - [ ] Tabs: Up/Down Arrow keys in vertical orientation.
-- [ ] Tabs: Home and End keys, selection event and host-managed panel updates.
+- [ ] Tabs: Home and End keys, selection event, `aria-controls`/`aria-labelledby` references, and active/inactive panel visibility.
+- [ ] Tabs: confirm each named slot matches its label and that focus can move from the tablist into the active panel.
 - [ ] Radio groups: Tab entry, arrow-key selection, Space activation and independent groups.
 - [ ] Radio groups: configured name, required state, disabled state and form reset.
 - [ ] Tooltips: verify `aria-describedby` announces the hint on focus.
