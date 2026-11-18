@@ -127,6 +127,11 @@
 <script src="../components/json-editor/index.js"></script>
 <script src="../components/tilt-card/index.js"></script>
 <script src="../components/flip-card/index.js"></script>
+<script src="../components/particle-field/index.js"></script>
+<script src="../components/marquee/index.js"></script>
+<script src="../components/scroll-reveal/index.js"></script>
+<script src="../components/animated-counter/index.js"></script>
+<script src="../components/confetti-button/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -209,7 +214,12 @@ const ITEMS = [
   { id: 'markdown-editor', name: 'Markdown Editor', tag: 'vfx-markdown-editor', how: 'Split Markdown editor with safe formatted preview.', html: '<vfx-markdown-editor></vfx-markdown-editor>', wide: true },
   { id: 'json-editor', name: 'JSON Editor', tag: 'vfx-json-editor', how: 'JSON editing with validation and formatting.', html: '<vfx-json-editor></vfx-json-editor>', wide: true },
   { id: 'tilt-card', name: '3D Tilt Card', tag: 'vfx-tilt-card', how: 'Pointer-reactive 3D perspective card.', html: '<vfx-tilt-card title="3D perspective" description="Move your pointer to tilt"></vfx-tilt-card>' },
-  { id: 'flip-card', name: '3D Flip Card', tag: 'vfx-flip-card', how: 'Front/back 3D flip interaction.', html: '<vfx-flip-card front="Question" back="Answer"></vfx-flip-card>' }
+  { id: 'flip-card', name: '3D Flip Card', tag: 'vfx-flip-card', how: 'Front/back 3D flip interaction.', html: '<vfx-flip-card front="Question" back="Answer"></vfx-flip-card>' },
+  { id: 'particle-field', name: 'Particle Field', tag: 'vfx-particle-field', how: 'Ambient canvas particle animation.', html: '<vfx-particle-field></vfx-particle-field>', wide: true },
+  { id: 'marquee', name: 'Marquee', tag: 'vfx-marquee', how: 'Looping content marquee with pause-on-hover and reduced-motion support.', html: '<vfx-marquee duration="20"><span>BUILD ✦ CREATE ✦ SHIP ✦</span></vfx-marquee>', wide: true },
+  { id: 'scroll-reveal', name: 'Scroll Reveal', tag: 'vfx-scroll-reveal', how: 'Viewport-triggered content reveal with observer cleanup.', html: '<vfx-scroll-reveal><article style="padding:22px;border-radius:12px;background:#f0edff"><h3>Reveal on scroll</h3><p>Scroll this card into view.</p></article></vfx-scroll-reveal>', wide: true },
+  { id: 'animated-counter', name: 'Animated Counter', tag: 'vfx-animated-counter', how: 'Animated numeric counter with completion event.', html: '<vfx-animated-counter value="12500" label="Downloads"></vfx-animated-counter>' },
+  { id: 'confetti-button', name: 'Confetti Button', tag: 'vfx-confetti-button', how: 'VFX celebration button with burst and shard effects.', html: '<vfx-confetti-button label="Celebrate release"></vfx-confetti-button>' }
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
 const WIRE = {
@@ -334,6 +344,11 @@ const WIRE = {
   'json-editor': ['Use <vfx-json-editor></vfx-json-editor> as a standalone custom element.', 'JSON editing with validation and formatting. See components/json-editor/README.md for API and limitations.'],
   'tilt-card': ['Use <vfx-tilt-card></vfx-tilt-card> as a standalone custom element.', 'Pointer-reactive 3D perspective card. See components/tilt-card/README.md for API and limitations.'],
   'flip-card': ['Use <vfx-flip-card></vfx-flip-card> as a standalone custom element.', 'Front/back 3D flip interaction. See components/flip-card/README.md for API and limitations.'],
+  'particle-field': ['Use <vfx-particle-field></vfx-particle-field> as a standalone custom element.', 'Ambient canvas particle animation. See components/particle-field/README.md for usage and limitations.'],
+  'marquee': ['Use <vfx-marquee></vfx-marquee> as a standalone custom element.', 'Looping content marquee with pause-on-hover and reduced-motion support. See components/marquee/README.md for usage and limitations.'],
+  'scroll-reveal': ['Use <vfx-scroll-reveal></vfx-scroll-reveal> as a standalone custom element.', 'Viewport-triggered content reveal with observer cleanup. See components/scroll-reveal/README.md for usage and limitations.'],
+  'animated-counter': ['Use <vfx-animated-counter></vfx-animated-counter> as a standalone custom element.', 'Animated numeric counter with completion event. See components/animated-counter/README.md for usage and limitations.'],
+  'confetti-button': ['Use <vfx-confetti-button></vfx-confetti-button> as a standalone custom element.', 'VFX celebration button with burst and shard effects. See components/confetti-button/README.md for usage and limitations.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -417,6 +432,8 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-markdown-editor') el.addEventListener('input', () => say('Markdown updated'));
   else if (it.tag === 'vfx-json-editor') el.addEventListener('change', e => say(e.detail.valid ? 'Valid JSON' : 'Invalid JSON'));
   else if (it.tag === 'vfx-flip-card') el.addEventListener('change', e => say(e.detail.flipped ? 'Card flipped' : 'Card returned'));
+  else if (it.tag === 'vfx-animated-counter') el.addEventListener('complete', e => say('Reached ' + e.detail.value));
+  else if (it.tag === 'vfx-confetti-button') el.addEventListener('celebrate', () => say('Celebration triggered'));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

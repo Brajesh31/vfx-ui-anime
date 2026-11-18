@@ -1552,6 +1552,106 @@
         }
       ],
       "docs": "Load the standalone component file. See components/flip-card/README.md."
+    },
+    {
+      "name": "particle-field",
+      "type": "registry:file",
+      "title": "VFX UI Anime Particle Field",
+      "description": "Ambient canvas particle animation. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "particle-field",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/particle-field/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/particle-field.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/particle-field/README.md."
+    },
+    {
+      "name": "marquee",
+      "type": "registry:file",
+      "title": "VFX UI Anime Marquee",
+      "description": "Looping content marquee with pause-on-hover and reduced-motion support. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "marquee",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/marquee/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/marquee.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/marquee/README.md."
+    },
+    {
+      "name": "scroll-reveal",
+      "type": "registry:file",
+      "title": "VFX UI Anime Scroll Reveal",
+      "description": "Viewport-triggered content reveal with observer cleanup. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "scroll-reveal",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/scroll-reveal/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/scroll-reveal.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/scroll-reveal/README.md."
+    },
+    {
+      "name": "animated-counter",
+      "type": "registry:file",
+      "title": "VFX UI Anime Animated Counter",
+      "description": "Animated numeric counter with completion event. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "animated-counter",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/animated-counter/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/animated-counter.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/animated-counter/README.md."
+    },
+    {
+      "name": "confetti-button",
+      "type": "registry:file",
+      "title": "VFX UI Anime Confetti Button",
+      "description": "VFX celebration button with burst and shard effects. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "confetti-button",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/confetti-button/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/confetti-button.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/confetti-button/README.md."
     }
   ]
 }

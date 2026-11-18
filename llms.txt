@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Seventy-seven dependency-free Web Component types with seventy-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Eighty-two dependency-free Web Component types with eighty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -142,3 +142,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - JSON Editor: components/json-editor/, <vfx-json-editor>. JSON editing with validation and formatting.
 - 3D Tilt Card: components/tilt-card/, <vfx-tilt-card>. Pointer-reactive 3D perspective card.
 - 3D Flip Card: components/flip-card/, <vfx-flip-card>. Front/back 3D flip interaction.
+
+
+## Advanced motion components
+- Particle Field: components/particle-field/, <vfx-particle-field>. Ambient canvas particle animation.
+- Marquee: components/marquee/, <vfx-marquee>. Looping content marquee with pause-on-hover and reduced-motion support.
+- Scroll Reveal: components/scroll-reveal/, <vfx-scroll-reveal>. Viewport-triggered content reveal with observer cleanup.
+- Animated Counter: components/animated-counter/, <vfx-animated-counter>. Animated numeric counter with completion event.
+- Confetti Button: components/confetti-button/, <vfx-confetti-button>. VFX celebration button with burst and shard effects.

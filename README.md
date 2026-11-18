@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Sixty-six additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Seventy-one additional controls extend the same design and interaction language.
 
-**Current library: 77 component types and 78 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 82 component types and 83 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -92,6 +92,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | JSON Editor | `<vfx-json-editor>` | [components/json-editor](components/json-editor/) |
 | 3D Tilt Card | `<vfx-tilt-card>` | [components/tilt-card](components/tilt-card/) |
 | 3D Flip Card | `<vfx-flip-card>` | [components/flip-card](components/flip-card/) |
+| Particle Field | `<vfx-particle-field>` | [components/particle-field](components/particle-field/) |
+| Marquee | `<vfx-marquee>` | [components/marquee](components/marquee/) |
+| Scroll Reveal | `<vfx-scroll-reveal>` | [components/scroll-reveal](components/scroll-reveal/) |
+| Animated Counter | `<vfx-animated-counter>` | [components/animated-counter](components/animated-counter/) |
+| Confetti Button | `<vfx-confetti-button>` | [components/confetti-button](components/confetti-button/) |
 
 Each component folder contains:
 
@@ -226,3 +231,12 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Markdown Editor**: split writing and preview panel with escaped text formatting.
 - **JSON Editor**: two-pane JSON editor with validity checks and formatting.
 - **3D Tilt Card and 3D Flip Card**: pointer perspective and reversible 3D presentation.
+
+
+## Advanced motion components
+
+- **Particle Field**: canvas-based ambient motion using the shared animation runtime.
+- **Marquee**: looping slotted content, pauses on hover, and honors reduced-motion preferences.
+- **Scroll Reveal**: viewport-triggered content reveal with observer cleanup.
+- **Animated Counter**: configurable number animation and completion event.
+- **Confetti Button**: VFX burst and shard celebration effects.
