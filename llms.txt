@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Fifty-seven dependency-free Web Component types with fifty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Sixty-two dependency-free Web Component types with sixty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -110,3 +110,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Notification Center: `components/notification-center/` `<vfx-notification-center>`, unread inbox, read/dismiss actions, and filtering.
 - Rich Text Editor: `components/rich-text-editor/` `<vfx-rich-text-editor>`, inline formatting, lists, undo/redo, and sanitized HTML.
 - Gradient Picker: `components/gradient-picker/` `<vfx-gradient-picker>`, two-color CSS gradient editor and presets.
+
+
+## Workflow and utility components
+- Multi-step Wizard: `components/wizard/` `<vfx-wizard>`, slotted flow steps, validation, progress, and completion.
+- Guided Tour: `components/guided-tour/` `<vfx-guided-tour>`, selector-based spotlight guide with keyboard navigation.
+- Stopwatch: `components/stopwatch/` `<vfx-stopwatch>`, start/stop, lap timing, and reset.
+- Emoji Picker: `components/emoji-picker/` `<vfx-emoji-picker>`, curated searchable emoji collection.
+- Copy Code Block: `components/copy-code/` `<vfx-copy-code>`, line numbers, copy action, and clipboard fallback.

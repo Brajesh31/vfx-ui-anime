@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Forty-six additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Fifty-one additional controls extend the same design and interaction language.
 
-**Current library: 57 component types and 58 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 62 component types and 63 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -72,6 +72,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Notification Center | `<vfx-notification-center>` | [components/notification-center](components/notification-center/) |
 | Rich Text Editor | `<vfx-rich-text-editor>` | [components/rich-text-editor](components/rich-text-editor/) |
 | Gradient Picker | `<vfx-gradient-picker>` | [components/gradient-picker](components/gradient-picker/) |
+| Multi-step Wizard | `<vfx-wizard>` | [components/wizard](components/wizard/) |
+| Guided Tour | `<vfx-guided-tour>` | [components/guided-tour](components/guided-tour/) |
+| Stopwatch | `<vfx-stopwatch>` | [components/stopwatch](components/stopwatch/) |
+| Emoji Picker | `<vfx-emoji-picker>` | [components/emoji-picker](components/emoji-picker/) |
+| Copy Code Block | `<vfx-copy-code>` | [components/copy-code](components/copy-code/) |
 
 Each component folder contains:
 
@@ -176,3 +181,12 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Notification Center**: unread filters, read actions, bulk read, and dismiss behavior.
 - **Rich Text Editor**: inline formatting, lists, undo/redo, word count, and sanitized HTML value.
 - **Gradient Picker**: two-color gradient editing, angle adjustment, live CSS preview, and presets.
+
+
+## Workflow and utility components
+
+- **Multi-step Wizard**: slotted steps, validation, progress, navigation, and completion event.
+- **Guided Tour**: selector-based spotlight overlay with keyboard navigation and skip.
+- **Stopwatch**: start/stop, lap splits, reset, and elapsed-time events.
+- **Emoji Picker**: searchable curated emoji grid and selection events.
+- **Copy Code Block**: line-numbered code display with copy action and clipboard fallback.

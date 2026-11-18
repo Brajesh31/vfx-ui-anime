@@ -107,6 +107,11 @@
 <script src="../components/notification-center/index.js"></script>
 <script src="../components/rich-text-editor/index.js"></script>
 <script src="../components/gradient-picker/index.js"></script>
+<script src="../components/wizard/index.js"></script>
+<script src="../components/guided-tour/index.js"></script>
+<script src="../components/stopwatch/index.js"></script>
+<script src="../components/emoji-picker/index.js"></script>
+<script src="../components/copy-code/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -169,8 +174,12 @@ const ITEMS = [
   { id: 'date-range-picker', name: 'Date Range Picker', tag: 'vfx-date-range-picker', how: 'Choose start and end dates or use a quick range preset.', html: '<vfx-date-range-picker label="Booking period"></vfx-date-range-picker>' },
   { id: 'notification-center', name: 'Notification Center', tag: 'vfx-notification-center', how: 'Filter unread updates, mark notifications read, or dismiss them.', html: '<vfx-notification-center items="welcome::Welcome aboard::Your workspace is ready.::unread|review::Review complete::Your latest build passed review.::read|mention::You were mentioned::A teammate mentioned you.::unread"></vfx-notification-center>', wide: true },
   { id: 'rich-text-editor', name: 'Rich Text Editor', tag: 'vfx-rich-text-editor', how: 'Format text, create lists, undo changes, and inspect the word count.', html: '<vfx-rich-text-editor placeholder="Write a project description…"></vfx-rich-text-editor>', wide: true },
-  { id: 'gradient-picker', name: 'Gradient Picker', tag: 'vfx-gradient-picker', how: 'Adjust two colors and direction, or apply a preset gradient.', html: '<vfx-gradient-picker from="#ff5fa8" to="#8f8df7" angle="135"></vfx-gradient-picker>' }
-];
+  { id: 'gradient-picker', name: 'Gradient Picker', tag: 'vfx-gradient-picker', how: 'Adjust two colors and direction, or apply a preset gradient.', html: '<vfx-gradient-picker from="#ff5fa8" to="#8f8df7" angle="135"></vfx-gradient-picker>' },
+  { id: 'wizard', name: 'Multi-step Wizard', tag: 'vfx-wizard', how: 'Move through a multi-step flow, validate fields, and finish.', html: '<vfx-wizard><section data-step data-title="Profile"><h3>Your profile</h3><p>Start with the basics.</p><input required placeholder="Your name"></section><section data-step data-title="Preferences"><h3>Set preferences</h3><p>Choose defaults for your workspace.</p></section><section data-step data-title="Finish"><h3>You are all set</h3><p>Complete the setup flow.</p></section></vfx-wizard>', wide: true },
+  { id: 'guided-tour', name: 'Guided Tour', tag: 'vfx-guided-tour', how: 'Launch the tour, navigate its steps, and dismiss with Escape.', html: '<button class="demo-tour-target" type="button" style="padding:10px 14px;border:2px solid #241d48;border-radius:10px;background:#ffe2ef;font-weight:800">Tour target</button><vfx-guided-tour steps=".demo-tour-target::Welcome::This is the highlighted area of your page.|body::Explore::Use Next or the arrow keys to continue."></vfx-guided-tour><button type="button" data-demo="tour-start">Start tour</button>' },
+  { id: 'stopwatch', name: 'Stopwatch', tag: 'vfx-stopwatch', how: 'Start, stop, record lap splits, and reset the elapsed time.', html: '<vfx-stopwatch></vfx-stopwatch>' },
+  { id: 'emoji-picker', name: 'Emoji Picker', tag: 'vfx-emoji-picker', how: 'Search and select an emoji from the curated collection.', html: '<vfx-emoji-picker value="✨"></vfx-emoji-picker>' },
+  { id: 'copy-code', name: 'Copy Code Block', tag: 'vfx-copy-code', how: 'Inspect line numbers and copy the code sample.', html: '<vfx-copy-code language="js">const greeting = "Hello, world!";\nconsole.log(greeting);</vfx-copy-code>' }];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
 const WIRE = {
@@ -275,6 +284,11 @@ const WIRE = {
   'notification-center': ['Use <vfx-notification-center items="welcome::Welcome::Your workspace is ready.::unread|review::Review complete::Build passed.::read"></vfx-notification-center>. Entries use id::title::message::readState::time.', 'Read items and unreadCount. Call markRead(id), markAllRead(), or dismiss(id). Listen for read, read-all, dismiss, and change. State is local until connected to a store.'],
   'rich-text-editor': ['Use <vfx-rich-text-editor name="description" placeholder="Write something…"></vfx-rich-text-editor>.', 'Read or set value as sanitized HTML, read text as plain text, and call focus(). Listen for input with HTML, text, and word count. Validate output again on your server.'],
   'gradient-picker': ['Use <vfx-gradient-picker name="background" from="#ff5fa8" to="#8f8df7" angle="135"></vfx-gradient-picker>.', 'Read or set from, to, angle, and CSS value. Listen for change. copy-request emits the CSS for the host app to copy if appropriate.'],
+  'wizard': ['Use <vfx-wizard><section data-step data-title="Profile">...</section><section data-step data-title="Finish">...</section></vfx-wizard>. Each direct child with data-step becomes one step.', 'Read activeIndex, totalSteps, and complete. Call goTo(index), next(), and previous(). Listen for change, invalid, and complete. Native required fields are checked before advancing.'],
+  'guided-tour': ['Use <vfx-guided-tour steps="#nav::Navigation::Explore the menu.|#hero::Welcome::Start here."></vfx-guided-tour>. Each entry is selector::title::description.', 'Call start(), next(), previous(), and finish(reason). Read active and currentIndex. Listen for start and finish. Escape exits; arrow keys navigate.'],
+  'stopwatch': ['Use <vfx-stopwatch></vfx-stopwatch> for a running stopwatch and lap list.', 'Call start(), stop(), reset(), and lap(). Read running, elapsed (milliseconds), and laps. Listen for start, stop, reset, and lap.'],
+  'emoji-picker': ['Use <vfx-emoji-picker value="✨"></vfx-emoji-picker> for a searchable emoji panel.', 'Read or set value. Listen for select and change with the chosen emoji. The included emoji collection is curated and extendable.'],
+  'copy-code': ['Use <vfx-copy-code language="js">const answer = 42;</vfx-copy-code>. Source is read as text and never executed.', 'Read or set value, inspect lineCount, and call copy(). Listen for copy and copy-error. Clipboard API falls back to a temporary textarea.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -342,6 +356,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-notification-center') el.addEventListener('change', e => say(e.detail.unreadCount + ' unread'));
   else if (it.tag === 'vfx-rich-text-editor') el.addEventListener('input', e => say(e.detail.words + ' words'));
   else if (it.tag === 'vfx-gradient-picker') el.addEventListener('change', e => say(e.detail.angle + '° gradient'));
+  else if (it.tag === 'vfx-wizard') { el.addEventListener('change', e => say('Step ' + (e.detail.index + 1) + ': ' + e.detail.step)); el.addEventListener('complete', () => say('Wizard completed')); }
+  else if (it.tag === 'vfx-guided-tour') { card.querySelector('[data-demo=tour-start]').addEventListener('click', () => el.start()); el.addEventListener('finish', e => say('Tour finished: ' + e.detail.reason)); }
+  else if (it.tag === 'vfx-stopwatch') { el.addEventListener('lap', e => say('Lap ' + e.detail.number + ': ' + Math.round(e.detail.elapsed) + ' ms')); el.addEventListener('stop', e => say('Stopped at ' + Math.round(e.detail.elapsed) + ' ms')); }
+  else if (it.tag === 'vfx-emoji-picker') el.addEventListener('select', e => say('Selected ' + e.detail.emoji));
+  else if (it.tag === 'vfx-copy-code') { el.addEventListener('copy', () => say('Code copied')); el.addEventListener('copy-error', () => say('Copy unavailable')); }
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.
