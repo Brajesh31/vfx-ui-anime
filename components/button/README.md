@@ -60,3 +60,10 @@ el.disabled = true;
 - **The burst behind it can be clipped.** It is drawn on a canvas inside the element that reaches 160 pixels past each edge; a parent with `overflow: hidden` cuts it off. Everything else is on the page-wide canvas and is not clipped.
 - **One label size.** The padding and the type are fixed; it does not have small or large sizes.
 - **Checked in headless Chromium** with real touch and key events. Not tried in Safari or Firefox, or with a screen reader.
+
+
+## Phase 2 refinements
+
+- The primary `impact()` method is now guarded against disabled or secondary variants. Calling it on a secondary button no longer starts the primary burst sequence.
+- Keyboard focus has a stronger VFX accent outline. Reduced-motion mode settles the button and checkmark springs immediately while keeping the same success state.
+- Existing `click`, `impact()` and `done()` behavior remains available.

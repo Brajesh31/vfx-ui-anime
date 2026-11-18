@@ -24,11 +24,11 @@ class vfxRating extends fx.Base {
   attributeChangedCallback(name, _, v) { if (!this.btns) return; if (name === 'value') this.value = v; else for (const b of this.btns) b.disabled = this.disabled; }
   render() { return `<div class="stars" role="radiogroup" part="stars" aria-label="${esc(this.getAttribute('label') || 'Rating')}">${[1, 2, 3, 4, 5].map((n) => `<button type="button" role="radio" part="star" aria-checked="false" tabindex="-1" aria-label="${n} star${n > 1 ? 's' : ''}"${this.disabled ? ' disabled' : ''}>${STAR}</button>`).join('')}</div>`; }
   set(n, quiet) {
-    const was = this.score; this.score = n; this.internals.setFormValue(n ? String(n) : null);
+    const was = this.score, seq = this.seq = (this.seq || 0) + 1; this.score = n; this.internals.setFormValue(n ? String(n) : null);
     this.btns.forEach((b, i) => {
       b.setAttribute('aria-checked', String(i + 1 === n)); b.tabIndex = (n ? i + 1 === n : i === 0) ? 0 : -1;
-      if (quiet) { b.classList.toggle('lit', i < n); return; }
-      later(Math.max(0, i - was) * 60, () => {   // they light one after another
+      if (quiet || fx.calm) { b.classList.toggle('lit', i < n); return; }
+      later(Math.max(0, i - was) * 60, () => { if (seq !== this.seq) return;   // they light one after another
         b.classList.toggle('lit', i < n); if (!(i < n && i >= was)) return;
         this.sp[i].x = 0.35; const c = at(b); puff(c.x, c.y + 14, { size: 5, n: 2, life: 0.4 });
         if (i !== n - 1) return;
@@ -39,14 +39,16 @@ class vfxRating extends fx.Base {
     if (!quiet) this.dispatchEvent(new Event('change', { bubbles: true }));
   }
   setup() {
-    this.btns = this.$$('button'); this.sp = this.btns.map(() => new Spring(1, 560, 12)); this.back = this.backLayer(); this.score = 0;
+    this.btns = this.$('button'); this.sp = this.btns.map(() => new Spring(1, 560, 12)); this.back = this.backLayer(); this.score = 0; this.seq = 0; this.initialValue = clamp(Math.round(+this.getAttribute('value') || 0), 0, 5);
     this.btns.forEach((b, i) => {
       b.addEventListener('click', () => this.set(this.score === i + 1 ? 0 : i + 1));
       b.addEventListener('keydown', (e) => { const d = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key]; if (!d) return; e.preventDefault(); const n = clamp((this.score || (d > 0 ? 0 : 2)) + d, 1, 5); this.set(n); this.btns[n - 1].focus(); });
     });
     this.set(clamp(Math.round(+this.getAttribute('value') || 0), 0, 5), true);
   }
-  frame(dt) { this.btns.forEach((b, i) => { const y = this.sp[i].step(dt); b.style.transform = Math.abs(y - 1) < 0.001 ? '' : `scale(${y}) rotate(${(1 - y) * -34}deg)`; }); }
+  formResetCallback() { this.set(this.initialValue ?? 0, true); }
+  formDisabledCallback(disabled) { if (this.btns) this.btns.forEach(b => b.disabled = !!disabled || this.disabled); }
+  frame(dt) { this.btns.forEach((b, i) => { if (fx.calm) { this.sp[i].x = 1; this.sp[i].v = 0; } const y = this.sp[i].step(dt); b.style.transform = Math.abs(y - 1) < 0.001 ? '' : `scale(${y}) rotate(${(1 - y) * -34}deg)`; }); }
 }
 fx.define('vfx-rating', vfxRating);
 }

@@ -39,3 +39,10 @@ el.value = 'pro';     // from code: no effects
 ## Limits
 
 - One column only.
+
+
+## Phase 2 refinements
+
+- Form reset restores the initial selected option. A `required` attribute exposes `aria-required` and native form validity through `ElementInternals`.
+- The group label updates after connection. Form-disabled changes are mirrored to the native radio inputs.
+- Reduced-motion mode snaps the selected dots to their final positions without replaying spring travel.

@@ -34,3 +34,10 @@ el.show(); el.hide(); el.open;
 
 - **Always above.** It does not flip when there is no room.
 - **It can't point at something else.** The button is the trigger.
+
+
+## Phase 2 refinements
+
+- Hover, keyboard focus and touch/keyboard pinning are tracked independently. Touch can toggle the tooltip closed even while the trigger retains focus; Escape clears all open reasons.
+- The tooltip flips below the trigger when there is insufficient room above and repositions on scroll/resize. Its position listeners are removed on disconnect and rebound on reconnect.
+- Reduced-motion mode settles both the button squash and tooltip spring immediately. Existing `show()`, `hide()` and `open` accessors remain available.

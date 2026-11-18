@@ -40,3 +40,10 @@ el.value;            // the picked option's value
 
 - **No panels and no `aria-controls`,** because the panels are outside its shadow root. Give each panel `role="tabpanel"` and a label yourself.
 - **They do not scroll.** Too many tabs for the width will overflow.
+
+
+## Phase 2 refinements
+
+- The tab strip now supports horizontal scrolling when its options exceed the available width, while retaining the springing active indicator.
+- Resize observation is stored and disconnected when the component leaves the document. It is reattached on reconnect, with a window-resize fallback.
+- Reduced-motion mode snaps the active indicator to its selected tab and suppresses the landing sequence. The component still intentionally leaves panel ownership to the consuming application.

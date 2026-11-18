@@ -46,7 +46,7 @@ class vfxProgress extends fx.Base {
   disconnectedCallback() { super.disconnectedCallback(); if (this.layer) { this.layer.dead = true; this.layer = null; } }
   // the ground, the pebbles, the cloud and the check: drawn every frame on the effects layer
   paint(tt, dt) {
-    if (!this.vis) return; const g = fx.g, P = fx.P, b = at(this.bar), L = b.x - b.w / 2, R = b.x + b.w / 2, p = this.p, done = this.doneAt, lead = L + 4 + (b.w - 8) * p, cy = b.y, gy = cy + b.h / 2 + 30;
+    if (!this.vis || fx.calm) return; const g = fx.g, P = fx.P, b = at(this.bar), L = b.x - b.w / 2, R = b.x + b.w / 2, p = this.p, done = this.doneAt, lead = L + 4 + (b.w - 8) * p, cy = b.y, gy = cy + b.h / 2 + 30;
     const reach = clamp(p * 1.25 + (done ? 1 : 0)), gx1 = lerp(L + 10, R - 10, reach);   // the ground draws itself out under the fill
     if (reach > 0.02) { g.strokeStyle = P.line; g.lineWidth = 1.4; g.beginPath(); g.moveTo(L + 10, gy); g.lineTo(gx1, gy); for (let x = L + 26; x < gx1 - 6; x += 37) { g.moveTo(x, gy); g.lineTo(x + 3, gy - 4); g.moveTo(x + 5, gy); g.lineTo(x + 6.5, gy - 2.5); } g.stroke(); }
     for (const q of this.peb) {   // a pebble lifts when the edge goes over it and drops when the load is done
@@ -69,9 +69,9 @@ class vfxProgress extends fx.Base {
   frame(dt) {
     this.t += dt; const r = this.box.getBoundingClientRect(); this.vis = r.bottom > -80 && r.top < innerHeight + 80;
     const demo = this.hasAttribute('demo');
-    if (demo && !this.doneAt) this.goal = Math.min(1, this.goal + dt * (0.14 + 0.115 * Math.sin(this.t * 2.1) + 0.07 * Math.sin(this.t * 4.7)));   // it loads in surges, not at one speed
-    const was = this.p; if (!this.doneAt && this.p < this.goal) this.p = Math.min(this.goal, this.p + dt * clamp((this.goal - this.p) * 3, 0.12, 0.9));
-    this.spd = lerp(this.spd, dt > 0 ? (this.p - was) / dt : 0, Math.min(1, dt * 8));
+    if (demo && !fx.calm && !this.doneAt) this.goal = Math.min(1, this.goal + dt * (0.14 + 0.115 * Math.sin(this.t * 2.1) + 0.07 * Math.sin(this.t * 4.7)));   // it loads in surges, not at one speed
+    const was = this.p; if (!this.doneAt) { if (fx.calm) this.p = this.goal; else if (this.p < this.goal) this.p = Math.min(this.goal, this.p + dt * clamp((this.goal - this.p) * 3, 0.12, 0.9)); }
+    this.spd = fx.calm ? 0 : lerp(this.spd, dt > 0 ? (this.p - was) / dt : 0, Math.min(1, dt * 8));
     const b = at(this.bar), L = b.x - b.w / 2, lead = L + 4 + (b.w - 8) * this.p, top = b.y - b.h / 2, p = this.p, spd = this.spd;
     if (!this.doneAt && this.vis) {
       if (p > 0.06 && spd > 0.02) { this.acc += dt * (4 + spd * 60);   // wisps torn off the back of the cloud, and the lines of its speed
@@ -90,7 +90,9 @@ class vfxProgress extends fx.Base {
     } else if (demo && this.doneAt && this.t - this.doneAt > 3.6) this.reset();
     const n = this.doneAt ? 100 : Math.floor(p * 100), key = this.doneAt ? (this.getAttribute('done-label') || 'Complete ✓') : n + '%';
     if (key !== this.lastPct) { this.lastPct = key; this.pct.textContent = key; if (n % 5 === 0 && !this.doneAt) this.tag.x = 1.1; }
+    if (fx.calm) { this.tag.x = this.tag.to; this.tag.v = 0; }
     this.pct.style.transform = `skewX(-12deg) scale(${this.tag.step(dt)})`;
+    this.box.setAttribute('aria-valuetext', key);
     this.box.style.setProperty('--v', p); this.box.setAttribute('aria-valuenow', n);
   }
 }

@@ -16,24 +16,49 @@ class vfxTooltip extends fx.Base {
     .tip { position: absolute; left: 50%; bottom: calc(100% + 16px); width: max-content; max-width: 220px; min-width: 120px; padding: 11px 14px; border: var(--vfx-bw) solid var(--vfx-ink); border-radius: 13px; background: var(--vfx-card); box-shadow: var(--vfx-sh); font-size: 16px; font-weight: 800; text-align: center; translate: -50% 0; transform-origin: 50% 120%; transform: scale(0); will-change: transform; pointer-events: none; }
     .tip::after { content: ""; position: absolute; left: 50%; top: 100%; margin-left: -9px; border: 9px solid transparent; border-top: 12px solid var(--vfx-ink); }
     .tip::before { content: ""; position: absolute; left: 50%; top: calc(100% - 4.5px); margin-left: -6px; border: 6px solid transparent; border-top: 8.5px solid var(--vfx-card); z-index: 1; }
+    .tip[data-side="bottom"] { top: calc(100% + 16px); bottom: auto; transform-origin: 50% -20%; }
+    .tip[data-side="bottom"]::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--vfx-ink); }
+    .tip[data-side="bottom"]::before { top: auto; bottom: calc(100% - 4.5px); border-top-color: transparent; border-bottom-color: var(--vfx-card); }
     .help { display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: var(--vfx-bw) solid var(--vfx-ink); border-radius: 50%; background: var(--vfx-card); box-shadow: 4px 5px 0 var(--vfx-soft); font-weight: 900; cursor: pointer; }`;
   get open() { return !!this.isOpen; }
   attributeChangedCallback(name, _, v) { if (!this.b) return; if (name === 'text') this.tip.textContent = v || ''; else this.b.setAttribute('aria-label', v || 'Help'); }
   render() { const id = 'sk-tip-' + ++count; return `<div class="tip" role="tooltip" id="${id}" part="tip">${esc(this.getAttribute('text') || 'Helpful hint!')}</div><button class="help" type="button" part="button" aria-describedby="${id}" aria-label="${esc(this.getAttribute('label') || 'Help')}"><slot>?</slot></button>`; }
   setup() {
-    const b = this.b = this.$('.help'); this.tip = this.$('.tip'); this.s = new Spring(0, 460, 15); this.bs = squashy(b, { low: 0.78, wide: 0.3 }); this.isOpen = false;
-    b.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') this.show(true); }); b.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') this.show(false); });
-    b.addEventListener('focus', () => this.show(true)); b.addEventListener('blur', () => this.show(false)); b.addEventListener('click', () => this.show(!this.isOpen || this.root.activeElement === b));
-    b.addEventListener('keydown', (e) => { if (e.key === 'Escape') this.show(false); });
+    const b = this.b = this.$('.help'); this.tip = this.$('.tip'); this.s = new Spring(0, 460, 15); this.bs = squashy(b, { low: 0.78, wide: 0.3 });
+    this.isOpen = false; this.hovered = false; this.focused = false; this.pinned = false;
+    b.addEventListener('pointerdown', e => { this.lastPointerType = e.pointerType; });
+    b.addEventListener('pointerenter', e => { this.lastPointerType = e.pointerType; if (e.pointerType === 'mouse') { this.hovered = true; this.update(); } });
+    b.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { this.hovered = false; this.update(); } });
+    b.addEventListener('focus', () => { this.focused = true; this.update(); });
+    b.addEventListener('blur', () => { this.focused = false; this.update(); });
+    b.addEventListener('click', e => { this.focused = false; if (this.lastPointerType === 'touch' || e.detail === 0) this.pinned = !this.pinned; else this.pinned = false; this.update(); });
+    b.addEventListener('keydown', e => { if (e.key === 'Escape') this.hide(); });
+    this.positionHandler = () => this.positionTip(); this.bindPositionEvents();
   }
-  show(on = true) {
-    if (on === this.isOpen) return; this.isOpen = on; this.s.to = on ? 1 : 0; this.s.d = on ? 15 : 34; if (!on) return; this.bs.s.v += 2;
+  bindPositionEvents() { if (this.positionBound) return; window.addEventListener('resize', this.positionHandler, { passive: true }); window.addEventListener('scroll', this.positionHandler, true); this.positionBound = true; }
+  connectedCallback() { super.connectedCallback(); if (this.ready) this.bindPositionEvents(); }
+  disconnectedCallback() { if (this.positionBound) { window.removeEventListener('resize', this.positionHandler); window.removeEventListener('scroll', this.positionHandler, true); this.positionBound = false; } super.disconnectedCallback(); }
+  positionTip() {
+    if (!this.isOpen || !this.tip) return;
+    const anchor = this.b.getBoundingClientRect(), host = this.getBoundingClientRect(), h = this.tip.offsetHeight, w = this.tip.offsetWidth;
+    const below = anchor.top < h + 20 && innerHeight - anchor.bottom > h + 20;
+    this.tip.dataset.side = below ? 'bottom' : 'top';
+    const center = Math.max(12 + w / 2, Math.min(innerWidth - 12 - w / 2, anchor.left + anchor.width / 2));
+    this.tip.style.left = (center - host.left) + 'px';
+  }
+  update() {
+    const on = this.hovered || this.focused || this.pinned;
+    if (on === this.isOpen) { if (on) this.positionTip(); return; }
+    this.isOpen = on; this.s.to = on ? 1 : 0; this.s.d = on ? 15 : 34;
+    if (!on) return;
+    this.positionTip(); this.bs.s.v += 2;
     later(120, () => { if (!this.isOpen) return; const c = at(this.tip), q = at(this.b);
       puff(c.x - c.w / 2 - 8, c.y - 12, { size: 8, n: 4, vx: -14, vy: -10, life: 0.8 }); puff(c.x + c.w / 2 + 10, c.y + 12, { size: 8, n: 4, vx: 14, vy: -6, life: 0.8 }); puff(c.x - c.w / 2 - 4, c.y + 22, { size: 5, n: 3, vx: -10, life: 0.6 });
       ticks(c.x + c.w / 2 - 2, c.y - c.h / 2 - 6, { dir: -1.0, n: 3, r: 5, len: 16, fan: 0.36, life: 0.5 }); ring(q.x, q.y - q.h / 2 - 3, { rx: 22, ry: 5, life: 0.5, w: 3 }); sfx('kachi', c.x + 6, c.y - 46, { size: 96, rot: -0.08, life: 0.8, ...hollow() }); });
   }
-  hide() { this.show(false); }
-  frame(dt) { this.bs.step(dt); const y = Math.max(0, this.s.step(dt)); this.tip.style.transform = `scale(${y}) rotate(${(1 - y) * -10}deg)`; }
+  show(on = true) { this.pinned = !!on; this.update(); }
+  hide() { this.hovered = false; this.focused = false; this.pinned = false; this.update(); }
+  frame(dt) { if (fx.calm) { this.s.x = this.s.to; this.s.v = 0; this.bs.s.x = 1; this.bs.s.v = 0; this.bs.pop.x = 1; this.bs.pop.v = 0; this.bs.tilt.x = 0; this.bs.tilt.v = 0; } this.bs.step(dt); const y = Math.max(0, this.s.step(dt)); this.tip.style.transform = 'scale(' + y + ') rotate(' + ((1 - y) * -10) + 'deg)'; }
 }
 fx.define('vfx-tooltip', vfxTooltip);
 }

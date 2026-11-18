@@ -38,3 +38,10 @@ el.value = 80;
 
 - **The effects need speed.** A slow drag only moves the thumb; the cloud starts above about a third of the track per second.
 - **Horizontal only.**
+
+
+## Phase 2 refinements
+
+- Form reset returns to the original `value` attribute (or 50 when omitted). Form-disabled changes are mirrored to the native range input.
+- The value bubble is reflected through the native range input's `aria-valuetext`. A `required` attribute is forwarded to the native input.
+- Reduced-motion mode snaps the thumb and value bubble to the current value and suppresses speed trails. The spring/cloud interaction remains unchanged for normal motion.

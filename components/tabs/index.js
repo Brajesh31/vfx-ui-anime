@@ -14,6 +14,10 @@ class vfxTabs extends fx.Base {
   static css = `
     :host { margin-top: 10px; }
     .tabs { position: relative; display: flex; border: var(--vfx-bw) solid var(--vfx-ink); border-radius: 12px; background: var(--vfx-card); box-shadow: var(--vfx-sh); }
+    .tabs { overflow-x: auto; scrollbar-width: none; overscroll-behavior-inline: contain; }
+    .tabs::-webkit-scrollbar { display: none; }
+    button { flex: 0 0 auto; }
+    button:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: -4px; z-index: 2; }
     .ind { position: absolute; top: -11px; bottom: -1px; left: 0; width: 10px; border: var(--vfx-bw) solid var(--vfx-ink); border-bottom: 0; border-radius: 13px 13px 0 0; background: var(--vfx-card); margin: 0 0 0 calc(var(--vfx-bw) * -1); will-change: transform, width; }
     button { position: relative; padding: 10px 15px; border: 0; border-left: 2.4px solid var(--vfx-ink); background: none; font: 600 15px/1.2 -apple-system, "Segoe UI", system-ui, sans-serif; white-space: nowrap; cursor: pointer; transition: translate .18s cubic-bezier(.3, 1.6, .5, 1); }
     button:first-of-type { border-left-color: transparent; }
@@ -41,9 +45,13 @@ class vfxTabs extends fx.Base {
       t.addEventListener('keydown', (e) => { const d = { ArrowRight: 1, ArrowLeft: -1, Home: -99, End: 99 }[e.key]; if (!d) return; e.preventDefault(); const n = Math.abs(d) > 1 ? (d < 0 ? 0 : this.tabs.length - 1) : (i + d + this.tabs.length) % this.tabs.length; this.go(n); this.tabs[n].focus(); });
     });
     this.go(+(this.getAttribute('selected') || 0), true);
-    new ResizeObserver(() => this.go(this.selected, true)).observe(this.$('.tabs'));
+    this.observeTabs();
   }
+  observeTabs() { if (typeof ResizeObserver === 'function') { this.ro = new ResizeObserver(() => this.go(this.selected, true)); this.ro.observe(this.$('.tabs')); } else { this.resizeHandler = () => this.go(this.selected, true); window.addEventListener('resize', this.resizeHandler, { passive: true }); } }
+  connectedCallback() { super.connectedCallback(); if (this.ready && !this.ro && !this.resizeHandler) this.observeTabs(); }
+  disconnectedCallback() { this.ro?.disconnect(); this.ro = null; if (this.resizeHandler) window.removeEventListener('resize', this.resizeHandler); this.resizeHandler = null; super.disconnectedCallback(); }
   frame(dt) {
+    if (fx.calm) { this.sx.x = this.sx.to; this.sx.v = 0; this.sw.x = this.sw.to; this.sw.v = 0; this.up.x = 0; this.up.v = 0; this.pending = false; }
     const sx = this.sx, x = sx.step(dt), w = this.sw.step(dt) + Math.min(46, Math.abs(sx.v) * 0.06), u = this.up.step(dt);
     this.ind.style.transform = `translate(${x - (sx.v < 0 ? 0 : w - this.sw.x)}px, ${u}px)`; this.ind.style.width = w + 'px';
     if (this.pending && Math.abs(x - sx.to) < 3) {   // it has landed

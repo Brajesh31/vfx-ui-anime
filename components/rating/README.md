@@ -34,3 +34,10 @@ el.value = 3;   // from code: no effects
 ## Limits
 
 - Always five stars. No half stars.
+
+
+## Phase 2 refinements
+
+- Each value update now invalidates delayed star callbacks from earlier selections, preventing an old staggered animation from changing a newer score.
+- Form reset returns to the original `value` attribute, and form-disabled state is mirrored to all star buttons.
+- Reduced-motion mode applies the final star state immediately while preserving the selected value and change event.

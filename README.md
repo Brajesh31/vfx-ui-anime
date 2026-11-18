@@ -13,6 +13,7 @@ Phase 1 is complete. The full 82-component audit, shared visual/animation specif
 - [Phase 1 component audit](docs/quality/PHASE-1-COMPONENT-AUDIT.md)
 - [VFX visual and animation design system](docs/quality/ANIMATION-DESIGN-SYSTEM.md)
 - [Quality acceptance matrix](docs/quality/PHASE-1-ACCEPTANCE-MATRIX.md)
+- [Phase 2 signature-control upgrade report](docs/quality/PHASE-2-SIGNATURE-CONTROLS.md)
 
 ## 🎮 Live gallery
 
@@ -248,3 +249,10 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Scroll Reveal**: viewport-triggered content reveal with observer cleanup.
 - **Animated Counter**: configurable number animation and completion event.
 - **Confetti Button**: VFX burst and shard celebration effects.
+
+
+undefined
+
+## 🎴 Phase 2: signature controls upgraded
+
+The original 11 controls have received a focused behavior, lifecycle, accessibility and reduced-motion pass. Their signature animation identities remain intact. The implementation adds form reset/disabled synchronization, validation support, stale-animation protection, safer overlay behavior and expanded browser regression tests. See the [Phase 2 upgrade report](docs/quality/PHASE-2-SIGNATURE-CONTROLS.md).

@@ -18,7 +18,7 @@ class vfxInput extends fx.Base {
     input[aria-invalid="true"] { border-color: var(--vfx-danger, #d63865); box-shadow: 0 0 0 2px color-mix(in srgb, var(--vfx-danger, #d63865) 20%, transparent); }
     input:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: 4px; }`;
   get value() { return this.inp ? this.inp.value : this.getAttribute('value') || ''; }
-  set value(v) { if (this.inp) { this.inp.value = v; this.internals.setFormValue(this.inp.value); } else this.setAttribute('value', v); }
+  set value(v) { if (this.inp) { this.inp.value = v; this.syncForm(); } else this.setAttribute('value', v); }
   get disabled() { return this.hasAttribute('disabled'); }
   set disabled(v) { this.toggleAttribute('disabled', !!v); }
   attributeChangedCallback(name, _, v) { if (!this.inp) return; if (name === 'value') this.value = v ?? ''; else if (name === 'disabled') this.inp.disabled = this.disabled; else if (name === 'label') this.inp.setAttribute('aria-label', v || 'Text'); else if (name === 'type') this.inp.type = TYPES.includes(v) ? v : 'text'; else if (name === 'autocomplete') this.inp.autocomplete = v || 'off'; else if (name === 'placeholder') this.inp.placeholder = v ?? ''; else if (name === 'required') this.inp.required = this.hasAttribute('required'); else if (name === 'readonly') this.inp.readOnly = this.hasAttribute('readonly'); else if (['minlength','maxlength','pattern'].includes(name)) { if (v === null) this.inp.removeAttribute(name); else this.inp.setAttribute(name, v); } this.syncForm(); }

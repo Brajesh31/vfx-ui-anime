@@ -43,3 +43,10 @@ el.value; el.done;
 
 - **No indeterminate look.** Without numbers it sits at 0.
 - **No failed look.** If the task fails, show that next to it and `reset()`.
+
+
+## Phase 2 refinements
+
+- The progressbar now exposes its visible percentage/completion label through `aria-valuetext` as well as `aria-valuenow`.
+- Reduced-motion mode moves the displayed progress directly to the current goal, suppresses the decorative ground/cloud drawing and does not autoplay the `demo` loop.
+- Normal-motion cloud choreography, easing, `set()`, `reset()` and the existing `vfx:done` event are preserved.

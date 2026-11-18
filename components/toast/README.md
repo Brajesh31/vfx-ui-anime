@@ -35,3 +35,12 @@ el.open;    // true while it is showing
 
 - **No stack** of several toasts, and no kinds (error, warning). The icon is always the tick.
 - **One line.** A long message is cut off with an ellipsis.
+
+
+## Phase 2 refinements
+
+`show(text, options)` now accepts `options.type` (`success`, `info`, `warning` or `error`) and an optional `options.duration` in seconds. A string may also be passed as the second argument for the type. The `type` attribute supplies the default kind. Error toasts use an assertive alert role; other kinds use a polite status role. The component emits `show` and `hide` events with the type in `event.detail`.
+
+- `duration: 0` leaves the toast open until `hide()` is called.
+- Hidden toasts are `inert` and `aria-hidden`, so the dismiss button cannot receive focus while invisible.
+- The one-toast-at-a-time behavior and existing slide/impact/recovery animation remain intact.

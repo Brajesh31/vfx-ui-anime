@@ -37,3 +37,11 @@ el.value = 'hello';
 
 - **No validation styles.** `required`, `pattern` and the like are not passed through, and there is no invalid look.
 - One line only; there is no textarea.
+
+
+## Phase 2 refinements
+
+- `required`, `readonly`, `minlength`, `maxlength` and `pattern` are now forwarded to the native input, including when changed after connection. The allowed input `type` and `autocomplete` attributes also stay synchronized.
+- The custom element mirrors native validity through `ElementInternals` and exposes `validity`, `validationMessage`, `checkValidity()`, `reportValidity()` and `setCustomValidity()`.
+- Form reset restores the initial `value` attribute. Form-disabled changes are mirrored to the native input. Invalid state receives a visible style and `aria-invalid`.
+- Reduced-motion mode settles the focus/typing spring without removing the caret dust when motion is enabled.
