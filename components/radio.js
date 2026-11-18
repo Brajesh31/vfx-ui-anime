@@ -41,7 +41,7 @@
 
     connectedCallback() {
       this.render();
-      this.defaultValue = this.value;
+      if (this.defaultValue === undefined) this.defaultValue = this.value;
     }
 
     attributeChangedCallback() {
@@ -97,6 +97,7 @@
         input.required = this.required;
 
         input.addEventListener("change", () => {
+          this.setAttribute("value", input.value);
           this.sync();
           window.VFXAnime?.impact(this, "spark", 0.5);
           this.dispatchEvent(new Event("change", {
@@ -141,12 +142,9 @@
     }
 
     formResetCallback() {
-      const resetValue = this.defaultValue || "";
-      const inputs = [...this.group.querySelectorAll('input[type="radio"]')];
-      inputs.forEach((input) => {
-        input.checked = input.value === resetValue;
-      });
-      this.sync();
+      if (this.defaultValue) this.setAttribute("value", this.defaultValue);
+      else this.removeAttribute("value");
+      this.render();
     }
 
     formStateRestoreCallback(state) {
