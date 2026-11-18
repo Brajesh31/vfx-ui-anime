@@ -3,29 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Runnable integration cookbook for VFX UI Anime custom elements.">
-  <meta name="theme-color" content="#fffdfb">
+  <meta name="description" content="Live integration examples for VFX UI Anime animated controls.">
+  <meta name="theme-color" content="#ffffff">
   <title>VFX UI Anime | Integration Cookbook</title>
-  <link rel="stylesheet" href="../styles.css">
   <style>
-    body { background: var(--vfx-paper, #fffdfb); color: var(--vfx-ink, #211b43); }
-    .cookbook { width: min(1080px, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0; }
-    .cookbook-header { max-width: 720px; margin-bottom: 2rem; }
-    .cookbook-header h1 { margin-bottom: .6rem; }
-    .cookbook-header p { color: var(--vfx-muted, #77718e); line-height: 1.65; }
-    .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; }
-    .demo { min-width: 0; padding: 1.25rem; border: 1px solid #e6e2f5; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px #211b430d; }
-    .demo h2 { margin: 0 0 .5rem; font-size: 1.05rem; }
-    .demo p { color: #77718e; line-height: 1.5; }
-    .stage { display: flex; min-height: 58px; align-items: center; gap: .85rem; flex-wrap: wrap; padding-top: .6rem; }
-    .stage vfx-slider, .stage vfx-progress, .stage vfx-tabs { width: 100%; max-width: 100%; }
-    .tab-content { padding: .9rem 1rem; background: #f3f0ff; border: 1px solid #e6e2f5; border-radius: 12px; line-height: 1.55; }
-    .event-log { max-height: 12rem; overflow: auto; padding-left: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
-    .note { margin-top: 2rem; padding: 1rem 1.1rem; border-left: 4px solid var(--vfx-violet, #6557d9); background: #f3f0ff; border-radius: 8px; }
-    code { overflow-wrap: anywhere; }
-    @media (max-width: 480px) { .cookbook { padding: 1.5rem 0; } .demo { padding: 1rem; } }
+    :root { color-scheme: light; font-family: Inter, "Segoe UI", system-ui, sans-serif; color: #1d1a4a; background: #fff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: #1d1a4a; }
+    a { color: inherit; }
+    .cookbook { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: 2.5rem 0 5rem; }
+    header { max-width: 760px; margin-bottom: 2rem; }
+    h1 { margin: .4rem 0 .75rem; font-size: clamp(2rem, 5vw, 3.4rem); letter-spacing: -.06em; }
+    header p { color: #77718e; line-height: 1.65; }
+    .eyebrow { color: #6557d9; text-transform: uppercase; letter-spacing: .13em; font-size: .7rem; font-weight: 800; }
+    .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); gap: 1rem; }
+    .demo { min-width: 0; min-height: 210px; padding: 1.2rem; border: 1.5px solid #dcdaf0; border-radius: 17px; background: #fff; display: flex; flex-direction: column; }
+    .demo h2 { margin: 0; font-size: 1rem; }
+    .demo p { color: #77718e; font-size: .84rem; line-height: 1.55; }
+    .stage { flex: 1; min-height: 95px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; padding: 1rem .25rem; }
+    .stage vfx-slider, .stage vfx-progress, .stage vfx-tabs { max-width: 100%; }
+    .stage vfx-progress { margin-top: 1rem; }
+    .status { min-height: 1.4em; margin: .25rem 0 0; color: #6557d9; font-size: .77rem; }
+    .panel { width: 100%; min-height: 48px; padding: .75rem; border: 1px solid #e4defa; border-radius: 9px; background: #f8f6ff; color: #4f486d; font-size: .82rem; }
+    .code { display: block; overflow-wrap: anywhere; color: #77718e; font: .7rem/1.6 ui-monospace, monospace; }
+    @media (max-width: 480px) { .cookbook { padding-top: 1.5rem; } .demo { padding: 1rem; } }
   </style>
-  <script defer src="../core.js"></script>
+
   <script defer src="../components/button/index.js"></script>
   <script defer src="../components/toggle/index.js"></script>
   <script defer src="../components/slider/index.js"></script>
@@ -37,150 +40,223 @@
   <script defer src="../components/rating/index.js"></script>
   <script defer src="../components/toast/index.js"></script>
   <script defer src="../components/tooltip/index.js"></script>
+
+  <script defer src="../core.js"></script>
+  <script defer src="../components/like/index.js"></script>
+  <script defer src="../components/accordion/index.js"></script>
+  <script defer src="../components/segmented/index.js"></script>
+  <script defer src="../components/notification/index.js"></script>
 </head>
 <body>
   <main class="cookbook">
-    <header class="cookbook-header">
-      <p class="eyebrow">🧪 Runnable example</p>
+    <header>
+      <p class="eyebrow">🧪 Live component examples</p>
       <h1>Integration cookbook</h1>
-      <p>This page loads the shared engine and all eleven components, then connects their documented events to ordinary page state. Use it as a reference when wiring the controls into your own application.</p>
-      <p><a href="../index.html">← Back to the component gallery</a></p>
+      <p>Every example below uses the component's implemented API. Eleven animated controls are self-contained. Like, Accordion, Segmented, and Notification use the separate <code>core.js</code> engine.</p>
+      <p><a href="../index.html">← Back to the component gallery</a> · <a href="../docs/INTEGRATION_COOKBOOK.md">Read the integration guide</a></p>
     </header>
 
     <div class="demo-grid">
       <section class="demo">
-        <h2>✨ Button event</h2>
-        <p>The host listens for the composed <code>vfx-activate</code> event.</p>
-        <div class="stage"><vfx-button id="action">Run action</vfx-button></div>
+        <h2>✨ Button</h2>
+        <p>Click, wait for the save action, then call <code>done()</code> to show its success check.</p>
+        <div class="stage"><vfx-button id="save-action">Save changes</vfx-button></div>
+        <p class="status" id="save-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-button&gt;Save changes&lt;/vfx-button&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>🔔 Toggle state</h2>
-        <p>Read the boolean <code>checked</code> property after a change.</p>
-        <div class="stage"><vfx-toggle id="notifications" label="Enable notifications" checked></vfx-toggle></div>
+        <h2>🔔 Toggle</h2>
+        <p>Read the boolean <code>checked</code> property on its <code>change</code> event.</p>
+        <div class="stage"><vfx-toggle id="email-toggle" label="Email notifications"></vfx-toggle></div>
+        <p class="status" id="toggle-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-toggle label="Email notifications"&gt;&lt;/vfx-toggle&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>🎚️ Slider value</h2>
-        <p>The <code>input</code> event includes the numeric value in <code>detail.value</code>.</p>
-        <div class="stage"><vfx-slider id="intensity" min="0" max="100" value="42"></vfx-slider></div>
+        <h2>🎚️ Slider and Progress</h2>
+        <p>The slider's <code>input</code> event updates the progress bar from 0 to 1.</p>
+        <div class="stage">
+          <vfx-slider id="upload-slider" min="0" max="100" value="40" label="Upload progress"></vfx-slider>
+          <vfx-progress id="upload-progress" label="Uploading"></vfx-progress>
+        </div>
+        <p class="status" id="progress-status" aria-live="polite"></p>
+        <code class="code">progress.set(Number(slider.value) / 100)</code>
       </section>
 
       <section class="demo">
-        <h2>☑️ Checkbox state</h2>
-        <p>Use the component's boolean <code>checked</code> property.</p>
-        <div class="stage"><vfx-checkbox id="terms" checked>Accept the example setting</vfx-checkbox></div>
+        <h2>☑️ Checkbox</h2>
+        <p>Read the checked state. Its label is the text inside the element.</p>
+        <div class="stage"><vfx-checkbox id="remember-check" name="remember">Remember this device</vfx-checkbox></div>
+        <p class="status" id="checkbox-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-checkbox&gt;Remember this device&lt;/vfx-checkbox&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>🔘 Radio selection</h2>
-        <p>Options are comma-separated. Read the selected string through <code>value</code>.</p>
-        <div class="stage"><vfx-radio id="size" label="Size" name="size" required options="Small,Medium,Large" value="Medium"></vfx-radio></div>
+        <h2>🔘 Radio</h2>
+        <p>Define choices with child <code>option</code> elements and read the selected value.</p>
+        <div class="stage">
+          <vfx-radio id="plan-choice" label="Plan" name="plan">
+            <option value="free" selected>Free</option>
+            <option value="pro">Pro</option>
+          </vfx-radio>
+        </div>
+        <p class="status" id="radio-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-radio&gt;&lt;option&gt;...&lt;/option&gt;&lt;/vfx-radio&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>⌨️ Text input</h2>
-        <p>The host receives native-like <code>input</code> and <code>change</code> events.</p>
-        <div class="stage"><vfx-input id="display-name" label="Display name" placeholder="Enter a display name"></vfx-input></div>
+        <h2>⌨️ Input</h2>
+        <p>Listen for <code>input</code> and read the current value.</p>
+        <div class="stage"><vfx-input id="email-input" label="Email" type="email" placeholder="you@example.com"></vfx-input></div>
+        <p class="status" id="input-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-input label="Email" type="email"&gt;&lt;/vfx-input&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>🗂️ Tabs and host state</h2>
-        <p>Use Left/Right Arrow keys, Home and End. Vertical tabs also support Up/Down Arrow keys. Add one child panel per item with a <code>slot</code> name that exactly matches its tab label.</p>
-        <div class="stage"><vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details" orientation="horizontal"><div class="tab-content" slot="Overview"><strong>Overview</strong><p>The component links this panel to its tab and hides it when another tab is selected.</p></div><div class="tab-content" slot="Features"><strong>Features</strong><p>Panel content remains ordinary HTML authored by the host application.</p></div><div class="tab-content" slot="Details"><strong>Details</strong><p>Tab and panel IDs, relationships and visibility are managed by the component.</p></div></vfx-tabs></div>
-        <p>Vertical variation:</p>
-        <div class="stage"><vfx-tabs id="vertical-sections" label="Vertical sections" items="First,Second,Third" orientation="vertical"><div class="tab-content" slot="First">First panel content.</div><div class="tab-content" slot="Second">Second panel content.</div><div class="tab-content" slot="Third">Third panel content.</div></vfx-tabs></div>
+        <h2>🗂️ Tabs</h2>
+        <p>The host application manages panels. Tabs reports the selected option in its change event.</p>
+        <div class="stage">
+          <vfx-tabs id="section-tabs" label="Sections">
+            <option value="overview">Overview</option>
+            <option value="features">Features</option>
+            <option value="details">Details</option>
+          </vfx-tabs>
+          <div class="panel" id="section-panel" role="status" aria-live="polite">Overview panel content</div>
+        </div>
+        <code class="code">&lt;vfx-tabs&gt;&lt;option value="overview"&gt;Overview&lt;/option&gt;...&lt;/vfx-tabs&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>📊 Progress property</h2>
-        <p>The host updates the numeric <code>value</code> property in response to slider input.</p>
-        <div class="stage"><vfx-progress id="progress" value="42" label="Intensity preview"></vfx-progress></div>
+        <h2>⭐ Rating</h2>
+        <p>Select up to five stars. Click the selected star again to clear the score.</p>
+        <div class="stage"><vfx-rating id="recipe-rating" label="Rate this recipe"></vfx-rating></div>
+        <p class="status" id="rating-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-rating label="Rate this recipe"&gt;&lt;/vfx-rating&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>⭐ Rating event</h2>
-        <p>The <code>change</code> event includes the selected whole-star value.</p>
-        <div class="stage"><vfx-rating id="rating" value="3"></vfx-rating></div>
+        <h2>💬 Toast</h2>
+        <p>Call <code>show(message)</code> when the host action succeeds.</p>
+        <div class="stage">
+          <vfx-button id="show-toast" variant="secondary">Show toast</vfx-button>
+          <vfx-toast id="toast-example"></vfx-toast>
+        </div>
+        <code class="code">toast.show("Saved successfully!")</code>
       </section>
 
       <section class="demo">
-        <h2>🍞 Toast method</h2>
-        <p>Call <code>show(message)</code> through the custom element reference.</p>
-        <div class="stage"><vfx-toast id="toast" message="Your example action completed">Show toast</vfx-toast></div>
+        <h2>💡 Tooltip</h2>
+        <p>Hover, focus, or tap the help control. Press Escape to dismiss the hint.</p>
+        <div class="stage"><vfx-tooltip text="This is an explanatory hint." label="Help"></vfx-tooltip></div>
+        <code class="code">&lt;vfx-tooltip text="Helpful hint"&gt;&lt;/vfx-tooltip&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>💬 Accessible, viewport-aware tooltip</h2>
-        <p>The trigger references its hint with <code>aria-describedby</code>. Press Escape to dismiss, then move away or refocus to reopen it. Automatic placement flips above/below and clamps horizontally.</p>
-        <div class="stage"><vfx-tooltip text="A longer tooltip description that wraps within the viewport and stays inside the visible screen area." placement="auto">Auto placement</vfx-tooltip><vfx-tooltip text="This tooltip is explicitly placed below its trigger." placement="bottom">Bottom placement</vfx-tooltip></div>
+        <h2>💗 Like</h2>
+        <p>This additional control uses <code>core.js</code>.</p>
+        <div class="stage"><vfx-like id="like-example" label="Like" liked-label="Liked"></vfx-like></div>
+        <p class="status" id="like-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-like label="Like"&gt;&lt;/vfx-like&gt;</code>
       </section>
 
       <section class="demo">
-        <h2>🧾 Event log</h2>
-        <p>Events are listened for at the document level because they bubble and are composed.</p>
-        <ol id="event-log" class="event-log" aria-live="polite"><li>Interact with the controls to see events here.</li></ol>
+        <h2>📖 Accordion</h2>
+        <p>Open and close the accessible disclosure region.</p>
+        <div class="stage"><vfx-accordion label="What is included?">The original animated control set plus four additional UI components.</vfx-accordion></div>
+        <code class="code">&lt;vfx-accordion label="What is included?"&gt;...&lt;/vfx-accordion&gt;</code>
+      </section>
+
+      <section class="demo">
+        <h2>🎛️ Segmented</h2>
+        <p>Select one option. Arrow keys move between available values.</p>
+        <div class="stage">
+          <vfx-segmented id="range-choice" label="Time range" value="Week">
+            <option value="Day">Day</option>
+            <option value="Week">Week</option>
+            <option value="Month">Month</option>
+          </vfx-segmented>
+        </div>
+        <p class="status" id="range-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-segmented&gt;&lt;option&gt;Day&lt;/option&gt;...&lt;/vfx-segmented&gt;</code>
+      </section>
+
+      <section class="demo">
+        <h2>🔔 Notification</h2>
+        <p>Activate the bell to clear its unread count.</p>
+        <div class="stage"><vfx-notification id="notification-example" count="3"></vfx-notification></div>
+        <p class="status" id="notification-status" aria-live="polite"></p>
+        <code class="code">&lt;vfx-notification count="3"&gt;&lt;/vfx-notification&gt;</code>
       </section>
     </div>
-
-    <aside class="note">
-      <strong>Implementation note:</strong> This page demonstrates component events, linked tabpanels and host-side UI updates. It is not a certification of full form-associated custom element behavior, screen-reader support or cross-browser compatibility. Review the <a href="../docs/COMPONENT_API_REFERENCE.md">detailed API reference</a> and <a href="../docs/ACCESSIBILITY.md">accessibility limitations</a> before production use.
-    </aside>
   </main>
 
   <script>
-    (() => {
-      const log = document.querySelector("#event-log");
-      const addLog = (message) => {
-        const item = document.createElement("li");
-        item.textContent = message;
-        log.prepend(item);
-        while (log.children.length > 8) log.lastElementChild.remove();
-      };
-
-      document.addEventListener("vfx-activate", () => {
-        addLog("Button: vfx-activate");
-        document.querySelector("#toast").show("The button action was handled by the host page.");
+    window.addEventListener("DOMContentLoaded", () => {
+      const byId = (id) => document.getElementById(id);
+      const save = byId("save-action");
+      save.addEventListener("click", async () => {
+        byId("save-status").textContent = "Saving…";
+        await new Promise((resolve) => setTimeout(resolve, 450));
+        save.done();
+        byId("save-status").textContent = "Saved successfully.";
       });
 
-      document.addEventListener("change", (event) => {
-        const control = event.target;
-        switch (control.localName) {
-          case "vfx-toggle":
-            addLog("Toggle: checked = " + control.checked);
-            break;
-          case "vfx-checkbox":
-            addLog("Checkbox: checked = " + control.checked);
-            break;
-          case "vfx-radio":
-            addLog("Radio: value = " + control.value);
-            break;
-          case "vfx-tabs": {
-            const selected = event.detail?.value || control.value;
-            addLog("Tabs: selected = " + selected);
-            break;
-          }
-          case "vfx-rating":
-            addLog("Rating: " + event.detail.value + " out of 5");
-            break;
-        }
+      const toggle = byId("email-toggle");
+      toggle.addEventListener("change", () => {
+        byId("toggle-status").textContent = toggle.checked ? "Notifications are on." : "Notifications are off.";
       });
 
-      document.addEventListener("input", (event) => {
-        const control = event.target;
-        if (control.matches("vfx-slider")) {
-          const value = Number(event.detail?.value ?? control.value);
-          document.querySelector("#progress").value = value;
-          addLog("Slider: value = " + value);
-        } else if (control.matches("vfx-input")) {
-          addLog("Text input: " + (control.value || "(empty)"));
-        }
+      const slider = byId("upload-slider");
+      const progress = byId("upload-progress");
+      slider.addEventListener("input", () => {
+        progress.set(Number(slider.value) / 100);
+        byId("progress-status").textContent = Math.round(Number(slider.value)) + "%";
+      });
+      progress.addEventListener("vfx:done", () => {
+        byId("progress-status").textContent = "Complete.";
       });
 
-      document.addEventListener("vfx-toast", (event) => {
-        addLog("Toast: " + event.detail.message);
+      const checkbox = byId("remember-check");
+      checkbox.addEventListener("change", () => {
+        byId("checkbox-status").textContent = checkbox.checked ? "Preference enabled." : "Preference disabled.";
       });
-    })();
+
+      const radio = byId("plan-choice");
+      radio.addEventListener("change", () => {
+        byId("radio-status").textContent = "Selected: " + radio.value;
+      });
+
+      const input = byId("email-input");
+      input.addEventListener("input", () => {
+        byId("input-status").textContent = input.value ? "Characters: " + input.value.length : "Waiting for input.";
+      });
+
+      byId("section-tabs").addEventListener("change", (event) => {
+        byId("section-panel").textContent = event.detail.label + " panel content";
+      });
+
+      const rating = byId("recipe-rating");
+      rating.addEventListener("change", () => {
+        byId("rating-status").textContent = rating.value + " out of 5";
+      });
+
+      byId("show-toast").addEventListener("click", () => byId("toast-example").show("Saved successfully!"));
+
+      const like = byId("like-example");
+      like.addEventListener("change", () => {
+        byId("like-status").textContent = like.pressed ? "Added to favourites." : "Removed from favourites.";
+      });
+
+      const segmented = byId("range-choice");
+      segmented.addEventListener("change", () => {
+        byId("range-status").textContent = "Selected: " + segmented.value;
+      });
+
+      byId("notification-example").addEventListener("change", (event) => {
+        byId("notification-status").textContent = "Unread notifications: " + event.detail.count;
+      });
+    });
   </script>
 </body>
 </html>
