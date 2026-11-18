@@ -10,17 +10,17 @@ Help developers integrate or extend the project's native custom elements without
 
 ## Before editing
 1. Read the root README and `docs/COMPONENTS.md`.
-2. Inspect the target component and shared `core.js`.
+2. Inspect the target component's `index.js`, README, and demo. Determine whether it is one of the eleven standalone animated controls or one of the four controls backed by `core.js`.
 3. Identify the host application's framework, browser targets and form requirements.
 4. Preserve the no-dependency design unless the user explicitly requests otherwise.
 
 ## Integration workflow
-1. Load `core.js` before the selected component script.
+1. For Button, Toggle, Slider, Checkbox, Radio, Input, Tabs, Progress, Rating, Toast, and Tooltip, load the selected component script directly. For Like, Accordion, Segmented, and Notification, load `core.js` first.
 2. Load `styles.css` only if the host wants the demo theme. Components should not depend on gallery layout styles.
 3. Add the custom element to the relevant page.
 4. Use documented attributes, properties, methods and events.
 5. Wire application state explicitly. Do not assume that every component automatically manages associated content or application state.
-6. Test keyboard interaction, reduced motion, form submission and narrow viewports.
+6. Test keyboard interaction, reduced motion, form submission where applicable, and narrow viewports.
 
 ## Extension rules
 - Prefer native controls and native keyboard semantics.
