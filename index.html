@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>vfx VFX</title>
+<title>VFX UI Anime</title>
 <style>
   :root { --page: #ffffff; --text: #1d1a4a; --mute: #8580b0; --line: #dcdaf0; --chip: #f4f3fc; }
   * { box-sizing: border-box; }
@@ -40,15 +40,15 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>vfx VFX</h1>
-      <p class="lede">Twelve ordinary controls that react like anime: squash and overshoot on springs, and drawn effects (smoke, impact bursts, splashes, slashes) with manga sound-effect lettering. Each one is a single file with no dependencies.</p>
+      <h1>VFX UI Anime</h1>
+      <p class="lede">Eleven animated components that react like anime: they squash and overshoot on springs, with drawn smoke, impact bursts, splashes, slashes, and manga sound-effect lettering. Every source-backed component is self-contained.</p>
       <p class="links">
         <a class="pill" href="https://github.com/Brajesh31/vfx-ui-anime" target="_blank" rel="noopener">The repo on GitHub <span aria-hidden="true">&#8599;</span></a>
         </p>
     </div>
   </header>
   <main class="grid" id="grid"></main>
-  <p class="note">Effects are drawn on one canvas over the page and switch off for <code>prefers-reduced-motion</code>. Every colour is a <code>--sk-*</code> variable you can override.</p>
+  <p class="note">Effects are drawn on one canvas over the page and switch off for <code>prefers-reduced-motion</code>. Every colour can be themed with the component's <code>--vfx-*</code> CSS variables.</p>
 </div>
 <script src="./components/button/index.js"></script>
 <script src="./components/toggle/index.js"></script>
@@ -98,20 +98,20 @@ const WIRE = {
     'Setting el.checked from code jumps to the end without the animation; only a person flipping it plays it. The drawing is bigger than the switch, so the element keeps a margin around it for the splash.'],
   slider: ['Use <vfx-slider value="30" label="..."></vfx-slider> where my slider is. min, max, step and unit (shown after the number, "%" by default) work as attributes.',
     'Read el.value. It fires input while it moves and change when it is let go. With a name attribute it is sent with its form.',
-    'It is 230 pixels wide; set the --sk-slider-width CSS variable to change that. It keeps 30 pixels above it for the value bubble.'],
+    'It is 230 pixels wide; set the --vfx-slider-width CSS variable to change that. It keeps 30 pixels above it for the value bubble.'],
   checkbox: ['Use <vfx-checkbox>Remember me</vfx-checkbox>. The text inside is the label.', 'Read el.checked and listen for change. With a name attribute it is sent with its form like a checkbox.'],
   radio: ['List the choices as <option>s inside it: <vfx-radio label="Plan"><option value="a" selected>Option A</option><option value="b">Option B</option></vfx-radio>. The label is what a screen reader hears for the group.',
     'Read el.value and listen for change. With a name attribute it is sent with its form.'],
   input: ['Use <vfx-input label="..." placeholder="..."></vfx-input> where my text field is. type can be text, email, search, url, tel or password.',
     'Read and set el.value. It fires input and change like a text input. With a name attribute it is sent with its form.',
-    'It is 230 pixels wide; set the --sk-input-width CSS variable to change that.'],
+    'It is 230 pixels wide; set the --vfx-input-width CSS variable to change that.'],
   tabs: ['List the tabs as <option>s inside it: <vfx-tabs label="..."><option value="home">Home</option>...</vfx-tabs>.',
     'It only draws the tabs. Listen for change (e.detail has index, value and label) and show the matching panel yourself. el.selected is the index; setting it moves the tab without the landing effects.'],
   progress: ['Put <vfx-progress label="..."></vfx-progress> where my progress bar is. The label is what a screen reader hears, so say what is loading.',
     'Wire it to my real task: call el.set(n) with progress from 0 to 1 as often as it changes. The bar eases toward the number, so a jump is still ridden. el.set(n, true) goes straight there.',
     'Listen for the "vfx:done" event and move on from there. It fires once, when the bar itself reaches the end, a moment after my task finishes. el.reset() puts it back to 0.',
     'With the demo attribute it plays a pretend load on a loop. Do not ship it with that attribute.',
-    'It is 280 pixels wide (set --sk-progress-width to change it) and keeps 70 pixels above the bar for the cloud and about 110 below for the ground and the percentage.'],
+    'It is 280 pixels wide (set --vfx-progress-width to change it) and keeps 70 pixels above the bar for the cloud and about 110 below for the ground and the percentage.'],
   rating: ['Use <vfx-rating label="..."></vfx-rating>.', 'Read el.value (0 to 5) and listen for change. Clicking the lit star again clears it. With a name attribute it is sent with its form.'],
   toast: ['Put <vfx-toast></vfx-toast> where my toasts should appear, and call el.show("Saved") when there is something to say. It is a status region, so the message is read out.',
     'It stays for the duration attribute (2.6 seconds by default), or until el.hide(). It has a close button.',
@@ -129,7 +129,7 @@ const prompt = (it) => [
   `1. Get the file from ${fileUrl(it.id)} and save it in my project as ${it.id}.js. Do not rewrite it or split it up.`,
   `2. Load it with a plain script tag (not type="module").`,
   ...WIRE[it.id].map((l, i) => `${i + 3}. ${l}`),
-  `${WIRE[it.id].length + 3}. Its effects are drawn on one fixed canvas over the page, so they can fly outside the control. They switch off for prefers-reduced-motion. Its colours are --sk-* CSS variables.`,
+  `${WIRE[it.id].length + 3}. Its effects are drawn on one fixed canvas over the page, so they can fly outside the control. They switch off for prefers-reduced-motion. Its colours are --vfx-* CSS variables.`,
   `When you are done, show me where you put it and what listens to it. If something about it needs to look different, tell me instead of editing the effects.`,
   ``,
   `Use the matching component README for its full API and behaviour. Preserve the existing animation code when integrating it.`,
