@@ -13,11 +13,11 @@ class vfxButton extends fx.Base {
   static delegates = true;
   static observedAttributes = ['disabled'];
   static css = `
-    .btn { position: relative; padding: 14px 30px; border: var(--sk-bw) solid var(--sk-btn-line); border-radius: var(--sk-r); background: var(--sk-card); color: var(--sk-ink); font: italic 800 19px/1.1 "Avenir Next", "Nunito", -apple-system, "Segoe UI", system-ui, sans-serif; letter-spacing: -.01em; box-shadow: var(--sk-btn-sh); cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; will-change: transform; }
-    .btn.alt { border-color: var(--sk-alt-line); box-shadow: var(--sk-alt-sh); }
-    .btn.inv { background: var(--sk-ink); color: var(--sk-card); box-shadow: none; }   /* the impact frame */
+    .btn { position: relative; padding: 14px 30px; border: var(--vfx-bw) solid var(--vfx-btn-line); border-radius: var(--vfx-r); background: var(--vfx-card); color: var(--vfx-ink); font: italic 800 19px/1.1 "Avenir Next", "Nunito", -apple-system, "Segoe UI", system-ui, sans-serif; letter-spacing: -.01em; box-shadow: var(--vfx-btn-sh); cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; will-change: transform; }
+    .btn.alt { border-color: var(--vfx-alt-line); box-shadow: var(--vfx-alt-sh); }
+    .btn.inv { background: var(--vfx-ink); color: var(--vfx-card); box-shadow: none; }   /* the impact frame */
     .btn:disabled { opacity: .45; cursor: not-allowed; }
-    .ok { display: inline-block; width: calc(var(--ok, 0) * 24px); height: 18px; margin-left: calc(var(--ok, 0) * 6px); vertical-align: -2px; overflow: visible; fill: none; stroke: var(--sk-acc); stroke-width: 4.4; stroke-linecap: round; stroke-linejoin: round; transform: scale(var(--ok, 0)); }`;
+    .ok { display: inline-block; width: calc(var(--ok, 0) * 24px); height: 18px; margin-left: calc(var(--ok, 0) * 6px); vertical-align: -2px; overflow: visible; fill: none; stroke: var(--vfx-acc); stroke-width: 4.4; stroke-linecap: round; stroke-linejoin: round; transform: scale(var(--ok, 0)); }`;
 
   get primary() { return this.getAttribute('variant') !== 'secondary'; }
   get disabled() { return this.hasAttribute('disabled'); }
@@ -85,8 +85,8 @@ class Spring {
 // ───────── the palette ─────────
 // P is for the effects; the CSS variables below are for the controls.
 const P = { fill: '#ffffff', shade: '#b8b3ff', line: '#5a4fd8', accent: '#ff5fa8', ink: '#1d1a4a', sfx: ['#1d1a4a', '#ffffff'] };
-const VARS = '--sk-card:#fff;--sk-ink:#1d1a4a;--sk-dim:#8580b0;--sk-soft:#b8b3ff;--sk-pri:#8f8df7;--sk-pri-ink:#1d1a4a;--sk-acc:#ff5fa8;--sk-track:#c9cbe0;--sk-r:15px;--sk-bw:3.2px;--sk-sh:6px 7px 0 var(--sk-soft);--sk-btn-sh:var(--sk-sh);--sk-btn-line:var(--sk-ink);--sk-alt-sh:var(--sk-sh);--sk-alt-line:var(--sk-ink);--sk-tick:var(--sk-ink);--sk-fill:var(--sk-acc);--sk-on-pri:#fff;';
-// :where() keeps these at no specificity, so a page's own :root { --sk-acc: ... } wins.
+const VARS = '--vfx-card:#fff;--vfx-ink:#1d1a4a;--vfx-dim:#8580b0;--vfx-soft:#b8b3ff;--vfx-pri:#8f8df7;--vfx-pri-ink:#1d1a4a;--vfx-acc:#ff5fa8;--vfx-track:#c9cbe0;--vfx-r:15px;--vfx-bw:3.2px;--vfx-sh:6px 7px 0 var(--vfx-soft);--vfx-btn-sh:var(--vfx-sh);--vfx-btn-line:var(--vfx-ink);--vfx-alt-sh:var(--vfx-sh);--vfx-alt-line:var(--vfx-ink);--vfx-tick:var(--vfx-ink);--vfx-fill:var(--vfx-acc);--vfx-on-pri:#fff;';
+// :where() keeps these at no specificity, so a page's own :root { --vfx-acc: ... } wins.
 const pageCss = `:where(:root){${VARS}}
 canvas.vfx-fx{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:2147483000}`;
 document.head.append(Object.assign(document.createElement('style'), { textContent: pageCss }));
@@ -291,9 +291,9 @@ function squashy(el, { low = 0.82, k = 520, d = 15, wide = 0.55 } = {}) {
   return { s, pop, tilt, step(dt) { const y = s.step(dt), p = pop.step(dt), r = tilt.step(dt), still = Math.abs(y - 1) < 0.001 && Math.abs(s.v) < 0.01 && Math.abs(p - 1) < 0.001 && Math.abs(r) < 0.02;
     el.style.transform = still ? '' : `rotate(${r}deg) scale(${(1 + (1 - y) * wide) * p}, ${y * p})`; } };
 }
-const BASE_CSS = `:host{display:inline-block;position:relative;isolation:isolate;vertical-align:middle;color:var(--sk-ink);font:500 15px/1.4 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+const BASE_CSS = `:host{display:inline-block;position:relative;isolation:isolate;vertical-align:middle;color:var(--vfx-ink);font:500 15px/1.4 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 :host([hidden]){display:none}*{box-sizing:border-box}button,input{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
-:focus-visible{outline:2.5px solid var(--sk-acc);outline-offset:3px}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+:focus-visible{outline:2.5px solid var(--vfx-acc);outline-offset:3px}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 canvas.back{position:absolute;left:-160px;top:-160px;width:calc(100% + 320px);height:calc(100% + 320px);pointer-events:none;z-index:-1}`;
 // The base for every component: a shadow root built on first connect, one frame callback on the shared clock while it is on the page.
 class Base extends HTMLElement {
