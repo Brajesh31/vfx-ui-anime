@@ -5,7 +5,8 @@ All notable project changes are documented here.
 ## [Unreleased]
 
 ### Added
-- Horizontal and vertical tab orientation with roving focus, arrow-key navigation, and Home/End navigation.\n- Linked tabpanel semantics with generated `aria-controls`/`aria-labelledby` relationships, active-panel visibility and named content slots.
+- Horizontal and vertical tab orientation with roving focus, arrow-key navigation, and Home/End navigation.
+- Linked tabpanel semantics with generated `aria-controls`/`aria-labelledby` relationships, active-panel visibility and named content slots.
 - Accessible tablist labeling and a programmatic `value` property setter.
 - Radio group labels, configured names, disabled/required properties, form value synchronization, reset/disabled/state-restore callbacks, and native radio keyboard behavior.
 - Accessible, viewport-aware tooltips with `aria-describedby`, dynamic text, Escape dismissal, auto top/bottom placement and horizontal clamping.
