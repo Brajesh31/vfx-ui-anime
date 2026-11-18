@@ -4,7 +4,7 @@ Ordinary UI controls that react like anime. At rest they are plain. Use one and 
 
 Every effect is drawn in code on one canvas over the page. The lettering was painted with GPT Image and traced to paths, and the toggle is 43 painted frames; both live inside the component files, so there is nothing else to fetch. No dependencies, no build step for you, MIT licensed.
 
-## The twelve
+## The sixteen
 
 | | element | what happens |
 |---|---|---|
@@ -18,6 +18,10 @@ Every effect is drawn in code on one canvas over the page. The lettering was pai
 | [Progress](progress/) | `<sakuga-progress>` | A storm cloud rides the leading edge, pebbles lift off the ground, ゴゴゴゴ; at the end a burst, ドン! and a check. |
 | [Rating](rating/) | `<sakuga-rating>` | Stars pop in one after another; five gets a burst. |
 | [Toast](toast/) | `<sakuga-toast>` | Streaks in as a smear, lands in dust with ズザッ, leaves by shrinking. |
+| [Like](like/) | `<sakuga-like>` | A heart springs into place with an impact burst, glint and ポン. |
+| [Accordion](accordion/) | `<sakuga-accordion>` | A disclosure panel opens with a springing chevron and impact marks. |
+| [Segmented](segmented/) | `<sakuga-segmented>` | A segmented choice group lands each selection with a small burst. |
+| [Notification](notification/) | `<sakuga-notification>` | A bell rings with a spring, clears its unread count and throws impact sparks. |
 | [Tooltip](tooltip/) | `<sakuga-tooltip>` | The hint springs out like a speech bubble with puffs and カチッ. |
 
 ## The look
