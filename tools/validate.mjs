@@ -18,7 +18,9 @@ const required = [
 
 
 const upstreamRequired = [
-  "sakuga-interactions.js",
+  "sakuga-interactions.js", "sakuga-extra-interactions.js",
+  "sakuga-vfx/like/like.js", "sakuga-vfx/accordion/accordion.js",
+  "sakuga-vfx/segmented/segmented.js", "sakuga-vfx/notification/notification.js",
   "sakuga-vfx/button/button.js", "sakuga-vfx/toggle/toggle.js",
   "sakuga-vfx/slider/slider.js", "sakuga-vfx/checkbox/checkbox.js",
   "sakuga-vfx/radio/radio.js", "sakuga-vfx/input/input.js",
@@ -52,10 +54,12 @@ const registry = JSON.parse(await read("registry.json"));
 for (const tag of [
   "sakuga-button", "sakuga-toggle", "sakuga-slider", "sakuga-checkbox",
   "sakuga-radio", "sakuga-input", "sakuga-tabs", "sakuga-progress",
-  "sakuga-rating", "sakuga-toast", "sakuga-tooltip"
+  "sakuga-rating", "sakuga-toast", "sakuga-tooltip", "sakuga-like", "sakuga-accordion",
+  "sakuga-segmented", "sakuga-notification"
 ]) {
   if (!html.includes(tag)) errors.push(`Sakuga homepage demo missing: ${tag}`);
 }
+if (!html.includes('src="sakuga-extra-interactions.js"')) errors.push("Homepage does not load new Sakuga interaction wiring.");
 if (!html.includes('src="sakuga-interactions.js"')) {
   errors.push("Homepage does not load Sakuga host-page interaction wiring.");
 }
