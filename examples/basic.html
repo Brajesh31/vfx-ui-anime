@@ -1,3 +1,48 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime basic integration</title><link rel="stylesheet" href="../styles.css"><script defer src="../core.js"></script><script defer src="../components/button/index.js"></script><script defer src="../components/toggle/index.js"></script></head>
-<body><main class="wrap"><p class="eyebrow">Integration example</p><h1>Use the controls</h1><p>Load the shared engine once, then load only the components your page needs.</p><vfx-button id="action">Run action</vfx-button><vfx-toggle label="Enable notifications"></vfx-toggle><p id="status" aria-live="polite"></p></main><script>document.addEventListener("DOMContentLoaded",()=>document.querySelector("#action")?.addEventListener("vfx-activate",()=>document.querySelector("#status").textContent="Action activated."));</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Basic VFX UI Anime component integration example.">
+  <title>VFX UI Anime | Basic Integration</title>
+  <style>
+    body { max-width: 760px; margin: 3rem auto; padding: 0 1.25rem; color: #1d1a4a; font: 16px/1.6 system-ui, sans-serif; }
+    h1 { letter-spacing: -.04em; }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin: 2rem 0; }
+    #status { min-height: 1.5em; color: #6557d9; }
+  </style>
+  <script defer src="../components/button/index.js"></script>
+  <script defer src="../components/toggle/index.js"></script>
+</head>
+<body>
+  <main>
+    <p><a href="../index.html">← Back to VFX UI Anime gallery</a></p>
+    <h1>Basic integration</h1>
+    <p>The Button and Toggle are standalone animated controls. They do not require the separate <code>core.js</code> file.</p>
+
+    <div class="row">
+      <vfx-button id="action">Run action</vfx-button>
+      <vfx-toggle id="notifications" label="Enable notifications"></vfx-toggle>
+    </div>
+    <p id="status" aria-live="polite"></p>
+  </main>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const button = document.querySelector("#action");
+      const toggle = document.querySelector("#notifications");
+      const status = document.querySelector("#status");
+
+      button.addEventListener("click", async () => {
+        status.textContent = "Working…";
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        button.done();
+        status.textContent = "Action completed.";
+      });
+
+      toggle.addEventListener("change", () => {
+        status.textContent = toggle.checked ? "Notifications enabled." : "Notifications disabled.";
+      });
+    });
+  </script>
+</body>
+</html>
