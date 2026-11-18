@@ -13,6 +13,7 @@
     constructor() {
       super();
       this.instanceId = ++instanceCount;
+      this.formDisabled = false;
       this.internals = this.attachInternals?.();
       this.attachShadow({ mode: "open" });
       this.shadowRoot.innerHTML = `
@@ -64,7 +65,7 @@
     }
 
     get disabled() {
-      return this.hasAttribute("disabled");
+      return this.hasAttribute("disabled") || this.formDisabled;
     }
 
     get required() {
@@ -134,8 +135,9 @@
     }
 
     formDisabledCallback(disabled) {
-      this.toggleAttribute("disabled", disabled);
-      this.sync();
+      this.formDisabled = disabled;
+      if (this.isConnected) this.render();
+      else this.sync();
     }
 
     formResetCallback() {
