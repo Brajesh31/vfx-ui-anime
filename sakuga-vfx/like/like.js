@@ -1,6 +1,7 @@
 // Sakuga Like: a heart button that squashes, bursts and lands with ポン.
 (() => {
-const fx = window.SakugaFX, {Spring,at,squashy,burst,ticks,puff,sfx,hollow,later,kira}=fx;
+function component(fx) {
+const {Spring,at,squashy,burst,ticks,puff,sfx,hollow,later,kira} = fx;
 class SakugaLike extends fx.Base {
  static delegates=true;
  static css=`
@@ -275,3 +276,5 @@ const api = window.SakugaFX = {
 };
 })();
 // <<< sakuga core
+component(window.SakugaFX);
+})();
