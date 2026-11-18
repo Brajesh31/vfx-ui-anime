@@ -35,7 +35,7 @@ el.value; el.done;
 
 - **One number drives it.** The bar eases toward what you give it (at least 12% a second, at most 90%), so a jump still gets ridden by the cloud. The cloud's speed and drag come from how fast the bar is actually moving, so a stalled upload sits still.
 - **`vfx:done` fires once,** when the bar itself reaches the end, a moment after you `set(1)`. Going backwards (a lower number) clears it.
-- **Size:** 280 pixels wide (`--sk-progress-width`). It keeps 70 pixels above the bar for the cloud and about 110 below for the ground and the number.
+- **Size:** 280 pixels wide (`--vfx-progress-width`). It keeps 70 pixels above the bar for the cloud and about 110 below for the ground and the number.
 - **Off screen it stops drawing.** The bar still fills.
 - **Don't ship `demo`.**
 
