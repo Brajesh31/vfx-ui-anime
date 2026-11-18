@@ -31,13 +31,20 @@
 | Toast | `<vfx-toast>` | Temporary status message |
 | Tooltip | `<vfx-tooltip>` | Contextual hint |
 
-## 🌐 Live demo
+## 🚀 GitHub Pages hosting
 
-The static gallery is configured for GitHub Pages deployment:
+The repository includes an automated GitHub Pages deployment workflow. The one-time Pages publishing source setting has not yet been completed, so the public site is **not live** until that setting is saved and the deployment workflow succeeds.
+
+1. Open [Repository Settings → Pages](https://github.com/Brajesh31/vfx-ui-anime/settings/pages).
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Save the setting.
+4. Check the [Actions tab](https://github.com/Brajesh31/vfx-ui-anime/actions) for a successful **Deploy to GitHub Pages** run.
+
+Expected public URL after the first successful deployment:
 
 **https://brajesh31.github.io/vfx-ui-anime/**
 
-Every push to `main` runs validation and publishes the repository through the GitHub Pages workflow. The first deployment requires GitHub Pages to be enabled with **Settings → Pages → Source: GitHub Actions**.
+See [Deployment](docs/DEPLOYMENT.md) for setup and troubleshooting details.
 
 ## 🚀 Run the gallery locally
 
