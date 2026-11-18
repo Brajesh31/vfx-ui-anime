@@ -82,7 +82,7 @@
             border-bottom-color: var(--vfx-ink, #211b43);
           }
 
-          :host(:hover) .tip,
+          :host([data-active]) .tip,
           :host(:focus-within) .tip {
             opacity: 1;
             visibility: visible;
@@ -109,15 +109,17 @@
       this.tip.id = `vfx-tooltip-description-${this.instanceId}`;
       this.trigger.setAttribute("aria-describedby", this.tip.id);
 
-      this.handlePointerEnter = () => this.removeAttribute("data-dismissed");
-      this.handlePointerLeave = () => this.removeAttribute("data-dismissed");
-      this.handleFocusIn = () => this.removeAttribute("data-dismissed");
+      this.handlePointerEnter = () => { this.removeAttribute("data-dismissed"); this.setAttribute("data-active", ""); };
+      this.handlePointerLeave = () => { if (!this.matches(":focus-within")) this.removeAttribute("data-active"); this.removeAttribute("data-dismissed"); };
+      this.handleFocusIn = () => { this.removeAttribute("data-dismissed"); this.setAttribute("data-active", ""); };
+      this.handleFocusOut = () => { if (!this.matches(":focus-within") && !this.matches(":hover")) this.removeAttribute("data-active"); };
       this.handleKeyDown = (event) => {
         if (event.key !== "Escape") return;
         if (!this.matches(":hover") && !this.matches(":focus-within")) return;
 
         event.preventDefault();
         this.setAttribute("data-dismissed", "");
+        this.removeAttribute("data-active");
         this.trigger.blur();
       };
       this.handleViewportChange = () => this.updatePlacement();
@@ -128,6 +130,7 @@
       this.addEventListener("pointerenter", this.handlePointerEnter);
       this.addEventListener("pointerleave", this.handlePointerLeave);
       this.addEventListener("focusin", this.handleFocusIn);
+      this.addEventListener("focusout", this.handleFocusOut);
       this.addEventListener("keydown", this.handleKeyDown);
       window.addEventListener("resize", this.handleViewportChange, { passive: true });
       window.addEventListener("scroll", this.handleViewportChange, true);
@@ -145,6 +148,7 @@
       this.removeEventListener("pointerenter", this.handlePointerEnter);
       this.removeEventListener("pointerleave", this.handlePointerLeave);
       this.removeEventListener("focusin", this.handleFocusIn);
+      this.removeEventListener("focusout", this.handleFocusOut);
       this.removeEventListener("keydown", this.handleKeyDown);
       window.removeEventListener("resize", this.handleViewportChange);
       window.removeEventListener("scroll", this.handleViewportChange, true);
