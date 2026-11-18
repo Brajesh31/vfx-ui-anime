@@ -1,24 +1,42 @@
-# Tabs component
+# Tabs
 
-Keyboard-friendly tabs with linked content panels.
+The raised tab itself slides to the one you pick, stretching as it goes, and lands with wedges above it, a puff at the side it came from and speed lines behind it.
 
-## Live demo
-Open [demo.html](demo.html) to test the component in the library's design system.
+## Run it
 
-## Installation
-```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
-<script defer src="/components/tabs/index.js"></script>
-<vfx-tabs label="Sections" items="Overview,Features,Details"><p slot="Overview">Overview.</p><p slot="Features">Features.</p><p slot="Details">Details.</p></vfx-tabs>
+```sh
+python3 -m http.server 8000     # from the repo folder
+# open http://localhost:8000/tabs/
 ```
 
-## Component details
-- **Element:** `<vfx-tabs>`
-- **Category:** Navigation
-- **Runtime dependencies:** None
+## Use it
 
-## Accessibility
-Keep labels descriptive, preserve keyboard access, and test focus, form behavior, and screen-reader output in the browsers you support. The shared motion engine respects `prefers-reduced-motion`.
+List the tabs as `<option>`s inside it:
 
-See the [component API overview](../../docs/COMPONENTS.md) for the public inventory and links to detailed guidance.
+```html
+<script src="tabs.js"></script>
+<vfx-tabs label="Account">
+  <option value="home">Home</option>
+  <option value="profile">Profile</option>
+  <option value="settings">Settings</option>
+</vfx-tabs>
+```
+
+```js
+el.addEventListener('change', (e) => showPanel(e.detail.value));   // e.detail: { index, value, label }
+el.selected = 2;     // from code: moves without the landing effects
+el.value;            // the picked option's value
+```
+
+| attribute | what it sets | default |
+|---|---|---|
+| `label` | what a screen reader calls the tab list | Tabs |
+| `selected` | the index picked at the start | 0 |
+
+- **It only draws the tabs.** Show and hide your panels on `change`.
+- **Keyboard:** the arrow keys move and wrap round, Home and End go to the ends.
+
+## Limits
+
+- **No panels and no `aria-controls`,** because the panels are outside its shadow root. Give each panel `role="tabpanel"` and a label yourself.
+- **They do not scroll.** Too many tabs for the width will overflow.
