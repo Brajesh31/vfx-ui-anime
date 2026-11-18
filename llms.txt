@@ -24,7 +24,9 @@
 - `examples/integration-cookbook.html`: runnable all-component example with host-managed state and event handling.
 - `docs/ARCHITECTURE.md`: runtime architecture.
 - `docs/ACCESSIBILITY.md`: known accessibility gaps and QA checklist.
-- `docs/TESTING.md`: testing scope and current validation limitations.
+- `docs/TESTING.md`: static validation, dependency-free Chromium browser interaction tests and current testing limitations.
+- `tests/browser.html` and `tests/browser-interactions.js`: headless Chromium interaction test page and assertions.
+- `tools/run-browser-tests.mjs`: Node built-in HTTP server and Chromium test runner.
 - `skills/vfx-ui-anime/SKILL.md`: instructions for extending the project.
 
 ## Integration rules
