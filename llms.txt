@@ -24,9 +24,9 @@
 - `examples/integration-cookbook.html`: runnable all-component example with host-managed state and event handling.
 - `docs/ARCHITECTURE.md`: runtime architecture.
 - `docs/ACCESSIBILITY.md`: known accessibility gaps and QA checklist.
-- `docs/TESTING.md`: static validation, dependency-free Chromium browser interaction tests and current testing limitations.
+- `docs/TESTING.md`: static validation, Chromium/Firefox/WebKit browser interaction tests and current testing limitations.
 - `tests/browser.html` and `tests/browser-interactions.js`: headless Chromium interaction test page and assertions.
-- `tools/run-browser-tests.mjs`: Node built-in HTTP server and Chromium test runner.
+- `tools/run-browser-tests.mjs`: Node built-in HTTP server and Chromium test runner.\n- `tools/run-cross-browser-tests.mjs`: optional Playwright-powered Firefox and WebKit test runner; Playwright is installed temporarily for QA and is not a project dependency.
 - `skills/vfx-ui-anime/SKILL.md`: instructions for extending the project.
 
 ## Integration rules
