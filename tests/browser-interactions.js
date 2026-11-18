@@ -208,6 +208,7 @@
 
     const trigger = tooltip.shadowRoot.querySelector(".trigger");
     const description = tooltip.shadowRoot.querySelector('[role="tooltip"]');
+    description.style.transition = "none";
     assert(trigger.getAttribute("aria-describedby") === description.id, "aria-describedby does not resolve to the tooltip.");
     assert(description.textContent === "A helpful description", "Tooltip text was not rendered.");
 
