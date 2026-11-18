@@ -1,6 +1,7 @@
 // Sakuga Accordion: a real disclosure control with a springing chevron and impact on opening.
 (() => {
-const fx=window.SakugaFX,{Spring,at,squashy,burst,ticks,puff,sfx,later} = fx;
+function component(fx) {
+const {Spring,at,squashy,burst,ticks,puff,sfx,later} = fx;
 class SakugaAccordion extends fx.Base{
  static delegates=true; static observedAttributes=['open','disabled','label'];
  static css=`
@@ -281,5 +282,7 @@ const api = window.SakugaFX = {
 };
 })();
 // <<< sakuga core
+component(window.SakugaFX);
+})();
 component(window.SakugaFX);
 })();
