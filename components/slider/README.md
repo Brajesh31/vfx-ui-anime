@@ -32,7 +32,7 @@ el.value = 80;
 | `disabled` | can't be moved | off |
 
 - **Underneath is a real range input,** stretched over the track and transparent, so the keyboard, touch and screen readers get the native control. `value` is a string, like an input's; `valueAsNumber` is the number.
-- **Size:** 230 pixels wide; set `--sk-slider-width` to change it. It keeps 30 pixels above for the bubble.
+- **Size:** 230 pixels wide; set `--vfx-slider-width` to change it. It keeps 30 pixels above for the bubble.
 
 ## Limits
 
