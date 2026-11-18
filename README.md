@@ -6,7 +6,7 @@
 
 <p align="center"><img src="assets/hero-illustration.svg" alt="Original abstract anime impact illustration" width="100%"></p>
 
-> Independent implementation inspired by the broader idea of expressive anime-style UI motion. This project is not affiliated with or endorsed by the Sakuga VFX reference project.
+> This repository now keeps two clearly separated collections: the independently implemented `vfx-*` library and an exact upstream snapshot of Sakuga VFX under `sakuga-vfx/`. The upstream snapshot retains its original structure, assets, copyright notice and MIT license.
 
 <p align="center">
   <img src="https://img.shields.io/badge/vanilla-JavaScript-f7df1e?style=for-the-badge&logo=javascript&logoColor=111" alt="Vanilla JavaScript">
@@ -131,9 +131,16 @@ The checks validate required files, component registrations and key accessibilit
 
 The first public implementation includes eleven components and a static gallery. Browser compatibility, real-device performance, screen-reader behavior and advanced form integration still need a dedicated QA pass. See [known limitations](docs/ACCESSIBILITY.md) and [roadmap](ROADMAP.md).
 
-## 🙏 Inspiration
+## 🎴 Exact Sakuga VFX collection
 
-The interaction concept was inspired by [finktheartist/sakuga-vfx](https://github.com/finktheartist/sakuga-vfx). This repository contains an independent implementation and original code. No original source files or generated art assets are copied into this project.
+The repository includes a byte-for-byte snapshot of [finktheartist/sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) under [`sakuga-vfx/`](sakuga-vfx/). This preserves the original button, checkbox, toggle, slider, radio, input, tabs, progress, rating, toast and tooltip implementations, the interactive gallery, sound-effect artwork, toggle animation frames, component demos, registry, skill files and authoring tools.
+
+- [Open the original-style interactive gallery](sakuga-vfx/gallery/)
+- [Read the upstream documentation](sakuga-vfx/README.md)
+- [Review the upstream MIT license and copyright notice](sakuga-vfx/LICENSE)
+- [Read the snapshot provenance and integration notes](docs/UPSTREAM-SAKUGA-VFX.md)
+
+Snapshot source revision: `c3dabb173928a3ad2372183103caf2e6f50953d0`.
 
 ## 📄 License
 

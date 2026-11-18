@@ -5,6 +5,10 @@ All notable project changes are documented here.
 ## [Unreleased]
 
 ### Added
+- Exact upstream Sakuga VFX repository snapshot under `sakuga-vfx/`, including its interactive gallery, complete component demos, source code, artwork, toggle frames, registry, agent skill, build/test utilities, and original MIT license/copyright notice.
+- Main gallery entry point and upstream provenance documentation for the separately hosted Sakuga collection.
+
+### Added
 - Horizontal and vertical tab orientation with roving focus, arrow-key navigation, and Home/End navigation.
 - Linked tabpanel semantics with generated `aria-controls`/`aria-labelledby` relationships, active-panel visibility and named content slots.
 - Accessible tablist labeling and a programmatic `value` property setter.
