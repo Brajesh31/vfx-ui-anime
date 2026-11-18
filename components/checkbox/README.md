@@ -6,13 +6,13 @@ Tick it and two crescents swing round the box, crystals fly, the tick draws itse
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/checkbox/
+# open http://localhost:8000/components/checkbox/demo.html
 ```
 
 ## Use it
 
 ```html
-<script src="checkbox.js"></script>
+<script src="index.js"></script>
 <vfx-checkbox name="remember">Remember me</vfx-checkbox>
 ```
 
