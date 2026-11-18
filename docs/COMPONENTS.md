@@ -11,7 +11,7 @@ All components are registered as native custom elements. Load `core.js` before c
 ## `<vfx-toggle>`
 - Attributes: `checked`, `label`, `name`, `value`.
 - Property: `checked` boolean.
-- Form: uses ElementInternals when supported. Validate in target browsers before relying on form submission.
+- Form: uses ElementInternals when supported, including disabled-state and reset callbacks. Validate in target browsers before relying on form submission.
 - Keyboard: native button switch interaction; exposes `role="switch"` and `aria-checked`.
 
 ## `<vfx-slider>`
@@ -24,7 +24,7 @@ All components are registered as native custom elements. Load `core.js` before c
 - Attributes: `checked`, `name`, `value`.
 - Property: `checked` boolean.
 - Event: native-like bubbling `change`.
-- Uses a native checkbox internally.
+- Uses a native checkbox internally and supports form reset/disabled callbacks when ElementInternals is available.
 
 ## `<vfx-radio>`
 - Attributes: `options` comma-separated, `value`, `name`.
@@ -34,9 +34,10 @@ All components are registered as native custom elements. Load `core.js` before c
 
 ## `<vfx-input>`
 - Attributes: `type`, `placeholder`, `value`, `required`, `disabled`, `autocomplete`.
+- Attributes: `label` for an explicit accessible name.
 - Property: `value` string.
 - Events: `input`, `change`.
-- Current limitation: this wrapper does not yet proxy the full native constraint-validation API.
+- Supports form reset and disabled callbacks where ElementInternals is available. It does not yet proxy the full native constraint-validation API.
 
 ## `<vfx-tabs>`
 - Attributes: `items` comma-separated and `value`.
