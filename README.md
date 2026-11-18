@@ -32,7 +32,7 @@ The first eleven controls are self-contained scripts. Each carries the motion en
 
 ## 🚀 Explore
 
-Open the [interactive component gallery](index.html) or try a [standalone button demo](components/button/demo.html).
+Open the [interactive component gallery](index.html), browse the [artwork gallery](art-gallery/), or try a [standalone button demo](components/button/demo.html).
 
 ## 📦 Use a source-backed component
 

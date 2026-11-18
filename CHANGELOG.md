@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- Restored the six original sound-effect artwork files under `art/words/` and added a dedicated artwork gallery.
+
 ### Changed
 - Rebuilt the public landing page around the VFX UI Anime brand and design language.
 - Organized all fifteen controls into dedicated component folders.
