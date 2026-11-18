@@ -101,7 +101,7 @@ npm run check
 python3 -m http.server 8000
 ```
 
-The checks validate required files, component registrations and key accessibility hooks. They are static checks, not a substitute for browser-based interaction tests.
+The checks validate required files, component registrations and key accessibility hooks. Run `npm run test:browser` for headless Chromium interaction tests covering tabs, radio groups and tooltips. The browser suite adds no project dependency and does not replace cross-browser or screen-reader QA.
 
 ## 📚 Documentation
 
