@@ -77,7 +77,7 @@
       const requestedValue = this.getAttribute("value");
       const selectedValue = options.includes(requestedValue)
         ? requestedValue
-        : (options[0] || "");
+        : (this.required ? "" : (options[0] || ""));
       const name = this.getAttribute("name") || `vfx-radio-${this.instanceId}`;
 
       this.group.setAttribute("aria-label", this.getAttribute("label") || "Choose an option");
@@ -141,7 +141,7 @@
     }
 
     formResetCallback() {
-      const resetValue = this.defaultValue || this.options[0] || "";
+      const resetValue = this.defaultValue || "";
       const inputs = [...this.group.querySelectorAll('input[type="radio"]')];
       inputs.forEach((input) => {
         input.checked = input.value === resetValue;
