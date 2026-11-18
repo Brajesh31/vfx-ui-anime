@@ -1,0 +1,30 @@
+# VFX UI Anime
+
+> Dependency-free anime-inspired Web Components for expressive interface feedback.
+
+## Project map
+- `README.md`: overview and quick start.
+- `core.js`: shared canvas and motion engine.
+- `components/button.js`: vfx-button.
+- `components/toggle.js`: vfx-toggle.
+- `components/slider.js`: vfx-slider.
+- `components/checkbox.js`: vfx-checkbox.
+- `components/radio.js`: vfx-radio.
+- `components/input.js`: vfx-input.
+- `components/tabs.js`: vfx-tabs.
+- `components/progress.js`: vfx-progress.
+- `components/rating.js`: vfx-rating.
+- `components/toast.js`: vfx-toast.
+- `components/tooltip.js`: vfx-tooltip.
+- `docs/COMPONENTS.md`: public attributes, properties, methods and events.
+- `docs/ARCHITECTURE.md`: runtime architecture.
+- `docs/ACCESSIBILITY.md`: known accessibility gaps and QA checklist.
+- `skills/vfx-ui-anime/SKILL.md`: instructions for extending the project.
+
+## Integration rules
+1. Load `core.js` before component scripts.
+2. Keep native semantics and keyboard behavior.
+3. Use the documented custom element names and events.
+4. Do not claim full accessibility or cross-browser support without testing.
+5. Respect `prefers-reduced-motion`.
+6. Preserve the project's MIT license when redistributing.
