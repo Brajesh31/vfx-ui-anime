@@ -6,6 +6,14 @@ VFX UI Anime is a dependency-free Web Component collection. The original 11 adap
 
 **Current library: 82 component types and 83 live gallery demos.** The gallery includes primary and secondary Button examples.
 
+## 🧭 Quality standards and redesign audit
+
+Phase 1 is complete. The full 82-component audit, shared visual/animation specification and acceptance matrix are documented before implementation work begins.
+
+- [Phase 1 component audit](docs/quality/PHASE-1-COMPONENT-AUDIT.md)
+- [VFX visual and animation design system](docs/quality/ANIMATION-DESIGN-SYSTEM.md)
+- [Quality acceptance matrix](docs/quality/PHASE-1-ACCEPTANCE-MATRIX.md)
+
 ## 🎮 Live gallery
 
 Run a local server from the repository root:

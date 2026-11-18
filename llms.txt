@@ -150,3 +150,9 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Scroll Reveal: components/scroll-reveal/, <vfx-scroll-reveal>. Viewport-triggered content reveal with observer cleanup.
 - Animated Counter: components/animated-counter/, <vfx-animated-counter>. Animated numeric counter with completion event.
 - Confetti Button: components/confetti-button/, <vfx-confetti-button>. VFX celebration button with burst and shard effects.
+
+
+## Quality and redesign standards
+- `docs/quality/PHASE-1-COMPONENT-AUDIT.md`: baseline inventory, source findings, and component-specific redesign targets for all 82 components.
+- `docs/quality/ANIMATION-DESIGN-SYSTEM.md`: shared visual tokens, motion grammar, runtime, accessibility, responsive and performance standards.
+- `docs/quality/PHASE-1-ACCEPTANCE-MATRIX.md`: universal and component-family quality gates for subsequent phases.
