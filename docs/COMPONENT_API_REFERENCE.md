@@ -26,9 +26,10 @@ The browser APIs used by the implementation include Custom Elements, Shadow DOM,
 | `<vfx-toggle>` | `components/toggle.js` | `checked`, `label`, `disabled`, `name`, `value` | `change` |
 | `<vfx-slider>` | `components/slider.js` | `min`, `max`, `step`, `value`, `disabled` | `input` with `detail.value` |
 | `<vfx-checkbox>` | `components/checkbox.js` | `checked`, `disabled`, `value` | `change` |
-| `<vfx-radio>` | `components/radio.js` | `options`, `value`, `name` | `change` |
+| `<vfx-radio>` | `components/radio.js` | `options`, `value`, `name`, `disabled`, `required`, `label` | `change` |
+
 | `<vfx-input>` | `components/input.js` | `type`, `value`, `placeholder`, `required`, `disabled`, `autocomplete`, `label` | `input`, `change` |
-| `<vfx-tabs>` | `components/tabs.js` | `items`, `value` | `change` with `detail.value` |
+| `<vfx-tabs>` | `components/tabs.js` | `items`, `value`, `orientation`, `label` | `change` with `detail.value` |
 | `<vfx-progress>` | `components/progress.js` | `value`, `label` | None |
 | `<vfx-rating>` | `components/rating.js` | `value` | `change` with `detail.value` |
 | `<vfx-toast>` | `components/toast.js` | `message` | `vfx-toast` with `detail.message` |
@@ -142,19 +143,32 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 
 **Tag:** `<vfx-radio>`
 
-**Attributes:** `options`, `value`, `name`.
+**Attributes:** `options`, `value`, `name`, `disabled`, `required`, `label`.
 - `options` is a comma-separated string. The default is `Option A,Option B`.
-- `value` selects the matching option. When no value is provided, the first option is initially selected.
-- Empty option entries are discarded.
-- The `name` attribute is observed by the component, but the internal radio inputs currently use the fixed name `vfx-radio`.
+- `value` selects a matching option. When no valid value is provided, the first option is selected.
+- `name` is applied to the internal native radio inputs and is also the custom element's form field name.
+- When `name` is omitted, an instance-specific internal group name is generated so each component remains its own radio group.
+- `disabled` disables the internal inputs. Disabled fieldsets are handled through the form-associated disabled callback.
+- `required` marks the internal radio choices as required.
+- `label` supplies the accessible name for the radiogroup.
 
 **Property**
-- `value`: string getter/setter. The setter selects a matching internal option and synchronizes the form value.
+- `value`: string getter/setter. The setter selects a matching option and synchronizes the form value.
 
-**Event:** `change`, without a detail payload, when a different internal radio is selected.
+**Interaction and event**
+- Uses native radio inputs, preserving the browser's built-in radio selection and keyboard behavior within the group.
+- Emits `change`, without a custom detail payload, after the selected option changes.
+- Uses `ElementInternals.setFormValue()` when available. The component also implements form reset, disabled-state and state-restore callbacks.
 
 ```html
-<vfx-radio id="size-choice" options="Small,Medium,Large" value="Medium"></vfx-radio>
+<vfx-radio
+  id="size-choice"
+  label="Size"
+  name="size"
+  required
+  options="Small,Medium,Large"
+  value="Medium"
+></vfx-radio>
 <script>
   const choice = document.querySelector("#size-choice");
   choice.addEventListener("change", () => console.log(choice.value));
@@ -162,7 +176,7 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 </script>
 ```
 
-**Limitations:** Commas cannot appear inside option labels. The internal radio name is fixed, and the group does not implement custom arrow-key handling or a full native radio-group accessibility pattern. The `name` attribute should not be assumed to configure the internal radio inputs.
+**Limitations:** Options are comma-separated, so commas cannot appear inside option labels. Form submission, required validity, reset and disabled-fieldset behavior still need testing in every supported browser. The component does not expose a separate `defaultValue` property.
 
 ## 6. Text input
 
@@ -197,16 +211,30 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 
 **Tag:** `<vfx-tabs>`
 
-**Attributes:** `items` and `value`.
-- `items` is a comma-separated list, defaulting to `Overview,Details`.
-- `value` identifies the selected tab. When empty, the first item is selected for rendering.
+**Attributes:** `items`, `value`, `orientation`, `label`.
+- `items` is a comma-separated list, defaulting to `Overview,Details`. Duplicate and empty labels are removed.
+- `value` identifies the selected tab. When no valid value is set, the first item is selected.
+- `orientation="horizontal"` (default) uses Left/Right Arrow keys. `orientation="vertical"` uses Up/Down Arrow keys.
+- `label` sets the accessible name of the tablist.
 
-**Property:** `value` is a string getter for the attribute. The source does not implement a property setter.
+**Property**
+- `value`: string getter/setter. The getter returns the selected value, falling back to the first item; the setter selects a matching item.
+- `orientation`: read-only string getter that returns `horizontal` or `vertical`.
 
-**Event:** `change` with `event.detail.value` containing the selected tab label. Clicking a tab writes the `value` attribute, re-renders the selector, then emits the event.
+**Keyboard and event behavior**
+- Exactly one tab is in the tab order. Other tabs use `tabindex="-1"`.
+- Arrow keys move focus and selection, wrapping at either end.
+- `Home` selects/focuses the first tab. `End` selects/focuses the last tab.
+- Selection follows focus (automatic activation).
+- User selection emits `change` with `event.detail.value`. Programmatic `value` changes do not emit the event.
 
 ```html
-<vfx-tabs id="sections" items="Overview,Features,Details"></vfx-tabs>
+<vfx-tabs
+  id="sections"
+  label="Content sections"
+  items="Overview,Features,Details"
+  orientation="horizontal"
+></vfx-tabs>
 <script>
   document.querySelector("#sections").addEventListener("change", (event) => {
     console.log("Selected tab:", event.detail.value);
@@ -214,7 +242,7 @@ Events emitted by a component are dispatched with `bubbles: true` and `composed:
 </script>
 ```
 
-**Limitations:** This element renders the tab selector only. It does not render tab panels, link tabs to panels, manage panel visibility, or implement roving keyboard navigation and the complete ARIA tabs pattern. The application must provide those behaviors.
+**Limitations:** The component renders the tab selector only. It does not create linked tabpanels, control host panel visibility, or add `aria-controls`/panel relationships. The host application must connect the selected value to accessible panel content. Browser and assistive-technology testing is still required.
 
 ## 8. Progress
 
