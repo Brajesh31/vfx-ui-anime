@@ -71,7 +71,7 @@ for (const hook of [
 }
 
 const api = await read("docs/COMPONENT_API_REFERENCE.md");
-if (!api.includes("orientation=\"vertical\"") || !api.includes("ArrowDown")) {
+if (!api.includes("orientation=\"vertical\"") || !api.includes("Up/Down Arrow keys")) {
   errors.push("Component API reference does not document vertical tabs keyboard navigation.");
 }
 if (!api.includes("form reset") || !api.includes("required validity")) {
