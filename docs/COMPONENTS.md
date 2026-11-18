@@ -35,7 +35,7 @@ All custom-element events shown above bubble and cross the Shadow DOM boundary. 
 
 - `<vfx-slider>` copies its initial range attributes when it connects. Use its `value` property for later programmatic value changes.
 - `<vfx-tabs>` supports one tab stop, arrow-key selection, and Home/End navigation. It supports horizontal and vertical orientation, but the consuming application must still create and manage tab panels and their accessibility relationships.
-- `<vfx-radio>` accepts comma-separated options, applies the configured `name`, and uses native radio inputs for browser keyboard behavior. It supports `label`, `required` and `disabled`; form-associated behavior remains browser-dependent and should be tested.
+- `<vfx-radio>` accepts comma-separated options, applies the configured `name`, and uses native radio inputs for browser keyboard behavior. It supports `label`, `required` and `disabled`. A required group starts unselected unless a valid `value` is supplied; form-associated behavior remains browser-dependent and should be tested.
 - `<vfx-input>` does not proxy the complete native constraint-validation API.
 - Toggle, checkbox, radio and input declare form association and use `ElementInternals` where available, but production form behavior still needs browser-specific testing.
 - Reduced motion suppresses canvas particles. It does not automatically remove every CSS transition from the components.
