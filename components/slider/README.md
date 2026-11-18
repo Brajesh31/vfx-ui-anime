@@ -6,13 +6,13 @@ A range slider with a cloud behind the thumb. The value rides in a bubble that l
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/slider/
+# open http://localhost:8000/components/slider/demo.html
 ```
 
 ## Use it
 
 ```html
-<script src="slider.js"></script>
+<script src="index.js"></script>
 <vfx-slider value="30" label="Volume"></vfx-slider>
 <vfx-slider min="0" max="10" step="0.5" value="4" unit="" label="Spice" name="spice"></vfx-slider>
 ```
