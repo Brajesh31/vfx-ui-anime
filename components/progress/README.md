@@ -6,7 +6,7 @@ A loading bar with a storm cloud riding the leading edge. The cloud grows as the
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/progress/
+# open http://localhost:8000/components/progress/demo.html
 ```
 
 The page plays a pretend load. Drag the slider under it to drive it yourself.
@@ -14,7 +14,7 @@ The page plays a pretend load. Drag the slider under it to drive it yourself.
 ## Use it
 
 ```html
-<script src="progress.js"></script>
+<script src="index.js"></script>
 <vfx-progress label="Uploading photos"></vfx-progress>
 ```
 
