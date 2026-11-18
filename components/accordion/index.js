@@ -4,7 +4,7 @@
   static get observedAttributes(){return ["open","label","disabled"]}
   constructor(){super();this.key=++instance;this.attachShadow({mode:"open"});this.shadowRoot.innerHTML=`<style>
    :host{display:block;width:100%;max-width:420px;border:1.5px solid var(--vfx-line,#ded9ef);border-radius:15px;background:var(--vfx-surface,#fff);overflow:hidden}
-   button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.9rem 1rem;border:0;background:transparent;color:var(--vfx-ink,#211b43);font:750 .95rem/1.35 inherit;text-align:left;cursor:pointer}
+   button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.9rem 1rem;border:0;background:transparent;color:var(--vfx-ink,#211b43);font:750 .95rem/1.35 system-ui,sans-serif;text-align:left;cursor:pointer}
    button:focus-visible{outline:3px solid var(--vfx-violet,#6557d9);outline-offset:-4px}button:disabled{opacity:.55;cursor:not-allowed}
    .chevron{width:1rem;height:1rem;transition:transform .24s cubic-bezier(.2,.8,.2,1);flex:none}:host([open]) .chevron{transform:rotate(180deg)}
    .panel{height:0;overflow:hidden;transition:height .28s cubic-bezier(.2,.8,.2,1)}.inner{padding:0 1rem 1rem;color:var(--vfx-muted,#77718e);font-size:.9rem;line-height:1.65}

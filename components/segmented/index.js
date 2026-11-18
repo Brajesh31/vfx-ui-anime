@@ -4,7 +4,7 @@
   static formAssociated=true;static get observedAttributes(){return ["value","label","disabled","options","name"]}
   constructor(){super();this.attachShadow({mode:"open"});this.internals=this.attachInternals?.();this.shadowRoot.innerHTML=`<style>
    :host{display:inline-block;max-width:100%}[role=radiogroup]{display:inline-flex;gap:3px;padding:4px;border:1.5px solid var(--vfx-line,#ded9ef);border-radius:13px;background:var(--vfx-soft,#f5f2ff);max-width:100%;overflow-x:auto}
-   button{border:0;border-radius:9px;background:transparent;padding:.58rem .85rem;color:var(--vfx-muted,#77718e);font:700 .86rem/1.2 inherit;white-space:nowrap;cursor:pointer;transition:background .18s,color .18s,transform .18s}
+   button{border:0;border-radius:9px;background:transparent;padding:.58rem .85rem;color:var(--vfx-muted,#77718e);font:700 .86rem/1.2 system-ui,sans-serif;white-space:nowrap;cursor:pointer;transition:background .18s,color .18s,transform .18s}
    button[aria-checked=true]{background:var(--vfx-surface,#fff);color:var(--vfx-violet,#6557d9);box-shadow:0 2px 9px #211b4317}button:active{transform:scale(.94)}button:focus-visible{outline:2px solid var(--vfx-pink,#ff5f9e);outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed}
    @media(prefers-reduced-motion:reduce){button{transition:none}}
   </style><div role="radiogroup"></div>`;this.group=this.shadowRoot.querySelector("[role=radiogroup]")}
