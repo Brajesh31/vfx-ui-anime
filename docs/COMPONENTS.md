@@ -1,6 +1,6 @@
 # 🧩 Component library
 
-VFX UI Anime contains 15 native custom elements. Every component lives in its own dedicated folder with an implementation, standalone demo, and usage guide.
+VFX UI Anime contains 15 native custom elements. Eleven are standalone animated controls with embedded motion engines and artwork. Four additional controls use this repository's separate shared engine.
 
 | Component | Element | Category | Folder |
 |---|---|---|---|
@@ -20,9 +20,16 @@ VFX UI Anime contains 15 native custom elements. Every component lives in its ow
 | Segmented | `<vfx-segmented>` | Forms | [components/segmented/](../components/segmented/) |
 | Notification | `<vfx-notification>` | Feedback | [components/notification/](../components/notification/) |
 
-## Shared motion engine
+## Standalone animated controls
 
-Load `core.js` before component scripts. It exposes `window.VFXAnime` with:
+The Button, Toggle, Slider, Checkbox, Radio, Input, Tabs, Progress, Rating, Toast, and Tooltip scripts each contain their own copy of the animation engine, canvas effects, and the artwork they need. The first one loaded creates `window.VFXAnimeFX`; additional source-backed controls reuse that shared page instance. You do not need to load `core.js` to use them.
+
+The engine provides spring motion, bursts, shards, puffs, splashes, slashes, speed lines, smoke rings, and traced manga sound-effect lettering. The Toggle includes its 43-frame painted animation inside its component file.
+
+## Additional VFX UI Anime controls
+
+Like, Accordion, Segmented, and Notification use the separate `core.js` engine. Load `core.js` before any of those four scripts. That engine exposes `window.VFXAnime` with:
+
 - `emit(type, x, y, options)`: emit particles at viewport coordinates.
 - `impact(element, type, power)`: emit an effect near an element.
 - `spring(from, to, elapsedSeconds)`: scalar spring-like easing.
@@ -32,17 +39,24 @@ Load `core.js` before component scripts. It exposes `window.VFXAnime` with:
 ## Per-component structure
 
 Every component directory contains:
+
 - `index.js`: custom element implementation.
 - `demo.html`: working standalone preview.
-- `README.md`: component-specific use and installation notes.
+- `README.md`: component-specific attributes, properties, events, behaviour, and limits.
 
-## Example
+## Example: source-backed Button
 
 ```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
 <script defer src="/components/button/index.js"></script>
-<vfx-button>Continue</vfx-button>
+<vfx-button>Confirm</vfx-button>
 ```
 
-See the [detailed API reference](COMPONENT_API_REFERENCE.md), [installation guide](INSTALLATION.md), and each component's README for current details.
+## Example: additional Like control
+
+```html
+<script defer src="/core.js"></script>
+<script defer src="/components/like/index.js"></script>
+<vfx-like label="Like" liked-label="Liked"></vfx-like>
+```
+
+See the [detailed API reference](COMPONENT_API_REFERENCE.md), [installation guide](INSTALLATION.md), and each component's README for exact APIs.
