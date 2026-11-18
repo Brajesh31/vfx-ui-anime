@@ -14,13 +14,13 @@ For the complete, source-checked list of attributes, properties, methods, emitte
 | Checkbox | `<vfx-checkbox>` | `checked`, `disabled`, `value`, default slot | `change` |
 | Radio | `<vfx-radio>` | `options`, `value`, `name`, `disabled`, `required`, `label` | `change` |
 | Input | `<vfx-input>` | `type`, `value`, `placeholder`, `required`, `disabled`, `autocomplete`, `label` | `input`, `change` |
-| Tabs | `<vfx-tabs>` | `items`, `value`, `orientation`, `label` | `change` with `detail.value` |
+| Tabs | `<vfx-tabs>` | `items`, `value`, `orientation`, `label`, named panel slots | `change` with `detail.value` |
 | Progress | `<vfx-progress>` | `value`, `label` | None |
 | Rating | `<vfx-rating>` | `value` | `change` with `detail.value` |
 | Toast | `<vfx-toast>` | `message` | `vfx-toast` with `detail.message` |
 | Tooltip | `<vfx-tooltip>` | `text`, `placement`, default slot | None |
 
-All custom-element events shown above bubble and cross the Shadow DOM boundary. Events without a listed detail payload do not provide a documented custom payload.
+Tabs use named child slots whose names match the tab labels. The component generates linked `tab`/`tabpanel` semantics and manages panel visibility.\n\nAll custom-element events shown above bubble and cross the Shadow DOM boundary. Events without a listed detail payload do not provide a documented custom payload.
 
 ## Shared engine
 
