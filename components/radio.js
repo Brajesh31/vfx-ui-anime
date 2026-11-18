@@ -19,7 +19,7 @@
       this.shadowRoot.innerHTML = `
         <style>
           :host { display: flex; gap: .8rem; flex-wrap: wrap; }
-          :host([disabled]) { opacity: .6; }
+          [role="radiogroup"][aria-disabled="true"] { opacity: .6; }
           label {
             display: flex;
             align-items: center;
@@ -27,7 +27,7 @@
             cursor: pointer;
             font-size: .9rem;
           }
-          :host([disabled]) label { cursor: not-allowed; }
+          [role="radiogroup"][aria-disabled="true"] label { cursor: not-allowed; }
           input { accent-color: var(--vfx-violet, #6557d9); }
           input:focus-visible {
             outline: 2px solid var(--vfx-pink, #ff5f9e);
@@ -61,15 +61,27 @@
 
     set value(nextValue) {
       const value = String(nextValue ?? "");
-      if (this.options.includes(value)) this.setAttribute("value", value);
+      if (this.options.includes(value)) {
+        this.setAttribute("value", value);
+      } else if (!value && this.required) {
+        this.removeAttribute("value");
+      }
     }
 
     get disabled() {
       return this.hasAttribute("disabled") || this.formDisabled;
     }
 
+    set disabled(nextValue) {
+      this.toggleAttribute("disabled", Boolean(nextValue));
+    }
+
     get required() {
       return this.hasAttribute("required");
+    }
+
+    set required(nextValue) {
+      this.toggleAttribute("required", Boolean(nextValue));
     }
 
     render() {
