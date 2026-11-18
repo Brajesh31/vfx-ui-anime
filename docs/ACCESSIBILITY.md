@@ -1,32 +1,46 @@
 # ♿ Accessibility and compatibility
 
-## Implemented
-- Native button, checkbox, range and text input elements are used internally where practical.
-- Focusable controls retain browser keyboard behavior.
+## Implemented in the current source
+
+- Native button, checkbox, radio, range and text input elements are used internally where practical.
+- Focusable controls retain native browser keyboard behavior where native elements are used.
 - Switch state is exposed with `role="switch"` and `aria-checked`.
 - Progress exposes current and min/max values.
+- `<vfx-tabs>` exposes a tablist with one tab stop, `aria-selected` state, and roving focus.
+- Horizontal tabs support Left/Right Arrow keys. Vertical tabs support Up/Down Arrow keys. Both orientations support Home and End.
+- `<vfx-radio>` uses native radio inputs with a per-instance group name when no name is supplied. Browser-native radio keyboard behavior is retained within the group.
 - Tooltip can appear through keyboard focus.
 - Toast uses a polite live status region.
 - Canvas is marked `aria-hidden="true"` and does not capture pointer input.
 - Canvas particles are disabled when `prefers-reduced-motion: reduce` is active.
 
-## Known gaps
-- Custom form-associated controls use ElementInternals opportunistically, but reset, disabled-state propagation, validity and fallback behavior are not complete.
-- The radio wrapper does not currently implement the full arrow-key behavior of a native radio group.
-- Tabs do not yet implement linked tabpanels, roving keyboard navigation or full ARIA relationships.
-- Tooltip placement does not account for viewport edges.
+These are source-level implementation details. They are not a claim of formal WCAG conformance or completed assistive-technology testing.
+
+## Known gaps and constraints
+
+- `<vfx-tabs>` does not create linked tabpanels, panel IDs, `aria-controls` relationships or manage panel visibility. The host application must supply accessible panels and connect them to selection.
+- Radio labels are supplied as comma-separated options, so commas cannot appear inside an option label.
+- Custom form-associated controls depend on `ElementInternals` support. Form submission, required validity, reset and disabled-fieldset behavior must be tested in target browsers.
+- `<vfx-input>` does not proxy the complete native constraint-validation API.
+- Tooltip placement does not account for viewport edges, and the trigger is not connected to the tooltip with `aria-describedby`.
 - The fixed canvas can overlap dialogs and sticky UI visually.
 - No formal screen-reader audit has been completed.
 - Cross-browser and real-device testing has not yet been completed.
 
 ## Release QA checklist
-- [ ] Keyboard-only navigation.
+
+- [ ] Keyboard-only navigation through all controls.
+- [ ] Tabs: Left/Right Arrow keys in horizontal orientation.
+- [ ] Tabs: Up/Down Arrow keys in vertical orientation.
+- [ ] Tabs: Home and End keys, selection event and host-managed panel updates.
+- [ ] Radio groups: Tab entry, arrow-key selection, Space activation and independent groups.
+- [ ] Radio groups: configured name, required state, disabled state and form reset.
 - [ ] NVDA + Firefox and Chrome.
 - [ ] VoiceOver + Safari on macOS and iOS.
 - [ ] TalkBack + Chrome on Android.
 - [ ] Reduced-motion enabled and disabled.
 - [ ] 200% zoom and narrow viewport.
-- [ ] Form submit, reset, disabled and required states.
+- [ ] Form submit, reset, disabled fieldset and required states.
 - [ ] Dialog, popover and sticky-header stacking behavior.
 
 Do not describe the project as fully accessible until these checks are completed and gaps are addressed.
