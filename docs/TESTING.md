@@ -9,6 +9,17 @@ Run `npm test` or `npm run check`. The current validation script performs static
 
 The script also asks Node to syntax-parse the runtime JavaScript files. The feature assertions inspect source text. These checks do not instantiate the components, simulate keyboard input, submit forms, run a browser, or validate accessibility-tree output. A passing static check is not a browser interaction test.
 
+## Automated Chromium interaction tests
+
+Run `npm run test:browser`. This starts a small local HTTP server using Node's built-in modules, launches an installed Chromium executable in headless mode, and reads a structured test report from the page. No browser automation package or runtime dependency is added to the project.
+
+The browser suite exercises:
+- Tabs: generated tab/tabpanel IDs, reciprocal `aria-controls` and `aria-labelledby` references, named-slot assignment, active/inactive visibility, click activation, horizontal and vertical keyboard navigation, focus movement, programmatic selection and per-instance ID uniqueness.
+- Radio groups: native input configuration, required validity, selected form values in `FormData`, form reset, disabled state and independent groups.
+- Tooltips: `aria-describedby`, keyboard focus visibility, Escape dismissal, reopening, live text updates, automatic placement and horizontal viewport bounds.
+
+The suite currently targets Chromium only. It does not prove screen-reader interoperability, full WCAG conformance, or behavior in Firefox, Safari, iOS or Android. The GitHub validation workflow runs this suite after the static checks.
+
 ## Manual smoke test
 
 1. Serve the repository root over HTTP.
@@ -42,6 +53,15 @@ The script also asks Node to syntax-parse the runtime JavaScript files. The feat
 
 Do not convert this table to a passing matrix until the checks have actually been performed.
 
-## Future automation
+## Browser matrix
 
-Add browser-based interaction tests when a browser automation dependency and CI browser installation are intentionally introduced. The current project has no such dependency. Do not add a test dependency merely to create a passing badge; browser installation, repeatability and CI maintenance must be part of the decision.
+| Browser | Automated interaction suite | Manual / assistive-technology audit |
+|---|---|---|
+| Chromium | Headless suite in GitHub Actions | Not formally certified |
+| Firefox | Not tested | Not tested |
+| Safari macOS | Not tested | Not tested |
+| Safari iOS | Not tested | Not tested |
+| Chrome Android | Not tested | Not tested |
+| Screen readers | Not automated | Not audited |
+
+Keep these statuses honest. A passing Chromium suite is not a substitute for manual keyboard review, browser compatibility checks or testing with NVDA, VoiceOver and TalkBack.
