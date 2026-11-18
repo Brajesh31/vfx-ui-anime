@@ -12,7 +12,7 @@ permissions:
 jobs:
   static-validation:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -30,3 +30,11 @@ jobs:
 
       - name: Run headless Chromium interaction tests
         run: npm run test:browser
+
+      - name: Install temporary Playwright browser tooling
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps firefox webkit
+
+      - name: Run Firefox and WebKit interaction tests
+        run: npm run test:cross-browser
