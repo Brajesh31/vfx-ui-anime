@@ -6,7 +6,7 @@ The raised tab itself slides to the one you pick, stretching as it goes, and lan
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/tabs/
+# open http://localhost:8000/components/tabs/demo.html
 ```
 
 ## Use it
@@ -14,7 +14,7 @@ python3 -m http.server 8000     # from the repo folder
 List the tabs as `<option>`s inside it:
 
 ```html
-<script src="tabs.js"></script>
+<script src="index.js"></script>
 <vfx-tabs label="Account">
   <option value="home">Home</option>
   <option value="profile">Profile</option>
