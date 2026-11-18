@@ -282,6 +282,7 @@ class VfxChip extends Base {
   setup() {
     this.btn = this.$('.chip');
     this.removeBtn = this.$('.remove');
+    this.removeBtn.disabled = this.hasAttribute('disabled');
     this.spring = new Spring(1, 500, 18);
     this.btn.addEventListener('click', () => {
       if (this.hasAttribute('disabled')) return;
