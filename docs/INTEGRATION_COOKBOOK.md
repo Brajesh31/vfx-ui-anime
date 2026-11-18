@@ -104,27 +104,33 @@ Custom elements provide interaction primitives. They do not replace your applica
 </script>
 ```
 
-### Tabs to host content
+### Tabs with named panel slots
+
+The component owns tab and tabpanel semantics. Keep the content in ordinary HTML and give each child panel a `slot` name that exactly matches one item label:
 
 ```html
-<vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details" orientation="horizontal"></vfx-tabs>
-<section id="tab-content" aria-live="polite">Overview content</section>
+<vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details">
+  <section slot="Overview">
+    <h2>Overview</h2>
+    <p>Introductory content.</p>
+  </section>
+  <section slot="Features">
+    <h2>Features</h2>
+    <p>Feature content.</p>
+  </section>
+  <section slot="Details">
+    <h2>Details</h2>
+    <p>Additional details.</p>
+  </section>
+</vfx-tabs>
 <script>
-  const tabs = document.querySelector("#sections");
-  const panel = document.querySelector("#tab-content");
-
-  tabs.addEventListener("change", (event) => {
-    const contentByTab = {
-      Overview: "Overview content",
-      Features: "Feature content",
-      Details: "Additional details"
-    };
-    panel.textContent = contentByTab[event.detail.value] || "";
+  document.querySelector("#sections").addEventListener("change", (event) => {
+    console.log("Selected tab:", event.detail.value);
   });
 </script>
 ```
 
-The selector now implements roving focus and automatic activation: use Left/Right Arrow keys for horizontal tabs, Up/Down Arrow keys for vertical tabs, and Home/End for the first/last tab. This example still does not complete the WAI-ARIA tabs pattern because the component does not create tabpanels or link buttons to panel elements. A production application must supply accessible tab/panel relationships and panel visibility.
+The component generates each tab and panel ID, sets reciprocal `aria-controls` and `aria-labelledby` references, and hides inactive panels. The selected panel is focusable so keyboard users can move from the tablist into panel content. Use exact slot-label matches, and provide a panel for every item. Horizontal tabs use Left/Right Arrow keys; vertical tabs use Up/Down Arrow keys. Both use Home/End and automatic activation.
 
 ### Toast from application code
 
