@@ -1,0 +1,15 @@
+{
+  "name": "vfx-ui-anime",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Dependency-free anime-inspired Web Components.",
+  "type": "module",
+  "scripts": {
+    "check": "node tools/validate.mjs",
+    "test": "node tools/validate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
