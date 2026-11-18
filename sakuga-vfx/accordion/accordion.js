@@ -21,7 +21,7 @@ class SakugaAccordion extends fx.Base{
  frame(dt){this.press.step(dt);this.chev.style.transform='rotate('+(45+this.spin.step(dt))+'deg)'}
 }
 fx.define('sakuga-accordion',SakugaAccordion);
-})();
+}
 // >>> sakuga core (copied from core.js by tools/build.mjs)
 // Sakuga VFX core: springs, the effects layer and the lettering, shared by every component.
 // Each component file carries a copy of this between its core markers, so any one file works on its own. The first one loaded
@@ -282,7 +282,5 @@ const api = window.SakugaFX = {
 };
 })();
 // <<< sakuga core
-component(window.SakugaFX);
-})();
 component(window.SakugaFX);
 })();
