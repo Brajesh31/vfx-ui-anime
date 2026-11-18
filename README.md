@@ -2,7 +2,7 @@
 
 # ✨ VFX UI Anime
 
-**Expressive motion for everyday interface components.** A dependency-free library of native Web Components built around tactile response, crisp visual feedback, and a distinctive visual identity.
+**Anime-impact motion for everyday interface controls.** Fifteen native Web Components, including eleven fully animated, source-backed controls with spring motion, impact bursts, drawn smoke, splashes, slashes, and embedded frame artwork.
 
 <p align="center"><img src="assets/hero-illustration.svg" alt="Abstract impact artwork" width="100%"></p>
 
@@ -28,31 +28,43 @@ Every component has its own folder with `index.js`, `demo.html`, and `README.md`
 | Segmented | `<vfx-segmented>` | [components/segmented/](components/segmented/) |
 | Notification | `<vfx-notification>` | [components/notification/](components/notification/) |
 
+The first eleven controls are self-contained scripts. Each carries the motion engine it needs, so they can run independently without loading the separate `core.js` file. The Like, Accordion, Segmented, and Notification controls use the additional VFX UI Anime engine in `core.js`.
+
 ## 🚀 Explore
 
-Open the [interactive component gallery](index.html) or try any [standalone component demo](components/button/demo.html).
+Open the [interactive component gallery](index.html) or try a [standalone button demo](components/button/demo.html).
 
-## 📦 Use a component
+## 📦 Use a source-backed component
+
+The original animated controls are standalone scripts. Load the component directly:
 
 ```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
 <script defer src="/components/button/index.js"></script>
-<vfx-button>Continue</vfx-button>
+<vfx-button>Confirm</vfx-button>
 ```
 
-Start with the component's local README and demo. See [the API overview](docs/COMPONENTS.md), [detailed API reference](docs/COMPONENT_API_REFERENCE.md), and [installation guide](docs/INSTALLATION.md).
+The other eleven original controls follow the same pattern. See the component's local README for attributes, properties, events, behaviour, and limits.
+
+## 📦 Use one of the additional VFX controls
+
+These four controls use the additional shared VFX UI Anime engine:
+
+```html
+<script defer src="/core.js"></script>
+<script defer src="/components/like/index.js"></script>
+<vfx-like label="Like" liked-label="Liked"></vfx-like>
+```
 
 ## 🎨 Design language
 
-Soft paper surfaces, deep ink typography, violet action color, pink accents, crisp borders, and concise motion cues. Override `--vfx-ink`, `--vfx-paper`, `--vfx-violet`, `--vfx-pink`, and related tokens to theme the controls.
+White paper surfaces, deep violet ink, lavender impact fills, pink accents, bold outlines, spring overshoot, and hand-drawn motion artwork. Component tokens use the `--vfx-*` prefix.
 
 ## ♿ Accessibility and motion
 
-- Prefer native browser semantics and keyboard interactions.
-- Keep control labels descriptive and meaningful.
-- The shared engine honours `prefers-reduced-motion`.
-- Validate form behavior, focus states, and assistive-technology output in your target browsers.
+- Controls use native browser inputs or buttons inside their custom elements where appropriate.
+- Keyboard behaviour, form participation, and accessible names are documented per component.
+- The source-backed effect engine respects `prefers-reduced-motion`.
+- Test each control in the browsers and assistive technologies used by your application.
 
 ## 🧰 Development
 
@@ -62,7 +74,7 @@ No package install is required to run the static gallery:
 python3 -m http.server 8000
 ```
 
-Run `npm run check` for static validation and `npm run test:browser` for the headless browser interaction suite.
+Run `npm run check` for static validation and `npm run test:browser` for the browser interaction suite.
 
 ## 📚 Documentation
 
@@ -77,4 +89,4 @@ Run `npm run check` for static validation and `npm run test:browser` for the hea
 
 ## License
 
-See the root [MIT license](LICENSE). A separate third-party notice is retained for material present in earlier Git revisions.
+See the root [MIT license](LICENSE) for this repository's own files. Adapted third-party components and their required license terms are disclosed in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md).
