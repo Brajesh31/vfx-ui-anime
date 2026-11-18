@@ -40,7 +40,7 @@ class vfxRating extends fx.Base {
     if (!quiet) this.dispatchEvent(new Event('change', { bubbles: true }));
   }
   setup() {
-    this.btns = this.$('button'); this._formDisabled = !!this._formDisabled; this.btns.forEach(b => b.disabled = this.disabled || this._formDisabled); this.sp = this.btns.map(() => new Spring(1, 560, 12)); this.back = this.backLayer(); this.score = 0; this.seq = 0; this.initialValue = clamp(Math.round(+this.getAttribute('value') || 0), 0, 5);
+    this.btns = this.$$('button'); this._formDisabled = !!this._formDisabled; this.btns.forEach(b => b.disabled = this.disabled || this._formDisabled); this.sp = this.btns.map(() => new Spring(1, 560, 12)); this.back = this.backLayer(); this.score = 0; this.seq = 0; this.initialValue = clamp(Math.round(+this.getAttribute('value') || 0), 0, 5);
     this.btns.forEach((b, i) => {
       b.addEventListener('click', () => this.set(this.score === i + 1 ? 0 : i + 1));
       b.addEventListener('keydown', (e) => { const d = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key]; if (!d) return; e.preventDefault(); const n = clamp((this.score || (d > 0 ? 0 : 2)) + d, 1, 5); this.set(n); this.btns[n - 1].focus(); });
