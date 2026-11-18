@@ -69,3 +69,16 @@ All custom-element events shown above bubble and cross the Shadow DOM boundary. 
 - [Visual design system](DESIGN_SYSTEM.md)
 
 This overview describes the current source implementation. It does not imply complete native form parity, full screen-reader support, or verified cross-browser behavior.
+
+## 🎴 Original Sakuga components
+
+The homepage also loads the original-style `sakuga-*` elements from `sakuga-vfx/`. The preserved upstream collection includes eleven controls. Four additional original controls have been added locally:
+
+| Element | Purpose | Main state |
+|---|---|---|
+| `<sakuga-like>` | Like/favorite action | `aria-pressed`, `change` with `detail.pressed` |
+| `<sakuga-accordion>` | Disclosure panel | `open`, `change` with `detail.open` |
+| `<sakuga-segmented>` | Single-choice segmented group | `value`, `change` with `detail.value/index/label` |
+| `<sakuga-notification>` | Notification bell and unread count | `count`, `change` with `detail.count` |
+
+These are separate from the `vfx-*` components above. Load each file with a plain script tag. Every new component includes the Sakuga core block and can be loaded independently.
