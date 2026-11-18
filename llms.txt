@@ -1,28 +1,56 @@
 # VFX UI Anime
 
-> Ordinary UI controls that react like anime: squash and overshoot on springs, and drawn effects (smoke, impact bursts, slashes, splashes) with manga sound-effect lettering, on one canvas over the page. Each is one plain script that registers a custom element: no dependencies, no build step, no other files to fetch. MIT licensed.
+> Nineteen dependency-free Web Component types with twenty live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
-Live gallery: https://vfx-ui-anime.vercel.app
-Source: https://github.com/finktheartist/vfx-ui-anime
+Live gallery: https://brajesh31.github.io/vfx-ui-anime/
+Repository: https://github.com/Brajesh31/vfx-ui-anime
 
-## Drop-in components
+## Project map
+- `index.html`: root redirect to the gallery.
+- `gallery/index.html`: live demos, interaction examples, install-copy actions, and integration prompts.
+- `components/<name>/index.js`: standalone component source with embedded shared runtime.
+- `components/<name>/demo.html`: isolated component preview.
+- `components/<name>/README.md`: component API, behavior, examples, accessibility, and limits.
+- `core.js`: shared motion/effects source of truth.
+- `tools/build.mjs`: embeds the latest core in every standalone component.
+- `tools/test.mjs`: real touch and keyboard interaction tests in Chromium.
+- `registry.json`: component registry metadata.
+- `THIRD_PARTY_NOTICES/LICENSES.md`: upstream MIT attribution and permission notice for the eleven adapted original components and artwork.
 
-Each is one plain script that registers a custom element. Load it with a script tag, not as a module. Do not rewrite or split the file. Each file carries a copy of the shared core; the first one loaded sets window.VFXAnimeFX and the rest reuse it, so any mix shares one canvas and one loop.
+## Original adapted component set
+- Button: `components/button/` `<vfx-button>`
+- Toggle: `components/toggle/` `<vfx-toggle>`
+- Slider: `components/slider/` `<vfx-slider>`
+- Checkbox: `components/checkbox/` `<vfx-checkbox>`
+- Radio: `components/radio/` `<vfx-radio>`
+- Input: `components/input/` `<vfx-input>`
+- Tabs: `components/tabs/` `<vfx-tabs>`
+- Progress: `components/progress/` `<vfx-progress>`
+- Rating: `components/rating/` `<vfx-rating>`
+- Toast: `components/toast/` `<vfx-toast>`
+- Tooltip: `components/tooltip/` `<vfx-tooltip>`
 
-- [Button](https://vfx-ui-anime.vercel.app/components/button/button.js): A button that reacts like an anime impact frame: it squashes when pressed, inverts for one frame on release, and a burst goes off behind it with clouds and ドン!. A secondary variant is quieter. `<vfx-button>`: <vfx-button>Confirm</vfx-button> (variant="secondary" for the quiet one). Listen for click; call el.done() when the action worked to land a check on it. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/button/README.md)
-- [Toggle](https://vfx-ui-anime.vercel.app/components/toggle/toggle.js): A switch whose flip is 43 painted frames: the knob smears across, slams into the end, throws up a splash, and the track floods and settles. The frames are inside the file (about 500 KB). `<vfx-toggle>`: <vfx-toggle label="Notifications"></vfx-toggle>. Read el.checked and listen for change. Works in forms with a name. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/toggle/README.md)
-- [Slider](https://vfx-ui-anime.vercel.app/components/slider/slider.js): A range slider whose thumb stretches and lags on a spring, with cumulus rolling up behind a fast drag and a crescent thrown ahead on release. `<vfx-slider>`: <vfx-slider value="30" label="Volume"></vfx-slider>, with min, max, step and unit. Read el.value; it fires input and change. Works in forms with a name. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/slider/README.md)
-- [Checkbox](https://vfx-ui-anime.vercel.app/components/checkbox/checkbox.js): A checkbox that slashes: crescents swing round the box, crystals fly, the tick draws itself, and ズザッ lands in dotted letters. `<vfx-checkbox>`: <vfx-checkbox>Remember me</vfx-checkbox>. Read el.checked and listen for change. Works in forms with a name. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/checkbox/README.md)
-- [Radio](https://vfx-ui-anime.vercel.app/components/radio/radio.js): A radio group whose picked dot springs in with a fan of wedges, two puffs and a hollow ポン. `<vfx-radio>`: <vfx-radio label="Plan"><option value="a" selected>Option A</option><option value="b">Option B</option></vfx-radio>. Read el.value and listen for change. Works in forms with a name. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/radio/README.md)
-- [Input](https://vfx-ui-anime.vercel.app/components/input/input.js): A text field that kicks up a puff of dust from the caret on every key. `<vfx-input>`: <vfx-input label="Name" placeholder="Type something"></vfx-input>. Read and set el.value; it fires input and change. Works in forms with a name. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/input/README.md)
-- [Tabs](https://vfx-ui-anime.vercel.app/components/tabs/tabs.js): Tabs where the raised tab slides to the one you pick, stretching, and lands with wedges and a puff. `<vfx-tabs>`: <vfx-tabs label="Sections"><option>Home</option><option>Profile</option></vfx-tabs>. Listen for change (e.detail: index, value, label) and show the panel yourself. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/tabs/README.md)
-- [Progress](https://vfx-ui-anime.vercel.app/components/progress/progress.js): A loading bar with a storm cloud riding its leading edge, pebbles lifting off the ground and ゴゴゴゴ; at the end a burst, ドン! and a check. `<vfx-progress>`: <vfx-progress label="Loading"></vfx-progress>, then el.set(n) with progress from 0 to 1. Listen for sakuga:done (fires once). el.reset() for the next task. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/progress/README.md)
-- [Rating](https://vfx-ui-anime.vercel.app/components/rating/rating.js): Five stars that pop in one after another, with wedges and a hollow ポン on the last; five gets a burst. `<vfx-rating>`: <vfx-rating label="Rating"></vfx-rating>. Read el.value (0 to 5) and listen for change. Works in forms with a name. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/rating/README.md)
-- [Toast](https://vfx-ui-anime.vercel.app/components/toast/toast.js): A notification that streaks in as a smear, lands in dust with ズザッ, wobbles and leaves by shrinking. `<vfx-toast>`: Put <vfx-toast></vfx-toast> where toasts should appear and call el.show("Saved"). It stays for the duration attribute (2.6 s) or until el.hide(). [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/toast/README.md)
-- [Tooltip](https://vfx-ui-anime.vercel.app/components/tooltip/tooltip.js): A help button whose hint springs out like a speech bubble, with puffs and a hollow カチッ. `<vfx-tooltip>`: <vfx-tooltip text="Helpful hint!"></vfx-tooltip>. Opens on hover, focus and tap; Escape closes it. [Docs](https://github.com/finktheartist/vfx-ui-anime/blob/main/components/tooltip/README.md)
+## Additional VFX UI Anime components
+- Select: `components/select/` `<vfx-select>`
+- Textarea: `components/textarea/` `<vfx-textarea>`
+- Number Stepper: `components/number/` `<vfx-number>`
+- Search: `components/search/` `<vfx-search>`
+- Menu: `components/menu/` `<vfx-menu>`
+- Dialog: `components/dialog/` `<vfx-dialog>`
+- File Upload: `components/file-upload/` `<vfx-file-upload>`
+- Color Picker: `components/color-picker/` `<vfx-color-picker>`
 
-Install any one with the shadcn CLI: `npx shadcn add finktheartist/vfx-ui-anime/NAME`, where NAME is button, toggle, slider, checkbox, radio, input, tabs, progress, rating, toast, tooltip. The file lands in `public/vfx-ui-anime/`.
+## Integration rules
+1. Load a component file with a plain script tag, not as an ES module.
+2. Each component file contains the shared runtime and works independently.
+3. Read the component README for its exact attributes, properties, events, keyboard behavior, and form behavior.
+4. Honor `prefers-reduced-motion`; effects are decorative and state changes remain immediate.
+5. The package is private and has not been published. Do not present a public npm install command yet.
 
-Colours are --vfx-* CSS variables; a page's own :root values win. Effects switch off for prefers-reduced-motion.
+## Branding
+- Custom element prefix: `vfx-`.
+- Shared runtime global: `window.VFXAnimeFX`.
+- CSS custom-property prefix: `--vfx-`.
 
-## 
+## Verification
+Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` before packaging.

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialog | VFX UI Anime</title>
+<style>
+  :root { --page:#fff; --text:#1d1a4a; --mute:#8580b0; --line:#dcdaf0; --soft:#b8b3ff; }
+  * { box-sizing:border-box; }
+  html { min-height:100%; background:var(--page); }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; padding:26px 16px; color:var(--text); background:var(--page); font:500 15px/1.5 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif; }
+  main { width:min(680px,100%); }
+  h1 { margin:0; font:italic 850 30px/1.1 "Avenir Next","Nunito",sans-serif; letter-spacing:-.02em; }
+  .sub { max-width:590px; margin:9px 0 0; color:var(--mute); }
+  .stage { display:grid; place-items:center; min-height:260px; margin:28px 0 0; padding:34px 18px; border:1.5px solid var(--line); border-radius:18px; background:linear-gradient(145deg,#fff,#faf9ff); }
+  .status { min-height:1.5em; margin:17px 0 0; color:var(--mute); text-align:center; font-size:13px; }
+  nav { display:flex; justify-content:center; margin-top:26px; }
+  a { color:var(--text); font-size:13px; text-decoration-thickness:1px; text-underline-offset:3px; }
+  :focus-visible { outline:2.5px solid #ff5fa8; outline-offset:3px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Dialog</h1>
+  <p class="sub">A native modal dialog with a VFX launch reaction, cancel/confirm flows, Escape handling, backdrop dismissal, and focus management.</p>
+  <section class="stage"><vfx-dialog title="Publish changes" confirm-label="Publish"><span slot="trigger">Review changes</span><p>This will make your approved changes visible to everyone who can access the project.</p><p>Check the details before continuing.</p></vfx-dialog></section>
+  <p class="status" aria-live="polite">Open the modal, then confirm, cancel, click the backdrop, or press Escape.</p>
+  <nav><a href="../../gallery/">← Back to the VFX UI Anime gallery</a></nav>
+</main>
+<script src="./index.js"></script>
+<script>const el=document.querySelector('vfx-dialog');el.addEventListener('confirm',()=>document.querySelector('.status').textContent='Confirmed');el.addEventListener('close',e=>{if(e.detail.returnValue!=='confirm')document.querySelector('.status').textContent='Closed: '+e.detail.returnValue;});</script>
+</body>
+</html>

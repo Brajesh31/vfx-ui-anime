@@ -1,24 +1,24 @@
 # ✨ VFX UI Anime
 
-**Expressive anime-impact motion for everyday interface controls.**
+**Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a rebranded, carefully adapted distribution of the original animated control library. It keeps the original component behavior, spring motion, painted toggle animation, particle effects, sound-effect lettering, interaction timing, and standalone demos. The public identity uses VFX UI Anime branding.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Eight additional controls extend the same design and interaction language.
 
-The gallery contains **12 live demonstrations**: primary and secondary Button examples, plus Toggle, Slider, Checkbox, Radio, Input, Tabs, Progress, Rating, Toast, and Tooltip. These are **11 reusable component types**.
+**Current library: 19 component types and 20 live gallery demos.** The 20 demos include primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
-Run the site locally:
+Run a local server from the repository root:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to the interactive gallery.
+Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to the interactive component gallery.
 
-## 🧩 Components
+## 🧩 Component library
 
-| Component | Custom element | Source |
+| Component | Element | Component folder |
 |---|---|---|
 | Button | `<vfx-button>` | [components/button](components/button/) |
 | Toggle | `<vfx-toggle>` | [components/toggle](components/toggle/) |
@@ -31,28 +31,52 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Rating | `<vfx-rating>` | [components/rating](components/rating/) |
 | Toast | `<vfx-toast>` | [components/toast](components/toast/) |
 | Tooltip | `<vfx-tooltip>` | [components/tooltip](components/tooltip/) |
+| Select | `<vfx-select>` | [components/select](components/select/) |
+| Textarea | `<vfx-textarea>` | [components/textarea](components/textarea/) |
+| Number Stepper | `<vfx-number>` | [components/number](components/number/) |
+| Search | `<vfx-search>` | [components/search](components/search/) |
+| Menu | `<vfx-menu>` | [components/menu](components/menu/) |
+| Dialog | `<vfx-dialog>` | [components/dialog](components/dialog/) |
+| File Upload | `<vfx-file-upload>` | [components/file-upload](components/file-upload/) |
+| Color Picker | `<vfx-color-picker>` | [components/color-picker](components/color-picker/) |
 
-Each component folder contains its standalone JavaScript file, demo page, and API notes. Every original control includes the shared motion/effects runtime inside its own JavaScript file, so it can be loaded independently. The root `core.js` is the source of truth used by the build tool.
+Each component folder contains:
 
-## 🛠️ Development and validation
+- `index.js`, the standalone Web Component implementation, including the shared VFX animation runtime.
+- `demo.html`, an isolated working preview.
+- `README.md`, installation, API, events, behavior, accessibility, and limits.
+
+## ⚡ Motion language
+
+The library uses a restrained paper-and-ink palette, flat lavender shadow shapes, pink impact accents, and hand-drawn smoke, shards, crescents, speed lines, ticks, and sound-effect lettering. Interactive controls use spring response rather than generic CSS easing. Effects are triggered by real interactions, not idle animation.
+
+Every component remains usable with `prefers-reduced-motion`. State changes and form values do not depend on animation completing.
+
+## 🛠️ Development and quality checks
 
 ```sh
-node tools/build.mjs          # regenerate embedded runtime and toggle frames
-node tools/build.mjs --check  # verify generated files are current
-npm test                      # validate repository structure and registry
+node tools/build.mjs
+node tools/build.mjs --check
+npm test
 ```
 
-For interaction tests, start the local server in one terminal and run:
+To run the real touch and keyboard interaction suite, start the server in one terminal:
 
 ```sh
-node tools/test.mjs http://localhost:8000/gallery/
+python3 -m http.server 8000
 ```
 
-The browser test uses real touch and keyboard events in Chromium. Set `CHROME` to the browser executable if it is not on your PATH.
+Then run:
+
+```sh
+npm run test:browser
+```
+
+The browser suite exercises the original controls and the new controls, including selection, keyboard navigation, form values, file selection, menu actions, and dialog flows.
 
 ## 📦 Package status
 
-This repository is being prepared for review. **No npm package has been published.** Package naming, registry installation, versioning, and release automation will be finalized only after the website and component behavior are approved.
+**Not published.** The package metadata remains private while the expanded library is reviewed. npm publishing, registry release, versioning, and a public install command will only be enabled after approval.
 
 ## 🎨 Branding
 
@@ -60,4 +84,4 @@ The public project name is **VFX UI Anime**. Component tags use the `vfx-*` pref
 
 ## ⚖️ Licensing and attribution
 
-The animated component implementations and associated artwork are adapted from an MIT-licensed third-party project. The original copyright and complete permission terms are preserved in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md). The root [LICENSE](LICENSE) applies to the repository's own original VFX UI Anime contributions and does not replace third-party terms.
+The eleven adapted original component implementations and associated artwork retain the upstream MIT copyright and permission terms in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md). The eight additional controls were independently authored for VFX UI Anime. The root [LICENSE](LICENSE) applies to the repository's own contributions and does not replace third-party terms.

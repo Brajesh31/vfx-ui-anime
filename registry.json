@@ -7,8 +7,8 @@
       "name": "button",
       "type": "registry:file",
       "title": "VFX UI Anime Button",
-      "description": "A button that reacts like an anime impact frame: it squashes when pressed, inverts for one frame on release, and a burst goes off behind it with clouds and ドン!. A secondary variant is quieter. One file, no dependencies, defines <sakuga-button>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A button that reacts like an anime impact frame: it squashes when pressed, inverts for one frame on release, and a burst goes off behind it with clouds and ドン!. A secondary variant is quieter. One file, no dependencies, defines <vfx-button>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "button",
         "anime",
@@ -21,14 +21,14 @@
           "target": "~/public/vfx-ui-anime/button.js"
         }
       ],
-      "docs": "VFX UI Anime Button is a plain script that registers a custom element. Load /vfx-ui-anime/button.js with a script tag (not a module), then use <vfx-button>Confirm</vfx-button> (variant=\"secondary\" for the quiet one). Listen for click; call el.done() when the action worked to land a check on it. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime button is a standalone custom element. Load /components/button/index.js with a plain script tag (not a module), then use the <vfx-button> element. See components/button/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "toggle",
       "type": "registry:file",
       "title": "VFX UI Anime Toggle",
-      "description": "A switch whose flip is 43 painted frames: the knob smears across, slams into the end, throws up a splash, and the track floods and settles. The frames are inside the file (about 500 KB). One file, no dependencies, defines <sakuga-toggle>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A switch whose flip is 43 painted frames: the knob smears across, slams into the end, throws up a splash, and the track floods and settles. The frames are inside the file (about 500 KB). One file, no dependencies, defines <vfx-toggle>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "switch",
         "toggle",
@@ -42,14 +42,14 @@
           "target": "~/public/vfx-ui-anime/toggle.js"
         }
       ],
-      "docs": "VFX UI Anime Toggle is a plain script that registers a custom element. Load /vfx-ui-anime/toggle.js with a script tag (not a module), then use <vfx-toggle label=\"Notifications\"></vfx-toggle>. Read el.checked and listen for change. Works in forms with a name. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime toggle is a standalone custom element. Load /components/toggle/index.js with a plain script tag (not a module), then use the <vfx-toggle> element. See components/toggle/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "slider",
       "type": "registry:file",
       "title": "VFX UI Anime Slider",
-      "description": "A range slider whose thumb stretches and lags on a spring, with cumulus rolling up behind a fast drag and a crescent thrown ahead on release. One file, no dependencies, defines <sakuga-slider>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A range slider whose thumb stretches and lags on a spring, with cumulus rolling up behind a fast drag and a crescent thrown ahead on release. One file, no dependencies, defines <vfx-slider>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "slider",
         "input",
@@ -63,14 +63,14 @@
           "target": "~/public/vfx-ui-anime/slider.js"
         }
       ],
-      "docs": "VFX UI Anime Slider is a plain script that registers a custom element. Load /vfx-ui-anime/slider.js with a script tag (not a module), then use <vfx-slider value=\"30\" label=\"Volume\"></vfx-slider>, with min, max, step and unit. Read el.value; it fires input and change. Works in forms with a name. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime slider is a standalone custom element. Load /components/slider/index.js with a plain script tag (not a module), then use the <vfx-slider> element. See components/slider/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "checkbox",
       "type": "registry:file",
       "title": "VFX UI Anime Checkbox",
-      "description": "A checkbox that slashes: crescents swing round the box, crystals fly, the tick draws itself, and ズザッ lands in dotted letters. One file, no dependencies, defines <sakuga-checkbox>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A checkbox that slashes: crescents swing round the box, crystals fly, the tick draws itself, and ズザッ lands in dotted letters. One file, no dependencies, defines <vfx-checkbox>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "checkbox",
         "input",
@@ -84,14 +84,14 @@
           "target": "~/public/vfx-ui-anime/checkbox.js"
         }
       ],
-      "docs": "VFX UI Anime Checkbox is a plain script that registers a custom element. Load /vfx-ui-anime/checkbox.js with a script tag (not a module), then use <vfx-checkbox>Remember me</vfx-checkbox>. Read el.checked and listen for change. Works in forms with a name. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime checkbox is a standalone custom element. Load /components/checkbox/index.js with a plain script tag (not a module), then use the <vfx-checkbox> element. See components/checkbox/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "radio",
       "type": "registry:file",
       "title": "VFX UI Anime Radio",
-      "description": "A radio group whose picked dot springs in with a fan of wedges, two puffs and a hollow ポン. One file, no dependencies, defines <sakuga-radio>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A radio group whose picked dot springs in with a fan of wedges, two puffs and a hollow ポン. One file, no dependencies, defines <vfx-radio>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "radio",
         "input",
@@ -105,14 +105,14 @@
           "target": "~/public/vfx-ui-anime/radio.js"
         }
       ],
-      "docs": "VFX UI Anime Radio is a plain script that registers a custom element. Load /vfx-ui-anime/radio.js with a script tag (not a module), then use <vfx-radio label=\"Plan\"><option value=\"a\" selected>Option A</option><option value=\"b\">Option B</option></vfx-radio>. Read el.value and listen for change. Works in forms with a name. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime radio is a standalone custom element. Load /components/radio/index.js with a plain script tag (not a module), then use the <vfx-radio> element. See components/radio/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "input",
       "type": "registry:file",
       "title": "VFX UI Anime Input",
-      "description": "A text field that kicks up a puff of dust from the caret on every key. One file, no dependencies, defines <sakuga-input>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A text field that kicks up a puff of dust from the caret on every key. One file, no dependencies, defines <vfx-input>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "input",
         "text",
@@ -126,14 +126,14 @@
           "target": "~/public/vfx-ui-anime/input.js"
         }
       ],
-      "docs": "VFX UI Anime Input is a plain script that registers a custom element. Load /vfx-ui-anime/input.js with a script tag (not a module), then use <vfx-input label=\"Name\" placeholder=\"Type something\"></vfx-input>. Read and set el.value; it fires input and change. Works in forms with a name. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime input is a standalone custom element. Load /components/input/index.js with a plain script tag (not a module), then use the <vfx-input> element. See components/input/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "tabs",
       "type": "registry:file",
       "title": "VFX UI Anime Tabs",
-      "description": "Tabs where the raised tab slides to the one you pick, stretching, and lands with wedges and a puff. One file, no dependencies, defines <sakuga-tabs>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "Tabs where the raised tab slides to the one you pick, stretching, and lands with wedges and a puff. One file, no dependencies, defines <vfx-tabs>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "tabs",
         "navigation",
@@ -147,14 +147,14 @@
           "target": "~/public/vfx-ui-anime/tabs.js"
         }
       ],
-      "docs": "VFX UI Anime Tabs is a plain script that registers a custom element. Load /vfx-ui-anime/tabs.js with a script tag (not a module), then use <vfx-tabs label=\"Sections\"><option>Home</option><option>Profile</option></vfx-tabs>. Listen for change (e.detail: index, value, label) and show the panel yourself. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime tabs is a standalone custom element. Load /components/tabs/index.js with a plain script tag (not a module), then use the <vfx-tabs> element. See components/tabs/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "progress",
       "type": "registry:file",
       "title": "VFX UI Anime Progress",
-      "description": "A loading bar with a storm cloud riding its leading edge, pebbles lifting off the ground and ゴゴゴゴ; at the end a burst, ドン! and a check. One file, no dependencies, defines <sakuga-progress>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A loading bar with a storm cloud riding its leading edge, pebbles lifting off the ground and ゴゴゴゴ; at the end a burst, ドン! and a check. One file, no dependencies, defines <vfx-progress>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "progress",
         "loading",
@@ -168,14 +168,14 @@
           "target": "~/public/vfx-ui-anime/progress.js"
         }
       ],
-      "docs": "VFX UI Anime Progress is a plain script that registers a custom element. Load /vfx-ui-anime/progress.js with a script tag (not a module), then use <vfx-progress label=\"Loading\"></vfx-progress>, then el.set(n) with progress from 0 to 1. Listen for sakuga:done (fires once). el.reset() for the next task. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime progress is a standalone custom element. Load /components/progress/index.js with a plain script tag (not a module), then use the <vfx-progress> element. See components/progress/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "rating",
       "type": "registry:file",
       "title": "VFX UI Anime Rating",
-      "description": "Five stars that pop in one after another, with wedges and a hollow ポン on the last; five gets a burst. One file, no dependencies, defines <sakuga-rating>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "Five stars that pop in one after another, with wedges and a hollow ポン on the last; five gets a burst. One file, no dependencies, defines <vfx-rating>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "rating",
         "input",
@@ -189,14 +189,14 @@
           "target": "~/public/vfx-ui-anime/rating.js"
         }
       ],
-      "docs": "VFX UI Anime Rating is a plain script that registers a custom element. Load /vfx-ui-anime/rating.js with a script tag (not a module), then use <vfx-rating label=\"Rating\"></vfx-rating>. Read el.value (0 to 5) and listen for change. Works in forms with a name. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime rating is a standalone custom element. Load /components/rating/index.js with a plain script tag (not a module), then use the <vfx-rating> element. See components/rating/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "toast",
       "type": "registry:file",
       "title": "VFX UI Anime Toast",
-      "description": "A notification that streaks in as a smear, lands in dust with ズザッ, wobbles and leaves by shrinking. One file, no dependencies, defines <sakuga-toast>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A notification that streaks in as a smear, lands in dust with ズザッ, wobbles and leaves by shrinking. One file, no dependencies, defines <vfx-toast>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "toast",
         "notification",
@@ -210,14 +210,14 @@
           "target": "~/public/vfx-ui-anime/toast.js"
         }
       ],
-      "docs": "VFX UI Anime Toast is a plain script that registers a custom element. Load /vfx-ui-anime/toast.js with a script tag (not a module), then use Put <vfx-toast></vfx-toast> where toasts should appear and call el.show(\"Saved\"). It stays for the duration attribute (2.6 s) or until el.hide(). More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime toast is a standalone custom element. Load /components/toast/index.js with a plain script tag (not a module), then use the <vfx-toast> element. See components/toast/README.md for attributes, properties, events, behavior, and limits."
     },
     {
       "name": "tooltip",
       "type": "registry:file",
       "title": "VFX UI Anime Tooltip",
-      "description": "A help button whose hint springs out like a speech bubble, with puffs and a hollow カチッ. One file, no dependencies, defines <sakuga-tooltip>.",
-      "author": "Justin Finkelman <https://github.com/finktheartist>",
+      "description": "A help button whose hint springs out like a speech bubble, with puffs and a hollow カチッ. One file, no dependencies, defines <vfx-tooltip>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "tooltip",
         "help",
@@ -231,7 +231,167 @@
           "target": "~/public/vfx-ui-anime/tooltip.js"
         }
       ],
-      "docs": "VFX UI Anime Tooltip is a plain script that registers a custom element. Load /vfx-ui-anime/tooltip.js with a script tag (not a module), then use <vfx-tooltip text=\"Helpful hint!\"></vfx-tooltip>. Opens on hover, focus and tap; Escape closes it. More: https://vfx-ui-anime.vercel.app"
+      "docs": "VFX UI Anime tooltip is a standalone custom element. Load /components/tooltip/index.js with a plain script tag (not a module), then use the <vfx-tooltip> element. See components/tooltip/README.md for attributes, properties, events, behavior, and limits."
+    },
+    {
+      "name": "select",
+      "type": "registry:file",
+      "title": "VFX Select",
+      "description": "A springing listbox with keyboard navigation, selected-state marks, and form submission.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "select",
+        "input",
+        "navigation"
+      ],
+      "files": [
+        {
+          "path": "components/select/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/select.js"
+        }
+      ],
+      "docs": "VFX UI Anime Select is a standalone custom element. Load /components/select/index.js with a plain script tag (not a module). See components/select/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "textarea",
+      "type": "registry:file",
+      "title": "VFX Textarea",
+      "description": "A multi-line field with autosizing, a live character count, caret effects, and form submission.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "textarea",
+        "input",
+        "forms"
+      ],
+      "files": [
+        {
+          "path": "components/textarea/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/textarea.js"
+        }
+      ],
+      "docs": "VFX UI Anime Textarea is a standalone custom element. Load /components/textarea/index.js with a plain script tag (not a module). See components/textarea/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "number",
+      "type": "registry:file",
+      "title": "VFX Number Stepper",
+      "description": "A bounded numeric stepper with tactile increment/decrement controls and native number editing.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "number",
+        "input",
+        "forms"
+      ],
+      "files": [
+        {
+          "path": "components/number/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/number.js"
+        }
+      ],
+      "docs": "VFX UI Anime Number Stepper is a standalone custom element. Load /components/number/index.js with a plain script tag (not a module). See components/number/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "search",
+      "type": "registry:file",
+      "title": "VFX Search",
+      "description": "A search field with filtered suggestions, keyboard navigation, clear action, and search events.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "search",
+        "input",
+        "navigation"
+      ],
+      "files": [
+        {
+          "path": "components/search/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/search.js"
+        }
+      ],
+      "docs": "VFX UI Anime Search is a standalone custom element. Load /components/search/index.js with a plain script tag (not a module). See components/search/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "menu",
+      "type": "registry:file",
+      "title": "VFX Menu",
+      "description": "An accessible action menu with roving focus, keyboard controls, and selection events.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "menu",
+        "navigation",
+        "actions"
+      ],
+      "files": [
+        {
+          "path": "components/menu/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/menu.js"
+        }
+      ],
+      "docs": "VFX UI Anime Menu is a standalone custom element. Load /components/menu/index.js with a plain script tag (not a module). See components/menu/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "dialog",
+      "type": "registry:file",
+      "title": "VFX Dialog",
+      "description": "A native modal dialog with animated launch, confirm/cancel flows, Escape handling, and focus management.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "dialog",
+        "overlay",
+        "accessibility"
+      ],
+      "files": [
+        {
+          "path": "components/dialog/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/dialog.js"
+        }
+      ],
+      "docs": "VFX UI Anime Dialog is a standalone custom element. Load /components/dialog/index.js with a plain script tag (not a module). See components/dialog/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "file-upload",
+      "type": "registry:file",
+      "title": "VFX File Upload",
+      "description": "A keyboard-accessible dropzone with file validation, drag feedback, multiple-file support, and form data.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "file-upload",
+        "forms",
+        "input"
+      ],
+      "files": [
+        {
+          "path": "components/file-upload/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/file-upload.js"
+        }
+      ],
+      "docs": "VFX UI Anime File Upload is a standalone custom element. Load /components/file-upload/index.js with a plain script tag (not a module). See components/file-upload/README.md for the full API, keyboard behavior, events, and usage."
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:file",
+      "title": "VFX Color Picker",
+      "description": "A native color input with an animated swatch, live hex value, and form submission.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "color-picker",
+        "input",
+        "forms"
+      ],
+      "files": [
+        {
+          "path": "components/color-picker/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/color-picker.js"
+        }
+      ],
+      "docs": "VFX UI Anime Color Picker is a standalone custom element. Load /components/color-picker/index.js with a plain script tag (not a module). See components/color-picker/README.md for the full API, keyboard behavior, events, and usage."
     }
   ]
 }

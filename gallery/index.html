@@ -41,7 +41,7 @@
   <header>
     <div>
       <h1>VFX UI Anime</h1>
-      <p class="lede">Twelve animated component demos that react like anime: squash and overshoot on springs, and drawn effects (smoke, impact bursts, splashes, slashes) with manga sound-effect lettering. Each one is a single file with no dependencies.</p>
+      <p class="lede">Twenty interactive component demos with spring-driven reactions, manga impact effects, keyboard behavior, and standalone, dependency-free implementations.</p>
       <p class="links">
         <a class="pill" href="https://github.com/Brajesh31/vfx-ui-anime" target="_blank" rel="noopener">The repo on GitHub <span aria-hidden="true">&#8599;</span></a>
         </p>
@@ -61,6 +61,14 @@
 <script src="../components/rating/index.js"></script>
 <script src="../components/toast/index.js"></script>
 <script src="../components/tooltip/index.js"></script>
+<script src="../components/select/index.js"></script>
+<script src="../components/textarea/index.js"></script>
+<script src="../components/number/index.js"></script>
+<script src="../components/search/index.js"></script>
+<script src="../components/menu/index.js"></script>
+<script src="../components/dialog/index.js"></script>
+<script src="../components/file-upload/index.js"></script>
+<script src="../components/color-picker/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -77,6 +85,15 @@ const ITEMS = [
   { id: 'rating', name: 'Rating', tag: 'vfx-rating', how: 'Give it five.', html: '<vfx-rating label="Rating"></vfx-rating>' },
   { id: 'toast', name: 'Toast', tag: 'vfx-toast', how: 'Press Save.', html: '<div class="toastwrap"><vfx-button variant="secondary" data-demo="save">Save</vfx-button><vfx-toast></vfx-toast></div>' },
   { id: 'tooltip', name: 'Tooltip', tag: 'vfx-tooltip', how: 'Hover, focus or tap the button.', html: '<vfx-tooltip text="Helpful hint!"></vfx-tooltip>' },
+
+  { id: 'select', name: 'Select', tag: 'vfx-select', how: 'Open it, navigate with the arrow keys, and choose a plan.', html: '<vfx-select label="Choose a plan"><option value="starter">Starter</option><option value="creator" selected>Creator</option><option value="studio">Studio</option><option value="enterprise" disabled>Enterprise, coming soon</option></vfx-select>' },
+  { id: 'textarea', name: 'Textarea', tag: 'vfx-textarea', how: 'Write a message and watch the live character count.', html: '<vfx-textarea label="Project notes" placeholder="Write a few lines…" maxlength="180" auto-grow rows="4"></vfx-textarea>' },
+  { id: 'number', name: 'Number stepper', tag: 'vfx-number', how: 'Use the + and − controls or the keyboard arrows.', html: '<vfx-number label="Quantity" value="3" min="1" max="12" step="1"></vfx-number>' },
+  { id: 'search', name: 'Search', tag: 'vfx-search', how: 'Type to filter suggestions, use arrows, and press Enter.', html: '<vfx-search label="Search components" placeholder="Try a component name" suggestions="Button|Toggle|Slider|Checkbox|Radio|Input|Tabs|Progress|Rating|Toast|Tooltip|Select|Textarea|Dialog"></vfx-search>' },
+  { id: 'menu', name: 'Menu', tag: 'vfx-menu', how: 'Open the actions menu and use keyboard navigation.', html: '<vfx-menu label="Project actions" items="Rename|Duplicate|Move to folder|Archive|Delete project"></vfx-menu>' },
+  { id: 'dialog', name: 'Dialog', tag: 'vfx-dialog', how: 'Open the modal, then confirm, cancel, or press Escape.', html: '<vfx-dialog title="Publish changes" confirm-label="Publish"><span slot="trigger">Review changes</span><p>This will make your approved changes visible to everyone who can access the project.</p></vfx-dialog>' },
+  { id: 'file-upload', name: 'File upload', tag: 'vfx-file-upload', how: 'Drop files into the area or activate it to browse.', html: '<vfx-file-upload label="Drop files here" multiple accept=".png,.jpg,.pdf" max-size="10"></vfx-file-upload>', wide: true },
+  { id: 'color-picker', name: 'Color picker', tag: 'vfx-color-picker', how: 'Choose a color and inspect the hexadecimal value.', html: '<vfx-color-picker label="Accent color" value="#ff5fa8"></vfx-color-picker>' }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -109,6 +126,46 @@ const WIRE = {
     'The element keeps its place on the page while the toast is hidden. Position it yourself, for example position: fixed; left: 24px; bottom: 24px.'],
   tooltip: ['Use <vfx-tooltip text="..." label="..."></vfx-tooltip> next to the thing it explains. text is the hint; label is what a screen reader calls the button ("Help" by default).',
     'It opens on hover, focus and tap, and Escape closes it. Whatever is inside the element replaces the "?" on the button.'],
+  select: [
+    'Use <vfx-select label="Plan"><option value="starter">Starter</option><option value="studio">Studio</option></vfx-select>. Child options can be marked selected or disabled.',
+    'Read el.value. Listen for input and change; change detail contains the chosen value and label. The selected value is submitted when the element has a name attribute.',
+    'Arrow Up/Down moves through options, Home/End jumps to the ends, Enter commits, and Escape closes the list.'
+  ],
+  textarea: [
+    'Use <vfx-textarea label="Message" placeholder="Write here…" maxlength="180"></vfx-textarea>. Add auto-grow to let the field expand as the person writes.',
+    'Read or set el.value. Listen for input and change. With a name attribute it participates in FormData, and maxlength is reflected in the live counter.',
+    'The field keeps native text editing, selection, and keyboard behavior. The VFX reaction is decorative and never blocks typing.'
+  ],
+  number: [
+    'Use <vfx-number label="Quantity" value="2" min="1" max="12" step="1"></vfx-number> for a bounded numeric stepper.',
+    'Read or set el.value. The + and − buttons respect min, max, and step; the inner number input keeps native keyboard editing and form behavior.',
+    'Listen for input and change. Both include the numeric value in event.detail.'
+  ],
+  search: [
+    'Use <vfx-search label="Search" suggestions="Button|Toggle|Slider"></vfx-search>. Suggestions are separated with a vertical bar.',
+    'Read or set el.value. Suggestions filter as the user types; Arrow Up/Down navigates, Enter chooses or submits, and Escape dismisses the list.',
+    'Listen for input while the query changes and search when the person submits. Search detail contains the query value.'
+  ],
+  menu: [
+    'Use <vfx-menu label="Actions" items="Edit|Duplicate|Archive|Delete"></vfx-menu>. The items attribute is a pipe-separated list of labels.',
+    'Listen for select. Its detail contains the selected item label and normalized value, plus a danger flag for destructive labels.',
+    'The trigger uses menu-button semantics. Arrow keys, Home, End, Enter, Space and Escape work, and focus returns to the trigger after an action.'
+  ],
+  dialog: [
+    'Use <vfx-dialog title="Confirm action" confirm-label="Continue"><span slot="trigger">Open</span><p>Dialog content.</p></vfx-dialog>.',
+    'Call el.showModal() and el.close(reason) from code. Listen for open, confirm and close. The close event reports its returnValue.',
+    'The implementation uses the browser native dialog, preserving modal focus handling, the Escape cancel path, and backdrop interaction.'
+  ],
+  'file-upload': [
+    'Use <vfx-file-upload label="Drop files here" name="attachments" multiple accept=".png,.pdf" max-size="10"></vfx-file-upload>. max-size is measured in megabytes per file.',
+    'Read el.files for the currently selected File objects. Listen for change; event.detail.files contains the updated list.',
+    'The dropzone supports pointer, drag-and-drop and keyboard activation. With a name attribute selected files are added to form data.'
+  ],
+  'color-picker': [
+    'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
+    'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
+    'It wraps the native color input, so the browser owns the color dialog and the custom element remains accessible and form-associated.'
+  ],
 };
 const fileUrl = (id) => new URL(`../components/${id}/index.js`, location.href).href;
 const prompt = (it) => [
@@ -137,6 +194,10 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-toast') card.querySelector('[data-demo=save]').addEventListener('click', () => el.show('Saved successfully!'));
   else if (it.tag === 'vfx-progress') el.addEventListener('vfx:done', () => say('vfx:done'));
   else if (it.tag === 'vfx-tabs') el.addEventListener('change', (e) => say(`Tab: ${e.detail.label}`));
+  else if (it.tag === 'vfx-search') el.addEventListener('search', (e) => say(`Search: ${e.detail.value || 'empty query'}`));
+  else if (it.tag === 'vfx-menu') el.addEventListener('select', (e) => say(`Action: ${e.detail.label}`));
+  else if (it.tag === 'vfx-dialog') { el.addEventListener('confirm', () => say('Confirmed')); el.addEventListener('close', (e) => { if (e.detail.returnValue !== 'confirm') say(`Closed: ${e.detail.returnValue}`); }); }
+  else if (it.tag === 'vfx-file-upload') el.addEventListener('change', (e) => say(`${e.detail.files.length} file(s) selected`));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

@@ -32,7 +32,7 @@ const type = async (text) => { for (const ch of text) { await send('Input.dispat
 let fails = 0;
 const check = (name, ok, got) => { if (!ok) fails++; console.log(`${ok ? 'ok  ' : 'FAIL'} ${name}${got !== undefined ? `  ->  ${got}` : ''}`); };
 
-check('all eleven elements are defined', (await ev(`['button','toggle','slider','checkbox','radio','input','tabs','progress','rating','toast','tooltip'].every((n) => customElements.get('vfx-' + n))`)));
+check('all nineteen elements are defined', (await ev(`['button','toggle','slider','checkbox','radio','input','tabs','progress','rating','toast','tooltip','select','textarea','number','search','menu','dialog','file-upload','color-picker'].every((n) => customElements.get('vfx-' + n))`)));
 check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
 { await tap('vfx-button[data-demo=primary] >>> .btn'); await sleep(1200); check('button: tap fires click and done() lands the check', +(await ev(`${find('vfx-button[data-demo=primary] >>> .btn')}.style.getPropertyValue('--ok')`)) > 0.5); }
 { await tap('vfx-toggle >>> .tog'); await sleep(500); check('toggle: tap turns it on', await ev(`document.querySelector('vfx-toggle').checked`));
@@ -56,6 +56,20 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
 { await tap('vfx-tooltip >>> .help'); await sleep(600); check('tooltip: tap opens it', await ev(`document.querySelector('vfx-tooltip').open`)); await key('Escape', 27); await sleep(300); check('tooltip: Escape closes it', !(await ev(`document.querySelector('vfx-tooltip').open`))); }
 { await ev(`(() => { const f = document.createElement('form'); f.id = 'tf'; f.innerHTML = '<vfx-checkbox name="c" checked></vfx-checkbox><vfx-slider name="s" value="42"></vfx-slider><vfx-rating name="r" value="3"></vfx-rating><vfx-toggle name="t" checked></vfx-toggle>'; document.body.append(f); })()`); await sleep(300);
   check('forms: values are sent with a form', (await ev(`new URLSearchParams(new FormData(document.getElementById('tf'))).toString()`)) === 'c=on&s=42&r=3&t=on', await ev(`new URLSearchParams(new FormData(document.getElementById('tf'))).toString()`)); }
+
+{ await tap('vfx-select >>> .trigger'); await sleep(120); check('select: opens its listbox', await ev(`document.querySelector('vfx-select').opened`));
+  await tap('vfx-select >>> .option[data-i="2"]'); await sleep(180); check('select: commits the chosen option', (await ev(`document.querySelector('vfx-select').value`)) === 'studio'); }
+{ await tap('vfx-textarea >>> textarea'); await type('hello'); await sleep(200); check('textarea: accepts text and updates its count', (await ev(`document.querySelector('vfx-textarea').value`)) === 'hello'); }
+{ await tap('vfx-number >>> .up'); await sleep(180); check('number: increments within its bounds', (await ev(`document.querySelector('vfx-number').value`)) === 4); }
+{ await tap('vfx-search >>> input'); await type('tog'); await sleep(180); check('search: filters suggestions', (await ev(`document.querySelector('vfx-search').shadowRoot.querySelectorAll('.suggestion').length`)) > 0);
+  await tap('vfx-search >>> .suggestion'); await sleep(160); check('search: choosing a suggestion commits the query', (await ev(`document.querySelector('vfx-search').value`)) === 'Toggle'); }
+{ await ev(`window.__menuPicked='';document.querySelector('vfx-menu').addEventListener('select',e=>window.__menuPicked=e.detail.value)`); await tap('vfx-menu >>> .trigger'); await tap('vfx-menu >>> .item[data-i="1"]'); await sleep(180);
+  check('menu: keyboard-safe action menu emits selection', (await ev(`window.__menuPicked`)) === 'duplicate'); }
+{ await ev(`window.__dialogConfirmed=false;document.querySelector('vfx-dialog').addEventListener('confirm',()=>window.__dialogConfirmed=true)`); await tap('vfx-dialog >>> .launch'); await sleep(100); check('dialog: opens a native modal', await ev(`document.querySelector('vfx-dialog').opened`));
+  await tap('vfx-dialog >>> .confirm'); await sleep(150); check('dialog: confirm emits and closes', await ev(`window.__dialogConfirmed&&!document.querySelector('vfx-dialog').opened`)); }
+{ const count=await ev(`(() => {const el=document.querySelector('vfx-file-upload');const dt=new DataTransfer();dt.items.add(new File(['sample'],'sample.pdf',{type:'application/pdf'}));const input=el.shadowRoot.querySelector('input');input.files=dt.files;input.dispatchEvent(new Event('change',{bubbles:true}));return el.files.length;})()`); check('file upload: accepts a selected file', count===1,count); }
+{ await ev(`(() => {const el=document.querySelector('vfx-color-picker');el.value='#123456';el.shadowRoot.querySelector('input').dispatchEvent(new Event('change',{bubbles:true}));})()`); check('color picker: stores a six-digit hex value', (await ev(`document.querySelector('vfx-color-picker').value`)) === '#123456'); }
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
