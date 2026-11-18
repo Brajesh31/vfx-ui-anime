@@ -952,6 +952,106 @@
         }
       ],
       "docs": "Load /components/before-after/index.js with a plain script tag. See components/before-after/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "multi-select",
+      "type": "registry:file",
+      "title": "VFX UI Anime Multi Select",
+      "description": "A filterable multi-select popover with selected-value chips, keyboard operation, and form association. One file, no dependencies, defines <vfx-multi-select>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "multi-select",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/multi-select/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/multi-select.js"
+        }
+      ],
+      "docs": "Load /components/multi-select/index.js with a plain script tag. See components/multi-select/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "time-picker",
+      "type": "registry:file",
+      "title": "VFX UI Anime Time Picker",
+      "description": "A native time input with quick presets, configurable minute adjustment, and form support. One file, no dependencies, defines <vfx-time-picker>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "time-picker",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/time-picker/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/time-picker.js"
+        }
+      ],
+      "docs": "Load /components/time-picker/index.js with a plain script tag. See components/time-picker/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "transfer-list",
+      "type": "registry:file",
+      "title": "VFX UI Anime Transfer List",
+      "description": "A dual-list selector with individual and bulk movement of selected values. One file, no dependencies, defines <vfx-transfer-list>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "transfer-list",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/transfer-list/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/transfer-list.js"
+        }
+      ],
+      "docs": "Load /components/transfer-list/index.js with a plain script tag. See components/transfer-list/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "split-pane",
+      "type": "registry:file",
+      "title": "VFX UI Anime Split Pane",
+      "description": "A resizable two-panel layout with pointer dragging, keyboard resizing, and separator semantics. One file, no dependencies, defines <vfx-split-pane>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "split-pane",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/split-pane/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/split-pane.js"
+        }
+      ],
+      "docs": "Load /components/split-pane/index.js with a plain script tag. See components/split-pane/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "lightbox-gallery",
+      "type": "registry:file",
+      "title": "VFX UI Anime Lightbox Gallery",
+      "description": "A thumbnail gallery with a native modal lightbox, captions, previous and next controls, and keyboard navigation. One file, no dependencies, defines <vfx-lightbox-gallery>.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "lightbox-gallery",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/lightbox-gallery/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/lightbox-gallery.js"
+        }
+      ],
+      "docs": "Load /components/lightbox-gallery/index.js with a plain script tag. See components/lightbox-gallery/README.md for attributes, methods, events, keyboard behavior, and limits."
     }
   ]
 }

@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Forty-seven dependency-free Web Component types with forty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Fifty-two dependency-free Web Component types with fifty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -94,3 +94,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Tree View: `components/tree-view/` `<vfx-tree-view>`, expandable hierarchy and keyboard navigation.
 - Signature Pad: `components/signature-pad/` `<vfx-signature-pad>`, touch/pen/mouse drawing and PNG export.
 - Before and After: `components/before-after/` `<vfx-before-after>`, native range-driven image comparison.
+
+
+## Selection and layout components
+- Multi Select: `components/multi-select/` `<vfx-multi-select>`, filterable multi-value selection with chips.
+- Time Picker: `components/time-picker/` `<vfx-time-picker>`, time input, minute adjustment, and quick presets.
+- Transfer List: `components/transfer-list/` `<vfx-transfer-list>`, dual-list selection and bulk movement.
+- Split Pane: `components/split-pane/` `<vfx-split-pane>`, accessible pointer and keyboard resizing.
+- Lightbox Gallery: `components/lightbox-gallery/` `<vfx-lightbox-gallery>`, modal image browsing and keyboard navigation.

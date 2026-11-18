@@ -97,6 +97,11 @@
 <script src="../components/tree-view/index.js"></script>
 <script src="../components/signature-pad/index.js"></script>
 <script src="../components/before-after/index.js"></script>
+<script src="../components/multi-select/index.js"></script>
+<script src="../components/time-picker/index.js"></script>
+<script src="../components/transfer-list/index.js"></script>
+<script src="../components/split-pane/index.js"></script>
+<script src="../components/lightbox-gallery/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -149,7 +154,12 @@ const ITEMS = [
   { id: 'data-grid', name: 'Data Grid', tag: 'vfx-data-grid', how: 'Filter, sort, select rows, and move between pages.', html: '<vfx-data-grid columns="name:Name|role:Role|status:Status" rows="1::Mika::Designer::Active|2::Ren::Engineer::Review|3::Yuki::Product::Active|4::Aki::Artist::Done|5::Haru::Developer::Active|6::Sora::Researcher::Review" page-size="4"></vfx-data-grid>', wide: true },
   { id: 'tree-view', name: 'Tree View', tag: 'vfx-tree-view', how: 'Expand project folders and navigate the hierarchy with arrow keys.', html: '<vfx-tree-view items="root::Project::-|docs::Documents::root|brief::Brief.md::docs|src::Source::root|app::App.js::src|assets::Assets::root|logo::logo.svg::assets"></vfx-tree-view>' },
   { id: 'signature-pad', name: 'Signature Pad', tag: 'vfx-signature-pad', how: 'Draw with mouse, finger, or stylus. Undo strokes or export a PNG.', html: '<vfx-signature-pad></vfx-signature-pad>', wide: true },
-  { id: 'before-after', name: 'Before and After', tag: 'vfx-before-after', how: 'Drag the split line or use arrow keys to compare both states.', html: '<vfx-before-after before-label="Original" after-label="Enhanced"></vfx-before-after>', wide: true }
+  { id: 'before-after', name: 'Before and After', tag: 'vfx-before-after', how: 'Drag the split line or use arrow keys to compare both states.', html: '<vfx-before-after before-label="Original" after-label="Enhanced"></vfx-before-after>', wide: true },
+  { id: 'multi-select', name: 'Multi Select', tag: 'vfx-multi-select', how: 'Filter options, select multiple values, and remove chips.', html: '<vfx-multi-select options="react::React|vue::Vue|svelte::Svelte|solid::Solid|angular::Angular|astro::Astro" value="react,vue"></vfx-multi-select>' },
+  { id: 'time-picker', name: 'Time Picker', tag: 'vfx-time-picker', how: 'Choose a time, use quick presets, or nudge it by 15 minutes.', html: '<vfx-time-picker value="09:30" step="15" presets="08:00|09:00|12:00|13:30|17:00"></vfx-time-picker>' },
+  { id: 'transfer-list', name: 'Transfer List', tag: 'vfx-transfer-list', how: 'Select items on either side and move them between lists.', html: '<vfx-transfer-list items="react::React|vue::Vue|svelte::Svelte|solid::Solid|angular::Angular|astro::Astro" value="vue,astro"></vfx-transfer-list>', wide: true },
+  { id: 'split-pane', name: 'Split Pane', tag: 'vfx-split-pane', how: 'Drag the divider or focus it and use the arrow keys to resize.', html: '<vfx-split-pane value="42"><section slot="primary"><h3 style="margin:0 0 8px">Editor</h3><p style="margin:0;color:#8580b0">Write your content in the primary pane.</p></section><aside slot="secondary"><h3 style="margin:0 0 8px">Preview</h3><p style="margin:0;color:#8580b0">See a live preview in the secondary pane.</p></aside></vfx-split-pane>', wide: true },
+  { id: 'lightbox-gallery', name: 'Lightbox Gallery', tag: 'vfx-lightbox-gallery', how: 'Open a thumbnail, navigate the viewer, and close with Escape.', html: '<vfx-lightbox-gallery items="First light::|Soft focus::|Afterglow::|Final frame::"></vfx-lightbox-gallery>', wide: true }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -245,6 +255,11 @@ const WIRE = {
   'tree-view': ['Use <vfx-tree-view items="root::Project::-|docs::Documents::root|brief::Brief.md::docs"></vfx-tree-view>. Each entry is id::label::parentId; use - for roots.', 'Listen for select and toggle. Use select(id), toggle(id), expandAll(), and collapseAll(). Arrow keys navigate the visible hierarchy.'],
   'signature-pad': ['Use <vfx-signature-pad></vfx-signature-pad> for mouse, stylus, and touch drawing.', 'Read hasSignature, call undo() or clear(), and await exportPNG() for a PNG Blob. Listen for change, undo, clear, and export.'],
   'before-after': ['Use <vfx-before-after before-src="/before.jpg" after-src="/after.jpg" before-label="Original" after-label="Enhanced"></vfx-before-after>. Without sources it uses stylized placeholders.', 'Read or set value from 0 to 100. Listen for input while moving and change when committed. Keyboard control is provided by a native range input.'],
+  'multi-select': ['Use <vfx-multi-select name="frameworks" options="react::React|vue::Vue|svelte::Svelte" value="react,vue"></vfx-multi-select>. Options can be value::label pairs.', 'Read or set value as an array. Use open(), close(), and clear(). Listen for open, close, and change; change detail contains selected values and option objects.'],
+  'time-picker': ['Use <vfx-time-picker name="meeting" value="09:30" step="15" presets="08:00|09:00|12:00"></vfx-time-picker>.', 'Read or set value in HH:MM format. Use setTime(value) and adjust(minutes). Listen for change with value, hours, and minutes.'],
+  'transfer-list': ['Use <vfx-transfer-list name="frameworks" items="react::React|vue::Vue|svelte::Svelte" value="vue"></vfx-transfer-list>.', 'Read or set value as an array of IDs. Use moveToSelected(all?) and moveToAvailable(all?). Listen for change with selected IDs and item objects.'],
+  'split-pane': ['Use <vfx-split-pane value="42"><section slot="primary">Editor</section><aside slot="secondary">Preview</aside></vfx-split-pane>.', 'Set value as the primary pane percentage. orientation="vertical" places panes side by side; horizontal stacks them. Listen for input and change. The separator supports arrow keys and Home/End.'],
+  'lightbox-gallery': ['Use <vfx-lightbox-gallery items="City::/images/city.jpg|Forest::/images/forest.jpg"></vfx-lightbox-gallery>. Entries are label::imageURL; omit URL for a stylized placeholder.', 'Use open(index), close(), next(), and previous(). Listen for open, change, and close. Escape and Left/Right Arrow work in the native modal viewer.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -302,6 +317,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-tree-view') el.addEventListener('select', e => say('Selected: ' + e.detail.label));
   else if (it.tag === 'vfx-signature-pad') { el.addEventListener('change', e => say(e.detail.strokes + ' stroke(s)')); el.addEventListener('clear', () => say('Signature cleared')); }
   else if (it.tag === 'vfx-before-after') el.addEventListener('input', e => say('Comparison: ' + e.detail.value + '%'));
+  else if (it.tag === 'vfx-multi-select') el.addEventListener('change', e => say(e.detail.value.length + ' selected'));
+  else if (it.tag === 'vfx-time-picker') el.addEventListener('change', e => say('Time: ' + e.detail.value));
+  else if (it.tag === 'vfx-transfer-list') el.addEventListener('change', e => say(e.detail.value.length + ' selected'));
+  else if (it.tag === 'vfx-split-pane') el.addEventListener('change', e => say('Primary pane: ' + Math.round(e.detail.value) + '%'));
+  else if (it.tag === 'vfx-lightbox-gallery') el.addEventListener('change', e => say('Viewing: ' + e.detail.item.label));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

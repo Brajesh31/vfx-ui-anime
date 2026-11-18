@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Thirty-six additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Forty-one additional controls extend the same design and interaction language.
 
-**Current library: 47 component types and 48 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 52 component types and 53 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -62,6 +62,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Tree View | `<vfx-tree-view>` | [components/tree-view](components/tree-view/) |
 | Signature Pad | `<vfx-signature-pad>` | [components/signature-pad](components/signature-pad/) |
 | Before and After | `<vfx-before-after>` | [components/before-after](components/before-after/) |
+| Multi Select | `<vfx-multi-select>` | [components/multi-select](components/multi-select/) |
+| Time Picker | `<vfx-time-picker>` | [components/time-picker](components/time-picker/) |
+| Transfer List | `<vfx-transfer-list>` | [components/transfer-list](components/transfer-list/) |
+| Split Pane | `<vfx-split-pane>` | [components/split-pane](components/split-pane/) |
+| Lightbox Gallery | `<vfx-lightbox-gallery>` | [components/lightbox-gallery](components/lightbox-gallery/) |
 
 Each component folder contains:
 
@@ -148,3 +153,12 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Tree View**: expandable hierarchy with selection and arrow-key navigation.
 - **Signature Pad**: pointer-based drawing with undo, clear, and PNG export.
 - **Before and After**: adjustable visual comparison slider with optional image sources.
+
+
+## Selection and layout components
+
+- **Multi Select**: filterable option popover, removable chips, keyboard selection, and form support.
+- **Time Picker**: native time editing with configurable minute increments and quick presets.
+- **Transfer List**: dual-list selection with individual and bulk movement.
+- **Split Pane**: pointer and keyboard resizing for side-by-side or stacked layouts.
+- **Lightbox Gallery**: thumbnail grid, native modal viewer, captions, and keyboard image navigation.
