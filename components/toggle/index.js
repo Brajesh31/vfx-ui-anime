@@ -34,7 +34,7 @@ class vfxToggle extends fx.Base {
     if (name === 'label') this.b.setAttribute('aria-label', this.getAttribute('label') || 'Toggle');
   }
   form() { this.internals.setFormValue(this.checked ? this.value : null); }
-  formResetCallback() { this.checked = this.hasAttribute('checked'); }
+  formResetCallback() { this.checked = !!this.initialChecked; }
   formDisabledCallback(disabled) { this._formDisabled = !!disabled; if (this.b) this.b.disabled = this._formDisabled || this.disabled; }
   formStateRestoreCallback(state) { if (state !== undefined) this.checked = state === this.value; }
   render() {
@@ -42,7 +42,7 @@ class vfxToggle extends fx.Base {
   }
   setup() {
     this.b = this.$('.tog'); this._formDisabled = !!this._formDisabled; this.b.disabled = this.disabled || this._formDisabled; this.c = this.$('canvas').getContext('2d');
-    this.seq = [this.checked ? N - 1 : 0]; this.pos = 0; this.acc = 0; this.shown = -1;
+    this.initialChecked = this.checked; this.seq = [this.checked ? N - 1 : 0]; this.pos = 0; this.acc = 0; this.shown = -1;
     const img = getSheet(); if (!img.complete) img.addEventListener('load', () => this.draw(this.cur()), { once: true });
     this.b.addEventListener('click', () => this.flip());
     this.form();
