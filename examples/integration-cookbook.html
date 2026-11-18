@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Runnable integration cookbook for VFX UI Anime custom elements.">
+  <meta name="theme-color" content="#fffdfb">
+  <title>VFX UI Anime | Integration Cookbook</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { background: var(--vfx-paper, #fffdfb); color: var(--vfx-ink, #211b43); }
+    .cookbook { width: min(1080px, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0; }
+    .cookbook-header { max-width: 720px; margin-bottom: 2rem; }
+    .cookbook-header h1 { margin-bottom: .6rem; }
+    .cookbook-header p { color: var(--vfx-muted, #77718e); line-height: 1.65; }
+    .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; }
+    .demo { min-width: 0; padding: 1.25rem; border: 1px solid #e6e2f5; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px #211b430d; }
+    .demo h2 { margin: 0 0 .5rem; font-size: 1.05rem; }
+    .demo p { color: #77718e; line-height: 1.5; }
+    .stage { display: flex; min-height: 58px; align-items: center; gap: .85rem; flex-wrap: wrap; padding-top: .6rem; }
+    .stage vfx-slider, .stage vfx-progress, .stage vfx-tabs { width: 100%; max-width: 100%; }
+    .status-panel { min-height: 3.5rem; padding: .9rem 1rem; background: #f3f0ff; border: 1px solid #e6e2f5; border-radius: 12px; }
+    .event-log { max-height: 12rem; overflow: auto; padding-left: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
+    .note { margin-top: 2rem; padding: 1rem 1.1rem; border-left: 4px solid var(--vfx-violet, #6557d9); background: #f3f0ff; border-radius: 8px; }
+    code { overflow-wrap: anywhere; }
+    @media (max-width: 480px) { .cookbook { padding: 1.5rem 0; } .demo { padding: 1rem; } }
+  </style>
+  <script defer src="../core.js"></script>
+  <script defer src="../components/button.js"></script>
+  <script defer src="../components/toggle.js"></script>
+  <script defer src="../components/slider.js"></script>
+  <script defer src="../components/checkbox.js"></script>
+  <script defer src="../components/radio.js"></script>
+  <script defer src="../components/input.js"></script>
+  <script defer src="../components/tabs.js"></script>
+  <script defer src="../components/progress.js"></script>
+  <script defer src="../components/rating.js"></script>
+  <script defer src="../components/toast.js"></script>
+  <script defer src="../components/tooltip.js"></script>
+</head>
+<body>
+  <main class="cookbook">
+    <header class="cookbook-header">
+      <p class="eyebrow">🧪 Runnable example</p>
+      <h1>Integration cookbook</h1>
+      <p>This page loads the shared engine and all eleven components, then connects their documented events to ordinary page state. Use it as a reference when wiring the controls into your own application.</p>
+      <p><a href="../index.html">← Back to the component gallery</a></p>
+    </header>
+
+    <div class="demo-grid">
+      <section class="demo">
+        <h2>✨ Button event</h2>
+        <p>The host listens for the composed <code>vfx-activate</code> event.</p>
+        <div class="stage"><vfx-button id="action">Run action</vfx-button></div>
+      </section>
+
+      <section class="demo">
+        <h2>🔔 Toggle state</h2>
+        <p>Read the boolean <code>checked</code> property after a change.</p>
+        <div class="stage"><vfx-toggle id="notifications" label="Enable notifications" checked></vfx-toggle></div>
+      </section>
+
+      <section class="demo">
+        <h2>🎚️ Slider value</h2>
+        <p>The <code>input</code> event includes the numeric value in <code>detail.value</code>.</p>
+        <div class="stage"><vfx-slider id="intensity" min="0" max="100" value="42"></vfx-slider></div>
+      </section>
+
+      <section class="demo">
+        <h2>☑️ Checkbox state</h2>
+        <p>Use the component's boolean <code>checked</code> property.</p>
+        <div class="stage"><vfx-checkbox id="terms" checked>Accept the example setting</vfx-checkbox></div>
+      </section>
+
+      <section class="demo">
+        <h2>🔘 Radio selection</h2>
+        <p>Options are comma-separated. Read the selected string through <code>value</code>.</p>
+        <div class="stage"><vfx-radio id="size" options="Small,Medium,Large" value="Medium"></vfx-radio></div>
+      </section>
+
+      <section class="demo">
+        <h2>⌨️ Text input</h2>
+        <p>The host receives native-like <code>input</code> and <code>change</code> events.</p>
+        <div class="stage"><vfx-input id="display-name" label="Display name" placeholder="Enter a display name"></vfx-input></div>
+      </section>
+
+      <section class="demo">
+        <h2>🗂️ Tabs and host state</h2>
+        <p>The custom element selects a tab. The host application supplies the associated content.</p>
+        <div class="stage"><vfx-tabs id="sections" items="Overview,Features,Details"></vfx-tabs></div>
+        <p id="tab-panel" class="status-panel" aria-live="polite">Overview content is controlled by this host page.</p>
+      </section>
+
+      <section class="demo">
+        <h2>📊 Progress property</h2>
+        <p>The host updates the numeric <code>value</code> property in response to slider input.</p>
+        <div class="stage"><vfx-progress id="progress" value="42" label="Intensity preview"></vfx-progress></div>
+      </section>
+
+      <section class="demo">
+        <h2>⭐ Rating event</h2>
+        <p>The <code>change</code> event includes the selected whole-star value.</p>
+        <div class="stage"><vfx-rating id="rating" value="3"></vfx-rating></div>
+      </section>
+
+      <section class="demo">
+        <h2>🍞 Toast method</h2>
+        <p>Call <code>show(message)</code> through the custom element reference.</p>
+        <div class="stage"><vfx-toast id="toast" message="Your example action completed">Show toast</vfx-toast></div>
+      </section>
+
+      <section class="demo">
+        <h2>💬 Tooltip</h2>
+        <p>The hint appears on hover and while keyboard focus is within the component.</p>
+        <div class="stage"><vfx-tooltip text="This text comes from the text attribute">Hover or focus me</vfx-tooltip></div>
+      </section>
+
+      <section class="demo">
+        <h2>🧾 Event log</h2>
+        <p>Events are listened for at the document level because they bubble and are composed.</p>
+        <ol id="event-log" class="event-log" aria-live="polite"><li>Interact with the controls to see events here.</li></ol>
+      </section>
+    </div>
+
+    <aside class="note">
+      <strong>Implementation note:</strong> This page demonstrates component events and host-side UI updates. It is not a certification of full form-associated custom element behavior, complete tab accessibility, screen-reader support or cross-browser compatibility. Review the <a href="../docs/COMPONENT_API_REFERENCE.md">detailed API reference</a> and <a href="../docs/ACCESSIBILITY.md">accessibility limitations</a> before production use.
+    </aside>
+  </main>
+
+  <script>
+    (() => {
+      const log = document.querySelector("#event-log");
+      const addLog = (message) => {
+        const item = document.createElement("li");
+        item.textContent = message;
+        log.prepend(item);
+        while (log.children.length > 8) log.lastElementChild.remove();
+      };
+
+      document.addEventListener("vfx-activate", () => {
+        addLog("Button: vfx-activate");
+        document.querySelector("#toast").show("The button action was handled by the host page.");
+      });
+
+      document.addEventListener("change", (event) => {
+        const control = event.target;
+        switch (control.localName) {
+          case "vfx-toggle":
+            addLog("Toggle: checked = " + control.checked);
+            break;
+          case "vfx-checkbox":
+            addLog("Checkbox: checked = " + control.checked);
+            break;
+          case "vfx-radio":
+            addLog("Radio: value = " + control.value);
+            break;
+          case "vfx-tabs": {
+            const selected = event.detail?.value || control.value;
+            const descriptions = {
+              Overview: "Overview content is controlled by this host page.",
+              Features: "The host page can render any content for the selected feature.",
+              Details: "Keep the tab panel and its accessibility relationships in the host application."
+            };
+            document.querySelector("#tab-panel").textContent = descriptions[selected] || selected;
+            addLog("Tabs: selected = " + selected);
+            break;
+          }
+          case "vfx-rating":
+            addLog("Rating: " + event.detail.value + " out of 5");
+            break;
+        }
+      });
+
+      document.addEventListener("input", (event) => {
+        const control = event.target;
+        if (control.matches("vfx-slider")) {
+          const value = Number(event.detail?.value ?? control.value);
+          document.querySelector("#progress").value = value;
+          addLog("Slider: value = " + value);
+        } else if (control.matches("vfx-input")) {
+          addLog("Text input: " + (control.value || "(empty)"));
+        }
+      });
+
+      document.addEventListener("vfx-toast", (event) => {
+        addLog("Toast: " + event.detail.message);
+      });
+    })();
+  </script>
+</body>
+</html>
