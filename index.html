@@ -1,123 +1,153 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="VFX UI Anime is a collection of expressive, dependency-free web components with tactile interaction feedback.">
-<meta name="theme-color" content="#f8f7ff"><title>VFX UI Anime | Components with character</title>
-<link rel="icon" href="assets/brand-mark.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css">
-<script defer src="core.js"></script>
-<script defer src="components/button/index.js"></script>
-<script defer src="components/toggle/index.js"></script>
-<script defer src="components/slider/index.js"></script>
-<script defer src="components/checkbox/index.js"></script>
-<script defer src="components/radio/index.js"></script>
-<script defer src="components/input/index.js"></script>
-<script defer src="components/tabs/index.js"></script>
-<script defer src="components/progress/index.js"></script>
-<script defer src="components/rating/index.js"></script>
-<script defer src="components/toast/index.js"></script>
-<script defer src="components/tooltip/index.js"></script>
-<script defer src="components/like/index.js"></script>
-<script defer src="components/accordion/index.js"></script>
-<script defer src="components/segmented/index.js"></script>
-<script defer src="components/notification/index.js"></script>
-<script defer src="showcase.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>vfx VFX</title>
+<style>
+  :root { --page: #ffffff; --text: #1d1a4a; --mute: #8580b0; --line: #dcdaf0; --chip: #f4f3fc; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; overflow-x: clip; background: var(--page); }
+  body { margin: 0; color: var(--text); background: var(--page); font: 500 15px/1.45 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; transition: background .2s, color .2s; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 80px; }
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; margin-bottom: 14px; }
+  h1 { margin: 0; font: italic 800 28px/1.1 "Avenir Next", "Nunito", -apple-system, "Segoe UI", system-ui, sans-serif; letter-spacing: -.01em; }
+  .lede { max-width: 640px; margin: 8px 0 0; color: var(--mute); }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 13px; border: 1.5px solid var(--line); border-radius: 999px; background: none; font-size: 13px; font-weight: 600; text-decoration: none; cursor: pointer; }
+  .pill:hover { border-color: var(--text); }
+  :focus-visible { outline: 2.5px solid #ff5fa8; outline-offset: 3px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 28px; grid-auto-flow: dense; }
+  .card { display: flex; flex-direction: column; min-width: 0; border: 1.5px solid var(--line); border-radius: 18px; }
+  .card.wide { grid-column: span 2; }
+  .card h2 { margin: 0; padding: 14px 16px 0; font-size: 15px; font-weight: 700; }
+  .card h2 span { margin-left: 6px; color: var(--mute); font-weight: 500; }
+  .card .how { margin: 2px 0 0; padding: 0 16px; color: var(--mute); font-size: 13px; }
+  .stage { flex: 1; display: grid; place-items: center; min-height: 230px; padding: 24px 16px; }
+  .stage.row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 22px; }
+  .said { min-height: 1.45em; margin: 0; padding: 0 16px; color: var(--mute); font-size: 13px; text-align: center; }
+  .acts { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 16px 14px; border-top: 1.5px solid var(--line); margin-top: 10px; }
+  .acts .pill { height: 30px; font-size: 12.5px; }
+  .note { margin: 40px 0 0; color: var(--mute); font-size: 13px; }
+  .note code { padding: 1px 5px; border-radius: 5px; background: var(--chip); font-size: 12.5px; }
+  .toastwrap { position: relative; display: grid; justify-items: center; gap: 22px; }
+  @media (max-width: 680px) { .card.wide { grid-column: auto; } }
+</style>
 </head>
 <body>
-<header class="topbar"><a class="brand" href="./"><img src="assets/brand-mark.svg" alt="" width="34" height="34"><span>VFX UI <b>Anime</b></span></a><nav aria-label="Main navigation"><a href="#components">Components</a><a href="docs/COMPONENTS.md">Documentation</a><a href="README.md">GitHub</a></nav><a class="top-cta" href="#components">Explore library <span aria-hidden="true">↗</span></a></header>
-<main>
-<section class="hero">
-<div class="hero-copy"><div class="eyebrow"><span class="eyebrow-dot"></span> Motion-first web components <span class="eyebrow-count">15 components · 0 dependencies</span></div>
-<h1>Make every<br><em>interaction</em><br>feel alive.</h1>
-<p class="hero-lead">A thoughtfully crafted collection of native web components with responsive motion, tactile feedback, and a little anime-inspired energy. Built to feel like one cohesive toolkit.</p>
-<div class="hero-actions"><a class="button-primary" href="#components">Browse components <span aria-hidden="true">↓</span></a><a class="button-quiet" href="docs/INSTALLATION.md">Read the docs <span aria-hidden="true">↗</span></a></div>
-<div class="hero-meta"><span><i>✓</i> Vanilla JavaScript</span><span><i>✓</i> Native Web Components</span><span><i>✓</i> Reduced-motion aware</span></div></div>
-<div class="hero-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="hero-sticker sticker-top">TAP!</div><div class="hero-sticker sticker-side">+ FEEL</div>
-<div class="hero-demo-window"><div class="window-top"><span></span><span></span><span></span><small>interaction-lab</small></div><div class="demo-window-body"><div class="demo-caption">TRY A LITTLE MOTION</div><vfx-button>Make it happen</vfx-button><div class="hero-toggle-line"><span>Motion enabled</span><vfx-toggle label="Motion enabled" checked></vfx-toggle></div><div class="hero-love-line"><span>Enjoying this?</span><vfx-like></vfx-like></div></div><div class="window-foot"><span>01 / BUTTON</span><span>LIVE PREVIEW <i></i></span></div></div><span class="spark spark-a">✳</span><span class="spark spark-b">✦</span><span class="spark spark-c">✳</span></div>
-</section>
-<section class="trust-strip"><div><strong>15</strong><span>ready-to-use components</span></div><div><strong>0</strong><span>runtime dependencies</span></div><div><strong>100%</strong><span>native browser technology</span></div><div><strong>∞</strong><span>ways to add personality</span></div></section>
-<section class="library-section" id="components">
-<div class="section-intro"><div><div class="eyebrow">THE COMPONENT LIBRARY</div><h2>Small details.<br><em>Big personality.</em></h2><p>Explore the collection, test each control, and open its dedicated page for the API and implementation guide.</p></div>
-<div class="search-wrap"><label for="component-search">Find a component</label><div class="search-input"><span aria-hidden="true">⌕</span><input id="component-search" type="search" placeholder="Search buttons, inputs, tabs..." autocomplete="off"></div><p id="result-count" aria-live="polite">Showing all 15 components</p></div></div>
-<div class="filters" role="group" aria-label="Filter components"><button class="filter-chip is-active" data-filter="all" aria-pressed="true">All components <span>15</span></button><button class="filter-chip" data-filter="Actions" aria-pressed="false">Actions</button><button class="filter-chip" data-filter="Forms" aria-pressed="false">Forms</button><button class="filter-chip" data-filter="Navigation" aria-pressed="false">Navigation</button><button class="filter-chip" data-filter="Feedback" aria-pressed="false">Feedback</button></div>
-<div class="component-grid" id="component-grid">
-<article class="component-card" data-name="button" data-category="Actions" data-search="button a tactile action button with animated press feedback.">
-<div class="card-top"><span class="card-number">01</span><span class="category-tag">Actions</span></div>
-<div class="card-preview preview-button"><vfx-button>Launch</vfx-button> <vfx-button variant="secondary">Secondary</vfx-button></div>
-<div class="card-copy"><h3>Button</h3><p>A tactile action button with animated press feedback.</p></div>
-<div class="card-footer"><code>&lt;vfx-button&gt;</code><a href="components/button/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="toggle" data-category="Forms" data-search="toggle a boolean switch with a clear state and form support.">
-<div class="card-top"><span class="card-number">02</span><span class="category-tag">Forms</span></div>
-<div class="card-preview preview-toggle"><vfx-toggle label="Notifications" checked></vfx-toggle></div>
-<div class="card-copy"><h3>Toggle</h3><p>A boolean switch with a clear state and form support.</p></div>
-<div class="card-footer"><code>&lt;vfx-toggle&gt;</code><a href="components/toggle/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="slider" data-category="Forms" data-search="slider a numeric range control with a live value readout.">
-<div class="card-top"><span class="card-number">03</span><span class="category-tag">Forms</span></div>
-<div class="card-preview preview-slider"><vfx-slider min="0" max="100" value="42"></vfx-slider></div>
-<div class="card-copy"><h3>Slider</h3><p>A numeric range control with a live value readout.</p></div>
-<div class="card-footer"><code>&lt;vfx-slider&gt;</code><a href="components/slider/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="checkbox" data-category="Forms" data-search="checkbox a native checkbox wrapped in a compact custom element.">
-<div class="card-top"><span class="card-number">04</span><span class="category-tag">Forms</span></div>
-<div class="card-preview preview-checkbox"><vfx-checkbox checked>Accept the terms</vfx-checkbox></div>
-<div class="card-copy"><h3>Checkbox</h3><p>A native checkbox wrapped in a compact custom element.</p></div>
-<div class="card-footer"><code>&lt;vfx-checkbox&gt;</code><a href="components/checkbox/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="radio" data-category="Forms" data-search="radio a named radio group with required and disabled states.">
-<div class="card-top"><span class="card-number">05</span><span class="category-tag">Forms</span></div>
-<div class="card-preview preview-radio"><vfx-radio label="Plan" name="plan" options="Free,Pro,Studio" value="Pro"></vfx-radio></div>
-<div class="card-copy"><h3>Radio</h3><p>A named radio group with required and disabled states.</p></div>
-<div class="card-footer"><code>&lt;vfx-radio&gt;</code><a href="components/radio/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="input" data-category="Forms" data-search="input a text input with a host-level value api.">
-<div class="card-top"><span class="card-number">06</span><span class="category-tag">Forms</span></div>
-<div class="card-preview preview-input"><vfx-input label="Email address" type="email" placeholder="you@example.com"></vfx-input></div>
-<div class="card-copy"><h3>Input</h3><p>A text input with a host-level value API.</p></div>
-<div class="card-footer"><code>&lt;vfx-input&gt;</code><a href="components/input/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="tabs" data-category="Navigation" data-search="tabs keyboard-friendly tabs with linked content panels.">
-<div class="card-top"><span class="card-number">07</span><span class="category-tag">Navigation</span></div>
-<div class="card-preview preview-tabs"><vfx-tabs label="Sections" items="Overview,Features,Details"><p slot="Overview">Overview.</p><p slot="Features">Features.</p><p slot="Details">Details.</p></vfx-tabs></div>
-<div class="card-copy"><h3>Tabs</h3><p>Keyboard-friendly tabs with linked content panels.</p></div>
-<div class="card-footer"><code>&lt;vfx-tabs&gt;</code><a href="components/tabs/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="progress" data-category="Feedback" data-search="progress a progress indicator with a completion response.">
-<div class="card-top"><span class="card-number">08</span><span class="category-tag">Feedback</span></div>
-<div class="card-preview preview-progress"><vfx-progress label="Upload" value="68"></vfx-progress></div>
-<div class="card-copy"><h3>Progress</h3><p>A progress indicator with a completion response.</p></div>
-<div class="card-footer"><code>&lt;vfx-progress&gt;</code><a href="components/progress/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="rating" data-category="Feedback" data-search="rating a five-step rating control with interactive stars.">
-<div class="card-top"><span class="card-number">09</span><span class="category-tag">Feedback</span></div>
-<div class="card-preview preview-rating"><vfx-rating value="3"></vfx-rating></div>
-<div class="card-copy"><h3>Rating</h3><p>A five-step rating control with interactive stars.</p></div>
-<div class="card-footer"><code>&lt;vfx-rating&gt;</code><a href="components/rating/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="toast" data-category="Feedback" data-search="toast a temporary status message with a reusable show method.">
-<div class="card-top"><span class="card-number">10</span><span class="category-tag">Feedback</span></div>
-<div class="card-preview preview-toast"><vfx-toast message="Your changes were saved">Show toast</vfx-toast></div>
-<div class="card-copy"><h3>Toast</h3><p>A temporary status message with a reusable show method.</p></div>
-<div class="card-footer"><code>&lt;vfx-toast&gt;</code><a href="components/toast/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="tooltip" data-category="Feedback" data-search="tooltip a contextual hint with focus, escape, and placement support.">
-<div class="card-top"><span class="card-number">11</span><span class="category-tag">Feedback</span></div>
-<div class="card-preview preview-tooltip"><vfx-tooltip text="Helpful context for this action." placement="auto">Hover or focus me</vfx-tooltip></div>
-<div class="card-copy"><h3>Tooltip</h3><p>A contextual hint with focus, Escape, and placement support.</p></div>
-<div class="card-footer"><code>&lt;vfx-tooltip&gt;</code><a href="components/tooltip/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="like" data-category="Actions" data-search="like a favorite action with a springy heart and pressed state.">
-<div class="card-top"><span class="card-number">12</span><span class="category-tag">Actions</span></div>
-<div class="card-preview preview-like"><vfx-like label="Like" liked-label="Liked"></vfx-like></div>
-<div class="card-copy"><h3>Like</h3><p>A favorite action with a springy heart and pressed state.</p></div>
-<div class="card-footer"><code>&lt;vfx-like&gt;</code><a href="components/like/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="accordion" data-category="Navigation" data-search="accordion an accessible disclosure panel with measured transitions.">
-<div class="card-top"><span class="card-number">13</span><span class="category-tag">Navigation</span></div>
-<div class="card-preview preview-accordion"><vfx-accordion label="What is included?">A lightweight component built with native browser features and the shared motion engine.</vfx-accordion></div>
-<div class="card-copy"><h3>Accordion</h3><p>An accessible disclosure panel with measured transitions.</p></div>
-<div class="card-footer"><code>&lt;vfx-accordion&gt;</code><a href="components/accordion/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="segmented" data-category="Forms" data-search="segmented a single-choice segmented control with arrow navigation.">
-<div class="card-top"><span class="card-number">14</span><span class="category-tag">Forms</span></div>
-<div class="card-preview preview-segmented"><vfx-segmented label="Time range" value="Week"><option value="Day">Day</option><option value="Week">Week</option><option value="Month">Month</option></vfx-segmented></div>
-<div class="card-copy"><h3>Segmented</h3><p>A single-choice segmented control with arrow navigation.</p></div>
-<div class="card-footer"><code>&lt;vfx-segmented&gt;</code><a href="components/segmented/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-<article class="component-card" data-name="notification" data-category="Feedback" data-search="notification a notification bell with an unread count and clear action.">
-<div class="card-top"><span class="card-number">15</span><span class="category-tag">Feedback</span></div>
-<div class="card-preview preview-notification"><vfx-notification count="3"></vfx-notification></div>
-<div class="card-copy"><h3>Notification</h3><p>A notification bell with an unread count and clear action.</p></div>
-<div class="card-footer"><code>&lt;vfx-notification&gt;</code><a href="components/notification/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
-</div><div class="empty-state" id="empty-state" hidden><span>⌕</span><h3>No matching components</h3><p>Try another search term or choose a different category.</p></div>
-</section>
-<section class="closing-cta"><div><div class="eyebrow">READY WHEN YOU ARE</div><h2>Good interfaces<br>are felt, not just seen.</h2><p>Start with one component. Add a little motion where it matters.</p></div><a class="button-primary" href="docs/INSTALLATION.md">Get started <span aria-hidden="true">↗</span></a></section>
-</main><footer class="site-footer"><a class="brand" href="./"><img src="assets/brand-mark.svg" alt="" width="28" height="28"><span>VFX UI <b>Anime</b></span></a><p>Built for expressive interfaces. Crafted with native web technology.</p><div><a href="docs/COMPONENTS.md">Docs</a><a href="README.md">Repository</a><a href="LICENSE">License</a></div></footer>
-</body></html>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>vfx VFX</h1>
+      <p class="lede">Twelve ordinary controls that react like anime: squash and overshoot on springs, and drawn effects (smoke, impact bursts, splashes, slashes) with manga sound-effect lettering. Each one is a single file with no dependencies.</p>
+      <p class="links">
+        <a class="pill" href="https://github.com/Brajesh31/vfx-ui-anime" target="_blank" rel="noopener">The repo on GitHub <span aria-hidden="true">&#8599;</span></a>
+        </p>
+    </div>
+  </header>
+  <main class="grid" id="grid"></main>
+  <p class="note">Effects are drawn on one canvas over the page and switch off for <code>prefers-reduced-motion</code>. Every colour is a <code>--sk-*</code> variable you can override.</p>
+</div>
+<script src="./components/button/index.js"></script>
+<script src="./components/toggle/index.js"></script>
+<script src="./components/slider/index.js"></script>
+<script src="./components/checkbox/index.js"></script>
+<script src="./components/radio/index.js"></script>
+<script src="./components/input/index.js"></script>
+<script src="./components/tabs/index.js"></script>
+<script src="./components/progress/index.js"></script>
+<script src="./components/rating/index.js"></script>
+<script src="./components/toast/index.js"></script>
+<script src="./components/tooltip/index.js"></script>
+<script>
+// The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
+const REPO = 'Brajesh31/vfx-ui-anime';
+const ITEMS = [
+  { id: 'button', name: 'Primary button', tag: 'vfx-button', how: 'Click it.', html: '<vfx-button data-demo="primary">Confirm</vfx-button>' },
+  { id: 'button', name: 'Secondary button', tag: 'vfx-button', how: 'Click it.', html: '<vfx-button variant="secondary">Cancel</vfx-button>' },
+  { id: 'toggle', name: 'Toggle', tag: 'vfx-toggle', how: 'Flip it, then flip it back.', html: '<vfx-toggle label="Notifications"></vfx-toggle>' },
+  { id: 'slider', name: 'Slider', tag: 'vfx-slider', how: 'Drag it fast, and let go while it is moving.', html: '<vfx-slider value="30" label="Volume"></vfx-slider>' },
+  { id: 'checkbox', name: 'Checkbox', tag: 'vfx-checkbox', how: 'Tick it.', html: '<vfx-checkbox>Remember me</vfx-checkbox>' },
+  { id: 'radio', name: 'Radio', tag: 'vfx-radio', how: 'Pick the other one.', html: '<vfx-radio label="Plan"><option value="a" selected>Option A</option><option value="b">Option B</option></vfx-radio>' },
+  { id: 'input', name: 'Text input', tag: 'vfx-input', how: 'Click it and type.', html: '<vfx-input label="Text" placeholder="Type something"></vfx-input>' },
+  { id: 'tabs', name: 'Tabs', tag: 'vfx-tabs', how: 'Pick another tab, or use the arrow keys.', html: '<vfx-tabs label="Sections"><option>Home</option><option>Profile</option><option>Settings</option></vfx-tabs>' },
+  { id: 'progress', name: 'Progress', tag: 'vfx-progress', how: 'It plays a load by itself, in surges. Click it to start again.', html: '<vfx-progress demo label="Loading"></vfx-progress>', wide: true },
+  { id: 'rating', name: 'Rating', tag: 'vfx-rating', how: 'Give it five.', html: '<vfx-rating label="Rating"></vfx-rating>' },
+  { id: 'toast', name: 'Toast', tag: 'vfx-toast', how: 'Press Save.', html: '<div class="toastwrap"><vfx-button variant="secondary" data-demo="save">Save</vfx-button><vfx-toast></vfx-toast></div>' },
+  { id: 'tooltip', name: 'Tooltip', tag: 'vfx-tooltip', how: 'Hover, focus or tap the button.', html: '<vfx-tooltip text="Helpful hint!"></vfx-tooltip>' },
+];
+
+// What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
+const WIRE = {
+  button: ['Use <vfx-button>Confirm</vfx-button> where my main button is, and <vfx-button variant="secondary">Cancel</vfx-button> for a quieter one. The text inside is the label.',
+    'Listen for click on the element as usual. For a submit button inside a form, add type="submit". The disabled attribute works like a button\'s.',
+    'When the action has actually succeeded, call el.done() to land a check on the button. Do not call it for a failure.'],
+  toggle: ['Use <vfx-toggle label="..."></vfx-toggle> where my switch is. The label is what a screen reader hears, so name the setting.',
+    'Read el.checked and listen for change. With a name attribute it is sent with its form like a checkbox (value "on", or the value attribute).',
+    'Setting el.checked from code jumps to the end without the animation; only a person flipping it plays it. The drawing is bigger than the switch, so the element keeps a margin around it for the splash.'],
+  slider: ['Use <vfx-slider value="30" label="..."></vfx-slider> where my slider is. min, max, step and unit (shown after the number, "%" by default) work as attributes.',
+    'Read el.value. It fires input while it moves and change when it is let go. With a name attribute it is sent with its form.',
+    'It is 230 pixels wide; set the --sk-slider-width CSS variable to change that. It keeps 30 pixels above it for the value bubble.'],
+  checkbox: ['Use <vfx-checkbox>Remember me</vfx-checkbox>. The text inside is the label.', 'Read el.checked and listen for change. With a name attribute it is sent with its form like a checkbox.'],
+  radio: ['List the choices as <option>s inside it: <vfx-radio label="Plan"><option value="a" selected>Option A</option><option value="b">Option B</option></vfx-radio>. The label is what a screen reader hears for the group.',
+    'Read el.value and listen for change. With a name attribute it is sent with its form.'],
+  input: ['Use <vfx-input label="..." placeholder="..."></vfx-input> where my text field is. type can be text, email, search, url, tel or password.',
+    'Read and set el.value. It fires input and change like a text input. With a name attribute it is sent with its form.',
+    'It is 230 pixels wide; set the --sk-input-width CSS variable to change that.'],
+  tabs: ['List the tabs as <option>s inside it: <vfx-tabs label="..."><option value="home">Home</option>...</vfx-tabs>.',
+    'It only draws the tabs. Listen for change (e.detail has index, value and label) and show the matching panel yourself. el.selected is the index; setting it moves the tab without the landing effects.'],
+  progress: ['Put <vfx-progress label="..."></vfx-progress> where my progress bar is. The label is what a screen reader hears, so say what is loading.',
+    'Wire it to my real task: call el.set(n) with progress from 0 to 1 as often as it changes. The bar eases toward the number, so a jump is still ridden. el.set(n, true) goes straight there.',
+    'Listen for the "vfx:done" event and move on from there. It fires once, when the bar itself reaches the end, a moment after my task finishes. el.reset() puts it back to 0.',
+    'With the demo attribute it plays a pretend load on a loop. Do not ship it with that attribute.',
+    'It is 280 pixels wide (set --sk-progress-width to change it) and keeps 70 pixels above the bar for the cloud and about 110 below for the ground and the percentage.'],
+  rating: ['Use <vfx-rating label="..."></vfx-rating>.', 'Read el.value (0 to 5) and listen for change. Clicking the lit star again clears it. With a name attribute it is sent with its form.'],
+  toast: ['Put <vfx-toast></vfx-toast> where my toasts should appear, and call el.show("Saved") when there is something to say. It is a status region, so the message is read out.',
+    'It stays for the duration attribute (2.6 seconds by default), or until el.hide(). It has a close button.',
+    'The element keeps its place on the page while the toast is hidden. Position it yourself, for example position: fixed; left: 24px; bottom: 24px.'],
+  tooltip: ['Use <vfx-tooltip text="..." label="..."></vfx-tooltip> next to the thing it explains. text is the hint; label is what a screen reader calls the button ("Help" by default).',
+    'It opens on hover, focus and tap, and Escape closes it. Whatever is inside the element replaces the "?" on the button.'],
+};
+const fileUrl = (id) => new URL(`./components/${id}/index.js`, location.href).href;
+const prompt = (it) => [
+  `Add the vfx ${it.name.toLowerCase()} to my app. It is a single JavaScript file with no dependencies that defines a <${it.tag}> element.`,
+  `1. Get the file from ${fileUrl(it.id)} and save it in my project as ${it.id}.js. Do not rewrite it or split it up.`,
+  `2. Load it with a plain script tag (not type="module").`,
+  ...WIRE[it.id].map((l, i) => `${i + 3}. ${l}`),
+  `${WIRE[it.id].length + 3}. Its effects are drawn on one fixed canvas over the page, so they can fly outside the control. They switch off for prefers-reduced-motion. Its colours are --sk-* CSS variables.`,
+  `When you are done, show me where you put it and what listens to it. If something about it needs to look different, tell me instead of editing the effects.`,
+  ``,
+  `Use the matching component README for its full API and behaviour. Preserve the existing animation code when integrating it.`,
+].join('\n');
+
+const grid = document.getElementById('grid');
+for (const it of ITEMS) {
+  const card = document.createElement('section'); card.className = 'card' + (it.wide ? ' wide' : '');
+  card.innerHTML = `<h2>${it.name}<span>&lt;${it.tag}&gt;</span></h2><p class="how">${it.how}</p><div class="stage">${it.html}</div><p class="said" aria-live="polite"></p>
+    <div class="acts"><a class="pill" href="./components/${it.id}/demo.html">Docs and demo</a><button class="pill" type="button" data-copy="cmd">Copy install</button><button class="pill" type="button" data-copy="prompt">Copy a prompt for your agent</button></div>`;
+  const said = card.querySelector('.said');
+  card.querySelector('[data-copy=cmd]').addEventListener('click', (e) => copy(`<script src="https://brajesh31.github.io/vfx-ui-anime/components/${it.id}/index.js"></script>`, e.currentTarget, said));
+  card.querySelector('[data-copy=prompt]').addEventListener('click', (e) => copy(prompt(it), e.currentTarget, said));
+  grid.append(card);
+  const el = card.querySelector(it.tag), say = (t) => { said.textContent = t; };   // the one line under each control that says what happened
+  if (it.tag === 'vfx-button' && el.dataset.demo === 'primary') el.addEventListener('click', () => { say('Clicked'); setTimeout(() => el.done(), 760); });
+  else if (it.tag === 'vfx-button') el.addEventListener('click', () => say('Clicked'));
+  else if (it.tag === 'vfx-toast') card.querySelector('[data-demo=save]').addEventListener('click', () => el.show('Saved successfully!'));
+  else if (it.tag === 'vfx-progress') el.addEventListener('vfx:done', () => say('vfx:done'));
+  else if (it.tag === 'vfx-tabs') el.addEventListener('change', (e) => say(`Tab: ${e.detail.label}`));
+  else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
+}
+// Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.
+async function copy(text, btn, said) {
+  let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch {
+    const t = Object.assign(document.createElement('textarea'), { value: text }); t.style.cssText = 'position:fixed;opacity:0'; document.body.append(t); t.select();
+    try { ok = document.execCommand('copy'); } catch {} t.remove();
+  }
+  said.textContent = ok ? (btn.dataset.copy === 'cmd' ? 'Install command copied' : 'Prompt copied') : 'Could not copy here';
+}
+</script>
+</body>
+</html>
