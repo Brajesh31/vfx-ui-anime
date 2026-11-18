@@ -12,9 +12,9 @@ For the complete, source-checked list of attributes, properties, methods, emitte
 | Toggle | `<vfx-toggle>` | `checked`, `label`, `name`, `value`, `disabled` | `change` |
 | Slider | `<vfx-slider>` | `min`, `max`, `step`, `value`, `disabled` | `input` with `detail.value` |
 | Checkbox | `<vfx-checkbox>` | `checked`, `disabled`, `value`, default slot | `change` |
-| Radio | `<vfx-radio>` | `options`, `value`, `name` | `change` |
+| Radio | `<vfx-radio>` | `options`, `value`, `name`, `disabled`, `required`, `label` | `change` |
 | Input | `<vfx-input>` | `type`, `value`, `placeholder`, `required`, `disabled`, `autocomplete`, `label` | `input`, `change` |
-| Tabs | `<vfx-tabs>` | `items`, `value` | `change` with `detail.value` |
+| Tabs | `<vfx-tabs>` | `items`, `value`, `orientation`, `label` | `change` with `detail.value` |
 | Progress | `<vfx-progress>` | `value`, `label` | None |
 | Rating | `<vfx-rating>` | `value` | `change` with `detail.value` |
 | Toast | `<vfx-toast>` | `message` | `vfx-toast` with `detail.message` |
@@ -34,8 +34,8 @@ All custom-element events shown above bubble and cross the Shadow DOM boundary. 
 ## Important implementation notes
 
 - `<vfx-slider>` copies its initial range attributes when it connects. Use its `value` property for later programmatic value changes.
-- `<vfx-tabs>` only renders the tab selector. The consuming application must create and manage tab panels and their accessibility relationships.
-- `<vfx-radio>` accepts comma-separated options. The current internal radio inputs share a fixed name, so do not assume the host `name` attribute changes their internal grouping.
+- `<vfx-tabs>` supports one tab stop, arrow-key selection, and Home/End navigation. It supports horizontal and vertical orientation, but the consuming application must still create and manage tab panels and their accessibility relationships.
+- `<vfx-radio>` accepts comma-separated options, applies the configured `name`, and uses native radio inputs for browser keyboard behavior. It supports `label`, `required` and `disabled`; form-associated behavior remains browser-dependent and should be tested.
 - `<vfx-input>` does not proxy the complete native constraint-validation API.
 - Toggle, checkbox, radio and input declare form association and use `ElementInternals` where available, but production form behavior still needs browser-specific testing.
 - Reduced motion suppresses canvas particles. It does not automatically remove every CSS transition from the components.
