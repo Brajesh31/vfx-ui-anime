@@ -11,7 +11,7 @@
 - `components/checkbox.js`: vfx-checkbox.
 - `components/radio.js`: vfx-radio with labeled, named, required and disabled group support.
 - `components/input.js`: vfx-input.
-- `components/tabs.js`: vfx-tabs with horizontal/vertical orientation and arrow/Home/End keyboard navigation.
+- `components/tabs.js`: vfx-tabs with horizontal/vertical orientation, arrow/Home/End keyboard navigation, named content slots, linked aria-controls/aria-labelledby tabpanels and active-panel visibility.
 - `components/progress.js`: vfx-progress.
 - `components/rating.js`: vfx-rating.
 - `components/toast.js`: vfx-toast.
