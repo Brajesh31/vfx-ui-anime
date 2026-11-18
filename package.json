@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "check": "node tools/validate.mjs",
-    "test": "node tools/validate.mjs"
+    "test": "node tools/validate.mjs",
+    "test:browser": "node tools/run-browser-tests.mjs"
   },
   "engines": {
     "node": ">=20"
