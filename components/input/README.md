@@ -6,13 +6,13 @@ A text field that kicks up dust. Focus it and three wedges fly off the corner. E
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/input/
+# open http://localhost:8000/components/input/demo.html
 ```
 
 ## Use it
 
 ```html
-<script src="input.js"></script>
+<script src="index.js"></script>
 <vfx-input label="Email" type="email" placeholder="you@example.com" name="email"></vfx-input>
 ```
 
