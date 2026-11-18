@@ -1,31 +1,11 @@
-# 📋 Changelog
-
-All notable project changes are documented here.
+# Changelog
 
 ## [Unreleased]
 
-### Added
-- Exact upstream Sakuga VFX repository snapshot under `sakuga-vfx/`, including its interactive gallery, complete component demos, source code, artwork, toggle frames, registry, agent skill, build/test utilities, and original MIT license/copyright notice.
-- Main gallery entry point and upstream provenance documentation for the separately hosted Sakuga collection.
-
-### Added
-- Horizontal and vertical tab orientation with roving focus, arrow-key navigation, and Home/End navigation.
-- Linked tabpanel semantics with generated `aria-controls`/`aria-labelledby` relationships, active-panel visibility and named content slots.
-- Accessible tablist labeling and a programmatic `value` property setter.
-- Radio group labels, configured names, disabled/required properties, form value synchronization, reset/disabled/state-restore callbacks, and native radio keyboard behavior.
-- Accessible, viewport-aware tooltips with `aria-describedby`, dynamic text, Escape dismissal, auto top/bottom placement and horizontal clamping.
-- Static regression assertions for tab, radio and tooltip implementation hooks, plus runtime JavaScript syntax parsing.
-- Dependency-free Chromium browser interaction suite covering tabs, radio group form behavior and tooltip focus/dismissal states.
-- Optional CI-only Playwright compatibility run executes the same interaction suite in Firefox and WebKit without adding a saved project dependency.
-
 ### Changed
-- Updated the gallery, component API reference, integration cookbook, accessibility guide and QA checklist for the new controls.
-
-## [1.0.0] - 2026-11-18
-### Added
-- Initial public release of the VFX UI Anime project.
-- Shared canvas particle engine with reduced-motion handling.
-- Eleven custom elements and a static interactive gallery.
-- Component API, architecture, development, deployment and accessibility documentation.
-- Agent skill and static repository validation script.
-- GitHub governance and automation baseline.
+- Rebuilt the public landing page around the VFX UI Anime brand and design language.
+- Organized all fifteen controls into dedicated component folders.
+- Replaced the old showcase with a searchable, category-filtered component gallery.
+- Added individual live demos and usage guides for all components.
+- Added independent implementations for favorite, disclosure, segmented-choice, and notification controls.
+- Updated repository validation and browser fixtures for the new component structure.

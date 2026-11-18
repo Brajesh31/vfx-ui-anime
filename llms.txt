@@ -1,40 +1,40 @@
 # VFX UI Anime
 
-> Dependency-free anime-inspired Web Components for expressive interface feedback.
+> A dependency-free collection of expressive native Web Components.
 
 ## Project map
-- `README.md`: overview and quick start.
-- `core.js`: shared canvas and motion engine.
-- `components/button.js`: vfx-button.
-- `components/toggle.js`: vfx-toggle.
-- `components/slider.js`: vfx-slider.
-- `components/checkbox.js`: vfx-checkbox.
-- `components/radio.js`: vfx-radio with labeled, named, required and disabled group support.
-- `components/input.js`: vfx-input.
-- `components/tabs.js`: vfx-tabs with horizontal/vertical orientation, arrow/Home/End keyboard navigation, named content slots, linked aria-controls/aria-labelledby tabpanels and active-panel visibility.
-- `components/progress.js`: vfx-progress.
-- `components/rating.js`: vfx-rating.
-- `components/toast.js`: vfx-toast.
-- `components/tooltip.js`: vfx-tooltip with `aria-describedby`, Escape dismissal, dynamic text, automatic top/bottom placement and horizontal viewport clamping.
-- `docs/COMPONENTS.md`: component inventory and concise API overview.
-- `docs/COMPONENT_API_REFERENCE.md`: detailed attributes, properties, methods, events, payloads and implementation limitations.
-- `docs/INTEGRATIONS.md`: framework integration boundaries and high-level setup notes.
-- `docs/INTEGRATION_COOKBOOK.md`: practical vanilla JavaScript, React, Vue and Angular integration patterns, with form and accessibility cautions.
-- `examples/basic.html`: minimal button and toggle integration.
-- `examples/integration-cookbook.html`: runnable all-component example with host-managed state and event handling.
-- `docs/ARCHITECTURE.md`: runtime architecture.
-- `docs/ACCESSIBILITY.md`: known accessibility gaps and QA checklist.
-- `docs/TESTING.md`: static validation, Chromium/Firefox/WebKit browser interaction tests and current testing limitations.
-- `tests/browser.html` and `tests/browser-interactions.js`: headless Chromium interaction test page and assertions.
-- `tools/run-browser-tests.mjs`: Node built-in HTTP server and Chromium test runner.\n- `tools/run-cross-browser-tests.mjs`: optional Playwright-powered Firefox and WebKit test runner; Playwright is installed temporarily for QA and is not a project dependency.
-- `skills/vfx-ui-anime/SKILL.md`: instructions for extending the project.
+- `index.html`: branded, searchable component gallery.
+- `core.js`: shared motion and canvas effects engine.
+- `styles.css`: design tokens and product presentation.
+- `showcase.js`: catalog search and category filters.
+- `components/<name>/index.js`: individual component implementation.
+- `components/<name>/demo.html`: standalone live preview.
+- `components/<name>/README.md`: component-specific usage notes.
+- `docs/COMPONENTS.md`: component inventory.
+- `docs/COMPONENT_API_REFERENCE.md`: API and event details.
+- `tests/browser.html`: browser test fixture.
+- `tools/validate.mjs`: repository validation.
+
+## Component folders
+- `components/button/`: `<vfx-button>` component.
+- `components/toggle/`: `<vfx-toggle>` component.
+- `components/slider/`: `<vfx-slider>` component.
+- `components/checkbox/`: `<vfx-checkbox>` component.
+- `components/radio/`: `<vfx-radio>` component.
+- `components/input/`: `<vfx-input>` component.
+- `components/tabs/`: `<vfx-tabs>` component.
+- `components/progress/`: `<vfx-progress>` component.
+- `components/rating/`: `<vfx-rating>` component.
+- `components/toast/`: `<vfx-toast>` component.
+- `components/tooltip/`: `<vfx-tooltip>` component.
+- `components/like/`: `<vfx-like>` component.
+- `components/accordion/`: `<vfx-accordion>` component.
+- `components/segmented/`: `<vfx-segmented>` component.
+- `components/notification/`: `<vfx-notification>` component.
 
 ## Integration rules
-1. Load `core.js` before component scripts when particle effects are required.
-2. Keep native semantics and keyboard behavior.
-3. Use the documented custom element names and events.
-4. Check the detailed API reference for exact event payloads and current limitations.
-5. Keep application state and associated content in the host application.
-6. Do not claim full accessibility or cross-browser support without testing.
-7. Respect `prefers-reduced-motion`.
-8. Preserve the project's MIT license when redistributing.
+1. Load `core.js` before component scripts.
+2. Preserve native semantics and keyboard access.
+3. Follow each component's README and demo.
+4. Respect `prefers-reduced-motion`.
+5. Verify browser behavior before making compatibility claims.

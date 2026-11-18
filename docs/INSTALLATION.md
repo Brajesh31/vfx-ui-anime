@@ -10,7 +10,7 @@ The current release is distributed as source files. There is no npm package publ
 
 ```html
 <script defer src="/assets/core.js"></script>
-<script defer src="/assets/components/button.js"></script>
+<script defer src="/assets/components/button/index.js"></script>
 <vfx-button>Continue</vfx-button>
 ```
 

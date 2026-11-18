@@ -1,20 +1,144 @@
 {
-  "name":"vfx-ui-anime",
-  "version":"1.0.0",
-  "description":"Anime-inspired native Web Components with a shared motion engine.",
-  "homepage":"https://github.com/Brajesh31/vfx-ui-anime",
-  "license":"MIT",
-  "components":[
-    {"name":"button","tag":"vfx-button","file":"components/button.js","dependencies":["core.js"]},
-    {"name":"toggle","tag":"vfx-toggle","file":"components/toggle.js","dependencies":["core.js"]},
-    {"name":"slider","tag":"vfx-slider","file":"components/slider.js","dependencies":["core.js"]},
-    {"name":"checkbox","tag":"vfx-checkbox","file":"components/checkbox.js","dependencies":["core.js"]},
-    {"name":"radio","tag":"vfx-radio","file":"components/radio.js","dependencies":["core.js"]},
-    {"name":"input","tag":"vfx-input","file":"components/input.js","dependencies":["core.js"]},
-    {"name":"tabs","tag":"vfx-tabs","file":"components/tabs.js","dependencies":["core.js"]},
-    {"name":"progress","tag":"vfx-progress","file":"components/progress.js","dependencies":["core.js"]},
-    {"name":"rating","tag":"vfx-rating","file":"components/rating.js","dependencies":["core.js"]},
-    {"name":"toast","tag":"vfx-toast","file":"components/toast.js","dependencies":["core.js"]},
-    {"name":"tooltip","tag":"vfx-tooltip","file":"components/tooltip.js","dependencies":["core.js"]}
+  "name": "vfx-ui-anime",
+  "version": "2.0.0",
+  "description": "Expressive native Web Components with a shared motion engine.",
+  "homepage": "https://github.com/Brajesh31/vfx-ui-anime",
+  "license": "MIT",
+  "components": [
+    {
+      "name": "button",
+      "tag": "vfx-button",
+      "file": "components/button/index.js",
+      "demo": "components/button/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "toggle",
+      "tag": "vfx-toggle",
+      "file": "components/toggle/index.js",
+      "demo": "components/toggle/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "slider",
+      "tag": "vfx-slider",
+      "file": "components/slider/index.js",
+      "demo": "components/slider/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "checkbox",
+      "tag": "vfx-checkbox",
+      "file": "components/checkbox/index.js",
+      "demo": "components/checkbox/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "radio",
+      "tag": "vfx-radio",
+      "file": "components/radio/index.js",
+      "demo": "components/radio/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "input",
+      "tag": "vfx-input",
+      "file": "components/input/index.js",
+      "demo": "components/input/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "tabs",
+      "tag": "vfx-tabs",
+      "file": "components/tabs/index.js",
+      "demo": "components/tabs/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "progress",
+      "tag": "vfx-progress",
+      "file": "components/progress/index.js",
+      "demo": "components/progress/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "rating",
+      "tag": "vfx-rating",
+      "file": "components/rating/index.js",
+      "demo": "components/rating/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "toast",
+      "tag": "vfx-toast",
+      "file": "components/toast/index.js",
+      "demo": "components/toast/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "tooltip",
+      "tag": "vfx-tooltip",
+      "file": "components/tooltip/index.js",
+      "demo": "components/tooltip/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "like",
+      "tag": "vfx-like",
+      "file": "components/like/index.js",
+      "demo": "components/like/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "accordion",
+      "tag": "vfx-accordion",
+      "file": "components/accordion/index.js",
+      "demo": "components/accordion/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "segmented",
+      "tag": "vfx-segmented",
+      "file": "components/segmented/index.js",
+      "demo": "components/segmented/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    },
+    {
+      "name": "notification",
+      "tag": "vfx-notification",
+      "file": "components/notification/index.js",
+      "demo": "components/notification/demo.html",
+      "dependencies": [
+        "core.js"
+      ]
+    }
   ]
 }

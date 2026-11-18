@@ -1,72 +1,123 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="VFX UI Anime is a dependency-free collection of anime-inspired animated web components."><meta name="theme-color" content="#fffdfb"><title>VFX UI Anime | Motion-driven web components</title><link rel="icon" href="assets/brand-mark.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><script defer src="core.js"></script>
-<script defer src="components/button.js"></script><script defer src="components/toggle.js"></script><script defer src="components/slider.js"></script><script defer src="components/checkbox.js"></script><script defer src="components/radio.js"></script><script defer src="components/input.js"></script><script defer src="components/tabs.js"></script><script defer src="components/progress.js"></script><script defer src="components/rating.js"></script><script defer src="components/toast.js"></script><script defer src="components/tooltip.js"></script></head>
-<body><header class="site-header"><div class="eyebrow">A little motion goes a long way</div><h1>Interfaces with<br><span style="color:var(--vfx-violet)">anime impact.</span></h1><p class="lead">A collection of lightweight web components that turn everyday interactions into expressive motion. No framework required. Just HTML, CSS and JavaScript.</p><img src="assets/hero-illustration.svg" alt="Abstract anime-inspired impact illustration" style="display:block;width:100%;max-width:900px;margin:2rem auto 0;border-radius:24px"></header>
-<main class="wrap"><section class="demo-card" style="margin:0 0 2rem;padding:1.5rem"><div class="eyebrow">Original upstream collection</div><h2 style="margin:.35rem 0 .5rem">🎴 Sakuga VFX, exact gallery</h2><p>The original Sakuga VFX components, animation artwork and interactive gallery are included in a separate folder, with the original MIT license and author attribution retained.</p><a href="sakuga-vfx/" style="display:inline-flex;align-items:center;padding:.7rem 1rem;border-radius:10px;background:#1d1a4a;color:#fff;text-decoration:none;font-weight:750">Explore the Sakuga gallery ↗</a></section>
-<section class="sakuga-showcase" aria-labelledby="sakuga-heading">
-  <div class="sakuga-heading">
-    <div>
-      <div class="eyebrow">Original Sakuga VFX interactions</div>
-      <h2 id="sakuga-heading">🎴 Click it. Feel the impact.</h2>
-      <p>These are the original <code>sakuga-*</code> Web Components from the preserved upstream collection. Press, drag, type, select and toggle to trigger their actual manga-style motion.</p>
-    </div>
-    <a class="sakuga-link" href="sakuga-vfx/gallery/">Open the full original gallery ↗</a>
-  </div>
-
-  <div class="sakuga-grid">
-    <section class="sakuga-card"><h3>Primary button</h3><p>Press, release and wait for the real success check.</p><div class="sakuga-stage"><sakuga-button id="sakuga-confirm">Confirm</sakuga-button><p class="sakuga-status" id="sakuga-button-status" aria-live="polite">Click the button.</p></div></section>
-    <section class="sakuga-card"><h3>Secondary button</h3><p>A quieter click response.</p><div class="sakuga-stage"><sakuga-button variant="secondary" id="sakuga-cancel">Cancel</sakuga-button><p class="sakuga-status" id="sakuga-secondary-status" aria-live="polite">Click the button.</p></div></section>
-    <section class="sakuga-card"><h3>Toggle</h3><p>Flip the illustrated switch.</p><div class="sakuga-stage"><sakuga-toggle label="Notifications" id="sakuga-toggle"></sakuga-toggle><p class="sakuga-status" id="sakuga-toggle-status" aria-live="polite">Try switching it.</p></div></section>
-    <section class="sakuga-card"><h3>Checkbox</h3><p>Slash, crystals and a drawn tick.</p><div class="sakuga-stage"><sakuga-checkbox id="sakuga-checkbox">Accept the terms</sakuga-checkbox><p class="sakuga-status" id="sakuga-checkbox-status" aria-live="polite">Try checking it.</p></div></section>
-    <section class="sakuga-card"><h3>Radio choices</h3><p>Pick another option to see the spring and impact.</p><div class="sakuga-stage"><sakuga-radio label="Choose a plan" name="sakuga-plan" id="sakuga-radio"><option value="starter" selected>Starter</option><option value="pro">Pro</option><option value="studio">Studio</option></sakuga-radio><p class="sakuga-status" id="sakuga-radio-status" aria-live="polite">Choose a plan.</p></div></section>
-    <section class="sakuga-card"><h3>Text input</h3><p>Each keystroke triggers a small dust effect.</p><div class="sakuga-stage"><sakuga-input label="Your name" placeholder="Type something" id="sakuga-input"></sakuga-input><p class="sakuga-status" id="sakuga-input-status" aria-live="polite">Start typing.</p></div></section>
-    <section class="sakuga-card"><h3>Slider</h3><p>Drag quickly to throw the manga effects.</p><div class="sakuga-stage"><sakuga-slider value="35" label="Intensity" id="sakuga-slider"></sakuga-slider><p class="sakuga-status" id="sakuga-slider-status" aria-live="polite">Drag the slider.</p></div></section>
-    <section class="sakuga-card"><h3>Tabs</h3><p>Switch tabs, or use arrow keys.</p><div class="sakuga-stage"><sakuga-tabs label="Demo sections" id="sakuga-tabs"><option>Overview</option><option>Effects</option><option>Details</option></sakuga-tabs><p class="sakuga-status" id="sakuga-tabs-status" aria-live="polite">Choose a tab.</p></div></section>
-    <section class="sakuga-card"><h3>Rating</h3><p>Choose stars, five triggers the full burst.</p><div class="sakuga-stage"><sakuga-rating label="Rate this demo" id="sakuga-rating"></sakuga-rating><p class="sakuga-status" id="sakuga-rating-status" aria-live="polite">Give it a rating.</p></div></section>
-    <section class="sakuga-card"><h3>Progress</h3><p>Watch the storm cloud ride the progress edge.</p><div class="sakuga-stage"><sakuga-progress label="Demo progress" id="sakuga-progress"></sakuga-progress><div class="sakuga-actions"><button type="button" class="sakuga-action" id="sakuga-progress-start">Start demo</button><button type="button" class="sakuga-action" id="sakuga-progress-reset">Reset</button></div><p class="sakuga-status" id="sakuga-progress-status" aria-live="polite">Start the progress animation.</p></div></section>
-    <section class="sakuga-card"><h3>Toast</h3><p>Streaks in, lands in dust, then shrinks away.</p><div class="sakuga-stage"><sakuga-toast id="sakuga-toast"></sakuga-toast><button type="button" class="sakuga-action" id="sakuga-toast-show">Show notification</button><p class="sakuga-status" id="sakuga-toast-status" aria-live="polite">Trigger a toast.</p></div></section>
-    <section class="sakuga-card"><h3>Tooltip</h3><p>Hover, focus or tap the question button.</p><div class="sakuga-stage"><sakuga-tooltip text="A manga-inspired hint that springs into view." label="Open hint" id="sakuga-tooltip"></sakuga-tooltip><p class="sakuga-status" id="sakuga-tooltip-status" aria-live="polite">Hover or focus the hint.</p></div></section>
-  </div>
-  <p class="sakuga-footnote">Original component files and artwork remain under <code>sakuga-vfx/</code> with their upstream license and attribution. Motion effects honor reduced-motion preferences.</p>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="VFX UI Anime is a collection of expressive, dependency-free web components with tactile interaction feedback.">
+<meta name="theme-color" content="#f8f7ff"><title>VFX UI Anime | Components with character</title>
+<link rel="icon" href="assets/brand-mark.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css">
+<script defer src="core.js"></script>
+<script defer src="components/button/index.js"></script>
+<script defer src="components/toggle/index.js"></script>
+<script defer src="components/slider/index.js"></script>
+<script defer src="components/checkbox/index.js"></script>
+<script defer src="components/radio/index.js"></script>
+<script defer src="components/input/index.js"></script>
+<script defer src="components/tabs/index.js"></script>
+<script defer src="components/progress/index.js"></script>
+<script defer src="components/rating/index.js"></script>
+<script defer src="components/toast/index.js"></script>
+<script defer src="components/tooltip/index.js"></script>
+<script defer src="components/like/index.js"></script>
+<script defer src="components/accordion/index.js"></script>
+<script defer src="components/segmented/index.js"></script>
+<script defer src="components/notification/index.js"></script>
+<script defer src="showcase.js"></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="./"><img src="assets/brand-mark.svg" alt="" width="34" height="34"><span>VFX UI <b>Anime</b></span></a><nav aria-label="Main navigation"><a href="#components">Components</a><a href="docs/COMPONENTS.md">Documentation</a><a href="README.md">GitHub</a></nav><a class="top-cta" href="#components">Explore library <span aria-hidden="true">↗</span></a></header>
+<main>
+<section class="hero">
+<div class="hero-copy"><div class="eyebrow"><span class="eyebrow-dot"></span> Motion-first web components <span class="eyebrow-count">15 components · 0 dependencies</span></div>
+<h1>Make every<br><em>interaction</em><br>feel alive.</h1>
+<p class="hero-lead">A thoughtfully crafted collection of native web components with responsive motion, tactile feedback, and a little anime-inspired energy. Built to feel like one cohesive toolkit.</p>
+<div class="hero-actions"><a class="button-primary" href="#components">Browse components <span aria-hidden="true">↓</span></a><a class="button-quiet" href="docs/INSTALLATION.md">Read the docs <span aria-hidden="true">↗</span></a></div>
+<div class="hero-meta"><span><i>✓</i> Vanilla JavaScript</span><span><i>✓</i> Native Web Components</span><span><i>✓</i> Reduced-motion aware</span></div></div>
+<div class="hero-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="hero-sticker sticker-top">TAP!</div><div class="hero-sticker sticker-side">+ FEEL</div>
+<div class="hero-demo-window"><div class="window-top"><span></span><span></span><span></span><small>interaction-lab</small></div><div class="demo-window-body"><div class="demo-caption">TRY A LITTLE MOTION</div><vfx-button>Make it happen</vfx-button><div class="hero-toggle-line"><span>Motion enabled</span><vfx-toggle label="Motion enabled" checked></vfx-toggle></div><div class="hero-love-line"><span>Enjoying this?</span><vfx-like></vfx-like></div></div><div class="window-foot"><span>01 / BUTTON</span><span>LIVE PREVIEW <i></i></span></div></div><span class="spark spark-a">✳</span><span class="spark spark-b">✦</span><span class="spark spark-c">✳</span></div>
 </section>
-
-<section class="sakuga-showcase" aria-labelledby="sakuga-extra-heading">
-<div class="sakuga-heading"><div><div class="eyebrow">New Sakuga originals</div><h2 id="sakuga-extra-heading">✨ More interactions, more impact.</h2><p>Four additional controls built on the same spring-and-canvas engine. Each has its own action, state and impact sequence.</p></div></div>
-<div class="sakuga-grid">
-<section class="sakuga-card"><h3>Like button</h3><p>Heart pops, impact burst, manga lettering and glint.</p><div class="sakuga-stage"><sakuga-like id="sakuga-like"></sakuga-like><p class="sakuga-status" id="sakuga-like-status" aria-live="polite">Tap to like.</p></div></section>
-<section class="sakuga-card"><h3>Accordion</h3><p>Disclosure panel with springing chevron and opening impact.</p><div class="sakuga-stage"><sakuga-accordion label="What makes this special?" id="sakuga-accordion">The panel uses a real disclosure state. The animation decorates the change, it does not control whether this content is available.</sakuga-accordion><p class="sakuga-status" id="sakuga-accordion-status" aria-live="polite">Open and close the panel.</p></div></section>
-<section class="sakuga-card"><h3>Segmented control</h3><p>Choose a view and watch the selection land.</p><div class="sakuga-stage"><sakuga-segmented label="Time range" id="sakuga-segmented"><option value="day" selected>Day</option><option value="week">Week</option><option value="month">Month</option></sakuga-segmented><p class="sakuga-status" id="sakuga-segmented-status" aria-live="polite">Choose a range.</p></div></section>
-<section class="sakuga-card"><h3>Notification bell</h3><p>Bell rings, impact sparks fly and unread count clears.</p><div class="sakuga-stage"><sakuga-notification count="3" id="sakuga-notification"></sakuga-notification><p class="sakuga-status" id="sakuga-notification-status" aria-live="polite">3 unread notifications.</p></div></section>
-</div></section>
-<div class="section-head"><div><div class="eyebrow">Component playground</div><h2>Try the controls</h2></div><span class="code">11 components · 0 runtime dependencies</span></div><div class="grid">
-<section class="demo-card"><h3>Button</h3><p>Squash, spring and impact on activation.</p><div class="stage"><vfx-button>Activate</vfx-button><vfx-button variant="secondary">Secondary</vfx-button></div></section>
-<section class="demo-card"><h3>Toggle</h3><p>Switch state with a springy snap.</p><div class="stage"><vfx-toggle label="Notifications" checked></vfx-toggle></div></section>
-<section class="demo-card"><h3>Slider</h3><p>Responsive value control with a lively thumb.</p><div class="stage" style="width:100%"><vfx-slider value="42"></vfx-slider></div></section>
-<section class="demo-card"><h3>Checkbox</h3><p>Confirm a choice with a quick burst.</p><div class="stage"><vfx-checkbox checked>Accept terms</vfx-checkbox></div></section>
-<section class="demo-card"><h3>Radio group</h3><p>Native radio keyboard behavior, named group and form state.</p><div class="stage"><vfx-radio label="Size" name="size" required options="Small,Medium,Large" value="Medium"></vfx-radio></div></section>
-<section class="demo-card"><h3>Input</h3><p>Text entry with subtle focus feedback.</p><div class="stage"><vfx-input placeholder="Your name"></vfx-input></div></section>
-<section class="demo-card"><h3>Tabs</h3><p>Use Left/Right Arrow keys, Home and End to move and activate.</p><div class="stage"><vfx-tabs label="Content sections" items="Overview,Features,Details" orientation="horizontal"><div slot="Overview"><p><strong>Overview</strong></p><p>Build expressive interfaces with lightweight custom elements.</p></div><div slot="Features"><p><strong>Features</strong></p><p>Eleven controls, keyboard interactions and a shared motion engine.</p></div><div slot="Details"><p><strong>Details</strong></p><p>Use the component API reference to integrate each element.</p></div></vfx-tabs></div></section>
-<section class="demo-card"><h3>Vertical tabs</h3><p>Vertical orientation uses Up/Down Arrow keys, plus Home and End.</p><div class="stage"><vfx-tabs label="Vertical sections" items="First,Second,Third" orientation="vertical"><div slot="First">First panel content, paired with the selected vertical tab.</div><div slot="Second">Second panel content, paired with the selected vertical tab.</div><div slot="Third">Third panel content, paired with the selected vertical tab.</div></vfx-tabs></div></section>
-<section class="demo-card"><h3>Progress</h3><p>Animate progress toward completion.</p><div class="stage" style="width:100%"><vfx-progress value="68" label="Upload progress"></vfx-progress></div></section>
-<section class="demo-card"><h3>Rating</h3><p>Rate from one to five stars.</p><div class="stage"><vfx-rating value="3"></vfx-rating></div></section>
-<section class="demo-card"><h3>Toast</h3><p>Show a temporary status message.</p><div class="stage"><vfx-toast message="Changes saved">Show toast</vfx-toast></div></section>
-<section class="demo-card"><h3>Tooltip</h3><p>Accessible description, Escape dismissal and viewport-aware auto placement.</p><div class="stage"><vfx-tooltip text="This hint is connected to its trigger with aria-describedby and moves to the side with more room." placement="auto">Hover or focus me</vfx-tooltip><vfx-tooltip text="This tooltip is intentionally placed below the trigger." placement="bottom">Bottom placement</vfx-tooltip></div></section>
-</div></main><footer>VFX UI Anime · Built for expressive interfaces · MIT License</footer>
-<script defer src="sakuga-vfx/button/button.js"></script>
-<script defer src="sakuga-vfx/toggle/toggle.js"></script>
-<script defer src="sakuga-vfx/slider/slider.js"></script>
-<script defer src="sakuga-vfx/checkbox/checkbox.js"></script>
-<script defer src="sakuga-vfx/radio/radio.js"></script>
-<script defer src="sakuga-vfx/input/input.js"></script>
-<script defer src="sakuga-vfx/tabs/tabs.js"></script>
-<script defer src="sakuga-vfx/progress/progress.js"></script>
-<script defer src="sakuga-vfx/rating/rating.js"></script>
-<script defer src="sakuga-vfx/toast/toast.js"></script>
-<script defer src="sakuga-vfx/tooltip/tooltip.js"></script>
-<script defer src="sakuga-interactions.js"></script>
-<script defer src="sakuga-vfx/like/like.js"></script>
-<script defer src="sakuga-vfx/accordion/accordion.js"></script>
-<script defer src="sakuga-vfx/segmented/segmented.js"></script>
-<script defer src="sakuga-vfx/notification/notification.js"></script>
-<script defer src="sakuga-extra-interactions.js"></script>
+<section class="trust-strip"><div><strong>15</strong><span>ready-to-use components</span></div><div><strong>0</strong><span>runtime dependencies</span></div><div><strong>100%</strong><span>native browser technology</span></div><div><strong>∞</strong><span>ways to add personality</span></div></section>
+<section class="library-section" id="components">
+<div class="section-intro"><div><div class="eyebrow">THE COMPONENT LIBRARY</div><h2>Small details.<br><em>Big personality.</em></h2><p>Explore the collection, test each control, and open its dedicated page for the API and implementation guide.</p></div>
+<div class="search-wrap"><label for="component-search">Find a component</label><div class="search-input"><span aria-hidden="true">⌕</span><input id="component-search" type="search" placeholder="Search buttons, inputs, tabs..." autocomplete="off"></div><p id="result-count" aria-live="polite">Showing all 15 components</p></div></div>
+<div class="filters" role="group" aria-label="Filter components"><button class="filter-chip is-active" data-filter="all" aria-pressed="true">All components <span>15</span></button><button class="filter-chip" data-filter="Actions" aria-pressed="false">Actions</button><button class="filter-chip" data-filter="Forms" aria-pressed="false">Forms</button><button class="filter-chip" data-filter="Navigation" aria-pressed="false">Navigation</button><button class="filter-chip" data-filter="Feedback" aria-pressed="false">Feedback</button></div>
+<div class="component-grid" id="component-grid">
+<article class="component-card" data-name="button" data-category="Actions" data-search="button a tactile action button with animated press feedback.">
+<div class="card-top"><span class="card-number">01</span><span class="category-tag">Actions</span></div>
+<div class="card-preview preview-button"><vfx-button>Launch</vfx-button> <vfx-button variant="secondary">Secondary</vfx-button></div>
+<div class="card-copy"><h3>Button</h3><p>A tactile action button with animated press feedback.</p></div>
+<div class="card-footer"><code>&lt;vfx-button&gt;</code><a href="components/button/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="toggle" data-category="Forms" data-search="toggle a boolean switch with a clear state and form support.">
+<div class="card-top"><span class="card-number">02</span><span class="category-tag">Forms</span></div>
+<div class="card-preview preview-toggle"><vfx-toggle label="Notifications" checked></vfx-toggle></div>
+<div class="card-copy"><h3>Toggle</h3><p>A boolean switch with a clear state and form support.</p></div>
+<div class="card-footer"><code>&lt;vfx-toggle&gt;</code><a href="components/toggle/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="slider" data-category="Forms" data-search="slider a numeric range control with a live value readout.">
+<div class="card-top"><span class="card-number">03</span><span class="category-tag">Forms</span></div>
+<div class="card-preview preview-slider"><vfx-slider min="0" max="100" value="42"></vfx-slider></div>
+<div class="card-copy"><h3>Slider</h3><p>A numeric range control with a live value readout.</p></div>
+<div class="card-footer"><code>&lt;vfx-slider&gt;</code><a href="components/slider/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="checkbox" data-category="Forms" data-search="checkbox a native checkbox wrapped in a compact custom element.">
+<div class="card-top"><span class="card-number">04</span><span class="category-tag">Forms</span></div>
+<div class="card-preview preview-checkbox"><vfx-checkbox checked>Accept the terms</vfx-checkbox></div>
+<div class="card-copy"><h3>Checkbox</h3><p>A native checkbox wrapped in a compact custom element.</p></div>
+<div class="card-footer"><code>&lt;vfx-checkbox&gt;</code><a href="components/checkbox/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="radio" data-category="Forms" data-search="radio a named radio group with required and disabled states.">
+<div class="card-top"><span class="card-number">05</span><span class="category-tag">Forms</span></div>
+<div class="card-preview preview-radio"><vfx-radio label="Plan" name="plan" options="Free,Pro,Studio" value="Pro"></vfx-radio></div>
+<div class="card-copy"><h3>Radio</h3><p>A named radio group with required and disabled states.</p></div>
+<div class="card-footer"><code>&lt;vfx-radio&gt;</code><a href="components/radio/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="input" data-category="Forms" data-search="input a text input with a host-level value api.">
+<div class="card-top"><span class="card-number">06</span><span class="category-tag">Forms</span></div>
+<div class="card-preview preview-input"><vfx-input label="Email address" type="email" placeholder="you@example.com"></vfx-input></div>
+<div class="card-copy"><h3>Input</h3><p>A text input with a host-level value API.</p></div>
+<div class="card-footer"><code>&lt;vfx-input&gt;</code><a href="components/input/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="tabs" data-category="Navigation" data-search="tabs keyboard-friendly tabs with linked content panels.">
+<div class="card-top"><span class="card-number">07</span><span class="category-tag">Navigation</span></div>
+<div class="card-preview preview-tabs"><vfx-tabs label="Sections" items="Overview,Features,Details"><p slot="Overview">Overview.</p><p slot="Features">Features.</p><p slot="Details">Details.</p></vfx-tabs></div>
+<div class="card-copy"><h3>Tabs</h3><p>Keyboard-friendly tabs with linked content panels.</p></div>
+<div class="card-footer"><code>&lt;vfx-tabs&gt;</code><a href="components/tabs/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="progress" data-category="Feedback" data-search="progress a progress indicator with a completion response.">
+<div class="card-top"><span class="card-number">08</span><span class="category-tag">Feedback</span></div>
+<div class="card-preview preview-progress"><vfx-progress label="Upload" value="68"></vfx-progress></div>
+<div class="card-copy"><h3>Progress</h3><p>A progress indicator with a completion response.</p></div>
+<div class="card-footer"><code>&lt;vfx-progress&gt;</code><a href="components/progress/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="rating" data-category="Feedback" data-search="rating a five-step rating control with interactive stars.">
+<div class="card-top"><span class="card-number">09</span><span class="category-tag">Feedback</span></div>
+<div class="card-preview preview-rating"><vfx-rating value="3"></vfx-rating></div>
+<div class="card-copy"><h3>Rating</h3><p>A five-step rating control with interactive stars.</p></div>
+<div class="card-footer"><code>&lt;vfx-rating&gt;</code><a href="components/rating/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="toast" data-category="Feedback" data-search="toast a temporary status message with a reusable show method.">
+<div class="card-top"><span class="card-number">10</span><span class="category-tag">Feedback</span></div>
+<div class="card-preview preview-toast"><vfx-toast message="Your changes were saved">Show toast</vfx-toast></div>
+<div class="card-copy"><h3>Toast</h3><p>A temporary status message with a reusable show method.</p></div>
+<div class="card-footer"><code>&lt;vfx-toast&gt;</code><a href="components/toast/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="tooltip" data-category="Feedback" data-search="tooltip a contextual hint with focus, escape, and placement support.">
+<div class="card-top"><span class="card-number">11</span><span class="category-tag">Feedback</span></div>
+<div class="card-preview preview-tooltip"><vfx-tooltip text="Helpful context for this action." placement="auto">Hover or focus me</vfx-tooltip></div>
+<div class="card-copy"><h3>Tooltip</h3><p>A contextual hint with focus, Escape, and placement support.</p></div>
+<div class="card-footer"><code>&lt;vfx-tooltip&gt;</code><a href="components/tooltip/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="like" data-category="Actions" data-search="like a favorite action with a springy heart and pressed state.">
+<div class="card-top"><span class="card-number">12</span><span class="category-tag">Actions</span></div>
+<div class="card-preview preview-like"><vfx-like label="Like" liked-label="Liked"></vfx-like></div>
+<div class="card-copy"><h3>Like</h3><p>A favorite action with a springy heart and pressed state.</p></div>
+<div class="card-footer"><code>&lt;vfx-like&gt;</code><a href="components/like/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="accordion" data-category="Navigation" data-search="accordion an accessible disclosure panel with measured transitions.">
+<div class="card-top"><span class="card-number">13</span><span class="category-tag">Navigation</span></div>
+<div class="card-preview preview-accordion"><vfx-accordion label="What is included?">A lightweight component built with native browser features and the shared motion engine.</vfx-accordion></div>
+<div class="card-copy"><h3>Accordion</h3><p>An accessible disclosure panel with measured transitions.</p></div>
+<div class="card-footer"><code>&lt;vfx-accordion&gt;</code><a href="components/accordion/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="segmented" data-category="Forms" data-search="segmented a single-choice segmented control with arrow navigation.">
+<div class="card-top"><span class="card-number">14</span><span class="category-tag">Forms</span></div>
+<div class="card-preview preview-segmented"><vfx-segmented label="Time range" value="Week"><option value="Day">Day</option><option value="Week">Week</option><option value="Month">Month</option></vfx-segmented></div>
+<div class="card-copy"><h3>Segmented</h3><p>A single-choice segmented control with arrow navigation.</p></div>
+<div class="card-footer"><code>&lt;vfx-segmented&gt;</code><a href="components/segmented/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+<article class="component-card" data-name="notification" data-category="Feedback" data-search="notification a notification bell with an unread count and clear action.">
+<div class="card-top"><span class="card-number">15</span><span class="category-tag">Feedback</span></div>
+<div class="card-preview preview-notification"><vfx-notification count="3"></vfx-notification></div>
+<div class="card-copy"><h3>Notification</h3><p>A notification bell with an unread count and clear action.</p></div>
+<div class="card-footer"><code>&lt;vfx-notification&gt;</code><a href="components/notification/demo.html">Explore component <span aria-hidden="true">↗</span></a></div></article>
+</div><div class="empty-state" id="empty-state" hidden><span>⌕</span><h3>No matching components</h3><p>Try another search term or choose a different category.</p></div>
+</section>
+<section class="closing-cta"><div><div class="eyebrow">READY WHEN YOU ARE</div><h2>Good interfaces<br>are felt, not just seen.</h2><p>Start with one component. Add a little motion where it matters.</p></div><a class="button-primary" href="docs/INSTALLATION.md">Get started <span aria-hidden="true">↗</span></a></section>
+</main><footer class="site-footer"><a class="brand" href="./"><img src="assets/brand-mark.svg" alt="" width="28" height="28"><span>VFX UI <b>Anime</b></span></a><p>Built for expressive interfaces. Crafted with native web technology.</p><div><a href="docs/COMPONENTS.md">Docs</a><a href="README.md">Repository</a><a href="LICENSE">License</a></div></footer>
 </body></html>

@@ -15,8 +15,8 @@ Copy the shared engine and the component scripts you need into your application'
 ```html
 <link rel="stylesheet" href="/assets/vfx/styles.css">
 <script defer src="/assets/vfx/core.js"></script>
-<script defer src="/assets/vfx/components/button.js"></script>
-<script defer src="/assets/vfx/components/toggle.js"></script>
+<script defer src="/assets/vfx/components/button/index.js"></script>
+<script defer src="/assets/vfx/components/toggle/index.js"></script>
 ```
 
 The stylesheet is the project's visual theme and gallery-level styles. Components render their controls in Shadow DOM and use CSS custom properties with some internal fallback styles. You may omit the stylesheet if you do not want the gallery theme, but verify the resulting appearance in your application.
@@ -41,7 +41,7 @@ Do not use `file://` as the primary test path. A local HTTP server provides more
 ```html
 <link rel="stylesheet" href="/assets/vfx/styles.css">
 <script defer src="/assets/vfx/core.js"></script>
-<script defer src="/assets/vfx/components/button.js"></script>
+<script defer src="/assets/vfx/components/button/index.js"></script>
 
 <vfx-button id="save">Save changes</vfx-button>
 <p id="status" aria-live="polite"></p>

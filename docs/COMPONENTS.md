@@ -1,84 +1,48 @@
-# 🧩 Component API overview
+# 🧩 Component library
 
-VFX UI Anime exposes eleven native custom elements. Load `core.js` before the component scripts when you want the shared canvas effects. Each component file registers its own tag.
+VFX UI Anime contains 15 native custom elements. Every component lives in its own dedicated folder with an implementation, standalone demo, and usage guide.
 
-For the complete, source-checked list of attributes, properties, methods, emitted event payloads, form behavior, accessibility semantics and current limitations, see the **[Detailed Component API Reference](COMPONENT_API_REFERENCE.md)**.
-
-## Component inventory
-
-| Component | Custom element | Primary inputs | Host events |
+| Component | Element | Category | Folder |
 |---|---|---|---|
-| Button | `<vfx-button>` | `variant`, default slot | `vfx-activate` |
-| Toggle | `<vfx-toggle>` | `checked`, `label`, `name`, `value`, `disabled` | `change` |
-| Slider | `<vfx-slider>` | `min`, `max`, `step`, `value`, `disabled` | `input` with `detail.value` |
-| Checkbox | `<vfx-checkbox>` | `checked`, `disabled`, `value`, default slot | `change` |
-| Radio | `<vfx-radio>` | `options`, `value`, `name`, `disabled`, `required`, `label` | `change` |
-| Input | `<vfx-input>` | `type`, `value`, `placeholder`, `required`, `disabled`, `autocomplete`, `label` | `input`, `change` |
-| Tabs | `<vfx-tabs>` | `items`, `value`, `orientation`, `label`, named panel slots | `change` with `detail.value` |
-| Progress | `<vfx-progress>` | `value`, `label` | None |
-| Rating | `<vfx-rating>` | `value` | `change` with `detail.value` |
-| Toast | `<vfx-toast>` | `message` | `vfx-toast` with `detail.message` |
-| Tooltip | `<vfx-tooltip>` | `text`, `placement`, default slot | None |
+| Button | `<vfx-button>` | Actions | [components/button/](../components/button/) |
+| Toggle | `<vfx-toggle>` | Forms | [components/toggle/](../components/toggle/) |
+| Slider | `<vfx-slider>` | Forms | [components/slider/](../components/slider/) |
+| Checkbox | `<vfx-checkbox>` | Forms | [components/checkbox/](../components/checkbox/) |
+| Radio | `<vfx-radio>` | Forms | [components/radio/](../components/radio/) |
+| Input | `<vfx-input>` | Forms | [components/input/](../components/input/) |
+| Tabs | `<vfx-tabs>` | Navigation | [components/tabs/](../components/tabs/) |
+| Progress | `<vfx-progress>` | Feedback | [components/progress/](../components/progress/) |
+| Rating | `<vfx-rating>` | Feedback | [components/rating/](../components/rating/) |
+| Toast | `<vfx-toast>` | Feedback | [components/toast/](../components/toast/) |
+| Tooltip | `<vfx-tooltip>` | Feedback | [components/tooltip/](../components/tooltip/) |
+| Like | `<vfx-like>` | Actions | [components/like/](../components/like/) |
+| Accordion | `<vfx-accordion>` | Navigation | [components/accordion/](../components/accordion/) |
+| Segmented | `<vfx-segmented>` | Forms | [components/segmented/](../components/segmented/) |
+| Notification | `<vfx-notification>` | Feedback | [components/notification/](../components/notification/) |
 
-Tabs use named child slots whose names match the tab labels. The component generates linked `tab`/`tabpanel` semantics and manages panel visibility.
+## Shared motion engine
 
-All custom-element events shown above bubble and cross the Shadow DOM boundary. Events without a listed detail payload do not provide a documented custom payload.
+Load `core.js` before component scripts. It exposes `window.VFXAnime` with:
+- `emit(type, x, y, options)`: emit particles at viewport coordinates.
+- `impact(element, type, power)`: emit an effect near an element.
+- `spring(from, to, elapsedSeconds)`: scalar spring-like easing.
+- `reducedMotion`: current `prefers-reduced-motion` state.
+- `version`: engine version.
 
-## Shared engine
+## Per-component structure
 
-`core.js` creates `window.VFXAnime` with:
-- `emit(type, x, y, options?)`: emit particles at viewport coordinates.
-- `impact(element, type?, power?)`: emit at the center of an element.
-- `spring(from, to, elapsedSeconds)`: return a scalar easing value.
-- `reducedMotion`: read-only state from `prefers-reduced-motion`.
-- `version`: engine version string.
-
-## Important implementation notes
-
-- `<vfx-slider>` copies its initial range attributes when it connects. Use its `value` property for later programmatic value changes.
-- `<vfx-tabs>` supports one tab stop, arrow-key selection, and Home/End navigation. It supports horizontal and vertical orientation, but the consuming application must still create and manage tab panels and their accessibility relationships.
-- `<vfx-radio>` accepts comma-separated options, applies the configured `name`, and uses native radio inputs for browser keyboard behavior. Its `value`, `required` and `disabled` properties are writable. A required group starts unselected unless a valid `value` is supplied; form-associated behavior remains browser-dependent and should be tested.
-- `<vfx-input>` does not proxy the complete native constraint-validation API.
-- Toggle, checkbox, radio and input declare form association and use `ElementInternals` where available, but production form behavior still needs browser-specific testing.
-- `<vfx-tooltip>` connects its focusable trigger to the hint with `aria-describedby`, supports automatic top/bottom placement or an explicit side, clamps horizontally to the viewport, and can be dismissed with Escape.
-- Reduced motion suppresses canvas particles and disables the tooltip's own visibility transition. Other components may still have CSS transitions.
+Every component directory contains:
+- `index.js`: custom element implementation.
+- `demo.html`: working standalone preview.
+- `README.md`: component-specific use and installation notes.
 
 ## Example
 
 ```html
 <link rel="stylesheet" href="/styles.css">
 <script defer src="/core.js"></script>
-<script defer src="/components/button.js"></script>
-
-<vfx-button id="continue">Continue</vfx-button>
-<script>
-  document.querySelector("#continue").addEventListener("vfx-activate", () => {
-    console.log("Continue activated");
-  });
-</script>
+<script defer src="/components/button/index.js"></script>
+<vfx-button>Continue</vfx-button>
 ```
 
-## Further guidance
-
-- [Detailed Component API Reference](COMPONENT_API_REFERENCE.md)
-- [Installation](INSTALLATION.md)
-- [Architecture](ARCHITECTURE.md)
-- [Accessibility and compatibility](ACCESSIBILITY.md)
-- [Testing strategy](TESTING.md)
-- [Framework integrations](INTEGRATIONS.md)
-- [Visual design system](DESIGN_SYSTEM.md)
-
-This overview describes the current source implementation. It does not imply complete native form parity, full screen-reader support, or verified cross-browser behavior.
-
-## 🎴 Original Sakuga components
-
-The homepage also loads the original-style `sakuga-*` elements from `sakuga-vfx/`. The preserved upstream collection includes eleven controls. Four additional original controls have been added locally:
-
-| Element | Purpose | Main state |
-|---|---|---|
-| `<sakuga-like>` | Like/favorite action | `aria-pressed`, `change` with `detail.pressed` |
-| `<sakuga-accordion>` | Disclosure panel | `open`, `change` with `detail.open` |
-| `<sakuga-segmented>` | Single-choice segmented group | `value`, `change` with `detail.value/index/label` |
-| `<sakuga-notification>` | Notification bell and unread count | `count`, `change` with `detail.count` |
-
-These are separate from the `vfx-*` components above. Load each file with a plain script tag. Every new component includes the Sakuga core block and can be loaded independently.
+See the [detailed API reference](COMPONENT_API_REFERENCE.md), [installation guide](INSTALLATION.md), and each component's README for current details.

@@ -1,0 +1,5 @@
+(() => {
+const search=document.querySelector("#component-search"),cards=[...document.querySelectorAll(".component-card")],chips=[...document.querySelectorAll(".filter-chip")],count=document.querySelector("#result-count"),empty=document.querySelector("#empty-state");let active="all";
+function update(){const q=(search?.value||"").trim().toLowerCase();let visible=0;cards.forEach(card=>{const show=(active==="all"||card.dataset.category===active)&&(!q||card.dataset.search.includes(q)||card.dataset.name.includes(q));card.hidden=!show;if(show)visible++});if(count)count.textContent=visible===15?"Showing all 15 components":`Showing ${visible} of 15 components`;if(empty)empty.hidden=visible!==0}
+search?.addEventListener("input",update);chips.forEach(chip=>chip.addEventListener("click",()=>{active=chip.dataset.filter;chips.forEach(item=>{const selected=item===chip;item.classList.toggle("is-active",selected);item.setAttribute("aria-pressed",String(selected))});update()}));update();
+})();

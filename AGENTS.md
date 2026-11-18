@@ -1,26 +1,17 @@
 # 🤖 Agent instructions
 
 ## Project identity
-VFX UI Anime is an independent, dependency-free Web Components library. It is not the original Sakuga VFX project and must not claim affiliation with it.
+VFX UI Anime is an independent, dependency-free Web Components library. Keep its visual identity, APIs, and directory structure consistent.
 
 ## Source of truth
-- Public component behavior: `docs/COMPONENTS.md`.
-- Runtime architecture: `docs/ARCHITECTURE.md`.
-- Known accessibility gaps: `docs/ACCESSIBILITY.md`.
-- Installation and framework guidance: `docs/INSTALLATION.md`.
-- Automated static checks: `tools/validate.mjs`.
+- Public behavior: `docs/COMPONENTS.md`.
+- Detailed API inventory: `docs/COMPONENT_API_REFERENCE.md`.
+- Component implementation and demos: `components/<name>/`.
 
-## Non-negotiable rules
-1. Preserve native browser semantics wherever practical.
-2. Keep the project dependency-free unless the user explicitly approves a dependency.
-3. Load the shared `core.js` before component scripts.
-4. Respect `prefers-reduced-motion`.
-5. Do not invent APIs, tests, browser support or passing results.
-6. Update the component API docs and gallery whenever a public component API changes.
-7. Do not copy proprietary artwork, logos or source files from reference projects.
-8. Keep all generated effects decorative and hidden from assistive technology.
-9. Be explicit about incomplete form behavior and accessibility limitations.
-10. Run `npm test`, `npm run check` and `npm run test:browser`. When cross-browser behavior changes, also run `npm run test:cross-browser` after installing optional Playwright tooling without saving dependencies. Manually test Safari and assistive technology where Apple/browser sessions are available.
-
-## Change completion report
-State files changed, public API changes, checks actually run, checks not run and remaining limitations.
+## Repository rules
+- Keep every component in its own folder with `index.js`, `demo.html`, and `README.md`.
+- Prefer native semantics and accessible keyboard interactions.
+- Preserve reduced-motion support.
+- Do not add runtime dependencies without a concrete need.
+- Do not claim tests pass unless they were run.
+- Keep docs aligned with actual code.
