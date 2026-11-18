@@ -46,7 +46,8 @@ The GitHub validation workflow runs the same nine interaction checks in Chromium
 |---|---|---|
 | Chromium | 9 headless interaction checks in GitHub Actions | Not formally certified |
 | Firefox | 9 headless interaction checks in GitHub Actions | Not formally certified |
-| WebKit engine | 9 headless interaction checks in GitHub Actions | Not equivalent to Safari certification |\n| Safari macOS | Not tested | Not tested |
+| WebKit engine | 9 headless interaction checks in GitHub Actions | Not equivalent to Safari certification |
+| Safari macOS | Not tested | Not tested |
 | Safari iOS | Not tested | Not tested |
 | Chrome Android | Not tested | Not tested |
 | Screen readers | Not automated | Not audited |
