@@ -247,7 +247,7 @@ Respect reduced motion in host-authored animations too. The core suppresses canv
 The current source is not a drop-in replacement for every native form control:
 - Form-associated elements use `ElementInternals` opportunistically. Browser behavior must be tested, including submit, reset, disabled fieldsets and validity.
 - The checkbox wrapper does not expose a `name` API in the current implementation.
-- The radio wrapper uses native radio inputs and the browser's radio keyboard behavior. Test independent groups, configured names, form submission, required validity, reset and disabled fieldsets in target browsers.
+- The radio wrapper uses native radio inputs and the browser's radio keyboard behavior. Its `value`, `required` and `disabled` properties can be assigned from JavaScript. Test independent groups, configured names, form submission, required validity, reset and disabled fieldsets in target browsers.
 - The input wrapper does not proxy the complete native constraint-validation API.
 - Tabs implement keyboard navigation and roving focus, but do not create linked tabpanels or manage panel visibility.
 - Tooltip placement does not collision-check viewport edges and the trigger is not connected to the tooltip with `aria-describedby`.
