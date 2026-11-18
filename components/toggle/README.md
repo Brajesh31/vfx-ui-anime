@@ -2,7 +2,7 @@
 
 A switch whose flip is a drawn animation, not a simulation. Turn it on and the knob smears across the track with a torn tail, slams into the end and throws up a splash crown, and the track floods, sloshes and settles with a glint. Turn it off and the dash plays back.
 
-The 43 frames were painted with GPT Image (through Higgsfield) from a sheet of twelve keyframes, in three parts of 16 frames, aligned on the housing and played at 30 a second. They are inside `toggle.js` as one sprite sheet, so there is still only one file.
+The 43 frames were painted with GPT Image (through Higgsfield) from a sheet of twelve keyframes, in three parts of 16 frames, aligned on the housing and played at 30 a second. They are inside `index.js` as one sprite sheet, so there is still only one file.
 
 ## Run it
 
@@ -38,10 +38,10 @@ el.flip();            // from code, with the animation
 
 ## The frames
 
-`toggle/frames.webp` is the sheet (8 across, 300 by 325 pixels each, 346 KB). `node tools/build.mjs` writes it into `toggle.js`. The originals were 480 by 520; they were halved here, which is still twice the size they are shown at.
+`toggle/frames.webp` is the sheet (8 across, 300 by 325 pixels each, 346 KB). `node tools/build.mjs` writes it into `index.js`. The originals were 480 by 520; they were halved here, which is still twice the size they are shown at.
 
 ## Limits
 
 - **It is about 500 KB,** most of it the frames. The other components are about 45 KB.
-- **The art is painted,** so the `--sk-*` colours do not reach it.
+- **The art is painted,** so the `--vfx-*` colours do not reach it.
 - **Reduced motion** skips to the last frame.
