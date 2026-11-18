@@ -5,7 +5,7 @@
 Run `npm test` or `npm run check`. The current validation script performs static checks:
 - Required repository paths and all eleven custom-element registrations.
 - Gallery script registration and the shared reduced-motion hook.
-- Required implementation hooks for tab keyboard navigation and radio group state/form integration.
+- Required implementation hooks for tab keyboard navigation, radio group state/form integration, and tooltip accessible description/viewport behavior.
 
 The script also asks Node to syntax-parse the runtime JavaScript files. The feature assertions inspect source text. These checks do not instantiate the components, simulate keyboard input, submit forms, run a browser, or validate accessibility-tree output. A passing static check is not a browser interaction test.
 
@@ -21,9 +21,13 @@ The script also asks Node to syntax-parse the runtime JavaScript files. The feat
 8. For vertical tabs, use Up/Down Arrow keys, Home and End.
 9. For radio groups, test Tab entry, arrow-key selection, Space activation, independent groups and the configured `name`.
 10. Test radio `required` and `disabled` attributes and properties, reset, restored state and disabled-fieldset behavior inside a form.
-11. Enable the operating system's reduced-motion setting and confirm particle effects are suppressed.
-12. Test at 320px, 768px and desktop widths.
-13. Check the browser console for errors.
+11. Focus a tooltip trigger and confirm its `aria-describedby` ID resolves to the tooltip element in the same shadow root.
+12. Press Escape to dismiss a focused/hovered tooltip, then move the pointer away and refocus to confirm it can appear again.
+13. Test automatic top/bottom placement near viewport edges and horizontal clamping near both screen edges; resize and scroll while it is visible.
+14. Change the tooltip `text` attribute after connection and verify the description updates.
+15. Enable the operating system's reduced-motion setting and confirm particle effects are suppressed.
+16. Test at 320px, 768px and desktop widths.
+17. Check the browser console for errors.
 
 ## Browser matrix
 
