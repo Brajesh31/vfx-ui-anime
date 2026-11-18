@@ -255,6 +255,63 @@
     assert(tooltip.getAttribute("data-placement") === "bottom", "Explicit bottom placement was not applied.");
   });
 
+
+  test("Sakuga Like toggles semantic pressed state and emits change", async () => {
+    const el = document.createElement("sakuga-like");
+    document.body.append(el);
+    if (document.readyState === "loading") await new Promise(resolve => document.addEventListener("DOMContentLoaded", resolve, { once: true }));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    let detail;
+    el.addEventListener("change", event => { detail = event.detail; });
+    el.shadowRoot.querySelector("button").click();
+    assert(el.shadowRoot.querySelector("button").getAttribute("aria-pressed") === "true", "Like button did not set aria-pressed.");
+    assert(detail?.pressed === true, "Like change event did not report pressed state.");
+  });
+
+  test("Sakuga Accordion exposes and changes its disclosure state", async () => {
+    const el = document.createElement("sakuga-accordion");
+    el.setAttribute("label", "Test disclosure");
+    el.textContent = "Panel content";
+    document.body.append(el);
+    if (document.readyState === "loading") await new Promise(resolve => document.addEventListener("DOMContentLoaded", resolve, { once: true }));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    let detail;
+    el.addEventListener("change", event => { detail = event.detail; });
+    el.shadowRoot.querySelector("button").click();
+    assert(el.open === true, "Accordion did not open.");
+    assert(el.shadowRoot.querySelector("button").getAttribute("aria-expanded") === "true", "Accordion aria-expanded did not update.");
+    assert(el.shadowRoot.querySelector(".panel").hidden === false, "Accordion panel remained hidden.");
+    assert(detail?.open === true, "Accordion change event did not report open state.");
+  });
+
+  test("Sakuga Segmented selects supplied options and emits value details", async () => {
+    const el = document.createElement("sakuga-segmented");
+    el.setAttribute("label", "Test period");
+    el.innerHTML = '<option value="day" selected>Day</option><option value="week">Week</option>';
+    document.body.append(el);
+    if (document.readyState === "loading") await new Promise(resolve => document.addEventListener("DOMContentLoaded", resolve, { once: true }));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    let detail;
+    el.addEventListener("change", event => { detail = event.detail; });
+    el.shadowRoot.querySelectorAll("button")[1].click();
+    assert(el.value === "week", "Segmented control did not select the clicked option.");
+    assert(detail?.value === "week" && detail?.label === "Week", "Segmented change event did not expose selection details.");
+  });
+
+  test("Sakuga Notification clears unread count and reports the new count", async () => {
+    const el = document.createElement("sakuga-notification");
+    el.setAttribute("count", "4");
+    document.body.append(el);
+    if (document.readyState === "loading") await new Promise(resolve => document.addEventListener("DOMContentLoaded", resolve, { once: true }));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    let detail;
+    el.addEventListener("change", event => { detail = event.detail; });
+    el.shadowRoot.querySelector("button").click();
+    assert(el.count === 0, "Notification count did not clear.");
+    assert(el.shadowRoot.querySelector(".count").hidden, "Zero unread count badge remained visible.");
+    assert(detail?.count === 0, "Notification change event did not report zero unread items.");
+  });
+
   const finish = () => {
     const passed = results.filter((result) => result.status === "passed").length;
     const failed = results.filter((result) => result.status === "failed").length;
