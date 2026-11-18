@@ -1,92 +1,63 @@
-<p align="center"><img src="assets/brand-mark.svg" width="88" alt="VFX UI Anime brand mark"></p>
-
 # ✨ VFX UI Anime
 
-**Anime-impact motion for everyday interface controls.** Fifteen native Web Components, including eleven fully animated, source-backed controls with spring motion, impact bursts, drawn smoke, splashes, slashes, and embedded frame artwork.
+**Expressive anime-impact motion for everyday interface controls.**
 
-<p align="center"><img src="assets/hero-illustration.svg" alt="Abstract impact artwork" width="100%"></p>
+VFX UI Anime is a rebranded, carefully adapted distribution of the original animated control library. It keeps the original component behavior, spring motion, painted toggle animation, particle effects, sound-effect lettering, interaction timing, and standalone demos. The public identity uses VFX UI Anime branding.
 
-## 🌸 The component library
+The gallery contains **12 live demonstrations**: primary and secondary Button examples, plus Toggle, Slider, Checkbox, Radio, Input, Tabs, Progress, Rating, Toast, and Tooltip. These are **11 reusable component types**.
 
-Every component has its own folder with `index.js`, `demo.html`, and `README.md`.
+## 🎮 Live gallery
 
-| Component | Element | Component folder |
-|---|---|---|
-| Button | `<vfx-button>` | [components/button/](components/button/) |
-| Toggle | `<vfx-toggle>` | [components/toggle/](components/toggle/) |
-| Slider | `<vfx-slider>` | [components/slider/](components/slider/) |
-| Checkbox | `<vfx-checkbox>` | [components/checkbox/](components/checkbox/) |
-| Radio | `<vfx-radio>` | [components/radio/](components/radio/) |
-| Input | `<vfx-input>` | [components/input/](components/input/) |
-| Tabs | `<vfx-tabs>` | [components/tabs/](components/tabs/) |
-| Progress | `<vfx-progress>` | [components/progress/](components/progress/) |
-| Rating | `<vfx-rating>` | [components/rating/](components/rating/) |
-| Toast | `<vfx-toast>` | [components/toast/](components/toast/) |
-| Tooltip | `<vfx-tooltip>` | [components/tooltip/](components/tooltip/) |
-| Like | `<vfx-like>` | [components/like/](components/like/) |
-| Accordion | `<vfx-accordion>` | [components/accordion/](components/accordion/) |
-| Segmented | `<vfx-segmented>` | [components/segmented/](components/segmented/) |
-| Notification | `<vfx-notification>` | [components/notification/](components/notification/) |
+Run the site locally:
 
-The first eleven controls are self-contained scripts. Each carries the motion engine it needs, so they can run independently without loading the separate `core.js` file. The Like, Accordion, Segmented, and Notification controls use the additional VFX UI Anime engine in `core.js`.
-
-## 🚀 Explore
-
-Open the [interactive component gallery](index.html), browse the [artwork gallery](art-gallery/), or try a [standalone button demo](components/button/demo.html).
-
-## 📦 Use a source-backed component
-
-The original animated controls are standalone scripts. Load the component directly:
-
-```html
-<script defer src="/components/button/index.js"></script>
-<vfx-button>Confirm</vfx-button>
-```
-
-The other eleven original controls follow the same pattern. See the component's local README for attributes, properties, events, behaviour, and limits.
-
-## 📦 Use one of the additional VFX controls
-
-These four controls use the additional shared VFX UI Anime engine:
-
-```html
-<script defer src="/core.js"></script>
-<script defer src="/components/like/index.js"></script>
-<vfx-like label="Like" liked-label="Liked"></vfx-like>
-```
-
-## 🎨 Design language
-
-White paper surfaces, deep violet ink, lavender impact fills, pink accents, bold outlines, spring overshoot, and hand-drawn motion artwork. Component tokens use the `--vfx-*` prefix.
-
-## ♿ Accessibility and motion
-
-- Controls use native browser inputs or buttons inside their custom elements where appropriate.
-- Keyboard behaviour, form participation, and accessible names are documented per component.
-- The source-backed effect engine respects `prefers-reduced-motion`.
-- Test each control in the browsers and assistive technologies used by your application.
-
-## 🧰 Development
-
-No package install is required to run the static gallery:
-
-```bash
+```sh
 python3 -m http.server 8000
 ```
 
-Run `npm run check` for static validation and `npm run test:browser` for the browser interaction suite.
+Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to the interactive gallery.
 
-## 📚 Documentation
+## 🧩 Components
 
-- [Component overview](docs/COMPONENTS.md)
-- [Component API reference](docs/COMPONENT_API_REFERENCE.md)
-- [Installation](docs/INSTALLATION.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Accessibility](docs/ACCESSIBILITY.md)
-- [Testing](docs/TESTING.md)
-- [Design system](docs/DESIGN_SYSTEM.md)
-- [Changelog](CHANGELOG.md)
+| Component | Custom element | Source |
+|---|---|---|
+| Button | `<vfx-button>` | [components/button](components/button/) |
+| Toggle | `<vfx-toggle>` | [components/toggle](components/toggle/) |
+| Slider | `<vfx-slider>` | [components/slider](components/slider/) |
+| Checkbox | `<vfx-checkbox>` | [components/checkbox](components/checkbox/) |
+| Radio | `<vfx-radio>` | [components/radio](components/radio/) |
+| Input | `<vfx-input>` | [components/input](components/input/) |
+| Tabs | `<vfx-tabs>` | [components/tabs](components/tabs/) |
+| Progress | `<vfx-progress>` | [components/progress](components/progress/) |
+| Rating | `<vfx-rating>` | [components/rating](components/rating/) |
+| Toast | `<vfx-toast>` | [components/toast](components/toast/) |
+| Tooltip | `<vfx-tooltip>` | [components/tooltip](components/tooltip/) |
 
-## License
+Each component folder contains its standalone JavaScript file, demo page, and API notes. Every original control includes the shared motion/effects runtime inside its own JavaScript file, so it can be loaded independently. The root `core.js` is the source of truth used by the build tool.
 
-See the root [MIT license](LICENSE) for this repository's own files. Adapted third-party components and their required license terms are disclosed in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md).
+## 🛠️ Development and validation
+
+```sh
+node tools/build.mjs          # regenerate embedded runtime and toggle frames
+node tools/build.mjs --check  # verify generated files are current
+npm test                      # validate repository structure and registry
+```
+
+For interaction tests, start the local server in one terminal and run:
+
+```sh
+node tools/test.mjs http://localhost:8000/gallery/
+```
+
+The browser test uses real touch and keyboard events in Chromium. Set `CHROME` to the browser executable if it is not on your PATH.
+
+## 📦 Package status
+
+This repository is being prepared for review. **No npm package has been published.** Package naming, registry installation, versioning, and release automation will be finalized only after the website and component behavior are approved.
+
+## 🎨 Branding
+
+The public project name is **VFX UI Anime**. Component tags use the `vfx-*` prefix, the shared runtime uses `window.VFXAnimeFX`, and theme tokens use the `--vfx-*` prefix.
+
+## ⚖️ Licensing and attribution
+
+The animated component implementations and associated artwork are adapted from an MIT-licensed third-party project. The original copyright and complete permission terms are preserved in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md). The root [LICENSE](LICENSE) applies to the repository's own original VFX UI Anime contributions and does not replace third-party terms.

@@ -1,4 +1,5 @@
 name: Validate
+
 on:
   push:
     branches: [main]
@@ -10,31 +11,22 @@ permissions:
   contents: read
 
 jobs:
-  static-validation:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v7
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           package-manager-cache: false
-
-      - name: Validate repository and components
+      - name: Validate original component set and generated files
         run: |
           npm test
           npm run check
-
-      - name: Run headless Chromium interaction tests
-        run: npm run test:browser
-
-      - name: Install temporary Playwright browser tooling
+      - name: Start local gallery server
         run: |
-          npm install --no-save --no-package-lock playwright
-          npx playwright install --with-deps firefox webkit
-
-      - name: Run Firefox and WebKit interaction tests
-        run: npm run test:cross-browser
+          python3 -m http.server 8000 >/tmp/vfx-ui-anime-http.log 2>&1 &
+          sleep 2
+      - name: Run touch, keyboard, and form interaction tests
+        run: npm run test:browser

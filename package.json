@@ -1,14 +1,14 @@
 {
   "name": "vfx-ui-anime",
-  "version": "1.0.0",
-  "private": false,
-  "description": "Dependency-free anime-inspired Web Components.",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VFX UI Anime, an adapted collection of animated UI controls",
   "type": "module",
   "scripts": {
-    "check": "node tools/validate.mjs",
+    "build": "node tools/build.mjs",
+    "check": "node tools/build.mjs --check && node tools/validate.mjs",
     "test": "node tools/validate.mjs",
-    "test:browser": "node tools/run-browser-tests.mjs",
-    "test:cross-browser": "node tools/run-cross-browser-tests.mjs"
+    "test:browser": "node tools/test.mjs http://localhost:8000/gallery/"
   },
   "engines": {
     "node": ">=20"

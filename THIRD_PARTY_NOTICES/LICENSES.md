@@ -1,6 +1,12 @@
-# Third-party software notice
+# Third-party software and artwork notices
 
-Eleven standalone animated controls in VFX UI Anime contain adapted third-party implementation code and artwork distributed under the MIT License. Their public custom-element names, runtime namespace, and CSS token prefix have been adapted for this project. This notice preserves the original copyright and permission terms required for redistribution.
+VFX UI Anime includes adapted implementation code and artwork from the MIT-licensed project **Sakuga VFX**, originally published at https://github.com/finktheartist/sakuga-vfx.
+
+The adapted material includes the eleven custom-element implementations, their embedded shared animation runtime, the toggle animation frames, and the six sound-effect artwork files. The VFX UI Anime distribution changes branding identifiers, public custom-element names, the runtime namespace, CSS custom-property prefixes, documentation, and integration paths. The original animation logic and visual effects are retained.
+
+Original project author and copyright holder: **Justin Finkelman**, copyright 2026.
+
+The following MIT license notice is retained as required. This notice applies to the third-party material described above. It does not assert that VFX UI Anime created the original third-party implementation or artwork.
 
 MIT License
 
