@@ -61,6 +61,11 @@
 <script src="./components/rating/index.js"></script>
 <script src="./components/toast/index.js"></script>
 <script src="./components/tooltip/index.js"></script>
+<script src="./core.js"></script>
+<script src="./components/like/index.js"></script>
+<script src="./components/accordion/index.js"></script>
+<script src="./components/segmented/index.js"></script>
+<script src="./components/notification/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -77,6 +82,10 @@ const ITEMS = [
   { id: 'rating', name: 'Rating', tag: 'vfx-rating', how: 'Give it five.', html: '<vfx-rating label="Rating"></vfx-rating>' },
   { id: 'toast', name: 'Toast', tag: 'vfx-toast', how: 'Press Save.', html: '<div class="toastwrap"><vfx-button variant="secondary" data-demo="save">Save</vfx-button><vfx-toast></vfx-toast></div>' },
   { id: 'tooltip', name: 'Tooltip', tag: 'vfx-tooltip', how: 'Hover, focus or tap the button.', html: '<vfx-tooltip text="Helpful hint!"></vfx-tooltip>' },
+  { id: 'like', name: 'Like', tag: 'vfx-like', how: 'Tap the heart to toggle the favourite state.', html: '<vfx-like label="Like" liked-label="Liked"></vfx-like>' },
+  { id: 'accordion', name: 'Accordion', tag: 'vfx-accordion', how: 'Open and close the disclosure panel.', html: '<vfx-accordion label="What is included?">A lightweight animated disclosure panel.</vfx-accordion>' },
+  { id: 'segmented', name: 'Segmented', tag: 'vfx-segmented', how: 'Choose a time range.', html: '<vfx-segmented label="Time range" value="Week"><option value="Day">Day</option><option value="Week">Week</option><option value="Month">Month</option></vfx-segmented>' },
+  { id: 'notification', name: 'Notification', tag: 'vfx-notification', how: 'Click the bell to clear the unread count.', html: '<vfx-notification count="3"></vfx-notification>' },
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -109,6 +118,10 @@ const WIRE = {
     'The element keeps its place on the page while the toast is hidden. Position it yourself, for example position: fixed; left: 24px; bottom: 24px.'],
   tooltip: ['Use <vfx-tooltip text="..." label="..."></vfx-tooltip> next to the thing it explains. text is the hint; label is what a screen reader calls the button ("Help" by default).',
     'It opens on hover, focus and tap, and Escape closes it. Whatever is inside the element replaces the "?" on the button.'],
+  like: ['Use <vfx-like label="Like" liked-label="Liked"></vfx-like> for a favourite action.', 'Read el.pressed and listen for change to track the state.'],
+  accordion: ['Use <vfx-accordion label="Section title">Panel content</vfx-accordion> for a disclosure panel.', 'Read el.open and use the accessible trigger to expand or collapse content.'],
+  segmented: ['List the choices as <option> elements inside <vfx-segmented label="Time range">...</vfx-segmented>.', 'Read el.value and listen for change. Arrow keys move between options.'],
+  notification: ['Use <vfx-notification count="3"></vfx-notification> to show unread notifications.', 'Activate the bell to clear the unread count.'],
 };
 const fileUrl = (id) => new URL(`./components/${id}/index.js`, location.href).href;
 const prompt = (it) => [
