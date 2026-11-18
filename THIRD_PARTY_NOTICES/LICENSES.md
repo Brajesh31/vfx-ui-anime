@@ -1,3 +1,7 @@
+# Third-party software notice
+
+The repository's earlier Git history included a third-party component distribution under the MIT License. This notice is retained to preserve the required copyright and permission terms for that historical material. The current VFX UI Anime component implementations are independently written and are covered by the repository's root license.
+
 MIT License
 
 Copyright (c) 2026 Justin Finkelman
@@ -19,7 +23,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-This notice is retained because an earlier published Git revision of this
-repository contained this licensed source distribution. It does not license
-the independently implemented VFX UI Anime components in the current tree.
