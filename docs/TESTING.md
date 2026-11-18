@@ -45,14 +45,17 @@ These checks cover only the assertions listed above. They do not exercise every 
 14. Test at 320px, 768px, and desktop widths.
 15. Check the browser console for runtime errors.
 
-## Browser matrix
+## Cross-browser workflow and browser matrix
 
-| Browser | Current automated status | Manual / assistive-technology audit |
+The GitHub Actions validation workflow is configured to run the same interaction fixture in Chromium, Firefox, and WebKit. It installs Playwright and the Firefox/WebKit browser binaries temporarily in CI; these are test-only tools, not production dependencies. Check the latest workflow run before reporting a pass. WebKit is an engine-level signal, not proof of parity with Safari on macOS or iOS.
+
+| Browser | Automation configuration | Manual / assistive-technology audit |
 |---|---|---|
-| Chromium | A limited headless interaction suite is available | Must be run and recorded separately |
-| Firefox | Not currently verified by the current test suite | Not verified |
-| Safari / WebKit | Not currently verified by the current test suite | Not verified |
+| Chromium | Headless interaction suite via `npm run test:browser` | Must be run and recorded separately |
+| Firefox | Headless interaction suite via `npm run test:cross-browser` in CI | Not verified |
+| WebKit engine | Headless interaction suite via `npm run test:cross-browser` in CI | Not equivalent to Safari certification |
+| Safari macOS / iOS | Not included in the automated workflow | Not tested |
 | Chrome Android | Not tested | Not tested |
 | Screen readers | Not automated | Not audited |
 
-Do not claim full browser compatibility, screen-reader interoperability, or WCAG conformance based only on the current static and Chromium assertions. Record actual test runs and environments before making those claims.
+Do not claim full browser compatibility, screen-reader interoperability, or WCAG conformance based only on automated assertions. Record actual workflow results and manual test environments before making those claims.
