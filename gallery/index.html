@@ -82,6 +82,11 @@
 <script src="../components/chip/index.js"></script>
 <script src="../components/breadcrumb/index.js"></script>
 <script src="../components/stepper/index.js"></script>
+<script src="../components/calendar/index.js"></script>
+<script src="../components/date-picker/index.js"></script>
+<script src="../components/command-palette/index.js"></script>
+<script src="../components/context-menu/index.js"></script>
+<script src="../components/combobox/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -120,6 +125,11 @@ const ITEMS = [
   { id: 'chip', name: 'Chip', tag: 'vfx-chip', how: 'Select tokens or dismiss the removable one.', html: '<div style="display:flex;gap:9px;flex-wrap:wrap;justify-content:center"><vfx-chip selected>Anime</vfx-chip><vfx-chip>Motion</vfx-chip><vfx-chip removable label="Remove me"></vfx-chip></div>' },
   { id: 'breadcrumb', name: 'Breadcrumb', tag: 'vfx-breadcrumb', how: 'Activate an ancestor to see the directional trail.', html: '<vfx-breadcrumb><a href="#home">Home</a><a href="#library">Library</a><span>Effects</span></vfx-breadcrumb>' },
   { id: 'stepper', name: 'Stepper', tag: 'vfx-stepper', how: 'Use the buttons or arrow keys to change the bounded value.', html: '<vfx-stepper label="Quantity" value="3" min="0" max="12"></vfx-stepper>' }
+  { id: 'calendar', name: 'Calendar', tag: 'vfx-calendar', how: 'Turn months with the arrow controls and move dates with the keyboard.', html: '<vfx-calendar></vfx-calendar>' },
+  { id: 'date-picker', name: 'Date Picker', tag: 'vfx-date-picker', how: 'Open the calendar popover and choose a date.', html: '<vfx-date-picker label="Launch date"></vfx-date-picker>' },
+  { id: 'command-palette', name: 'Command Palette', tag: 'vfx-command-palette', how: 'Open the launcher or press Ctrl / ⌘ + K, then filter commands.', html: '<div style="display:grid;justify-items:center;gap:12px"><button class="pill" type="button" data-demo="palette-open">Open command palette</button><vfx-command-palette commands="Create project|Open recent file|Search components|Toggle appearance|View shortcuts"></vfx-command-palette></div>' },
+  { id: 'context-menu', name: 'Context Menu', tag: 'vfx-context-menu', how: 'Right-click the surface or use Shift+F10 to open actions.', html: '<vfx-context-menu items="Open|Copy link|Rename|Duplicate|Archive|Delete"><div tabindex="0" style="display:grid;place-items:center;min-height:125px;padding:18px;border:2px dashed #8580b0;border-radius:14px;background:#faf9ff;font-weight:800">Right-click this surface</div></vfx-context-menu>' },
+  { id: 'combobox', name: 'Combobox', tag: 'vfx-combobox', how: 'Type to filter options, then move and commit with the keyboard.', html: '<vfx-combobox label="Framework" placeholder="Search frameworks"><option value="react">React</option><option value="vue">Vue</option><option value="svelte">Svelte</option><option value="solid">Solid</option><option value="angular">Angular</option></vfx-combobox>' }
 ];
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
@@ -200,6 +210,11 @@ const WIRE = {
   chip: ['Use <vfx-chip selected>Anime</vfx-chip> for a selectable token, and add removable for a separate dismiss button.', 'Listen for change with detail.selected. Listen for remove with detail.label. The disabled attribute prevents both actions; selected reflects aria-pressed.'],
   breadcrumb: ['Use <vfx-breadcrumb> with ancestor anchors followed by a final non-link current page element.', 'Listen for navigate; its detail contains index, label, and href. The final crumb receives aria-current="page" and is not navigable.'],
   stepper: ['Use <vfx-stepper name="quantity" label="Quantity" value="2" min="0" max="10" step="1"></vfx-stepper>.', 'Read or set value. Listen for change with detail.value. Arrow keys adjust the value; Home and End jump to the bounds. The element participates in FormData when named.'],
+  calendar: ['Use <vfx-calendar name="event-date"></vfx-calendar> for an inline month grid. value, min, max, disabled, and locale configure the selection.', 'Listen for change with detail.value and detail.date. Arrow keys move by day/week, Home/End move within the week, and PageUp/PageDown change month.'],
+  'date-picker': ['Use <vfx-date-picker name="launch-date" label="Launch date"></vfx-date-picker> for a popover date field.', 'Read or set value in YYYY-MM-DD format. Listen for change with detail.value and detail.date. Methods show() and hide() control the popover.'],
+  'command-palette': ['Use <vfx-command-palette commands="New file|Open project|Search"></vfx-command-palette> and call show() from your own launcher button.', 'Ctrl+K or ⌘+K opens it. Typing filters commands; Arrow Up/Down moves, Enter selects, Escape closes. Listen for select with detail.index and detail.label.'],
+  'context-menu': ['Wrap the target surface in <vfx-context-menu items="Open|Rename|Delete">...</vfx-context-menu>.', 'Right-click or press Shift+F10 to open. Listen for select with detail.index, label, normalized value, and danger. Escape closes.'],
+  combobox: ['Provide child option elements inside <vfx-combobox label="Framework">...</vfx-combobox>. It supports editable filtering and a committed option value.', 'Read or set value. Listen for input while filtering and change after selection. Arrow Up/Down navigates, Enter commits, Escape closes; a name attribute enables form submission.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -242,6 +257,11 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-chip') card.querySelectorAll('vfx-chip').forEach(chip => { chip.addEventListener('change', e => say(chip.textContent.trim() + ': ' + (e.detail.selected ? 'selected' : 'cleared'))); chip.addEventListener('remove', e => say('Removed: ' + e.detail.label)); });
   else if (it.tag === 'vfx-breadcrumb') el.addEventListener('navigate', e => say('Navigation: ' + e.detail.label));
   else if (it.tag === 'vfx-stepper') el.addEventListener('change', e => say('Quantity: ' + e.detail.value));
+  else if (it.tag === 'vfx-calendar') el.addEventListener('change', e => say(e.detail.value || 'Selection cleared'));
+  else if (it.tag === 'vfx-date-picker') el.addEventListener('change', e => say('Date: ' + e.detail.value));
+  else if (it.tag === 'vfx-command-palette') { card.querySelector('[data-demo=palette-open]').addEventListener('click', () => el.show()); el.addEventListener('select', e => say('Command: ' + e.detail.label)); }
+  else if (it.tag === 'vfx-context-menu') el.addEventListener('select', e => say('Action: ' + e.detail.label));
+  else if (it.tag === 'vfx-combobox') { el.addEventListener('change', e => say('Selected: ' + e.detail.label)); el.addEventListener('input', e => say('Filtering: ' + e.detail.query)); }
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.

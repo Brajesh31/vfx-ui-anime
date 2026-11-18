@@ -4,7 +4,7 @@
 
 VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Sixteen additional controls extend the same design and interaction language.
 
-**Current library: 32 component types and 28 live gallery demos.** The 28 demos include primary and secondary Button examples.
+**Current library: 37 component types and 38 live gallery demos.** The 28 demos include primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -47,6 +47,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Alert | `<vfx-alert>` | [components/alert](components/alert/) |
 | Drawer | `<vfx-drawer>` | [components/drawer](components/drawer/) |
 | Skeleton Loader | `<vfx-skeleton>` | [components/skeleton](components/skeleton/) |
+| Calendar | `<vfx-calendar>` | [components/calendar](components/calendar/) |
+| Date Picker | `<vfx-date-picker>` | [components/date-picker](components/date-picker/) |
+| Command Palette | `<vfx-command-palette>` | [components/command-palette](components/command-palette/) |
+| Context Menu | `<vfx-context-menu>` | [components/context-menu](components/context-menu/) |
+| Combobox | `<vfx-combobox>` | [components/combobox](components/combobox/) |
 
 Each component folder contains:
 
@@ -104,3 +109,14 @@ The eleven adapted original component implementations and associated artwork ret
 - **Stepper**: bounded quantity input with keyboard and form support.
 
 Each component includes a standalone implementation, isolated demo, and API documentation under `components/<name>/`.
+
+
+## Advanced interaction components in this release
+
+- **Calendar**: inline month grid, constrained date selection, keyboard date navigation, and page-turn motion.
+- **Date Picker**: popover date field with month transitions and form support.
+- **Command Palette**: global Ctrl/⌘+K launcher with filtering and keyboard selection.
+- **Context Menu**: pointer-anchored action menu with keyboard activation.
+- **Combobox**: editable option filtering, keyboard navigation, and form association.
+
+Each ships with a standalone source file, isolated demo, and dedicated API/accessibility reference.

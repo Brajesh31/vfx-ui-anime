@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-export const NAMES = ['button', 'toggle', 'slider', 'checkbox', 'radio', 'input', 'tabs', 'progress', 'rating', 'toast', 'tooltip', 'select', 'textarea', 'number', 'search', 'menu', 'dialog', 'file-upload', 'color-picker', 'accordion', 'segmented', 'otp', 'tag-input', 'pagination', 'alert', 'drawer', 'skeleton', 'badge', 'avatar', 'chip', 'breadcrumb', 'stepper'];
+export const NAMES = ['button', 'toggle', 'slider', 'checkbox', 'radio', 'input', 'tabs', 'progress', 'rating', 'toast', 'tooltip', 'select', 'textarea', 'number', 'search', 'menu', 'dialog', 'file-upload', 'color-picker', 'accordion', 'segmented', 'otp', 'tag-input', 'pagination', 'alert', 'drawer', 'skeleton', 'badge', 'avatar', 'chip', 'breadcrumb', 'stepper', 'calendar', 'date-picker', 'command-palette', 'context-menu', 'combobox'];
 const check = process.argv.includes('--check');
 const core = readFileSync(join(root, 'core.js'), 'utf8').trim();
 const sheet = 'data:image/webp;base64,' + readFileSync(join(root, 'components/toggle/frames.webp')).toString('base64');

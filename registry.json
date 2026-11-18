@@ -652,6 +652,106 @@
         }
       ],
       "docs": "Load /components/stepper/index.js with a plain script tag. See components/stepper/README.md."
+    },
+    {
+      "name": "calendar",
+      "type": "registry:file",
+      "title": "VFX UI Anime Calendar",
+      "description": "Interactive month calendar with date constraints, keyboard navigation, and page-turn motion.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "calendar",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/calendar/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/calendar.js"
+        }
+      ],
+      "docs": "Load /components/calendar/index.js with a plain script tag. See components/calendar/README.md."
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:file",
+      "title": "VFX UI Anime Date Picker",
+      "description": "Popover date selection field with animated reveal, month transitions, and form support.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "date-picker",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/date-picker/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/date-picker.js"
+        }
+      ],
+      "docs": "Load /components/date-picker/index.js with a plain script tag. See components/date-picker/README.md."
+    },
+    {
+      "name": "command-palette",
+      "type": "registry:file",
+      "title": "VFX UI Anime Command Palette",
+      "description": "Keyboard-first command launcher with global shortcut, filtering, and modal interaction.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "command-palette",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/command-palette/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/command-palette.js"
+        }
+      ],
+      "docs": "Load /components/command-palette/index.js with a plain script tag. See components/command-palette/README.md."
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:file",
+      "title": "VFX UI Anime Context Menu",
+      "description": "Pointer-anchored action menu with right-click and keyboard activation.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "context-menu",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/context-menu/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/context-menu.js"
+        }
+      ],
+      "docs": "Load /components/context-menu/index.js with a plain script tag. See components/context-menu/README.md."
+    },
+    {
+      "name": "combobox",
+      "type": "registry:file",
+      "title": "VFX UI Anime Combobox",
+      "description": "Editable and filterable option picker with keyboard navigation and form association.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "combobox",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/combobox/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/combobox.js"
+        }
+      ],
+      "docs": "Load /components/combobox/index.js with a plain script tag. See components/combobox/README.md."
     }
   ]
 }

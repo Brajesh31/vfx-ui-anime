@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Thirty-two dependency-free Web Component types with thirty-three live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Thirty-seven dependency-free Web Component types with thirty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -70,3 +70,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Chip: `components/chip/` `<vfx-chip>`, selectable and removable tokens.
 - Breadcrumb: `components/breadcrumb/` `<vfx-breadcrumb>`, semantic navigation trails.
 - Stepper: `components/stepper/` `<vfx-stepper>`, bounded quantity control with keyboard and form support.
+
+
+## Advanced interaction components
+- Calendar: `components/calendar/` `<vfx-calendar>`, inline month grid and keyboard date navigation.
+- Date Picker: `components/date-picker/` `<vfx-date-picker>`, date selection popover.
+- Command Palette: `components/command-palette/` `<vfx-command-palette>`, Ctrl/⌘+K command launcher.
+- Context Menu: `components/context-menu/` `<vfx-context-menu>`, pointer-anchored and keyboard-triggered action menu.
+- Combobox: `components/combobox/` `<vfx-combobox>`, editable filterable option selection.
