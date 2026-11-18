@@ -1,24 +1,36 @@
-# Tooltip component
+# Tooltip
 
-A contextual hint with focus, Escape, and placement support.
+A help button whose hint springs out of it like a speech bubble, with puffs either side, a ring off the top of the button, wedges at the corner and a hollow カチッ.
 
-## Live demo
-Open [demo.html](demo.html) to test the component in the library's design system.
+## Run it
 
-## Installation
-```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
-<script defer src="/components/tooltip/index.js"></script>
-<vfx-tooltip text="Helpful context for this action." placement="auto">Hover or focus me</vfx-tooltip>
+```sh
+python3 -m http.server 8000     # from the repo folder
+# open http://localhost:8000/tooltip/
 ```
 
-## Component details
-- **Element:** `<vfx-tooltip>`
-- **Category:** Feedback
-- **Runtime dependencies:** None
+## Use it
 
-## Accessibility
-Keep labels descriptive, preserve keyboard access, and test focus, form behavior, and screen-reader output in the browsers you support. The shared motion engine respects `prefers-reduced-motion`.
+```html
+<script src="tooltip.js"></script>
+<vfx-tooltip text="We only use this to send your receipt." label="Why we ask"></vfx-tooltip>
+<vfx-tooltip text="Keyboard shortcuts">i</vfx-tooltip>
+```
 
-See the [component API overview](../../docs/COMPONENTS.md) for the public inventory and links to detailed guidance.
+```js
+el.show(); el.hide(); el.open;
+```
+
+| attribute | what it sets | default |
+|---|---|---|
+| `text` | the hint | Helpful hint! |
+| `label` | what a screen reader calls the button | Help |
+
+- **It opens on hover (with a mouse), on focus and on tap,** and Escape closes it. The hint is linked to the button with `aria-describedby`.
+- **Whatever is inside the element replaces the "?"** on the button.
+- **The hint is up to 220 pixels wide** and wraps. It opens above the button; the element keeps 60 pixels above it for that.
+
+## Limits
+
+- **Always above.** It does not flip when there is no room.
+- **It can't point at something else.** The button is the trigger.
