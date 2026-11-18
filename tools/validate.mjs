@@ -8,7 +8,7 @@ const execFileAsync = promisify(execFile);
 const root = process.cwd();
 const required = [
   "README.md", "LICENSE", "core.js", "styles.css", "index.html", "llms.txt", "registry.json",
-  "tests/browser.html", "tests/browser-interactions.js", "tools/run-browser-tests.mjs",
+  "tests/browser.html", "tests/browser-interactions.js", "tools/run-browser-tests.mjs", "tools/run-cross-browser-tests.mjs",
   "docs/COMPONENTS.md", "docs/COMPONENT_API_REFERENCE.md", "docs/ARCHITECTURE.md",
   "docs/ACCESSIBILITY.md", "docs/INSTALLATION.md", "docs/TESTING.md",
   "components/button.js", "components/toggle.js", "components/slider.js", "components/checkbox.js",
@@ -116,6 +116,12 @@ for (const hook of [
   if (!browserTests.includes(hook)) errors.push("Chromium interaction test missing: " + hook);
 }
 
+const crossBrowserRunner = await read("tools/run-cross-browser-tests.mjs");
+for (const hook of ["firefox", "webkit", "waitForFunction", "browser.newPage"]) {
+  if (!crossBrowserRunner.toLowerCase().includes(hook.toLowerCase())) {
+    errors.push("Cross-browser runner hook missing: " + hook);
+  }
+}
 const browserRunner = await read("tools/run-browser-tests.mjs");
 if (!browserRunner.includes("--headless=new") || !browserRunner.includes("--dump-dom")) {
   errors.push("Browser test runner must execute Chromium in headless mode and collect its test report.");
