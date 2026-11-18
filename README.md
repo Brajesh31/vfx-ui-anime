@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/brand-mark.svg" width="88" alt="VFX UI Anime brand mark"></p>
+ <p align="center"><img src="assets/brand-mark.svg" width="88" alt="VFX UI Anime brand mark"></p>
 
 # ✨ VFX UI Anime
 
@@ -39,7 +39,7 @@ The static website is published through GitHub Pages. The workflow validates the
 
 **Live website:** https://brajesh31.github.io/vfx-ui-anime/
 
-[View the latest successful deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44236461017) · [Open repository Pages settings](https://github.com/Brajesh31/vfx-ui-anime/settings/pages)
+[View the latest successful deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44239706083) · [Open repository Pages settings](https://github.com/Brajesh31/vfx-ui-anime/settings/pages)
 
 See [Deployment](docs/DEPLOYMENT.md) for hosting details and troubleshooting.
 
@@ -67,6 +67,10 @@ Load the shared engine before the component scripts:
 ```
 
 Each component is a JavaScript custom element that uses the shared core. The core creates one page-level canvas and exposes `window.VFXAnime` for effect helpers. See [Installation](docs/INSTALLATION.md), [Component API overview](docs/COMPONENTS.md), and the [detailed component API reference](docs/COMPONENT_API_REFERENCE.md).
+
+## 🧑‍🍳 Try the integration cookbook
+
+Open the [runnable integration cookbook](examples/integration-cookbook.html) to see all eleven components wired to host-page state and events. The accompanying [integration cookbook guide](docs/INTEGRATION_COOKBOOK.md) includes vanilla JavaScript, React, Vue and Angular patterns, plus form and accessibility cautions.
 
 ## 🎨 Theme tokens
 
@@ -96,6 +100,8 @@ The checks validate required files, component registrations and key accessibilit
 - [Installation](docs/INSTALLATION.md)
 - [Component API overview](docs/COMPONENTS.md)
 - [Detailed component API reference](docs/COMPONENT_API_REFERENCE.md)
+- [Integration cookbook](docs/INTEGRATION_COOKBOOK.md)
+- [Runnable cookbook example](examples/integration-cookbook.html)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Testing strategy](docs/TESTING.md)
