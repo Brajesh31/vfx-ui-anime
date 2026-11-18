@@ -1,291 +1,252 @@
 # 🧑‍🍳 Integration cookbook
 
-This guide turns the public component APIs into practical host-application patterns. The examples use the current source implementation and do not require a framework adapter or a runtime dependency.
+This guide uses the actual APIs implemented by the components. No framework adapter or runtime package is required.
 
-For exact attributes, properties, methods and emitted event payloads, use the [Detailed Component API Reference](COMPONENT_API_REFERENCE.md). For known keyboard, form and screen-reader gaps, use [Accessibility](ACCESSIBILITY.md).
+For complete attributes, methods, events, and known limits, use the [Component API Reference](COMPONENT_API_REFERENCE.md) and each component's README.
 
-## 1. Choose how to load the library
+## 1. Choose the correct script loading pattern
 
-The repository currently distributes source files, not a published npm package. Do not use an npm install command for this project.
+### Eleven standalone animated controls
 
-### Use local files
-
-Copy the shared engine and the component scripts you need into your application's static assets. Load the engine before the component scripts:
+Button, Toggle, Slider, Checkbox, Radio, Input, Tabs, Progress, Rating, Toast, and Tooltip each include their own animation runtime and artwork. Load each control directly:
 
 ```html
-<link rel="stylesheet" href="/assets/vfx/styles.css">
-<script defer src="/assets/vfx/core.js"></script>
-<script defer src="/assets/vfx/components/button/index.js"></script>
-<script defer src="/assets/vfx/components/toggle/index.js"></script>
+<script defer src="/components/button/index.js"></script>
+<script defer src="/components/toggle/index.js"></script>
+<vfx-button>Save</vfx-button>
+<vfx-toggle label="Notifications"></vfx-toggle>
 ```
 
-The stylesheet is the project's visual theme and gallery-level styles. Components render their controls in Shadow DOM and use CSS custom properties with some internal fallback styles. You may omit the stylesheet if you do not want the gallery theme, but verify the resulting appearance in your application.
+Do not load the separate `core.js` just for these eleven controls. Their standalone runtime is initialised once on the page and reused by any other standalone controls.
 
-### Use the repository directly during development
+### Four additional VFX UI Anime controls
 
-Serve the repository root with a static HTTP server:
+Like, Accordion, Segmented, and Notification use this repository's separate `core.js` engine. Load it first:
+
+```html
+<script defer src="/core.js"></script>
+<script defer src="/components/like/index.js"></script>
+<script defer src="/components/accordion/index.js"></script>
+<vfx-like label="Like" liked-label="Liked"></vfx-like>
+<vfx-accordion label="Details">Panel content</vfx-accordion>
+```
+
+### Run the repository locally
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open:
-- Gallery: `http://localhost:8000/`
-- Basic integration: `http://localhost:8000/examples/basic.html`
-- Full cookbook: `http://localhost:8000/examples/integration-cookbook.html`
+Open `http://localhost:8000/` for the full interactive gallery, or open any individual `components/<name>/demo.html` page.
 
-Do not use `file://` as the primary test path. A local HTTP server provides more representative browser loading behavior.
+## 2. Button success state
 
-## 2. Start with a minimal custom element
+The Button emits an ordinary click event. The impact animation happens on click. Call `.done()` only after the operation has actually succeeded:
 
 ```html
-<link rel="stylesheet" href="/assets/vfx/styles.css">
-<script defer src="/assets/vfx/core.js"></script>
-<script defer src="/assets/vfx/components/button/index.js"></script>
-
+<script defer src="/components/button/index.js"></script>
 <vfx-button id="save">Save changes</vfx-button>
 <p id="status" aria-live="polite"></p>
-
 <script>
-  document.addEventListener("vfx-activate", (event) => {
-    if (event.target.matches("#save")) {
-      document.querySelector("#status").textContent = "Save action received.";
+  const button = document.querySelector("#save");
+  const status = document.querySelector("#status");
+
+  button.addEventListener("click", async () => {
+    try {
+      await saveChanges();
+      button.done();
+      status.textContent = "Saved successfully.";
+    } catch {
+      status.textContent = "Save failed. Try again.";
     }
   });
 </script>
 ```
 
-The button emits `vfx-activate` when its internal native button is clicked. The host application owns the actual save operation.
+Use `variant="secondary"` for the quieter button. Use `type="submit"` when the button should submit its containing form.
 
-## 3. Listen for custom element events
+## 3. Form controls
 
-All custom-element events documented by this project bubble and are composed. A listener on an ancestor can observe them outside Shadow DOM.
-
-```js
-document.addEventListener("vfx-activate", (event) => {
-  console.log("Activated element:", event.target);
-});
-
-document.addEventListener("change", (event) => {
-  const element = event.target;
-
-  if (element.matches("vfx-toggle")) {
-    console.log("Toggle state:", element.checked);
-  }
-
-  if (element.matches("vfx-radio")) {
-    console.log("Selected option:", element.value);
-  }
-
-  if (element.matches("vfx-rating")) {
-    console.log("Rating:", event.detail.value);
-  }
-});
-```
-
-**Do not assume every event includes `detail`.** The API reference explicitly identifies which event payloads exist. For example, toggle and checkbox `change` events have no custom detail payload, while tabs and rating events do.
-
-## 4. Keep application state in the host
-
-Custom elements provide interaction primitives, but they do not replace your application state model. Tabs manage their own linked panel visibility; the host application remains responsible for supplying the panel content and managing broader application state.
-
-### Slider to progress
+### Toggle
 
 ```html
-<vfx-slider id="volume" min="0" max="100" value="40"></vfx-slider>
-<vfx-progress id="volume-preview" value="40" label="Volume preview"></vfx-progress>
+<vfx-toggle label="Email notifications" name="email_notifications"></vfx-toggle>
 <script>
-  const slider = document.querySelector("#volume");
-  const progress = document.querySelector("#volume-preview");
-
-  slider.addEventListener("input", (event) => {
-    progress.value = event.detail.value;
+  const toggle = document.querySelector("vfx-toggle");
+  toggle.addEventListener("change", () => {
+    console.log("Notifications enabled:", toggle.checked);
   });
 </script>
 ```
 
-### Tabs with named panel slots
+Read or set `checked`. Calling `flip()` programmatically plays the animated transition; assigning `checked` from code sets the state directly.
 
-The component owns tab and tabpanel semantics. Keep the content in ordinary HTML and give each child panel a `slot` name that exactly matches one item label:
+### Slider driving Progress
 
 ```html
-<vfx-tabs id="sections" label="Content sections" items="Overview,Features,Details">
-  <section slot="Overview">
-    <h2>Overview</h2>
-    <p>Introductory content.</p>
-  </section>
-  <section slot="Features">
-    <h2>Features</h2>
-    <p>Feature content.</p>
-  </section>
-  <section slot="Details">
-    <h2>Details</h2>
-    <p>Additional details.</p>
-  </section>
+<vfx-slider id="upload-speed" min="0" max="100" value="40" label="Upload progress"></vfx-slider>
+<vfx-progress id="upload-progress" label="Uploading"></vfx-progress>
+<script>
+  const slider = document.querySelector("#upload-speed");
+  const progress = document.querySelector("#upload-progress");
+
+  slider.addEventListener("input", () => {
+    progress.set(Number(slider.value) / 100);
+  });
+</script>
+```
+
+The Slider fires `input` while moving and `change` when released. Progress accepts values from 0 to 1, supports `.set(value, immediate)` and `.reset()`, and emits `vfx:done` when its animated bar reaches the end.
+
+### Checkbox
+
+```html
+<vfx-checkbox name="remember">Remember this device</vfx-checkbox>
+<script>
+  const checkbox = document.querySelector("vfx-checkbox");
+  checkbox.addEventListener("change", () => {
+    console.log(checkbox.checked);
+  });
+</script>
+```
+
+### Radio
+
+Supply the choices as child `option` elements:
+
+```html
+<vfx-radio label="Plan" name="plan">
+  <option value="free" selected>Free</option>
+  <option value="pro">Pro</option>
+</vfx-radio>
+<script>
+  const radio = document.querySelector("vfx-radio");
+  radio.addEventListener("change", () => console.log(radio.value));
+</script>
+```
+
+Radio reads its options when it first connects. Replace the element to change the option list after connection.
+
+### Input
+
+```html
+<vfx-input label="Email" type="email" placeholder="you@example.com" name="email"></vfx-input>
+<script>
+  const input = document.querySelector("vfx-input");
+  input.addEventListener("input", () => console.log(input.value));
+</script>
+```
+
+Supported input types are `text`, `email`, `search`, `url`, `tel`, and `password`.
+
+### Rating
+
+```html
+<vfx-rating label="Rate this recipe" name="rating"></vfx-rating>
+<script>
+  const rating = document.querySelector("vfx-rating");
+  rating.addEventListener("change", () => console.log(rating.value));
+</script>
+```
+
+Rating ranges from 0 to 5. Clicking the currently selected star again clears the value.
+
+## 4. Navigation and feedback
+
+### Tabs with host-managed panels
+
+Tabs renders the tab list only. It does not create, hide, or manage associated panel content. Listen for its change event and update your own panel:
+
+```html
+<vfx-tabs id="sections" label="Sections">
+  <option value="overview">Overview</option>
+  <option value="features">Features</option>
+  <option value="details">Details</option>
 </vfx-tabs>
+<section id="overview-panel">Overview content</section>
+<section id="features-panel" hidden>Features content</section>
+<section id="details-panel" hidden>Details content</section>
 <script>
-  document.querySelector("#sections").addEventListener("change", (event) => {
-    console.log("Selected tab:", event.detail.value);
+  const tabs = document.querySelector("#sections");
+  const panels = [...document.querySelectorAll("[id$='-panel']")];
+
+  tabs.addEventListener("change", (event) => {
+    panels.forEach((panel) => {
+      panel.hidden = panel.id !== event.detail.value + "-panel";
+    });
   });
 </script>
 ```
 
-The component generates each tab and panel ID, sets reciprocal `aria-controls` and `aria-labelledby` references, and hides inactive panels. The selected panel is focusable so keyboard users can move from the tablist into panel content. Use exact slot-label matches, and provide a panel for every item. Horizontal tabs use Left/Right Arrow keys; vertical tabs use Up/Down Arrow keys. Both use Home/End and automatic activation.
+The event detail contains `index`, `value`, and `label`. Arrow keys move between tabs, and Home/End move to the first/last tab.
 
-### Toast from application code
+### Toast
 
 ```html
-<vfx-toast id="notice" message="Saved">Show notice</vfx-toast>
+<vfx-toast id="notice" message="Saved successfully!"></vfx-toast>
 <script>
-  const notice = document.querySelector("#notice");
-  notice.show("Your changes were saved.");
-  notice.addEventListener("vfx-toast", (event) => {
-    console.log("Displayed:", event.detail.message);
-  });
+  const toast = document.querySelector("#notice");
+  toast.show("Your changes were saved.");
+  // Call toast.hide() when it should disappear early.
 </script>
 ```
 
-Call `show()` in response to a real application action. The component hides its notice after 2.6 seconds; there is no public hide method or shared queue.
+Position the Toast element where it should appear, for example with `position: fixed` in a page stylesheet.
 
-## 5. Framework integration patterns
-
-The elements remain browser custom elements inside framework applications. Load `core.js` and the component files once at application bootstrap or through the framework's static asset configuration. Use DOM listeners for custom events when framework template event handling does not expose the event payload reliably.
-
-### React
-
-Use a ref and attach a DOM listener in an effect:
-
-```jsx
-import { useEffect, useRef, useState } from "react";
-
-export function SaveControl() {
-  const controlRef = useRef(null);
-  const [message, setMessage] = useState("Ready");
-
-  useEffect(() => {
-    const element = controlRef.current;
-    if (!element) return;
-
-    const handleActivate = () => setMessage("Save action received.");
-    element.addEventListener("vfx-activate", handleActivate);
-
-    return () => element.removeEventListener("vfx-activate", handleActivate);
-  }, []);
-
-  return (
-    <>
-      <vfx-button ref={controlRef}>Save</vfx-button>
-      <p aria-live="polite">{message}</p>
-    </>
-  );
-}
-```
-
-Load the custom-element scripts before this component is used. In TypeScript projects, add the appropriate JSX intrinsic-element typing for the custom tag if the compiler requires it. Assign non-string properties such as numeric `value` through a ref, rather than relying on string attributes when the API requires a JavaScript property.
-
-### Vue
-
-Register the prefix as a custom element in the Vue compiler configuration where required, then use a ref to attach custom event listeners:
-
-```vue
-<script setup>
-import { onBeforeUnmount, onMounted, ref } from "vue";
-
-const control = ref(null);
-const message = ref("Ready");
-
-function handleActivate() {
-  message.value = "Save action received.";
-}
-
-onMounted(() => {
-  control.value?.addEventListener("vfx-activate", handleActivate);
-});
-
-onBeforeUnmount(() => {
-  control.value?.removeEventListener("vfx-activate", handleActivate);
-});
-</script>
-
-<template>
-  <vfx-button ref="control">Save</vfx-button>
-  <p aria-live="polite">{{ message }}</p>
-</template>
-```
-
-Use element properties through the component ref for values that should remain JavaScript numbers or booleans. Keep application state and associated content in Vue.
-
-### Angular
-
-Configure Angular to accept custom elements in the relevant compilation context when required, include the component scripts through the application's static asset/script configuration, then listen for the DOM custom event:
+### Tooltip
 
 ```html
-<vfx-button (vfx-activate)="onActivate()">Save</vfx-button>
-<p aria-live="polite">{{ status }}</p>
+<vfx-tooltip text="We use this to send your receipt." label="Why we ask"></vfx-tooltip>
 ```
 
-```ts
-status = "Ready";
+It opens on hover, focus, or tap, and Escape closes it. The element also exposes `.show()` and `.hide()`.
 
-onActivate(): void {
-  this.status = "Save action received.";
-}
+## 5. Additional VFX UI Anime controls
+
+Load `core.js` before these four components.
+
+### Like
+
+```html
+<vfx-like label="Like" liked-label="Liked"></vfx-like>
+<script>
+  const like = document.querySelector("vfx-like");
+  like.addEventListener("change", () => console.log(like.pressed));
+</script>
 ```
 
-The exact schema configuration depends on whether the application uses NgModules or standalone components. Verify event typing, change detection, property assignment and custom-element loading in the Angular version used by the host project. This repository does not ship Angular wrappers or value accessors.
+### Accordion
 
-## 6. Use the shared motion engine deliberately
-
-The engine is global and initialized by `core.js`. Use optional chaining if a page can load a component without loading the engine:
-
-```js
-const target = document.querySelector("#save");
-window.VFXAnime?.impact(target, "spark", 0.8);
-window.VFXAnime?.emit("burst", 120, 90, { count: 16, power: 1.1 });
+```html
+<vfx-accordion label="What is included?">The panel content goes here.</vfx-accordion>
 ```
 
-The engine's `spring(from, to, elapsedSeconds)` helper returns a scalar easing value. It does not animate a DOM element by itself.
+Use the `open` property or attribute to read or set the disclosure state. Its trigger and region are linked with accessible IDs.
 
-Respect reduced motion in host-authored animations too. The core suppresses canvas particles when `prefers-reduced-motion: reduce` is active, but it does not remove every transition authored inside component styles or host application CSS.
+### Segmented
 
-## 7. Form and accessibility cautions
-
-The current source is not a drop-in replacement for every native form control:
-- Form-associated elements use `ElementInternals` opportunistically. Browser behavior must be tested, including submit, reset, disabled fieldsets and validity.
-- The checkbox wrapper does not expose a `name` API in the current implementation.
-- The radio wrapper uses native radio inputs and the browser's radio keyboard behavior. Its `value`, `required` and `disabled` properties can be assigned from JavaScript. Test independent groups, configured names, form submission, required validity, reset and disabled fieldsets in target browsers.
-- The input wrapper does not proxy the complete native constraint-validation API.
-- Tabs implement keyboard navigation and roving focus, but do not create linked tabpanels or manage panel visibility.
-- Tooltip placement does not collision-check viewport edges and the trigger is not connected to the tooltip with `aria-describedby`.
-- Rating uses separate native buttons and does not implement arrow-key rating navigation.
-
-Use native controls or another fully tested component when those gaps conflict with a production requirement. Do not assume that a form-associated declaration guarantees identical behavior across browsers.
-
-## 8. Run and test the examples
-
-```bash
-npm test
-npm run check
-python3 -m http.server 8000
+```html
+<vfx-segmented label="Time range" value="Week">
+  <option value="Day">Day</option>
+  <option value="Week">Week</option>
+  <option value="Month">Month</option>
+</vfx-segmented>
 ```
 
-Then open the [integration cookbook example](../examples/integration-cookbook.html) and verify:
-1. Each control can be focused and operated using a keyboard where its underlying control supports it.
-2. The event log updates after interactions.
-3. Slider changes update the progress preview.
-4. Tabs update the host-owned content message.
-5. Button activation triggers the toast.
-6. The browser console contains no errors.
-7. At narrow and wide viewport widths, the example remains readable.
+Read `.value` and listen for `change`.
 
-These are manual test instructions. Static repository validation does not execute the example in a browser, and no browser automation result is implied.
+### Notification
 
-## Related references
+```html
+<vfx-notification count="3"></vfx-notification>
+```
 
-- [Detailed Component API Reference](COMPONENT_API_REFERENCE.md)
-- [Component overview](COMPONENTS.md)
-- [Installation](INSTALLATION.md)
-- [Accessibility and compatibility](ACCESSIBILITY.md)
-- [Testing strategy](TESTING.md)
-- [Architecture](ARCHITECTURE.md)
-- [Runnable cookbook page](../examples/integration-cookbook.html)
+The button clears the unread count when activated.
+
+## 6. Integration cautions
+
+- Do not assume that every control uses the same event payload. Check the component README.
+- Tabs does not manage its panels. The host application owns the panel content.
+- Toggle and Checkbox expose `.checked`; Slider exposes `.value` and `.valueAsNumber`.
+- Keep form names and labels meaningful when using controls in forms.
+- Respect `prefers-reduced-motion` and test keyboard operation in the target browser.
