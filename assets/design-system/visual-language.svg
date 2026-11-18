@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<title id="title">VFX UI Anime visual language board</title>
+<desc id="desc">A design system overview showing the existing ink, paper, violet, lavender and pink palette, typography hierarchy, example control cards, shape language and principles.</desc>
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#E6E2F5" stroke-width="1"/></pattern>
+  <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#211B43" flood-opacity=".08"/></filter>
+</defs>
+<rect width="1600" height="1120" fill="#FFFDFB"/>
+<rect width="1600" height="1120" fill="url(#grid)" opacity=".4"/>
+<g font-family="Inter, ui-sans-serif, Arial, sans-serif" fill="#211B43">
+  <text x="72" y="72" font-size="18" font-weight="800" letter-spacing="4" fill="#6557D9">VFX UI ANIME / DESIGN FOUNDATIONS</text>
+  <text x="72" y="152" font-size="72" font-weight="900" letter-spacing="-4">Visual language.</text>
+  <text x="76" y="194" font-size="23" fill="#77718E">Expressive interaction. Clear interface. Ink, paper, and impact.</text>
+  <g transform="translate(1370 70)">
+    <rect width="120" height="120" rx="28" fill="#211B43"/>
+    <path d="M60 12 70 43 103 31 81 59 108 81 76 76 60 109 48 77 14 81 40 59 18 31 51 43Z" fill="#FF5F9E" stroke="#FFFDFB" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="60" cy="60" r="13" fill="#AAA5FF" stroke="#FFFDFB" stroke-width="4"/>
+  </g>
+
+  <g transform="translate(72 250)">
+    <rect width="1456" height="260" rx="24" fill="#FFFFFF" stroke="#E6E2F5" stroke-width="2" filter="url(#soft)"/>
+    <text x="34" y="48" font-size="18" font-weight="800" letter-spacing="2" fill="#6557D9">01 / COLOR SYSTEM</text>
+    <g transform="translate(34 76)">
+      <rect width="220" height="112" rx="14" fill="#211B43"/><text x="18" y="145" font-size="18" font-weight="800">INK</text><text x="18" y="170" font-size="16" fill="#77718E">#211B43</text>
+      <rect x="240" width="220" height="112" rx="14" fill="#FFFDFB" stroke="#E6E2F5" stroke-width="2"/><text x="258" y="145" font-size="18" font-weight="800">PAPER</text><text x="258" y="170" font-size="16" fill="#77718E">#FFFDFB</text>
+      <rect x="480" width="220" height="112" rx="14" fill="#6557D9"/><text x="498" y="145" font-size="18" font-weight="800">VIOLET</text><text x="498" y="170" font-size="16" fill="#77718E">#6557D9</text>
+      <rect x="720" width="220" height="112" rx="14" fill="#AAA5FF"/><text x="738" y="145" font-size="18" font-weight="800">LAVENDER</text><text x="738" y="170" font-size="16" fill="#77718E">#AAA5FF</text>
+      <rect x="960" width="220" height="112" rx="14" fill="#FF5F9E"/><text x="978" y="145" font-size="18" font-weight="800">PINK</text><text x="978" y="170" font-size="16" fill="#77718E">#FF5F9E</text>
+      <rect x="1200" width="188" height="112" rx="14" fill="#F3F0FF" stroke="#E6E2F5" stroke-width="2"/><text x="1218" y="145" font-size="18" font-weight="800">SURFACE</text><text x="1218" y="170" font-size="16" fill="#77718E">#F3F0FF</text>
+    </g>
+    <text x="34" y="238" font-size="15" fill="#77718E">Use violet for readable emphasis. Pink and lavender are accents and fills, not small text on light backgrounds.</text>
+  </g>
+
+  <g transform="translate(72 546)">
+    <rect width="700" height="490" rx="24" fill="#FFFFFF" stroke="#E6E2F5" stroke-width="2" filter="url(#soft)"/>
+    <text x="34" y="48" font-size="18" font-weight="800" letter-spacing="2" fill="#6557D9">02 / TYPE &amp; SHAPE</text>
+    <text x="38" y="132" font-size="50" font-weight="900" letter-spacing="-2">Impact,</text>
+    <text x="38" y="187" font-size="50" font-weight="900" letter-spacing="-2" fill="#6557D9">with clarity.</text>
+    <text x="40" y="228" font-size="19" fill="#77718E">System sans · Bold hierarchy · Calm body copy</text>
+    <line x1="38" y1="260" x2="660" y2="260" stroke="#E6E2F5" stroke-width="2"/>
+    <rect x="40" y="294" width="182" height="88" rx="14" fill="#FFFDFB" stroke="#211B43" stroke-width="3"/>
+    <rect x="50" y="304" width="182" height="88" rx="14" fill="none" stroke="#AAA5FF" stroke-width="7"/>
+    <text x="264" y="328" font-size="18" font-weight="800">Bold outline</text><text x="264" y="356" font-size="16" fill="#77718E">Use on meaningful objects</text>
+    <rect x="40" y="414" width="182" height="44" rx="12" fill="#6557D9"/>
+    <text x="131" y="443" font-size="18" text-anchor="middle" font-weight="800" fill="#FFFFFF">Primary action</text>
+    <text x="264" y="433" font-size="18" font-weight="800">Simple silhouette</text><text x="264" y="461" font-size="16" fill="#77718E">No decoration without purpose</text>
+  </g>
+
+  <g transform="translate(808 546)">
+    <rect width="720" height="490" rx="24" fill="#FFFFFF" stroke="#E6E2F5" stroke-width="2" filter="url(#soft)"/>
+    <text x="34" y="48" font-size="18" font-weight="800" letter-spacing="2" fill="#6557D9">03 / COMPONENT STAGE</text>
+    <rect x="34" y="82" width="310" height="174" rx="18" fill="#FFFDFB" stroke="#E6E2F5" stroke-width="2"/>
+    <text x="56" y="116" font-size="19" font-weight="800">Button</text>
+    <text x="56" y="142" font-size="15" fill="#77718E">Clear label. Focused feedback.</text>
+    <rect x="92" y="179" width="188" height="48" rx="12" fill="#6557D9" stroke="#211B43" stroke-width="3"/>
+    <text x="186" y="210" font-size="17" font-weight="800" fill="#FFFFFF" text-anchor="middle">Activate</text>
+    <rect x="376" y="82" width="310" height="174" rx="18" fill="#FFFDFB" stroke="#E6E2F5" stroke-width="2"/>
+    <text x="398" y="116" font-size="19" font-weight="800">Motion stage</text>
+    <text x="398" y="142" font-size="15" fill="#77718E">Leave room around the control.</text>
+    <path d="M530 180 551 149 562 178 596 160 580 193 609 214 572 211 552 238 541 207 507 210 527 190Z" fill="#AAA5FF" stroke="#211B43" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M512 169 476 157M514 197 461 205M597 151 635 136" stroke="#6557D9" stroke-width="5" stroke-linecap="round"/>
+    <rect x="34" y="284" width="652" height="160" rx="18" fill="#F3F0FF"/>
+    <text x="58" y="322" font-size="18" font-weight="800">Design rules</text>
+    <g font-size="16" fill="#211B43">
+      <circle cx="66" cy="356" r="5" fill="#FF5F9E"/><text x="84" y="362">Readable at rest</text>
+      <circle cx="66" cy="391" r="5" fill="#FF5F9E"/><text x="84" y="397">One clear visual accent</text>
+      <circle cx="385" cy="356" r="5" fill="#FF5F9E"/><text x="403" y="362">Focus state stays visible</text>
+      <circle cx="385" cy="391" r="5" fill="#FF5F9E"/><text x="403" y="397">Reduced motion preserves meaning</text>
+    </g>
+  </g>
+  <text x="72" y="1080" font-size="14" fill="#77718E">VFX UI Anime · Design specification · Existing live CSS remains unchanged in Phase 2</text>
+</g>
+</svg>
