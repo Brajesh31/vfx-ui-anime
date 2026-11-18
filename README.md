@@ -4,7 +4,7 @@
 
 VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Sixteen additional controls extend the same design and interaction language.
 
-**Current library: 27 component types and 28 live gallery demos.** The 20 demos include primary and secondary Button examples.
+**Current library: 27 component types and 28 live gallery demos.** The 28 demos include primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -39,6 +39,14 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Dialog | `<vfx-dialog>` | [components/dialog](components/dialog/) |
 | File Upload | `<vfx-file-upload>` | [components/file-upload](components/file-upload/) |
 | Color Picker | `<vfx-color-picker>` | [components/color-picker](components/color-picker/) |
+| Accordion | `<vfx-accordion>` | [components/accordion](components/accordion/) |
+| Segmented Control | `<vfx-segmented>` | [components/segmented](components/segmented/) |
+| OTP Input | `<vfx-otp>` | [components/otp](components/otp/) |
+| Tag Input | `<vfx-tag-input>` | [components/tag-input](components/tag-input/) |
+| Pagination | `<vfx-pagination>` | [components/pagination](components/pagination/) |
+| Alert | `<vfx-alert>` | [components/alert](components/alert/) |
+| Drawer | `<vfx-drawer>` | [components/drawer](components/drawer/) |
+| Skeleton Loader | `<vfx-skeleton>` | [components/skeleton](components/skeleton/) |
 
 Each component folder contains:
 

@@ -1,6 +1,6 @@
 # VFX UI Anime
 
-> Nineteen dependency-free Web Component types with twenty live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
+> Twenty-seven dependency-free Web Component types with twenty-eight live gallery demos. Each component is independently loadable and uses the VFX UI Anime spring and impact-motion language.
 
 Live gallery: https://brajesh31.github.io/vfx-ui-anime/
 Repository: https://github.com/Brajesh31/vfx-ui-anime
@@ -39,6 +39,14 @@ Repository: https://github.com/Brajesh31/vfx-ui-anime
 - Dialog: `components/dialog/` `<vfx-dialog>`
 - File Upload: `components/file-upload/` `<vfx-file-upload>`
 - Color Picker: `components/color-picker/` `<vfx-color-picker>`
+- Accordion: `components/accordion/` `<vfx-accordion>`
+- Segmented Control: `components/segmented/` `<vfx-segmented>`
+- OTP Input: `components/otp/` `<vfx-otp>`
+- Tag Input: `components/tag-input/` `<vfx-tag-input>`
+- Pagination: `components/pagination/` `<vfx-pagination>`
+- Alert: `components/alert/` `<vfx-alert>`
+- Drawer: `components/drawer/` `<vfx-drawer>`
+- Skeleton Loader: `components/skeleton/` `<vfx-skeleton>`
 
 ## Integration rules
 1. Load a component file with a plain script tag, not as an ES module.
