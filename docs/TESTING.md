@@ -5,7 +5,7 @@
 Run `npm test` or `npm run check`. The current validation script performs static checks:
 - Required repository paths and all eleven custom-element registrations.
 - Gallery script registration and the shared reduced-motion hook.
-- Required implementation hooks for tab keyboard navigation, radio group state/form integration, and tooltip accessible description/viewport behavior.
+- Required implementation hooks for tab keyboard navigation and linked tabpanels, radio group state/form integration, and tooltip accessible description/viewport behavior.
 
 The script also asks Node to syntax-parse the runtime JavaScript files. The feature assertions inspect source text. These checks do not instantiate the components, simulate keyboard input, submit forms, run a browser, or validate accessibility-tree output. A passing static check is not a browser interaction test.
 
@@ -17,8 +17,8 @@ The script also asks Node to syntax-parse the runtime JavaScript files. The feat
 4. Toggle state and verify the checked attribute.
 5. Drag the slider and verify its output.
 6. Submit and reset a sample host form when testing form-associated controls.
-7. For horizontal tabs, use Left/Right Arrow keys, Home and End. Confirm focus and selected state stay synchronized.
-8. For vertical tabs, use Up/Down Arrow keys, Home and End.
+7. For horizontal tabs, use Left/Right Arrow keys, Home and End. Confirm focus and selected state stay synchronized. Check each tab `aria-controls` against a panel ID in the same shadow root, and each panel `aria-labelledby` against its tab ID.
+8. For vertical tabs, use Up/Down Arrow keys, Home and End. Confirm the active panel is visible and every inactive panel is hidden. Tab from the selected tab into the panel and verify its named-slot content is available.
 9. For radio groups, test Tab entry, arrow-key selection, Space activation, independent groups and the configured `name`.
 10. Test radio `required` and `disabled` attributes and properties, reset, restored state and disabled-fieldset behavior inside a form.
 11. Focus a tooltip trigger and confirm its `aria-describedby` ID resolves to the tooltip element in the same shadow root.
