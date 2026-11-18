@@ -16,7 +16,7 @@
 - Canvas is marked `aria-hidden="true"` and does not capture pointer input.
 - Canvas particles are disabled when `prefers-reduced-motion: reduce` is active.
 
-These are source-level implementation details. They are not a claim of formal WCAG conformance or completed assistive-technology testing.
+The automated Chromium interaction suite exercises the tab, radio and tooltip behaviors listed above. These implementation details and passing browser assertions are not a claim of formal WCAG conformance or completed assistive-technology testing.
 
 ## Known gaps and constraints
 
