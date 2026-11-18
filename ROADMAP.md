@@ -10,13 +10,18 @@ This roadmap describes intended work, not completed features.
 - [x] Reduced-motion preference support.
 - [x] Repository validation workflow baseline.
 
+## ✅ Delivered interaction improvements
+- [x] Horizontal and vertical tab navigation with roving focus, arrow keys, Home and End.
+- [x] Radio groups using native radio controls and browser-provided keyboard navigation.
+- [x] Radio group accessible labels, configured names, required/disabled properties and form lifecycle callbacks.
+- [x] Static regression checks and JavaScript syntax parsing for runtime scripts.
+
 ## 🔧 Next engineering priorities
 - [ ] Browser-based interaction tests in Chromium.
 - [ ] Firefox and Safari compatibility testing.
-- [ ] Complete form-associated custom element lifecycle: reset, disabled state and validity.
-- [ ] Native-equivalent radio arrow-key navigation.
-- [ ] Full tabs and tabpanel ARIA pattern.
-- [ ] Tooltip viewport collision handling.
+- [ ] Complete form-associated custom element lifecycle and consistent validity behavior across target browsers.
+- [ ] Full tabs and tabpanel ARIA pattern, including linked panels and host content relationships.
+- [ ] Tooltip viewport collision handling and accessible description relationships.
 - [ ] Toast queue and dismissal controls.
 - [ ] Canvas lifecycle and overlay stacking configuration.
 - [ ] Visual regression screenshots.
