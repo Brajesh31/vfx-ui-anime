@@ -11,7 +11,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/vanilla-JavaScript-f7df1e?style=for-the-badge&logo=javascript&logoColor=111" alt="Vanilla JavaScript">
   <img src="https://img.shields.io/badge/Web%20Components-native-6557d9?style=for-the-badge" alt="Native Web Components">
-  <img src="https://img.shields.io/badge/dependencies-zero-20a779?style=for-the-badge" alt="Zero dependencies">
+  <img src="https://img.shields.io/badge/dependencies-zero-20a779?style=for-the-badge" alt="Zero runtime dependencies">
   <img src="https://img.shields.io/badge/license-MIT-ff5f9e?style=for-the-badge" alt="MIT License">
 </p>
 
@@ -31,24 +31,21 @@
 | Toast | `<vfx-toast>` | Temporary status message |
 | Tooltip | `<vfx-tooltip>` | Contextual hint |
 
-## 🚀 GitHub Pages hosting
+## 🚀 Live website and GitHub Pages
 
-The repository includes an automated GitHub Pages deployment workflow. The one-time Pages publishing source setting has not yet been completed, so the public site is **not live** until that setting is saved and the deployment workflow succeeds.
+<badge color="success">Deployed</badge>
 
-1. Open [Repository Settings → Pages](https://github.com/Brajesh31/vfx-ui-anime/settings/pages).
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-3. Save the setting.
-4. Check the [Actions tab](https://github.com/Brajesh31/vfx-ui-anime/actions) for a successful **Deploy to GitHub Pages** run.
+The static website is published through GitHub Pages. The workflow validates the repository, uploads the site artifact, and deploys it when changes are pushed to `main`.
 
-Expected public URL after the first successful deployment:
+**Live website:** https://brajesh31.github.io/vfx-ui-anime/
 
-**https://brajesh31.github.io/vfx-ui-anime/**
+[View the latest successful deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44233606857) · [Open repository Pages settings](https://github.com/Brajesh31/vfx-ui-anime/settings/pages)
 
-See [Deployment](docs/DEPLOYMENT.md) for setup and troubleshooting details.
+See [Deployment](docs/DEPLOYMENT.md) for hosting details and troubleshooting.
 
 ## 🚀 Run the gallery locally
 
-No package install or build step is required.
+No package install or production build step is required.
 
 ```bash
 git clone https://github.com/Brajesh31/vfx-ui-anime.git
@@ -69,7 +66,7 @@ Load the shared engine before the component scripts:
 <vfx-button>Launch</vfx-button>
 ```
 
-Each component is a standalone JavaScript file once the shared core is loaded. The core creates one page-level canvas and exposes `window.VFXAnime` for effect helpers. See [Installation](docs/INSTALLATION.md) and [Component API](docs/COMPONENTS.md).
+Each component is a JavaScript custom element that uses the shared core. The core creates one page-level canvas and exposes `window.VFXAnime` for effect helpers. See [Installation](docs/INSTALLATION.md) and [Component API](docs/COMPONENTS.md).
 
 ## 🎨 Theme tokens
 
@@ -105,6 +102,7 @@ The checks validate required files, component registrations and key accessibilit
 - [Deployment](docs/DEPLOYMENT.md)
 - [Framework integrations](docs/INTEGRATIONS.md)
 - [Release checklist](docs/RELEASE.md)
+- [Reference audit: Sakuga VFX](docs/REFERENCE_AUDIT.md)
 - [Roadmap](ROADMAP.md)
 - [Changelog](CHANGELOG.md)
 - [AI agent guide](llms.txt)
