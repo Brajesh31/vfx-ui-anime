@@ -1,9 +1,9 @@
 # Phase 2: original signature controls upgraded
 
-**Status:** Implementation batch complete, pending CI verification  
+**Status:** Implementation and automated CI verified on 19 November 2026; manual visual, cross-browser and assistive-technology review remain outstanding  
 **Scope:** The original 11 signature component types  
 **Base commit:** `98f00bea8aa26922863b34020ba9bdb32740fbb2`  
-**Phase 2 implementation commits:** `baf3ecb6347cb0691b972faea236925e8381ea12` plus the follow-up batch containing the remaining refinements and tests.
+**Phase 2 implementation commits:** `baf3ecb6347cb0691b972faea236925e8381ea12`, `c72dcdff293ce78373d61a5c81e0517a4da1ae7f`, `d93462f2d6f91f78d911dc3fbb62c6ab93d3b72b`, `2c3a38589e4bd243906419efdda9097ac3dbf8be`, `4db1e3ce2e2cfb98f8b90c245caabdc4fcf067b6`, `dd869b1620fa5f1de181fb7a5a451603edf3101d`, and `60484148f285fc52f259f68d5cd4813f0beb422e`.
 
 ## 1. Scope
 
@@ -14,11 +14,11 @@ Phase 2 improves the original Button, Toggle, Slider, Checkbox, Radio, Input, Ta
 | Component | Phase 2 work |
 |---|---|
 | Button | Guarded the primary impact method against disabled/secondary use; strengthened focus treatment; springs settle under reduced motion |
-| Toggle | Added form reset, disabled-fieldset and state-restore callbacks; emits input and change; reduced motion completes the painted frame sequence immediately |
-| Slider | Added form reset/disabled synchronization, required forwarding and accessible value text; reduced motion snaps the thumb and value bubble to the current value |
-| Checkbox | Added form reset and disabled-fieldset synchronization; reduced-motion spring settlement |
-| Radio | Added required-state exposure and form validity, reset and disabled-fieldset handling; label updates; reduced-motion spring settlement |
-| Input | Added dynamic forwarding of common native validation/input attributes, ElementInternals validity synchronization, form reset/disabled/state restoration and a visible invalid state |
+| Toggle | Added initial-state-aware form reset, disabled-fieldset and state-restore callbacks; emits input and change; reduced motion completes the painted frame sequence immediately |
+| Slider | Added form reset/disabled synchronization, required forwarding and accessible value text; preserves fieldset-disabled state across host attribute changes; reduced motion snaps the thumb and value bubble to the current value |
+| Checkbox | Added form reset and disabled-fieldset synchronization that remains correct while the host disabled attribute changes; reduced-motion spring settlement |
+| Radio | Added required-state exposure and form validity, reset and disabled-fieldset handling; label and dynamic required-state updates; correct no-selection and empty-string option handling; reduced-motion spring settlement |
+| Input | Added dynamic forwarding of common native validation/input attributes, ElementInternals validity synchronization, form reset/disabled/state restoration and a visible invalid state; preserves inherited fieldset-disabled state |
 | Tabs | Added horizontal overflow support, stored ResizeObserver lifecycle with reconnect behavior and a resize fallback; reduced-motion indicator snapping |
 | Progress | Added aria-valuetext, reduced-motion snapping, suppressed decorative canvas drawing and demo autoplay in reduced-motion mode |
 | Rating | Added sequence tokens to ignore stale delayed star callbacks, form reset/disabled handling and reduced-motion state settlement |
@@ -76,7 +76,7 @@ The existing end-to-end checks for all 82 registered component tags, mobile touc
 
 ## 5. Verification status and boundaries
 
-The implementation has been committed to `main`. The repository's Validate workflow is the source of truth for the browser regression suite, Pages deploy and CodeQL/Scorecard workflows. The phase should only be marked fully verified once those runs complete successfully.
+The implementation has been committed to `main`. Validate, GitHub Pages deployment, CodeQL and OSSF Scorecard all completed successfully for commit `60484148f285fc52f259f68d5cd4813f0beb422e` on 19 November 2026. Validate includes the headless Chromium browser regression suite.
 
 This pass includes headless Chromium automation, not a human visual review or manual assistive-technology certification. Safari, Firefox and real screen-reader testing remain outstanding. Those limitations should not be hidden behind a passing Chromium test.
 
@@ -90,7 +90,7 @@ This pass includes headless Chromium automation, not a human visual review or ma
 - [x] Toast and Input APIs documented.
 - [x] Browser regression tests added.
 - [x] README and llms.txt updated.
-- [ ] Validate workflow, including browser tests, completes successfully.
+- [x] Validate workflow, including browser tests, completes successfully. The full 82-component browser suite passed, including form reset, fieldset-disabled state, dynamic Radio required state, Rating animation cancellation, Tabs observer reconnection, Toast semantics and Tooltip touch behavior.
 - [ ] Visual review at desktop/mobile widths and manual screen-reader testing.
 
-**Phase 2 implementation is complete. Final verification is pending the workflow result. Phase 3 has not started.**
+**Phase 2 implementation and automated CI verification are complete. Manual visual review, Safari/Firefox and assistive-technology testing remain outstanding. Phase 3 has not started.**

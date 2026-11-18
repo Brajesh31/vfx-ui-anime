@@ -43,6 +43,6 @@ el.value = 'pro';     // from code: no effects
 
 ## Phase 2 refinements
 
-- Form reset restores the initial selected option. A `required` attribute exposes `aria-required` and native form validity through `ElementInternals`.
-- The group label updates after connection. Form-disabled changes are mirrored to the native radio inputs.
+- Form reset restores the initially selected option, including a genuinely empty selection. A `required` attribute exposes `aria-required` and native form validity through `ElementInternals`, and dynamic `required` changes update both.
+- The group label updates after connection. Form-disabled changes remain mirrored to the native radio inputs even while the custom element's own `disabled` attribute changes.
 - Reduced-motion mode snaps the selected dots to their final positions without replaying spring travel.

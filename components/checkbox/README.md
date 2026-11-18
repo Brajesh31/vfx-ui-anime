@@ -37,5 +37,5 @@ el.checked = true;    // from code: no effects
 
 ## Phase 2 refinements
 
-- Form reset restores the original `checked` attribute state, and disabled fieldset state is mirrored to the inner checkbox.
+- Form reset restores the original `checked` attribute state. Disabled fieldset state remains mirrored to the inner checkbox even while the custom element's own `disabled` attribute changes.
 - Reduced-motion mode settles the checkbox spring without the press wobble. The existing tick-draw and impact identity is preserved when motion is allowed.

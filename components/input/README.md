@@ -43,5 +43,5 @@ el.value = 'hello';
 
 - `required`, `readonly`, `minlength`, `maxlength` and `pattern` are now forwarded to the native input, including when changed after connection. The allowed input `type` and `autocomplete` attributes also stay synchronized.
 - The custom element mirrors native validity through `ElementInternals` and exposes `validity`, `validationMessage`, `checkValidity()`, `reportValidity()` and `setCustomValidity()`.
-- Form reset restores the initial `value` attribute. Form-disabled changes are mirrored to the native input. Invalid state receives a visible style and `aria-invalid`.
+- Form reset restores the initial `value` attribute. Form-disabled changes remain mirrored to the native input even while the custom element's own `disabled` attribute changes. Invalid state receives a visible style and `aria-invalid`.
 - Reduced-motion mode settles the focus/typing spring without removing the caret dust when motion is enabled.

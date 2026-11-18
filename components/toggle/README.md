@@ -49,6 +49,6 @@ The 43 painted animation frames are embedded in this component's `index.js` file
 
 ## Phase 2 refinements
 
-- Form reset restores the initial `checked` attribute state. Form-disabled changes are mirrored to the inner switch button, and state restoration is supported.
+- Form reset restores the initial checked state captured at connection, even after the live `checked` attribute changes. Form-disabled changes are mirrored to the inner switch button, and state restoration is supported.
 - A successful flip now dispatches both `input` and `change` events. The painted 43-frame animation remains intact; reduced motion jumps to its final frame.
 - A visible keyboard focus ring has been added.
