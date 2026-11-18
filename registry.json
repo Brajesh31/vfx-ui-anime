@@ -1252,6 +1252,106 @@
         }
       ],
       "docs": "Load /components/copy-code/index.js with a plain script tag. See components/copy-code/README.md for attributes, methods, events, keyboard behavior, and limits."
+    },
+    {
+      "name": "bar-chart",
+      "type": "registry:file",
+      "title": "VFX UI Anime Bar Chart",
+      "description": "Responsive SVG bar chart with interactive bars. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "bar-chart",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/bar-chart/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/bar-chart.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/bar-chart/README.md."
+    },
+    {
+      "name": "donut-chart",
+      "type": "registry:file",
+      "title": "VFX UI Anime Donut Chart",
+      "description": "Proportional SVG donut chart with legend. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "donut-chart",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/donut-chart/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/donut-chart.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/donut-chart/README.md."
+    },
+    {
+      "name": "sparkline",
+      "type": "registry:file",
+      "title": "VFX UI Anime Sparkline",
+      "description": "Inline SVG trend sparkline. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "sparkline",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/sparkline/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/sparkline.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/sparkline/README.md."
+    },
+    {
+      "name": "kpi-card",
+      "type": "registry:file",
+      "title": "VFX UI Anime KPI Card",
+      "description": "Compact dashboard metric tile. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "kpi-card",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/kpi-card/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/kpi-card.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/kpi-card/README.md."
+    },
+    {
+      "name": "gauge",
+      "type": "registry:file",
+      "title": "VFX UI Anime Gauge",
+      "description": "Semicircular metric gauge. One file, no dependencies.",
+      "author": "Brajesh Kumar <https://github.com/Brajesh31>",
+      "categories": [
+        "gauge",
+        "anime",
+        "animation"
+      ],
+      "files": [
+        {
+          "path": "components/gauge/index.js",
+          "type": "registry:file",
+          "target": "~/public/vfx-ui-anime/gauge.js"
+        }
+      ],
+      "docs": "Load the standalone component file. See components/gauge/README.md."
     }
   ]
 }

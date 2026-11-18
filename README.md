@@ -2,9 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Fifty-one additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Fifty-six additional controls extend the same design and interaction language.
 
-**Current library: 62 component types and 63 live gallery demos.** The gallery includes primary and secondary Button examples.
+**Current library: 67 component types and 68 live gallery demos.** The gallery includes primary and secondary Button examples.
 
 ## 🎮 Live gallery
 
@@ -77,6 +77,11 @@ Open [http://localhost:8000/](http://localhost:8000/). The home page forwards to
 | Stopwatch | `<vfx-stopwatch>` | [components/stopwatch](components/stopwatch/) |
 | Emoji Picker | `<vfx-emoji-picker>` | [components/emoji-picker](components/emoji-picker/) |
 | Copy Code Block | `<vfx-copy-code>` | [components/copy-code](components/copy-code/) |
+| Bar Chart | `<vfx-bar-chart>` | [components/bar-chart](components/bar-chart/) |
+| Donut Chart | `<vfx-donut-chart>` | [components/donut-chart](components/donut-chart/) |
+| Sparkline | `<vfx-sparkline>` | [components/sparkline](components/sparkline/) |
+| KPI Card | `<vfx-kpi-card>` | [components/kpi-card](components/kpi-card/) |
+| Gauge | `<vfx-gauge>` | [components/gauge](components/gauge/) |
 
 Each component folder contains:
 
@@ -190,3 +195,9 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Stopwatch**: start/stop, lap splits, reset, and elapsed-time events.
 - **Emoji Picker**: searchable curated emoji grid and selection events.
 - **Copy Code Block**: line-numbered code display with copy action and clipboard fallback.
+
+
+## Charts and dashboards
+
+- **Bar Chart, Donut Chart, Sparkline**: dependency-free SVG data visualizations.
+- **KPI Card and Gauge**: dashboard metrics and progress indicators.

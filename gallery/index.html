@@ -112,6 +112,11 @@
 <script src="../components/stopwatch/index.js"></script>
 <script src="../components/emoji-picker/index.js"></script>
 <script src="../components/copy-code/index.js"></script>
+<script src="../components/bar-chart/index.js"></script>
+<script src="../components/donut-chart/index.js"></script>
+<script src="../components/sparkline/index.js"></script>
+<script src="../components/kpi-card/index.js"></script>
+<script src="../components/gauge/index.js"></script>
 <script>
 // The gallery: every control live on one page, with its install line and a prompt that hands a coding agent the real file.
 const REPO = 'Brajesh31/vfx-ui-anime';
@@ -180,6 +185,11 @@ const ITEMS = [
   { id: 'stopwatch', name: 'Stopwatch', tag: 'vfx-stopwatch', how: 'Start, stop, record lap splits, and reset the elapsed time.', html: '<vfx-stopwatch></vfx-stopwatch>' },
   { id: 'emoji-picker', name: 'Emoji Picker', tag: 'vfx-emoji-picker', how: 'Search and select an emoji from the curated collection.', html: '<vfx-emoji-picker value="✨"></vfx-emoji-picker>' },
   { id: 'copy-code', name: 'Copy Code Block', tag: 'vfx-copy-code', how: 'Inspect line numbers and copy the code sample.', html: '<vfx-copy-code language="js">const greeting = "Hello, world!";\nconsole.log(greeting);</vfx-copy-code>' }];
+  { id: 'bar-chart', name: 'Bar Chart', tag: 'vfx-bar-chart', how: 'Responsive SVG bar chart with interactive bars.', html: '<vfx-bar-chart title="Monthly signups" labels="Jan,Feb,Mar,Apr,May,Jun" values="18,32,24,48,38,64"></vfx-bar-chart>', wide: true },
+  { id: 'donut-chart', name: 'Donut Chart', tag: 'vfx-donut-chart', how: 'Proportional SVG donut chart with legend.', html: '<vfx-donut-chart title="Traffic sources" labels="Direct,Search,Social,Other" values="45,30,15,10"></vfx-donut-chart>', wide: true },
+  { id: 'sparkline', name: 'Sparkline', tag: 'vfx-sparkline', how: 'Inline SVG trend sparkline.', html: '<vfx-sparkline label="Weekly trend" values="4,7,5,9,8,13,11,16"></vfx-sparkline>' },
+  { id: 'kpi-card', name: 'KPI Card', tag: 'vfx-kpi-card', how: 'Compact dashboard metric tile.', html: '<vfx-kpi-card label="Active users" value="12,480" delta="+12.8%"></vfx-kpi-card>', wide: true },
+  { id: 'gauge', name: 'Gauge', tag: 'vfx-gauge', how: 'Semicircular metric gauge.', html: '<vfx-gauge label="Completion" value="72" max="100"></vfx-gauge>', wide: true }
 
 // What each prompt says about wiring its component in. The rest of the prompt is the same for all of them.
 const WIRE = {
@@ -289,6 +299,11 @@ const WIRE = {
   'stopwatch': ['Use <vfx-stopwatch></vfx-stopwatch> for a running stopwatch and lap list.', 'Call start(), stop(), reset(), and lap(). Read running, elapsed (milliseconds), and laps. Listen for start, stop, reset, and lap.'],
   'emoji-picker': ['Use <vfx-emoji-picker value="✨"></vfx-emoji-picker> for a searchable emoji panel.', 'Read or set value. Listen for select and change with the chosen emoji. The included emoji collection is curated and extendable.'],
   'copy-code': ['Use <vfx-copy-code language="js">const answer = 42;</vfx-copy-code>. Source is read as text and never executed.', 'Read or set value, inspect lineCount, and call copy(). Listen for copy and copy-error. Clipboard API falls back to a temporary textarea.'],
+  'bar-chart': ['Use <vfx-bar-chart></vfx-bar-chart> as a self-contained custom element.', 'Responsive SVG bar chart with interactive bars. See components/bar-chart/README.md for attributes and events.'],
+  'donut-chart': ['Use <vfx-donut-chart></vfx-donut-chart> as a self-contained custom element.', 'Proportional SVG donut chart with legend. See components/donut-chart/README.md for attributes and events.'],
+  'sparkline': ['Use <vfx-sparkline></vfx-sparkline> as a self-contained custom element.', 'Inline SVG trend sparkline. See components/sparkline/README.md for attributes and events.'],
+  'kpi-card': ['Use <vfx-kpi-card></vfx-kpi-card> as a self-contained custom element.', 'Compact dashboard metric tile. See components/kpi-card/README.md for attributes and events.'],
+  'gauge': ['Use <vfx-gauge></vfx-gauge> as a self-contained custom element.', 'Semicircular metric gauge. See components/gauge/README.md for attributes and events.'],
   'color-picker': [
     'Use <vfx-color-picker label="Accent color" value="#ff5fa8" name="accent"></vfx-color-picker>.',
     'Read or set el.value as a six-digit hex color. Listen for input during selection and change when the color is committed.',
@@ -361,6 +376,8 @@ for (const it of ITEMS) {
   else if (it.tag === 'vfx-stopwatch') { el.addEventListener('lap', e => say('Lap ' + e.detail.number + ': ' + Math.round(e.detail.elapsed) + ' ms')); el.addEventListener('stop', e => say('Stopped at ' + Math.round(e.detail.elapsed) + ' ms')); }
   else if (it.tag === 'vfx-emoji-picker') el.addEventListener('select', e => say('Selected ' + e.detail.emoji));
   else if (it.tag === 'vfx-copy-code') { el.addEventListener('copy', () => say('Code copied')); el.addEventListener('copy-error', () => say('Copy unavailable')); }
+  else if (it.tag === 'vfx-bar-chart') el.addEventListener('select', e => say(e.detail.label + ': ' + e.detail.value));
+  else if (it.tag === 'vfx-gauge') el.addEventListener('change', e => say('Gauge: ' + Math.round(e.detail.percent) + '%'));
   else el.addEventListener('change', () => say(`change: ${it.tag === 'vfx-toggle' || it.tag === 'vfx-checkbox' ? (el.checked ? 'on' : 'off') : el.value}`));
 }
 // Copying needs the clipboard API, which plain http (other than localhost) does not have, so fall back to a selected textarea.
