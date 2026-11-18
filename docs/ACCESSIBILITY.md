@@ -16,7 +16,7 @@
 - Canvas is marked `aria-hidden="true"` and does not capture pointer input.
 - Canvas particles are disabled when `prefers-reduced-motion: reduce` is active.
 
-The automated Chromium interaction suite exercises the tab, radio and tooltip behaviors listed above. These implementation details and passing browser assertions are not a claim of formal WCAG conformance or completed assistive-technology testing.
+Automated interaction suites exercise the tab, radio and tooltip behaviors in Chromium, Firefox and WebKit. WebKit coverage is not equivalent to testing shipping Safari on macOS or iOS. These implementation details and passing browser assertions are not a claim of formal WCAG conformance or completed assistive-technology testing.
 
 ## Known gaps and constraints
 
@@ -27,7 +27,7 @@ The automated Chromium interaction suite exercises the tab, radio and tooltip be
 - Tooltip placement responds to viewport space, clamps horizontally and recalculates after resize/scroll. Explicit `top` or `bottom` placement is available.
 - The fixed canvas can overlap dialogs and sticky UI visually.
 - No formal screen-reader audit has been completed.
-- Cross-browser and real-device testing has not yet been completed.
+- Firefox and WebKit headless interaction coverage exists, but shipping Safari on macOS/iOS and real-device testing have not yet been completed.
 
 ## Release QA checklist
 
@@ -41,7 +41,7 @@ The automated Chromium interaction suite exercises the tab, radio and tooltip be
 - [ ] Tooltips: verify `aria-describedby` announces the hint on focus.
 - [ ] Tooltips: verify Escape dismissal and reappearance after pointer leave/refocus.
 - [ ] Tooltips: test auto-flip near the top/bottom edges, horizontal clamping near both sides, resize and scroll.
-- [ ] NVDA + Firefox and Chrome.
+- [ ] NVDA + Firefox and Chrome.\n- [ ] Real Safari macOS/iOS testing, including VoiceOver.
 - [ ] VoiceOver + Safari on macOS and iOS.
 - [ ] TalkBack + Chrome on Android.
 - [ ] Reduced-motion enabled and disabled.
