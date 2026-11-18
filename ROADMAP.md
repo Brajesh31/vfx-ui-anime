@@ -21,7 +21,7 @@ This roadmap describes intended work, not completed features.
 
 ## 🔧 Next engineering priorities
 - [x] Dependency-free headless Chromium interaction tests in GitHub Actions for tabs, radio groups and tooltips.
-- [ ] Firefox and Safari compatibility testing.
+- [x] Firefox and WebKit headless interaction testing in CI.\n- [ ] Shipping Safari compatibility testing on macOS and iOS.
 - [ ] Complete form-associated custom element lifecycle and consistent validity behavior across target browsers.
 - [ ] Toast queue and dismissal controls.
 - [ ] Canvas lifecycle and overlay stacking configuration.
