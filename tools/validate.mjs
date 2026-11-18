@@ -55,9 +55,16 @@ const tabs = await read("components/tabs.js");
 for (const hook of [
   "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End",
   "aria-orientation", 'button.tabIndex = isSelected ? 0 : -1',
-  'this.setAttribute("value", nextValue)'
+  'this.setAttribute("value", nextValue)',
+  'button.setAttribute("aria-controls", panelId)',
+  'panel.setAttribute("role", "tabpanel")',
+  'panel.setAttribute("aria-labelledby", tabId)',
+  'panel.hidden = !isSelected',
+  'panel.tabIndex = 0',
+  'panelSlot.name = item',
+  'this.panels.replaceChildren()'
 ]) {
-  if (!tabs.includes(hook)) errors.push(`Tabs keyboard/navigation hook missing: ${hook}`);
+  if (!tabs.includes(hook)) errors.push(`Tabs keyboard/navigation/panel hook missing: ${hook}`);
 }
 
 const radio = await read("components/radio.js");
@@ -91,6 +98,9 @@ const api = await read("docs/COMPONENT_API_REFERENCE.md");
 if (!api.includes("orientation=\"vertical\"") || !api.includes("Up/Down Arrow keys")) {
   errors.push("Component API reference does not document vertical tabs keyboard navigation.");
 }
+if (!api.includes("aria-controls") || !api.includes("aria-labelledby") || !api.includes('slot="Overview"')) {
+  errors.push("Component API reference does not document linked tabpanels and named content slots.");
+}
 if (!api.includes("form reset") || !api.includes("required validity")) {
   errors.push("Component API reference does not document radio form behavior.");
 }
@@ -103,5 +113,5 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Validation passed: ${required.length} required paths, 11 registrations, gallery script loading, reduced-motion support, and tabs/radio/tooltip regression hooks.`);
+console.log(`Validation passed: ${required.length} required paths, 11 registrations, gallery script loading, reduced-motion support, and tabs/panel/radio/tooltip regression hooks.`);
 console.log("Static validation only. Run manual/browser QA before claiming runtime or accessibility certification.");
