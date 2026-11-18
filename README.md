@@ -23,13 +23,17 @@
 | Toggle | `<vfx-toggle>` | Boolean state switch |
 | Slider | `<vfx-slider>` | Numeric range input |
 | Checkbox | `<vfx-checkbox>` | Boolean form choice |
-| Radio | `<vfx-radio>` | Single choice from options |
+| Radio | `<vfx-radio>` | Native radio group with named, required and disabled states |
 | Input | `<vfx-input>` | Text entry |
-| Tabs | `<vfx-tabs>` | Select a tab |
+| Tabs | `<vfx-tabs>` | Horizontal/vertical tabs with arrow-key navigation |
 | Progress | `<vfx-progress>` | Numeric progress display |
 | Rating | `<vfx-rating>` | Five-star rating |
 | Toast | `<vfx-toast>` | Temporary status message |
 | Tooltip | `<vfx-tooltip>` | Contextual hint |
+
+### ⌨️ Improved keyboard interactions
+
+Tabs now support horizontal and vertical orientation, arrow-key navigation, and Home/End selection. Radio groups use native radio inputs for browser keyboard behavior and support accessible group labels, required state, disabled state, and form lifecycle callbacks. The host application remains responsible for associating tabs with their content panels.
 
 ## 🚀 Live website and GitHub Pages
 
