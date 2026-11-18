@@ -1,5 +1,9 @@
 import { readFile, access } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { join } from "node:path";
+
+const execFileAsync = promisify(execFile);
 
 const root = process.cwd();
 const required = [
@@ -59,6 +63,7 @@ for (const hook of [
 const radio = await read("components/radio.js");
 for (const hook of [
   "input.name = name", "input.disabled = this.disabled", "input.required = this.required",
+  "this.required ? \"\" :", 'this.setAttribute("value", input.value)',
   "aria-required", "aria-disabled", "setFormValue", "formResetCallback",
   "formDisabledCallback", "formStateRestoreCallback"
 ]) {
