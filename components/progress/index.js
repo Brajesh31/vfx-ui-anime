@@ -100,10 +100,10 @@ fx.define('vfx-progress', vfxProgress);
 // >>> vfx core (copied from core.js by tools/build.mjs: edit core.js, not this block)
 // vfx VFX core: springs, the effects layer and the lettering, shared by every component.
 // Each component file carries a copy of this between its core markers, so any one file works on its own. The first one loaded
-// sets window.vfxFX and the others use it. Edit this file, then run `node tools/build.mjs` to stamp it into the components.
+// sets window.VFXAnimeFX and the others use it. Edit this file, then run `node tools/build.mjs` to stamp it into the components.
 (() => {
 'use strict';
-if (window.vfxFX) return;
+if (window.VFXAnimeFX) return;
 const TAU = Math.PI * 2;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -347,7 +347,7 @@ class Base extends HTMLElement {
 }
 const define = (tag, cls) => { if (!customElements.get(tag)) customElements.define(tag, cls); };
 
-const api = window.vfxFX = {
+const api = window.VFXAnimeFX = {
   version: 1, paused: false,
   get P() { return P; }, get calm() { return calm; }, get now() { return now; },
   TAU, clamp, lerp, rnd, Spring,
@@ -357,5 +357,5 @@ const api = window.vfxFX = {
 };
 })();
 // <<< vfx core
-component(window.vfxFX);
+component(window.VFXAnimeFX);
 })();
