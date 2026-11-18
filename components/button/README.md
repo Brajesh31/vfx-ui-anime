@@ -4,13 +4,13 @@ A button that reacts like an anime impact frame. Press it and it squashes flat, 
 
 The secondary variant is quieter: a small squash and three wedges at the corner.
 
-One of eleven files in this repo. Same idea in each (an ordinary control, anime reactions), different control.
+One of eleven standalone animated controls in VFX UI Anime. Each turns an ordinary interface control into an expressive animated interaction.
 
 ## Run it
 
 ```sh
 python3 -m http.server 8000     # from the repo folder
-# open http://localhost:8000/button/
+# open http://localhost:8000/components/button/demo.html
 ```
 
 `?embed=1` hides the heading.
@@ -20,7 +20,7 @@ python3 -m http.server 8000     # from the repo folder
 `index.js` is the whole component: one file, no dependencies.
 
 ```html
-<script src="button.js"></script>
+<script src="index.js"></script>
 <vfx-button>Confirm</vfx-button>
 <vfx-button variant="secondary">Cancel</vfx-button>
 ```
