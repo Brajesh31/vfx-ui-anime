@@ -39,7 +39,7 @@
             color: var(--vfx-violet, #6557d9);
             box-shadow: 0 2px 8px #241b5015;
           }
-          button:focus-visible {
+          button:focus-visible, .panel:focus-visible {
             outline: 3px solid var(--vfx-pink, #ff5f9e);
             outline-offset: 2px;
           }
@@ -51,10 +51,15 @@
             flex: none;
             text-align: start;
           }
+          .panels { padding-top: .65rem; }
+          .panel { min-width: 0; }
+          .panel[hidden] { display: none !important; }
         </style>
         <nav role="tablist" aria-label="Tabs" aria-orientation="horizontal"></nav>
+        <div class="panels"></div>
       `;
       this.nav = this.shadowRoot.querySelector("nav");
+      this.panels = this.shadowRoot.querySelector(".panels");
     }
 
     connectedCallback() {
@@ -96,23 +101,41 @@
       this.nav.setAttribute("aria-orientation", orientation);
       this.nav.setAttribute("aria-label", this.getAttribute("label") || "Tabs");
       this.nav.replaceChildren();
+      this.panels.replaceChildren();
 
       items.forEach((item, index) => {
         const button = document.createElement("button");
+        const panel = document.createElement("div");
+        const panelSlot = document.createElement("slot");
         const isSelected = item === selected;
+        const tabId = `vfx-tabs-${this.instanceId}-tab-${index}`;
+        const panelId = `vfx-tabs-${this.instanceId}-panel-${index}`;
 
         button.type = "button";
-        button.id = `vfx-tabs-${this.instanceId}-tab-${index}`;
+        button.id = tabId;
         button.setAttribute("role", "tab");
         button.setAttribute("aria-selected", String(isSelected));
+        button.setAttribute("aria-controls", panelId);
         button.tabIndex = isSelected ? 0 : -1;
         button.dataset.index = String(index);
         button.textContent = item;
-
         button.addEventListener("click", () => this.activate(index, true));
         button.addEventListener("keydown", (event) => this.handleKeydown(event, index));
 
+        panel.className = "panel";
+        panel.id = panelId;
+        panel.setAttribute("role", "tabpanel");
+        panel.setAttribute("aria-labelledby", tabId);
+        panel.tabIndex = 0;
+        panel.hidden = !isSelected;
+
+        // The slot name matches the tab label exactly, keeping both ARIA
+        // endpoints inside this shadow tree while panel content stays in HTML.
+        panelSlot.name = item;
+        panel.append(panelSlot);
+
         this.nav.append(button);
+        this.panels.append(panel);
       });
     }
 
