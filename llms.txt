@@ -16,15 +16,18 @@
 - `components/rating.js`: vfx-rating.
 - `components/toast.js`: vfx-toast.
 - `components/tooltip.js`: vfx-tooltip.
-- `docs/COMPONENTS.md`: public attributes, properties, methods and events.
+- `docs/COMPONENTS.md`: component inventory and concise API overview.
+- `docs/COMPONENT_API_REFERENCE.md`: detailed attributes, properties, methods, events, payloads and implementation limitations.
 - `docs/ARCHITECTURE.md`: runtime architecture.
 - `docs/ACCESSIBILITY.md`: known accessibility gaps and QA checklist.
+- `docs/TESTING.md`: testing scope and current validation limitations.
 - `skills/vfx-ui-anime/SKILL.md`: instructions for extending the project.
 
 ## Integration rules
-1. Load `core.js` before component scripts.
+1. Load `core.js` before component scripts when particle effects are required.
 2. Keep native semantics and keyboard behavior.
 3. Use the documented custom element names and events.
-4. Do not claim full accessibility or cross-browser support without testing.
-5. Respect `prefers-reduced-motion`.
-6. Preserve the project's MIT license when redistributing.
+4. Check the detailed API reference for exact event payloads and current limitations.
+5. Do not claim full accessibility or cross-browser support without testing.
+6. Respect `prefers-reduced-motion`.
+7. Preserve the project's MIT license when redistributing.
