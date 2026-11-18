@@ -21,25 +21,25 @@ class vfxRadio extends fx.Base {
     input:focus-visible + .dot { outline: 2.5px solid var(--vfx-acc); outline-offset: 3px; }
     :host([disabled]) label { opacity: .5; cursor: not-allowed; }`;
   get value() { return this.rows ? (this.rows.find((r) => r.inp.checked)?.inp.value ?? '') : this.getAttribute('value') || ''; }
-  set value(v) { if (!this.rows) { this.setAttribute('value', v); return; } for (const r of this.rows) r.inp.checked = r.inp.value === String(v); this.settle(true); }
+  set value(v) { if (!this.rows) { if (v == null) this.removeAttribute('value'); else this.setAttribute('value', v); return; } for (const r of this.rows) r.inp.checked = v != null && r.inp.value === String(v); this.settle(true); }
   get disabled() { return this.hasAttribute('disabled'); }
   set disabled(v) { this.toggleAttribute('disabled', !!v); }
-  attributeChangedCallback(name, _, v) { if (!this.rows) return; if (name === 'value') this.value = v; else if (name === 'label') this.$('.rad').setAttribute('aria-label', v || 'Options'); else if (name === 'disabled') for (const r of this.rows) r.inp.disabled = this.disabled; else this.syncForm(); }
+  attributeChangedCallback(name, _, v) { if (!this.rows) return; if (name === 'value') this.value = v ?? ''; else if (name === 'label') this.$('.rad').setAttribute('aria-label', v || 'Options'); else if (name === 'disabled') for (const r of this.rows) r.inp.disabled = this.disabled || this._formDisabled; else { this.$('.rad').setAttribute('aria-required', String(this.hasAttribute('required'))); this.syncForm(); } }
   render() {
     const name = 'sk-radio-' + ++count, want = this.getAttribute('value');
     const opts = [...this.querySelectorAll('option')].map((o, i) => ({ v: o.value || String(i), t: o.textContent.trim(), on: want !== null ? (o.value || String(i)) === want : o.selected }));
     if (!opts.length) opts.push({ v: 'a', t: 'Option A', on: true }, { v: 'b', t: 'Option B', on: false });
     return `<div class="rad" role="radiogroup" part="group" aria-label="${esc(this.getAttribute('label') || 'Options')}" aria-required="${this.hasAttribute('required')}">${opts.map((o) => `<label part="option"><input type="radio" name="${name}" value="${esc(o.v)}"${o.on ? ' checked' : ''}${this.disabled ? ' disabled' : ''}><span class="dot" part="dot"></span>${esc(o.t)}</label>`).join('')}</div>`;
   }
-  syncForm() { const value = this.value; this.internals.setFormValue(value || null); if (this.hasAttribute('required') && !value) this.internals.setValidity({ valueMissing: true }, 'Choose an option.', this.rows[0]?.inp); else this.internals.setValidity({}); }
+  syncForm() { const selected = this.rows.find(r => r.inp.checked); this.internals.setFormValue(selected ? selected.inp.value : null); if (this.hasAttribute('required') && !selected) this.internals.setValidity({ valueMissing: true }, 'Choose an option.', this.rows[0]?.inp); else this.internals.setValidity({}); }
   settle(quiet) { for (const r of this.rows) { r.s.to = r.inp.checked ? 1 : 0; if (quiet) r.s.x = r.s.to; } this.syncForm(); }
-  formResetCallback() { if (!this.rows) return; const initial = this.initialValue ?? ''; this.rows.forEach(r => { r.inp.checked = r.inp.value === initial; }); this.settle(true); }
-  formDisabledCallback(disabled) { if (this.rows) for (const r of this.rows) r.inp.disabled = !!disabled || this.disabled; }
+  formResetCallback() { if (!this.rows) return; const initial = this.initialValue; this.rows.forEach(r => { r.inp.checked = initial != null && r.inp.value === initial; }); this.settle(true); }
+  formDisabledCallback(disabled) { this._formDisabled = !!disabled; if (this.rows) for (const r of this.rows) r.inp.disabled = this._formDisabled || this.disabled; }
   checkValidity() { return this.internals.checkValidity(); }
   reportValidity() { return this.internals.reportValidity(); }
   setup() {
     this.rows = this.$$('label').map((l) => ({ inp: l.querySelector('input'), dot: l.querySelector('.dot'), s: new Spring(0, 520, 14) }));
-    this.settle(true); this.initialValue = this.value;
+    this._formDisabled = !!this._formDisabled; this.rows.forEach(r => r.inp.disabled = this.disabled || this._formDisabled); this.settle(true); const initial = this.rows.find(r => r.inp.checked); this.initialValue = initial ? initial.inp.value : null;
     for (const r of this.rows) r.inp.addEventListener('change', () => {
       this.settle(); const c = at(r.dot);
       ticks(c.x, c.y, { dir: -2.3, n: 4, r: 20, len: 15, fan: 0.36, life: 0.5 }); lines(c.x - 26, c.y + 18, { n: 3, dir: 2.6, len: 26, spread: 6 });

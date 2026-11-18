@@ -251,8 +251,6 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 - **Confetti Button**: VFX burst and shard celebration effects.
 
 
-undefined
-
 ## 🎴 Phase 2: signature controls upgraded
 
 The original 11 controls have received a focused behavior, lifecycle, accessibility and reduced-motion pass. Their signature animation identities remain intact. The implementation adds form reset/disabled synchronization, validation support, stale-animation protection, safer overlay behavior and expanded browser regression tests. See the [Phase 2 upgrade report](docs/quality/PHASE-2-SIGNATURE-CONTROLS.md).

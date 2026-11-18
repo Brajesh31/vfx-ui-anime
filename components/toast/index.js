@@ -18,7 +18,8 @@ class vfxToast extends fx.Base {
     .toast[data-kind="error"] .ic { background: #ff8eaa; }
     .toast[data-kind="info"] .ic { background: #b8b3ff; }
     .toast[data-kind="success"] .ic { background: #a8e9ca; }
-    .ic svg { width: 15px; height: 15px; fill: none; stroke: var(--vfx-on-pri); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .ic svg { width: 15px; height: 15px; fill: none; stroke: var(--vfx-ink); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+    .x:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: 2px; }
     .msg { overflow: hidden; text-overflow: ellipsis; }
     .x { margin-left: auto; flex: none; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: none; font-weight: 900; font-size: 15px; cursor: pointer; }`;
   get open() { return this.state > 0 && this.state < 3; }

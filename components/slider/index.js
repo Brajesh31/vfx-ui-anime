@@ -32,7 +32,7 @@ class vfxSlider extends fx.Base {
     if (!this.r) return;
     if (name === 'value') { this.r.value = v; this.sync(); }
     else if (name === 'label') this.r.setAttribute('aria-label', v || 'Slider');
-    else if (name === 'disabled') this.r.disabled = this.disabled;
+    else if (name === 'disabled') this.r.disabled = this.disabled || this._formDisabled;
     else if (name === 'unit') this.sync();
     else { if (v === null) this.r.removeAttribute(name); else this.r.setAttribute(name, v); this.sync(); }
   }
@@ -44,9 +44,9 @@ class vfxSlider extends fx.Base {
   frac() { const r = this.r, lo = +r.min || 0, hi = r.max === '' ? 100 : +r.max; return hi > lo ? (+r.value - lo) / (hi - lo) : 0; }
   sync() { this.s.to = this.frac(); this.val.textContent = this.r.value + (this.getAttribute('unit') ?? '%'); this.r.setAttribute('aria-valuetext', this.val.textContent); this.internals.setFormValue(this.r.value); }
   formResetCallback() { if (!this.r) return; this.r.value = this.getAttribute('value') ?? '50'; this.sync(); this.s.x = this.s.to; this.s.v = 0; this.peak = 0; }
-  formDisabledCallback(disabled) { if (this.r) this.r.disabled = !!disabled || this.disabled; }
+  formDisabledCallback(disabled) { this._formDisabled = !!disabled; if (this.r) this.r.disabled = this._formDisabled || this.disabled; }
   setup() {
-    const box = this.box = this.$('.sld'), r = this.r = this.$('input'); this.th = this.$('.th'); this.val = this.$('.val');
+    const box = this.box = this.$('.sld'), r = this.r = this.$('input'); this._formDisabled = !!this._formDisabled; r.disabled = this.disabled || this._formDisabled; this.th = this.$('.th'); this.val = this.$('.val');
     this.s = new Spring(0, 420, 30); this.sync(); this.s.x = this.s.to; this.acc = 0; this.peak = 0; this.said = 0; this.t = 0;
     r.addEventListener('input', () => this.sync());
     r.addEventListener('change', () => {

@@ -19,7 +19,8 @@ class vfxTooltip extends fx.Base {
     .tip[data-side="bottom"] { top: calc(100% + 16px); bottom: auto; transform-origin: 50% -20%; }
     .tip[data-side="bottom"]::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--vfx-ink); }
     .tip[data-side="bottom"]::before { top: auto; bottom: calc(100% - 4.5px); border-top-color: transparent; border-bottom-color: var(--vfx-card); }
-    .help { display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: var(--vfx-bw) solid var(--vfx-ink); border-radius: 50%; background: var(--vfx-card); box-shadow: 4px 5px 0 var(--vfx-soft); font-weight: 900; cursor: pointer; }`;
+    .help { display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: var(--vfx-bw) solid var(--vfx-ink); border-radius: 50%; background: var(--vfx-card); box-shadow: 4px 5px 0 var(--vfx-soft); font-weight: 900; cursor: pointer; }
+    .help:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: 4px; }`;
   get open() { return !!this.isOpen; }
   attributeChangedCallback(name, _, v) { if (!this.b) return; if (name === 'text') this.tip.textContent = v || ''; else this.b.setAttribute('aria-label', v || 'Help'); }
   render() { const id = 'sk-tip-' + ++count; return `<div class="tip" role="tooltip" id="${id}" part="tip">${esc(this.getAttribute('text') || 'Helpful hint!')}</div><button class="help" type="button" part="button" aria-describedby="${id}" aria-label="${esc(this.getAttribute('label') || 'Help')}"><slot>?</slot></button>`; }
@@ -56,7 +57,7 @@ class vfxTooltip extends fx.Base {
       puff(c.x - c.w / 2 - 8, c.y - 12, { size: 8, n: 4, vx: -14, vy: -10, life: 0.8 }); puff(c.x + c.w / 2 + 10, c.y + 12, { size: 8, n: 4, vx: 14, vy: -6, life: 0.8 }); puff(c.x - c.w / 2 - 4, c.y + 22, { size: 5, n: 3, vx: -10, life: 0.6 });
       ticks(c.x + c.w / 2 - 2, c.y - c.h / 2 - 6, { dir: -1.0, n: 3, r: 5, len: 16, fan: 0.36, life: 0.5 }); ring(q.x, q.y - q.h / 2 - 3, { rx: 22, ry: 5, life: 0.5, w: 3 }); sfx('kachi', c.x + 6, c.y - 46, { size: 96, rot: -0.08, life: 0.8, ...hollow() }); });
   }
-  show(on = true) { this.pinned = !!on; this.update(); }
+  show(on = true) { if (!on) { this.hide(); return; } this.pinned = true; this.update(); }
   hide() { this.hovered = false; this.focused = false; this.pinned = false; this.update(); }
   frame(dt) { if (fx.calm) { this.s.x = this.s.to; this.s.v = 0; this.bs.s.x = 1; this.bs.s.v = 0; this.bs.pop.x = 1; this.bs.pop.v = 0; this.bs.tilt.x = 0; this.bs.tilt.v = 0; } this.bs.step(dt); const y = Math.max(0, this.s.step(dt)); this.tip.style.transform = 'scale(' + y + ') rotate(' + ((1 - y) * -10) + 'deg)'; }
 }

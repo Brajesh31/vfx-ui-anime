@@ -2,12 +2,12 @@
 
 **Status:** Implementation batch complete, pending CI verification  
 **Scope:** The original 11 signature component types  
-**Base commit:** \`98f00bea8aa26922863b34020ba9bdb32740fbb2\`  
-**Phase 2 implementation commits:** \`baf3ecb6347cb0691b972faea236925e8381ea12\` plus the follow-up batch containing the remaining refinements and tests.
+**Base commit:** `98f00bea8aa26922863b34020ba9bdb32740fbb2`  
+**Phase 2 implementation commits:** `baf3ecb6347cb0691b972faea236925e8381ea12` plus the follow-up batch containing the remaining refinements and tests.
 
 ## 1. Scope
 
-Phase 2 improves the original Button, Toggle, Slider, Checkbox, Radio, Input, Tabs, Progress, Rating, Toast and Tooltip. The original custom effects and visual identities remain the reference. No new component types were added. The shared \`core.js\` runtime was not changed, so the duplicated core blocks in the other 71 component files were not rewritten as part of this phase.
+Phase 2 improves the original Button, Toggle, Slider, Checkbox, Radio, Input, Tabs, Progress, Rating, Toast and Tooltip. The original custom effects and visual identities remain the reference. No new component types were added. The shared `core.js` runtime was not changed, so the duplicated core blocks in the other 71 component files were not rewritten as part of this phase.
 
 ## 2. Changes made
 
@@ -31,32 +31,32 @@ All additions are backward-compatible with the existing documented methods and a
 
 ### Toast
 
-\`\`\`js
+```js
 toast.show('Saved successfully', { type: 'success', duration: 2.6 });
 toast.show('Network unavailable', { type: 'error', duration: 0 });
 toast.hide();
-\`\`\`
+```
 
-Supported types are \`success\`, \`info\`, \`warning\` and \`error\`. The \`type\` attribute supplies the default. Passing \`0\` for duration keeps the message open until explicitly hidden.
+Supported types are `success`, `info`, `warning` and `error`. The `type` attribute supplies the default. Passing `0` for duration keeps the message open until explicitly hidden.
 
 Events:
 
-- \`show\`: \`event.detail\` includes \`message\` and \`type\`.
-- \`hide\`: \`event.detail\` includes \`type\`.
+- `show`: `event.detail` includes `message` and `type`.
+- `hide`: `event.detail` includes `type`.
 
 ### Input
 
-The custom input forwards \`required\`, \`readonly\`, \`minlength\`, \`maxlength\` and \`pattern\`, and dynamically synchronizes \`type\`, \`autocomplete\`, \`placeholder\`, \`label\` and \`value\`.
+The custom input forwards `required`, `readonly`, `minlength`, `maxlength` and `pattern`, and dynamically synchronizes `type`, `autocomplete`, `placeholder`, `label` and `value`.
 
-It exposes \`validity\`, \`validationMessage\`, \`checkValidity()\`, \`reportValidity()\` and \`setCustomValidity(message)\`.
+It exposes `validity`, `validationMessage`, `checkValidity()`, `reportValidity()` and `setCustomValidity(message)`.
 
 ### Radio
 
-The required state is exposed on the radiogroup and through form-associated validity. \`checkValidity()\` and \`reportValidity()\` delegate to \`ElementInternals\`.
+The required state is exposed on the radiogroup and through form-associated validity. `checkValidity()` and `reportValidity()` delegate to `ElementInternals`.
 
 ### Toggle and form controls
 
-The form-associated signature controls now reset to their initial attribute state and respond to form-disabled callbacks. Toggle also emits both \`input\` and \`change\` on a user flip.
+The form-associated signature controls now reset to their initial attribute state and respond to form-disabled callbacks. Toggle also emits both `input` and `change` on a user flip.
 
 ## 4. Regression tests added
 
@@ -76,7 +76,7 @@ The existing end-to-end checks for all 82 registered component tags, mobile touc
 
 ## 5. Verification status and boundaries
 
-The implementation has been committed to \`main\`. The repository's Validate workflow is the source of truth for the browser regression suite, Pages deploy and CodeQL/Scorecard workflows. The phase should only be marked fully verified once those runs complete successfully.
+The implementation has been committed to `main`. The repository's Validate workflow is the source of truth for the browser regression suite, Pages deploy and CodeQL/Scorecard workflows. The phase should only be marked fully verified once those runs complete successfully.
 
 This pass includes headless Chromium automation, not a human visual review or manual assistive-technology certification. Safari, Firefox and real screen-reader testing remain outstanding. Those limitations should not be hidden behind a passing Chromium test.
 

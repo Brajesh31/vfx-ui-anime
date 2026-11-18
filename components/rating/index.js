@@ -15,13 +15,14 @@ class vfxRating extends fx.Base {
     .stars { display: flex; }
     button { width: 44px; height: 44px; padding: 2px; border: 0; background: none; cursor: pointer; will-change: transform; }
     button:disabled { cursor: not-allowed; opacity: .5; }
+    button:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: 3px; border-radius: 5px; }
     svg { width: 100%; height: 100%; fill: var(--vfx-card); stroke: var(--vfx-ink); stroke-width: 2.3; stroke-linejoin: round; overflow: visible; }
     .lit svg { fill: var(--vfx-pri); }`;
   get value() { return this.score ?? +(this.getAttribute('value') || 0); }
   set value(n) { if (this.btns) this.set(clamp(Math.round(+n || 0), 0, 5), true); else this.setAttribute('value', n); }
   get disabled() { return this.hasAttribute('disabled'); }
   set disabled(v) { this.toggleAttribute('disabled', !!v); }
-  attributeChangedCallback(name, _, v) { if (!this.btns) return; if (name === 'value') this.value = v; else for (const b of this.btns) b.disabled = this.disabled; }
+  attributeChangedCallback(name, _, v) { if (!this.btns) return; if (name === 'value') this.value = v; else for (const b of this.btns) b.disabled = this.disabled || this._formDisabled; }
   render() { return `<div class="stars" role="radiogroup" part="stars" aria-label="${esc(this.getAttribute('label') || 'Rating')}">${[1, 2, 3, 4, 5].map((n) => `<button type="button" role="radio" part="star" aria-checked="false" tabindex="-1" aria-label="${n} star${n > 1 ? 's' : ''}"${this.disabled ? ' disabled' : ''}>${STAR}</button>`).join('')}</div>`; }
   set(n, quiet) {
     const was = this.score, seq = this.seq = (this.seq || 0) + 1; this.score = n; this.internals.setFormValue(n ? String(n) : null);
@@ -39,7 +40,7 @@ class vfxRating extends fx.Base {
     if (!quiet) this.dispatchEvent(new Event('change', { bubbles: true }));
   }
   setup() {
-    this.btns = this.$('button'); this.sp = this.btns.map(() => new Spring(1, 560, 12)); this.back = this.backLayer(); this.score = 0; this.seq = 0; this.initialValue = clamp(Math.round(+this.getAttribute('value') || 0), 0, 5);
+    this.btns = this.$('button'); this._formDisabled = !!this._formDisabled; this.btns.forEach(b => b.disabled = this.disabled || this._formDisabled); this.sp = this.btns.map(() => new Spring(1, 560, 12)); this.back = this.backLayer(); this.score = 0; this.seq = 0; this.initialValue = clamp(Math.round(+this.getAttribute('value') || 0), 0, 5);
     this.btns.forEach((b, i) => {
       b.addEventListener('click', () => this.set(this.score === i + 1 ? 0 : i + 1));
       b.addEventListener('keydown', (e) => { const d = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key]; if (!d) return; e.preventDefault(); const n = clamp((this.score || (d > 0 ? 0 : 2)) + d, 1, 5); this.set(n); this.btns[n - 1].focus(); });
@@ -47,7 +48,7 @@ class vfxRating extends fx.Base {
     this.set(clamp(Math.round(+this.getAttribute('value') || 0), 0, 5), true);
   }
   formResetCallback() { this.set(this.initialValue ?? 0, true); }
-  formDisabledCallback(disabled) { if (this.btns) this.btns.forEach(b => b.disabled = !!disabled || this.disabled); }
+  formDisabledCallback(disabled) { this._formDisabled = !!disabled; if (this.btns) this.btns.forEach(b => b.disabled = this._formDisabled || this.disabled); }
   frame(dt) { this.btns.forEach((b, i) => { if (fx.calm) { this.sp[i].x = 1; this.sp[i].v = 0; } const y = this.sp[i].step(dt); b.style.transform = Math.abs(y - 1) < 0.001 ? '' : `scale(${y}) rotate(${(1 - y) * -34}deg)`; }); }
 }
 fx.define('vfx-rating', vfxRating);

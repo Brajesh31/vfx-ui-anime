@@ -30,18 +30,18 @@ class vfxToggle extends fx.Base {
   attributeChangedCallback(name) {
     if (!this.b) return;
     if (name === 'checked') { const on = this.checked; this.b.setAttribute('aria-checked', String(on)); if (!this.flipping) { this.seq = [on ? N - 1 : 0]; this.pos = 0; } this.form(); }
-    if (name === 'disabled') this.b.disabled = this.disabled;
+    if (name === 'disabled') this.b.disabled = this.disabled || this._formDisabled;
     if (name === 'label') this.b.setAttribute('aria-label', this.getAttribute('label') || 'Toggle');
   }
   form() { this.internals.setFormValue(this.checked ? this.value : null); }
   formResetCallback() { this.checked = this.hasAttribute('checked'); }
-  formDisabledCallback(disabled) { if (this.b) this.b.disabled = !!disabled || this.disabled; }
+  formDisabledCallback(disabled) { this._formDisabled = !!disabled; if (this.b) this.b.disabled = this._formDisabled || this.disabled; }
   formStateRestoreCallback(state) { if (state !== undefined) this.checked = state === this.value; }
   render() {
     return `<button class="tog" type="button" role="switch" part="switch" aria-checked="${this.checked}" aria-label="${fx.esc(this.getAttribute('label') || 'Toggle')}"${this.disabled ? ' disabled' : ''}><canvas width="${FW}" height="${FH}" aria-hidden="true"></canvas></button>`;
   }
   setup() {
-    this.b = this.$('.tog'); this.c = this.$('canvas').getContext('2d');
+    this.b = this.$('.tog'); this._formDisabled = !!this._formDisabled; this.b.disabled = this.disabled || this._formDisabled; this.c = this.$('canvas').getContext('2d');
     this.seq = [this.checked ? N - 1 : 0]; this.pos = 0; this.acc = 0; this.shown = -1;
     const img = getSheet(); if (!img.complete) img.addEventListener('load', () => this.draw(this.cur()), { once: true });
     this.b.addEventListener('click', () => this.flip());
