@@ -15,7 +15,7 @@ class SakugaLike extends fx.Base {
  frame(dt){this.press.step(dt);this.b.style.setProperty('--heart-scale',Math.max(.1,this.heart.step(dt)).toFixed(3))}
 }
 fx.define('sakuga-like',SakugaLike);
-})();
+}
 // >>> sakuga core (copied from core.js by tools/build.mjs)
 // Sakuga VFX core: springs, the effects layer and the lettering, shared by every component.
 // Each component file carries a copy of this between its core markers, so any one file works on its own. The first one loaded
