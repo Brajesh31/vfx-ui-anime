@@ -39,7 +39,7 @@ The static website is published through GitHub Pages. The workflow validates the
 
 **Live website:** https://brajesh31.github.io/vfx-ui-anime/
 
-[View the latest successful deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44233606857) · [Open repository Pages settings](https://github.com/Brajesh31/vfx-ui-anime/settings/pages)
+[View the latest successful deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44236461017) · [Open repository Pages settings](https://github.com/Brajesh31/vfx-ui-anime/settings/pages)
 
 See [Deployment](docs/DEPLOYMENT.md) for hosting details and troubleshooting.
 
@@ -66,7 +66,7 @@ Load the shared engine before the component scripts:
 <vfx-button>Launch</vfx-button>
 ```
 
-Each component is a JavaScript custom element that uses the shared core. The core creates one page-level canvas and exposes `window.VFXAnime` for effect helpers. See [Installation](docs/INSTALLATION.md) and [Component API](docs/COMPONENTS.md).
+Each component is a JavaScript custom element that uses the shared core. The core creates one page-level canvas and exposes `window.VFXAnime` for effect helpers. See [Installation](docs/INSTALLATION.md), [Component API overview](docs/COMPONENTS.md), and the [detailed component API reference](docs/COMPONENT_API_REFERENCE.md).
 
 ## 🎨 Theme tokens
 
@@ -94,7 +94,8 @@ The checks validate required files, component registrations and key accessibilit
 ## 📚 Documentation
 
 - [Installation](docs/INSTALLATION.md)
-- [Component API](docs/COMPONENTS.md)
+- [Component API overview](docs/COMPONENTS.md)
+- [Detailed component API reference](docs/COMPONENT_API_REFERENCE.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Testing strategy](docs/TESTING.md)
