@@ -26,6 +26,8 @@ class vfxCheckbox extends fx.Base {
   get value() { return this.getAttribute('value') || 'on'; }
   attributeChangedCallback(name) { if (!this.inp) return; if (name === 'checked') this.checked = this.hasAttribute('checked'); else this.inp.disabled = this.disabled; }
   form() { this.internals.setFormValue(this.checked ? this.value : null); }
+  formResetCallback() { if (!this.inp) return; this.inp.checked = this.hasAttribute('checked'); this.form(); this.s.x = 1; this.s.v = 0; }
+  formDisabledCallback(disabled) { if (this.inp) this.inp.disabled = !!disabled || this.disabled; }
   render() { return `<label part="label"><input type="checkbox"${this.hasAttribute('checked') ? ' checked' : ''}${this.disabled ? ' disabled' : ''}><span class="box" part="box"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 10.5l4.5 4.5 8.5-10"/></svg></span><slot></slot></label>`; }
   setup() {
     const inp = this.inp = this.$('input'), box = this.box = this.$('.box'); this.s = new Spring(1, 600, 13); this.form();
@@ -40,7 +42,7 @@ class vfxCheckbox extends fx.Base {
       this.dispatchEvent(new Event('change', { bubbles: true }));
     });
   }
-  frame(dt) { const y = this.s.step(dt); this.box.style.transform = Math.abs(y - 1) < 0.001 ? '' : `scale(${y}) rotate(${(1 - y) * 20}deg)`; }
+  frame(dt) { if (fx.calm) { this.s.x = 1; this.s.v = 0; } const y = this.s.step(dt); this.box.style.transform = Math.abs(y - 1) < 0.001 ? '' : `scale(${y}) rotate(${(1 - y) * 20}deg)`; }
 }
 fx.define('vfx-checkbox', vfxCheckbox);
 }

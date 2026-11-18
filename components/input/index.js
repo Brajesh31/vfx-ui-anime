@@ -11,28 +11,26 @@ const TYPES = ['text', 'email', 'search', 'url', 'tel', 'password'];
 class vfxInput extends fx.Base {
   static delegates = true;
   static formAssociated = true;
-  static observedAttributes = ['value', 'placeholder', 'disabled', 'label'];
+  static observedAttributes = ['value', 'placeholder', 'disabled', 'label', 'type', 'autocomplete', 'required', 'readonly', 'minlength', 'maxlength', 'pattern'];
   static css = `
     input { width: var(--vfx-input-width, 230px); max-width: 100%; padding: 13px 16px; border: var(--vfx-bw) solid var(--vfx-ink); border-radius: var(--vfx-r); background: var(--vfx-card); box-shadow: var(--vfx-sh); font-weight: 600; font-size: 16px; outline: none; caret-color: var(--vfx-ink); will-change: transform; }
-    input::placeholder { color: var(--vfx-dim); } input:disabled { opacity: .5; }`;
+    input::placeholder { color: var(--vfx-dim); } input:disabled { opacity: .5; }
+    input[aria-invalid="true"] { border-color: var(--vfx-danger, #d63865); box-shadow: 0 0 0 2px color-mix(in srgb, var(--vfx-danger, #d63865) 20%, transparent); }
+    input:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: 4px; }`;
   get value() { return this.inp ? this.inp.value : this.getAttribute('value') || ''; }
   set value(v) { if (this.inp) { this.inp.value = v; this.internals.setFormValue(this.inp.value); } else this.setAttribute('value', v); }
   get disabled() { return this.hasAttribute('disabled'); }
   set disabled(v) { this.toggleAttribute('disabled', !!v); }
-  attributeChangedCallback(name, _, v) {
-    if (!this.inp) return;
-    if (name === 'value') this.value = v ?? ''; else if (name === 'disabled') this.inp.disabled = this.disabled;
-    else if (name === 'label') this.inp.setAttribute('aria-label', v || 'Text'); else this.inp.placeholder = v ?? '';
-  }
+  attributeChangedCallback(name, _, v) { if (!this.inp) return; if (name === 'value') this.value = v ?? ''; else if (name === 'disabled') this.inp.disabled = this.disabled; else if (name === 'label') this.inp.setAttribute('aria-label', v || 'Text'); else if (name === 'type') this.inp.type = TYPES.includes(v) ? v : 'text'; else if (name === 'autocomplete') this.inp.autocomplete = v || 'off'; else if (name === 'placeholder') this.inp.placeholder = v ?? ''; else if (name === 'required') this.inp.required = this.hasAttribute('required'); else if (name === 'readonly') this.inp.readOnly = this.hasAttribute('readonly'); else if (['minlength','maxlength','pattern'].includes(name)) { if (v === null) this.inp.removeAttribute(name); else this.inp.setAttribute(name, v); } this.syncForm(); }
   render() {
     const a = (n, d = '') => esc(this.getAttribute(n) ?? d), type = TYPES.includes(this.getAttribute('type')) ? this.getAttribute('type') : 'text';
     return `<input part="input" type="${type}" value="${a('value')}" placeholder="${a('placeholder')}" aria-label="${a('label', 'Text')}" autocomplete="${a('autocomplete', 'off')}"${this.disabled ? ' disabled' : ''}>`;
   }
   setup() {
-    const inp = this.inp = this.$('input'), m = document.createElement('canvas').getContext('2d'); this.s = new Spring(1, 700, 16); this.internals.setFormValue(inp.value);
+    const inp = this.inp = this.$('input'), m = document.createElement('canvas').getContext('2d'); this.s = new Spring(1, 700, 16); this.inp.required = this.hasAttribute('required'); this.inp.readOnly = this.hasAttribute('readonly'); for (const attr of ['minlength','maxlength','pattern']) if (this.hasAttribute(attr)) this.inp.setAttribute(attr, this.getAttribute(attr)); this.syncForm();
     inp.addEventListener('focus', () => { const c = at(inp, 1, 0); this.s.x = 1.04; ticks(c.x - 6, c.y - 4, { dir: -1.05, n: 3, r: 5, len: 17, fan: 0.36, life: 0.5 }); });
     inp.addEventListener('input', () => {   // every key kicks up a little dust where the caret is
-      this.internals.setFormValue(inp.value);
+      this.syncForm();
       const cs = getComputedStyle(inp); m.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
       const shown = inp.type === 'password' ? '•'.repeat(inp.selectionStart ?? inp.value.length) : inp.value.slice(0, inp.selectionStart ?? inp.value.length);
       const c = at(inp, 0, 0.5), x = c.x + 18 + Math.min(c.w - 38, m.measureText(shown).width);
@@ -40,7 +38,12 @@ class vfxInput extends fx.Base {
     });
     inp.addEventListener('change', () => this.dispatchEvent(new Event('change', { bubbles: true })));
   }
-  frame(dt) { const y = this.s.step(dt); this.inp.style.transform = Math.abs(y - 1) < 0.0006 ? '' : `scale(${y})`; }
+  syncForm() { if (!this.inp || !this.internals) return; this.internals.setFormValue(this.inp.value); const v = this.inp.validity, flags = {}; for (const key of ['badInput','customError','patternMismatch','rangeOverflow','rangeUnderflow','stepMismatch','tooLong','tooShort','typeMismatch','valueMissing']) if (v[key]) flags[key] = true; if (v.valid) this.internals.setValidity({}); else this.internals.setValidity(flags, this.inp.validationMessage, this.inp); this.inp.setAttribute('aria-invalid', String(!v.valid)); }
+  formResetCallback() { if (!this.inp) return; this.inp.value = this.getAttribute('value') || ''; this.s.x = 1; this.s.v = 0; this.syncForm(); }
+  formDisabledCallback(disabled) { if (this.inp) this.inp.disabled = !!disabled || this.disabled; }
+  formStateRestoreCallback(state) { if (this.inp && typeof state === 'string') { this.inp.value = state; this.syncForm(); } }
+  get validity() { return this.inp?.validity; } get validationMessage() { return this.inp?.validationMessage || ''; } checkValidity() { return this.inp?.checkValidity() ?? true; } reportValidity() { return this.inp?.reportValidity() ?? true; } setCustomValidity(message) { this.inp?.setCustomValidity(String(message || '')); this.syncForm(); }
+  frame(dt) { if (fx.calm) { this.s.x = 1; this.s.v = 0; } const y = this.s.step(dt); this.inp.style.transform = Math.abs(y - 1) < 0.0006 ? '' : 'scale(' + y + ')'; }
 }
 fx.define('vfx-input', vfxInput);
 }

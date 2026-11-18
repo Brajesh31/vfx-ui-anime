@@ -20,6 +20,7 @@ class vfxToggle extends fx.Base {
     :host { width: 108px; height: 54px; margin: 89px 21px 20px; }   /* the drawing is bigger than the button: this keeps room for all of it */
     .tog { position: relative; display: block; width: 108px; height: 54px; padding: 0; border: 0; border-radius: 27px; background: none; cursor: pointer; }
     .tog:disabled { cursor: not-allowed; opacity: .5; }
+    .tog:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: 6px; border-radius: 28px; }
     canvas { position: absolute; left: 50%; top: 50%; width: 150px; height: 162.5px; margin: -115.6px 0 0 -75px; pointer-events: none; }`;
   get checked() { return this.hasAttribute('checked'); }
   set checked(v) { this.toggleAttribute('checked', !!v); }
@@ -33,6 +34,9 @@ class vfxToggle extends fx.Base {
     if (name === 'label') this.b.setAttribute('aria-label', this.getAttribute('label') || 'Toggle');
   }
   form() { this.internals.setFormValue(this.checked ? this.value : null); }
+  formResetCallback() { this.checked = this.hasAttribute('checked'); }
+  formDisabledCallback(disabled) { if (this.b) this.b.disabled = !!disabled || this.disabled; }
+  formStateRestoreCallback(state) { if (state !== undefined) this.checked = state === this.value; }
   render() {
     return `<button class="tog" type="button" role="switch" part="switch" aria-checked="${this.checked}" aria-label="${fx.esc(this.getAttribute('label') || 'Toggle')}"${this.disabled ? ' disabled' : ''}><canvas width="${FW}" height="${FH}" aria-hidden="true"></canvas></button>`;
   }
@@ -48,7 +52,8 @@ class vfxToggle extends fx.Base {
     if (this.disabled) return; const on = !this.checked;
     this.flipping = true; this.checked = on; this.flipping = false;
     this.seq = on ? ON : OFF; this.pos = fx.calm ? this.seq.length - 1 : 0; this.acc = 0; this.draw(this.cur());
-    this.dispatchEvent(new Event('change', { bubbles: true }));
+    this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
   cur() { return this.seq[Math.min(this.seq.length - 1, this.pos)]; }
   draw(i) {
@@ -56,6 +61,7 @@ class vfxToggle extends fx.Base {
     this.c.clearRect(0, 0, FW, FH); this.c.drawImage(img, (i % COLS) * FW, Math.floor(i / COLS) * FH, FW, FH, 0, 0, FW, FH); this.shown = i;
   }
   frame(dt) {
+    if (fx.calm) { this.pos = this.seq.length - 1; this.acc = 0; }
     if (this.pos < this.seq.length - 1) { this.acc += dt * FPS; while (this.acc >= 1 && this.pos < this.seq.length - 1) { this.acc -= 1; this.pos++; } }
     if (this.cur() !== this.shown) this.draw(this.cur());
   }

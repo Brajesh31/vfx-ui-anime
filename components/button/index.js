@@ -17,6 +17,7 @@ class vfxButton extends fx.Base {
     .btn.alt { border-color: var(--vfx-alt-line); box-shadow: var(--vfx-alt-sh); }
     .btn.inv { background: var(--vfx-ink); color: var(--vfx-card); box-shadow: none; }   /* the impact frame */
     .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn:focus-visible { outline: 3px solid var(--vfx-acc); outline-offset: 5px; }
     .ok { display: inline-block; width: calc(var(--ok, 0) * 24px); height: 18px; margin-left: calc(var(--ok, 0) * 6px); vertical-align: -2px; overflow: visible; fill: none; stroke: var(--vfx-acc); stroke-width: 4.4; stroke-linecap: round; stroke-linejoin: round; transform: scale(var(--ok, 0)); }`;
 
   get primary() { return this.getAttribute('variant') !== 'secondary'; }
@@ -43,6 +44,7 @@ class vfxButton extends fx.Base {
   }
   // the impact: what a click does. You can call it yourself.
   impact() {
+    if (!this.primary || this.disabled || !this.b) return;
     const b = this.b, sq = this.sq, c = at(b), n = ++this.seq; this.ok.to = 0; this.ok.x = 0;
     sq.s.x = Math.min(sq.s.x, 0.6); sq.pop.x = 1.24; sq.tilt.x = -5; b.classList.add('inv'); later(190, () => b.classList.remove('inv'));
     burst(c.x, c.y, { r: 98, spikes: 17, life: 0.48, layer: this.back }); shards(c.x, c.y, { n: 11, speed: 260, size: 9, life: 0.95, arc: 6.28, grav: 300 });
@@ -58,7 +60,11 @@ class vfxButton extends fx.Base {
     kira(q.x - 16, q.y + 2, { r: 15, life: 1 }); ticks(q.x - 2, q.y - 12, { dir: -0.8, n: 2, r: 6, len: 12 });
     if (hold > 0) later(hold * 1000, () => { if (n === this.seq) this.ok.to = 0; });
   }
-  frame(dt) { this.sq.step(dt); if (this.primary) this.b.style.setProperty('--ok', Math.max(0, this.ok.step(dt)).toFixed(3)); }
+  frame(dt) {
+    if (fx.calm) { this.sq.s.x = 1; this.sq.s.v = 0; this.sq.pop.x = 1; this.sq.pop.v = 0; this.sq.tilt.x = 0; this.sq.tilt.v = 0; this.ok.x = this.ok.to; this.ok.v = 0; }
+    this.sq.step(dt);
+    if (this.primary) this.b.style.setProperty('--ok', Math.max(0, this.ok.step(dt)).toFixed(3));
+  }
 }
 fx.define('vfx-button', vfxButton);
 }

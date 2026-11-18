@@ -11,7 +11,7 @@ const { Spring, clamp, rnd, later, at, esc, puff, lines, shards, slash, burst, t
 class vfxSlider extends fx.Base {
   static delegates = true;
   static formAssociated = true;
-  static observedAttributes = ['value', 'min', 'max', 'step', 'disabled', 'label', 'unit'];
+  static observedAttributes = ['value', 'min', 'max', 'step', 'disabled', 'label', 'unit', 'required'];
   static css = `
     :host { margin: 30px 0 0; }
     .sld { position: relative; width: var(--vfx-slider-width, 230px); max-width: 100%; height: 46px; }
@@ -42,7 +42,9 @@ class vfxSlider extends fx.Base {
       <input type="range" min="${a('min', 0)}" max="${a('max', 100)}" step="${a('step', 1)}" value="${a('value', 50)}" aria-label="${a('label', 'Slider')}"${this.disabled ? ' disabled' : ''}></div>`;
   }
   frac() { const r = this.r, lo = +r.min || 0, hi = r.max === '' ? 100 : +r.max; return hi > lo ? (+r.value - lo) / (hi - lo) : 0; }
-  sync() { this.s.to = this.frac(); this.val.textContent = this.r.value + (this.getAttribute('unit') ?? '%'); this.internals.setFormValue(this.r.value); }
+  sync() { this.s.to = this.frac(); this.val.textContent = this.r.value + (this.getAttribute('unit') ?? '%'); this.r.setAttribute('aria-valuetext', this.val.textContent); this.internals.setFormValue(this.r.value); }
+  formResetCallback() { if (!this.r) return; this.r.value = this.getAttribute('value') ?? '50'; this.sync(); this.s.x = this.s.to; this.s.v = 0; this.peak = 0; }
+  formDisabledCallback(disabled) { if (this.r) this.r.disabled = !!disabled || this.disabled; }
   setup() {
     const box = this.box = this.$('.sld'), r = this.r = this.$('input'); this.th = this.$('.th'); this.val = this.$('.val');
     this.s = new Spring(0, 420, 30); this.sync(); this.s.x = this.s.to; this.acc = 0; this.peak = 0; this.said = 0; this.t = 0;
@@ -56,7 +58,9 @@ class vfxSlider extends fx.Base {
     });
   }
   frame(dt) {
-    this.t += dt; const W = this.box.clientWidth - 28, x = this.s.step(dt), v = this.s.v, st = 1 + Math.min(1.5, Math.abs(v) * 0.3);
+    this.t += dt;
+    if (fx.calm) { this.s.x = this.s.to; this.s.v = 0; this.peak = 0; const W = this.box.clientWidth - 28, x = this.s.x; this.th.style.transform = 'translateX(' + (x * W) + 'px)'; this.val.style.transform = 'translateX(' + (x * W - (this.val.offsetWidth - 46) / 2) + 'px)'; this.box.style.setProperty('--v', clamp(x)); return; }
+    const W = this.box.clientWidth - 28, x = this.s.step(dt), v = this.s.v, st = 1 + Math.min(1.5, Math.abs(v) * 0.3);
     this.th.style.transformOrigin = v > 0 ? '100% 50%' : '0 50%'; this.th.style.transform = `translateX(${x * W}px) scale(${st}, ${1 / Math.sqrt(st)})`;
     this.val.style.transform = `translateX(${x * W - (this.val.offsetWidth - 46) / 2}px) rotate(${clamp(-v * 5, -14, 14)}deg)`; this.box.style.setProperty('--v', clamp(x));
     if (Math.abs(v) > Math.abs(this.peak)) this.peak = v; else this.peak *= 0.96;

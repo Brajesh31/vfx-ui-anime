@@ -11,7 +11,7 @@ let count = 0;
 class vfxRadio extends fx.Base {
   static formAssociated = true;
   static fromChildren = true;
-  static observedAttributes = ['value', 'disabled'];
+  static observedAttributes = ['value', 'disabled', 'label'];
   static css = `
     .rad { display: grid; gap: 12px; }
     label { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; -webkit-user-select: none; }
@@ -24,17 +24,22 @@ class vfxRadio extends fx.Base {
   set value(v) { if (!this.rows) { this.setAttribute('value', v); return; } for (const r of this.rows) r.inp.checked = r.inp.value === String(v); this.settle(true); }
   get disabled() { return this.hasAttribute('disabled'); }
   set disabled(v) { this.toggleAttribute('disabled', !!v); }
-  attributeChangedCallback(name, _, v) { if (!this.rows) return; if (name === 'value') this.value = v; else for (const r of this.rows) r.inp.disabled = this.disabled; }
+  attributeChangedCallback(name, _, v) { if (!this.rows) return; if (name === 'value') this.value = v; else if (name === 'label') this.$('.rad').setAttribute('aria-label', v || 'Options'); else for (const r of this.rows) r.inp.disabled = this.disabled; }
   render() {
     const name = 'sk-radio-' + ++count, want = this.getAttribute('value');
     const opts = [...this.querySelectorAll('option')].map((o, i) => ({ v: o.value || String(i), t: o.textContent.trim(), on: want !== null ? (o.value || String(i)) === want : o.selected }));
     if (!opts.length) opts.push({ v: 'a', t: 'Option A', on: true }, { v: 'b', t: 'Option B', on: false });
     return `<div class="rad" role="radiogroup" part="group" aria-label="${esc(this.getAttribute('label') || 'Options')}">${opts.map((o) => `<label part="option"><input type="radio" name="${name}" value="${esc(o.v)}"${o.on ? ' checked' : ''}${this.disabled ? ' disabled' : ''}><span class="dot" part="dot"></span>${esc(o.t)}</label>`).join('')}</div>`;
   }
-  settle(quiet) { for (const r of this.rows) { r.s.to = r.inp.checked ? 1 : 0; if (quiet) r.s.x = r.s.to; } this.internals.setFormValue(this.value || null); }
+  syncForm() { const value = this.value; this.internals.setFormValue(value || null); if (this.hasAttribute('required') && !value) this.internals.setValidity({ valueMissing: true }, 'Choose an option.', this.rows[0]?.inp); else this.internals.setValidity({}); }
+  settle(quiet) { for (const r of this.rows) { r.s.to = r.inp.checked ? 1 : 0; if (quiet) r.s.x = r.s.to; } this.syncForm(); }
+  formResetCallback() { if (!this.rows) return; const initial = this.initialValue ?? ''; this.rows.forEach(r => { r.inp.checked = r.inp.value === initial; }); this.settle(true); }
+  formDisabledCallback(disabled) { if (this.rows) for (const r of this.rows) r.inp.disabled = !!disabled || this.disabled; }
+  checkValidity() { return this.internals.checkValidity(); }
+  reportValidity() { return this.internals.reportValidity(); }
   setup() {
     this.rows = this.$$('label').map((l) => ({ inp: l.querySelector('input'), dot: l.querySelector('.dot'), s: new Spring(0, 520, 14) }));
-    this.settle(true);
+    this.settle(true); this.initialValue = this.value;
     for (const r of this.rows) r.inp.addEventListener('change', () => {
       this.settle(); const c = at(r.dot);
       ticks(c.x, c.y, { dir: -2.3, n: 4, r: 20, len: 15, fan: 0.36, life: 0.5 }); lines(c.x - 26, c.y + 18, { n: 3, dir: 2.6, len: 26, spread: 6 });
@@ -43,7 +48,7 @@ class vfxRadio extends fx.Base {
       this.dispatchEvent(new Event('change', { bubbles: true }));
     });
   }
-  frame(dt) { for (const r of this.rows) r.dot.style.setProperty('--d', Math.max(0, r.s.step(dt)).toFixed(3)); }
+  frame(dt) { for (const r of this.rows) { if (fx.calm) { r.s.x = r.s.to; r.s.v = 0; } r.dot.style.setProperty('--d', Math.max(0, r.s.step(dt)).toFixed(3)); } }
 }
 fx.define('vfx-radio', vfxRadio);
 }
