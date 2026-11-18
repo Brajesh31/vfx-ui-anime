@@ -30,6 +30,14 @@
   <p class="sakuga-footnote">Original component files and artwork remain under <code>sakuga-vfx/</code> with their upstream license and attribution. Motion effects honor reduced-motion preferences.</p>
 </section>
 
+<section class="sakuga-showcase" aria-labelledby="sakuga-extra-heading">
+<div class="sakuga-heading"><div><div class="eyebrow">New Sakuga originals</div><h2 id="sakuga-extra-heading">✨ More interactions, more impact.</h2><p>Four additional controls built on the same spring-and-canvas engine. Each has its own action, state and impact sequence.</p></div></div>
+<div class="sakuga-grid">
+<section class="sakuga-card"><h3>Like button</h3><p>Heart pops, impact burst, manga lettering and glint.</p><div class="sakuga-stage"><sakuga-like id="sakuga-like"></sakuga-like><p class="sakuga-status" id="sakuga-like-status" aria-live="polite">Tap to like.</p></div></section>
+<section class="sakuga-card"><h3>Accordion</h3><p>Disclosure panel with springing chevron and opening impact.</p><div class="sakuga-stage"><sakuga-accordion label="What makes this special?" id="sakuga-accordion">The panel uses a real disclosure state. The animation decorates the change, it does not control whether this content is available.</sakuga-accordion><p class="sakuga-status" id="sakuga-accordion-status" aria-live="polite">Open and close the panel.</p></div></section>
+<section class="sakuga-card"><h3>Segmented control</h3><p>Choose a view and watch the selection land.</p><div class="sakuga-stage"><sakuga-segmented label="Time range" id="sakuga-segmented"><option value="day" selected>Day</option><option value="week">Week</option><option value="month">Month</option></sakuga-segmented><p class="sakuga-status" id="sakuga-segmented-status" aria-live="polite">Choose a range.</p></div></section>
+<section class="sakuga-card"><h3>Notification bell</h3><p>Bell rings, impact sparks fly and unread count clears.</p><div class="sakuga-stage"><sakuga-notification count="3" id="sakuga-notification"></sakuga-notification><p class="sakuga-status" id="sakuga-notification-status" aria-live="polite">3 unread notifications.</p></div></section>
+</div></section>
 <div class="section-head"><div><div class="eyebrow">Component playground</div><h2>Try the controls</h2></div><span class="code">11 components · 0 runtime dependencies</span></div><div class="grid">
 <section class="demo-card"><h3>Button</h3><p>Squash, spring and impact on activation.</p><div class="stage"><vfx-button>Activate</vfx-button><vfx-button variant="secondary">Secondary</vfx-button></div></section>
 <section class="demo-card"><h3>Toggle</h3><p>Switch state with a springy snap.</p><div class="stage"><vfx-toggle label="Notifications" checked></vfx-toggle></div></section>
@@ -56,4 +64,9 @@
 <script defer src="sakuga-vfx/toast/toast.js"></script>
 <script defer src="sakuga-vfx/tooltip/tooltip.js"></script>
 <script defer src="sakuga-interactions.js"></script>
+<script defer src="sakuga-vfx/like/like.js"></script>
+<script defer src="sakuga-vfx/accordion/accordion.js"></script>
+<script defer src="sakuga-vfx/segmented/segmented.js"></script>
+<script defer src="sakuga-vfx/notification/notification.js"></script>
+<script defer src="sakuga-extra-interactions.js"></script>
 </body></html>
