@@ -38,7 +38,8 @@ All custom-element events shown above bubble and cross the Shadow DOM boundary. 
 - `<vfx-radio>` accepts comma-separated options, applies the configured `name`, and uses native radio inputs for browser keyboard behavior. Its `value`, `required` and `disabled` properties are writable. A required group starts unselected unless a valid `value` is supplied; form-associated behavior remains browser-dependent and should be tested.
 - `<vfx-input>` does not proxy the complete native constraint-validation API.
 - Toggle, checkbox, radio and input declare form association and use `ElementInternals` where available, but production form behavior still needs browser-specific testing.
-- Reduced motion suppresses canvas particles. It does not automatically remove every CSS transition from the components.
+- `<vfx-tooltip>` connects its focusable trigger to the hint with `aria-describedby`, supports automatic top/bottom placement or an explicit side, clamps horizontally to the viewport, and can be dismissed with Escape.
+- Reduced motion suppresses canvas particles and disables the tooltip's own visibility transition. Other components may still have CSS transitions.
 
 ## Example
 
