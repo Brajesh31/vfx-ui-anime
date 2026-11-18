@@ -157,12 +157,6 @@
             break;
           case "vfx-tabs": {
             const selected = event.detail?.value || control.value;
-            const descriptions = {
-              Overview: "Overview content is controlled by this host page.",
-              Features: "Feature panel content is authored as a named slot in the host page.",
-              Details: "The component manages the linked tabpanel relationship."
-            };
-            document.querySelector("#tab-panel").textContent = descriptions[selected] || selected;
             addLog("Tabs: selected = " + selected);
             break;
           }
