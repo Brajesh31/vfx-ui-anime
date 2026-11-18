@@ -1,77 +1,68 @@
-# 🧩 Component API
+# 🧩 Component API overview
 
-All components are registered as native custom elements. Load `core.js` before component scripts. Unless noted, events are bubbling and composed so they can be observed outside Shadow DOM.
+VFX UI Anime exposes eleven native custom elements. Load `core.js` before the component scripts when you want the shared canvas effects. Each component file registers its own tag.
 
-## `<vfx-button>`
-- Content: default slot.
-- Attribute: `variant="secondary"` for the alternate appearance.
-- Event: `vfx-activate` after activation.
-- Keyboard: native button behavior.
+For the complete, source-checked list of attributes, properties, methods, emitted event payloads, form behavior, accessibility semantics and current limitations, see the **[Detailed Component API Reference](COMPONENT_API_REFERENCE.md)**.
 
-## `<vfx-toggle>`
-- Attributes: `checked`, `label`, `name`, `value`.
-- Property: `checked` boolean.
-- Form: uses ElementInternals when supported, including disabled-state and reset callbacks. Validate in target browsers before relying on form submission.
-- Keyboard: native button switch interaction; exposes `role="switch"` and `aria-checked`.
+## Component inventory
 
-## `<vfx-slider>`
-- Attributes: `min`, `max`, `step`, `value`, `disabled`.
-- Property: `value` number.
-- Event: `input` with `event.detail.value`; visual spark effect on change.
-- Uses native range input semantics.
+| Component | Custom element | Primary inputs | Host events |
+|---|---|---|---|
+| Button | `<vfx-button>` | `variant`, default slot | `vfx-activate` |
+| Toggle | `<vfx-toggle>` | `checked`, `label`, `name`, `value`, `disabled` | `change` |
+| Slider | `<vfx-slider>` | `min`, `max`, `step`, `value`, `disabled` | `input` with `detail.value` |
+| Checkbox | `<vfx-checkbox>` | `checked`, `disabled`, `value`, default slot | `change` |
+| Radio | `<vfx-radio>` | `options`, `value`, `name` | `change` |
+| Input | `<vfx-input>` | `type`, `value`, `placeholder`, `required`, `disabled`, `autocomplete`, `label` | `input`, `change` |
+| Tabs | `<vfx-tabs>` | `items`, `value` | `change` with `detail.value` |
+| Progress | `<vfx-progress>` | `value`, `label` | None |
+| Rating | `<vfx-rating>` | `value` | `change` with `detail.value` |
+| Toast | `<vfx-toast>` | `message` | `vfx-toast` with `detail.message` |
+| Tooltip | `<vfx-tooltip>` | `text`, default slot | None |
 
-## `<vfx-checkbox>`
-- Attributes: `checked`, `name`, `value`.
-- Property: `checked` boolean.
-- Event: native-like bubbling `change`.
-- Uses a native checkbox internally and supports form reset/disabled callbacks when ElementInternals is available.
-
-## `<vfx-radio>`
-- Attributes: `options` comma-separated, `value`, `name`.
-- Property: `value` string.
-- Event: `change`.
-- Current limitation: options are rebuilt when observed attributes change. Commas are not supported inside option labels.
-
-## `<vfx-input>`
-- Attributes: `type`, `placeholder`, `value`, `required`, `disabled`, `autocomplete`.
-- Attributes: `label` for an explicit accessible name.
-- Property: `value` string.
-- Events: `input`, `change`.
-- Supports form reset and disabled callbacks where ElementInternals is available. It does not yet proxy the full native constraint-validation API.
-
-## `<vfx-tabs>`
-- Attributes: `items` comma-separated and `value`.
-- Property: `value` string.
-- Event: `change` with `event.detail.value`.
-- Current limitation: it renders the tab selector only. Your application must connect selection to the relevant panel and manage panel ARIA relationships.
-
-## `<vfx-progress>`
-- Attributes: `value` from 0 to 100, `label`.
-- Property: `value` number.
-- Exposes `role="progressbar"`, `aria-valuemin`, `aria-valuemax` and `aria-valuenow`.
-
-## `<vfx-rating>`
-- Attribute/property: `value` integer from 0 to 5.
-- Event: `change` with `event.detail.value`.
-- Keyboard: native buttons, each with an accessible label.
-- Current limitation: whole-star values only.
-
-## `<vfx-toast>`
-- Attribute: `message`.
-- Method: `show(message?)`.
-- Event: `vfx-toast`.
-- Uses a live status region. Current implementation shows one toast per element and does not provide a global queue.
-
-## `<vfx-tooltip>`
-- Attribute: `text`.
-- Content: default slot is the focusable trigger.
-- Uses hover and focus-within visibility.
-- Current limitation: placement is fixed above the trigger and does not yet perform viewport collision detection.
+All custom-element events shown above bubble and cross the Shadow DOM boundary. Events without a listed detail payload do not provide a documented custom payload.
 
 ## Shared engine
-`window.VFXAnime` exposes:
-- `emit(type, x, y, options?)` to create canvas particles.
-- `impact(element, type?, power?)` to emit at an element's center.
-- `spring(from, to, elapsedSeconds)` for a simple easing helper.
-- `reducedMotion` read-only state.
-- `version` engine version string.
+
+`core.js` creates `window.VFXAnime` with:
+- `emit(type, x, y, options?)`: emit particles at viewport coordinates.
+- `impact(element, type?, power?)`: emit at the center of an element.
+- `spring(from, to, elapsedSeconds)`: return a scalar easing value.
+- `reducedMotion`: read-only state from `prefers-reduced-motion`.
+- `version`: engine version string.
+
+## Important implementation notes
+
+- `<vfx-slider>` copies its initial range attributes when it connects. Use its `value` property for later programmatic value changes.
+- `<vfx-tabs>` only renders the tab selector. The consuming application must create and manage tab panels and their accessibility relationships.
+- `<vfx-radio>` accepts comma-separated options. The current internal radio inputs share a fixed name, so do not assume the host `name` attribute changes their internal grouping.
+- `<vfx-input>` does not proxy the complete native constraint-validation API.
+- Toggle, checkbox, radio and input declare form association and use `ElementInternals` where available, but production form behavior still needs browser-specific testing.
+- Reduced motion suppresses canvas particles. It does not automatically remove every CSS transition from the components.
+
+## Example
+
+```html
+<link rel="stylesheet" href="/styles.css">
+<script defer src="/core.js"></script>
+<script defer src="/components/button.js"></script>
+
+<vfx-button id="continue">Continue</vfx-button>
+<script>
+  document.querySelector("#continue").addEventListener("vfx-activate", () => {
+    console.log("Continue activated");
+  });
+</script>
+```
+
+## Further guidance
+
+- [Detailed Component API Reference](COMPONENT_API_REFERENCE.md)
+- [Installation](INSTALLATION.md)
+- [Architecture](ARCHITECTURE.md)
+- [Accessibility and compatibility](ACCESSIBILITY.md)
+- [Testing strategy](TESTING.md)
+- [Framework integrations](INTEGRATIONS.md)
+- [Visual design system](DESIGN_SYSTEM.md)
+
+This overview describes the current source implementation. It does not imply complete native form parity, full screen-reader support, or verified cross-browser behavior.
