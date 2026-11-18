@@ -1,26 +1,40 @@
-# Slider component
+# Slider
 
-A numeric range control with a live value readout.
+A range slider with a cloud behind the thumb. The value rides in a bubble that leans with the drag. The thumb stretches into a teardrop and lags behind your finger on a spring. Drag fast and a bank of cumulus rolls up behind it with speed lines and chips, and シュッ. Let go while it is still moving and a crescent flies on ahead, with a small burst, and two puffs are left where it came from.
 
-## Live demo
-Open [demo.html](demo.html) to test the component in the library's design system.
+## Run it
 
-## Installation
-Copy `index.js` and load the shared engine first:
-
-```html
-<link rel="stylesheet" href="/styles.css">
-<script defer src="/core.js"></script>
-<script defer src="/components/slider/index.js"></script>
-<vfx-slider min="0" max="100" value="42"></vfx-slider>
+```sh
+python3 -m http.server 8000     # from the repo folder
+# open http://localhost:8000/slider/
 ```
 
-## Component details
-- **Element:** `<vfx-slider>`
-- **Category:** Forms
-- **Runtime dependencies:** None
+## Use it
 
-## Accessibility
-Keep labels descriptive, preserve keyboard access, and test focus, form behavior, and screen-reader output in the browsers you support. The shared motion engine respects `prefers-reduced-motion`.
+```html
+<script src="slider.js"></script>
+<vfx-slider value="30" label="Volume"></vfx-slider>
+<vfx-slider min="0" max="10" step="0.5" value="4" unit="" label="Spice" name="spice"></vfx-slider>
+```
 
-See the [component API overview](../../docs/COMPONENTS.md) for the public inventory and links to detailed guidance.
+```js
+el.addEventListener('input', () => console.log(el.value));    // while it moves
+el.addEventListener('change', () => console.log(el.value));   // when it is let go
+el.value = 80;
+```
+
+| attribute | what it sets | default |
+|---|---|---|
+| `value`, `min`, `max`, `step` | like `<input type="range">` | 50, 0, 100, 1 |
+| `label` | what a screen reader calls it | Slider |
+| `unit` | shown after the number in the bubble | `%` |
+| `name` | sent with its form | none |
+| `disabled` | can't be moved | off |
+
+- **Underneath is a real range input,** stretched over the track and transparent, so the keyboard, touch and screen readers get the native control. `value` is a string, like an input's; `valueAsNumber` is the number.
+- **Size:** 230 pixels wide; set `--sk-slider-width` to change it. It keeps 30 pixels above for the bubble.
+
+## Limits
+
+- **The effects need speed.** A slow drag only moves the thumb; the cloud starts above about a third of the track per second.
+- **Horizontal only.**
