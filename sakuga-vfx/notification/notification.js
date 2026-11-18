@@ -1,6 +1,6 @@
 // Sakuga Notification: a bell button with a springy ring and a compact unread counter.
 (() => {
-const fx=window.SakugaFX,{Spring,at,squashy,burst,ticks,puff,sfx,kira}=fx;
+const fx=window.SakugaFX,{Spring,at,squashy,burst,ticks,puff,sfx,kira} = fx;
 class SakugaNotification extends fx.Base{
  static delegates=true; static observedAttributes=['count','disabled'];
  static css=`
@@ -279,3 +279,5 @@ const api = window.SakugaFX = {
 };
 })();
 // <<< sakuga core
+component(window.SakugaFX);
+})();
