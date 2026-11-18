@@ -1,0 +1,11 @@
+flowchart TD
+  A[Host HTML page] --> B[Load core.js]
+  B --> C[Create shared VFXAnime API]
+  C --> D[Mount shared canvas]
+  A --> E[Load component script]
+  E --> F[Register custom element]
+  F --> G[Render native control in Shadow DOM]
+  G --> H[User interaction]
+  H --> I[Update native state]
+  H --> J[Emit canvas particles]
+  J --> K[Shared animation loop]
