@@ -1,10 +1,6 @@
 # Third-party software notice
 
-VFX UI Anime includes adapted components from the MIT-licensed **Sakuga VFX** project by Justin Finkelman. The button, toggle, slider, checkbox, radio, input, tabs, progress, rating, toast, and tooltip implementations retain the original interaction logic and embedded animation artwork, with project-specific branding and custom-element identifiers adapted for VFX UI Anime.
-
-Original project: https://github.com/finktheartist/sakuga-vfx
-
-The original project name and copyright notice are retained here solely to comply with the MIT License. They are not used as the public-facing product or website branding.
+Eleven standalone animated controls in VFX UI Anime contain adapted third-party implementation code and artwork distributed under the MIT License. Their public custom-element names, runtime namespace, and CSS token prefix have been adapted for this project. This notice preserves the original copyright and permission terms required for redistribution.
 
 MIT License
 
