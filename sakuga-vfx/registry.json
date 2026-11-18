@@ -232,6 +232,86 @@
         }
       ],
       "docs": "Sakuga Tooltip is a plain script that registers a custom element. Load /sakuga-vfx/tooltip.js with a script tag (not a module), then use <sakuga-tooltip text=\"Helpful hint!\"></sakuga-tooltip>. Opens on hover, focus and tap; Escape closes it. More: https://sakuga-vfx.vercel.app"
+    },
+    {
+      "name": "like",
+      "type": "registry:file",
+      "title": "Sakuga Like",
+      "description": "A heart toggle with spring squash, impact burst, crystals and ポン lettering.",
+      "author": "Brajesh Kumar",
+      "categories": [
+        "anime",
+        "animation",
+        "interaction"
+      ],
+      "files": [
+        {
+          "path": "like/like.js",
+          "target": "~/public/sakuga-vfx/like.js",
+          "type": "registry:file"
+        }
+      ],
+      "docs": "Load /sakuga-vfx/like.js with a plain script tag. This registers the <sakuga-like> custom element."
+    },
+    {
+      "name": "accordion",
+      "type": "registry:file",
+      "title": "Sakuga Accordion",
+      "description": "A disclosure control with a springing chevron, impact burst and accessible expanded state.",
+      "author": "Brajesh Kumar",
+      "categories": [
+        "anime",
+        "animation",
+        "interaction"
+      ],
+      "files": [
+        {
+          "path": "accordion/accordion.js",
+          "target": "~/public/sakuga-vfx/accordion.js",
+          "type": "registry:file"
+        }
+      ],
+      "docs": "Load /sakuga-vfx/accordion.js with a plain script tag. This registers the <sakuga-accordion> custom element."
+    },
+    {
+      "name": "segmented",
+      "type": "registry:file",
+      "title": "Sakuga Segmented",
+      "description": "A segmented choice group with spring-pressed options and impact feedback.",
+      "author": "Brajesh Kumar",
+      "categories": [
+        "anime",
+        "animation",
+        "interaction"
+      ],
+      "files": [
+        {
+          "path": "segmented/segmented.js",
+          "target": "~/public/sakuga-vfx/segmented.js",
+          "type": "registry:file"
+        }
+      ],
+      "docs": "Load /sakuga-vfx/segmented.js with a plain script tag. This registers the <sakuga-segmented> custom element."
+    },
+    {
+      "name": "notification",
+      "type": "registry:file",
+      "title": "Sakuga Notification",
+      "description": "A notification bell with a ringing spring, impact marks and unread counter.",
+      "author": "Brajesh Kumar",
+      "categories": [
+        "anime",
+        "animation",
+        "interaction"
+      ],
+      "files": [
+        {
+          "path": "notification/notification.js",
+          "target": "~/public/sakuga-vfx/notification.js",
+          "type": "registry:file"
+        }
+      ],
+      "docs": "Load /sakuga-vfx/notification.js with a plain script tag. This registers the <sakuga-notification> custom element."
     }
   ]
 }
