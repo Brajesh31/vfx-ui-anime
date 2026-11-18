@@ -222,7 +222,9 @@
     await new Promise((resolve) => setTimeout(resolve, 220));
     assert(escape.defaultPrevented, "Escape was not consumed.");
     assert(tooltip.hasAttribute("data-dismissed"), "Escape did not mark the tooltip as dismissed.");
-    assert(getComputedStyle(description).visibility === "hidden", "Dismissed tooltip remained visible.");
+    assert(description.hasAttribute("data-dismissed"), "Escape did not mark the tooltip element as dismissed.");
+    const dismissedStyle = getComputedStyle(description);
+    assert(dismissedStyle.visibility === "hidden", "Dismissed tooltip remained visible. visibility=" + dismissedStyle.visibility + ", opacity=" + dismissedStyle.opacity + ", active=" + description.hasAttribute("data-active") + ", dismissed=" + description.hasAttribute("data-dismissed"));
 
     trigger.focus();
     await new Promise((resolve) => setTimeout(resolve, 220));
