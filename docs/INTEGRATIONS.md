@@ -1,25 +1,32 @@
 # 🔌 Framework integration notes
 
-The library ships as browser custom elements, not React/Vue/Angular components. Load `core.js` once and load only the component scripts used by the page.
+VFX UI Anime ships as browser custom elements, not as React, Vue or Angular component packages. It has no framework adapters, framework-specific value accessors or typed wrapper packages.
+
+Load `core.js` once before the component scripts, then load only the component definitions used by the page. Use [Installation](INSTALLATION.md) for the source-file setup and the [Integration Cookbook](INTEGRATION_COOKBOOK.md) for complete snippets and practical cautions.
 
 ## React
-- Import or include the scripts at application bootstrap.
-- Use custom elements directly in JSX when supported by the React version in use.
-- For custom DOM events, attach listeners through a ref and a React effect if JSX event handling does not expose the custom event.
-- Pass primitive attributes deliberately. For object values or complex state, use element properties through a ref.
+- Include the custom-element scripts once at application bootstrap or through the host page.
+- Use custom elements in JSX when supported by the selected React version.
+- For custom DOM events, attach a listener through a ref in an effect and remove it during cleanup.
+- Assign numeric or boolean JavaScript properties through a ref when the API exposes a property. Do not assume every property should be passed as a string attribute.
+- In TypeScript projects, add JSX intrinsic-element typing for the custom tags if the compiler requires it.
 
 ## Vue
-- Register the `vfx-` prefix as custom elements in the compiler configuration if needed.
-- Listen to documented custom events.
-- Keep panel state and application state in Vue. The custom elements do not replace application state management.
+- Register the `vfx-` prefix as custom elements in the compiler configuration when needed.
+- Use refs and DOM event listeners when you need the exact custom event or detail payload.
+- Remove manually attached listeners when the component unmounts.
+- Keep application state and associated panel content in Vue. The custom elements do not replace application state management.
 
 ## Angular
-- Configure the schema for custom elements if the compiler requires it.
-- Include the scripts through the application's asset or script configuration.
-- Verify custom event typing and form behavior in the chosen Angular version.
+- Configure the relevant Angular compilation context to accept custom elements when needed.
+- Include the scripts through the application's static asset or script configuration.
+- Verify custom event typing, change detection, property assignment and form behavior in the selected Angular version.
+- This repository does not ship Angular value accessors or wrapper components.
 
 ## Vanilla JavaScript
-Use the examples in `examples/basic.html`. The browser's Custom Elements API handles registration.
+Use [the basic integration example](../examples/basic.html) for a minimal button/toggle setup and [the runnable integration cookbook](../examples/integration-cookbook.html) for all eleven components, delegated event handling, host-owned tab content and a slider-to-progress example.
 
 ## Integration limits
-No framework adapter packages, typed React wrappers, Angular value accessors or Vue-specific components are published yet. Do not imply they exist.
+No npm package is currently published. `registry.json` is the project's own component inventory, not a shadcn registry manifest. No React wrappers, Vue components, Angular value accessors or framework adapter packages are published. Do not imply otherwise.
+
+The components have documented implementation limitations, especially around native form parity, radio keyboard behavior, tab panels and tooltip relationships. Review [the detailed Component API Reference](COMPONENT_API_REFERENCE.md) and [Accessibility](ACCESSIBILITY.md), and verify your browser/framework combination before production use.
