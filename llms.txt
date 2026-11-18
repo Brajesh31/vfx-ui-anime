@@ -18,6 +18,10 @@
 - `components/tooltip.js`: vfx-tooltip.
 - `docs/COMPONENTS.md`: component inventory and concise API overview.
 - `docs/COMPONENT_API_REFERENCE.md`: detailed attributes, properties, methods, events, payloads and implementation limitations.
+- `docs/INTEGRATIONS.md`: framework integration boundaries and high-level setup notes.
+- `docs/INTEGRATION_COOKBOOK.md`: practical vanilla JavaScript, React, Vue and Angular integration patterns, with form and accessibility cautions.
+- `examples/basic.html`: minimal button and toggle integration.
+- `examples/integration-cookbook.html`: runnable all-component example with host-managed state and event handling.
 - `docs/ARCHITECTURE.md`: runtime architecture.
 - `docs/ACCESSIBILITY.md`: known accessibility gaps and QA checklist.
 - `docs/TESTING.md`: testing scope and current validation limitations.
@@ -28,6 +32,7 @@
 2. Keep native semantics and keyboard behavior.
 3. Use the documented custom element names and events.
 4. Check the detailed API reference for exact event payloads and current limitations.
-5. Do not claim full accessibility or cross-browser support without testing.
-6. Respect `prefers-reduced-motion`.
-7. Preserve the project's MIT license when redistributing.
+5. Keep application state and associated content in the host application.
+6. Do not claim full accessibility or cross-browser support without testing.
+7. Respect `prefers-reduced-motion`.
+8. Preserve the project's MIT license when redistributing.
