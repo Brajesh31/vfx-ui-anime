@@ -343,6 +343,7 @@ const api = window.VFXAnimeFX = {
         return;
       }
       const radius = 46, circumference = 2 * Math.PI * radius;
+      svg.append(svgNode('circle', { cx: 70, cy: 70, r: radius, fill: 'none', stroke: '#eee', 'stroke-width': 18 }));
       let offset = 0;
       for (const item of data) {
         const length = circumference * item.value / total;
