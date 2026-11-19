@@ -1,30 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VFX UI Anime Notification Center</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Notification Center Demo · VFX UI Anime</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,800px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;justify-items:center;padding:22px 8px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px}.actions button{padding:8px 12px;border:1.5px solid #1d1a4a;border-radius:9px;background:#fff;font-weight:800;cursor:pointer}.actions button:hover{background:#f4f0ff}.hint{font-size:12px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;justify-items:center;padding:24px 8px}.status{width:min(100%,440px);min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}button{padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#fff;color:#1d1a4a;font-weight:850;cursor:pointer}a{color:#6c62be}
 </style>
 <script src="index.js"></script>
 </head>
-<body>
-<main>
+<body><main>
 <h1>🔔 Notification Center</h1>
-<p>Filter the inbox, mark individual items as read, dismiss them, or inject a new notification through the public property API.</p>
+<p>Filter unread items, mark one or all as read, or dismiss notifications. The inbox state is held in this component instance.</p>
 <div class="stage">
-<div class="actions"><button id="add" type="button">Add notification</button><button id="replace" type="button">Replace inbox data</button></div>
-<vfx-notification-center id="inbox" items="welcome::Welcome aboard::Your workspace is ready.::unread|review::Review complete::Your latest build passed review.::read|mention::You were mentioned::A teammate mentioned you.::unread"></vfx-notification-center>
+<vfx-notification-center id="inbox" items='[{"id":"welcome","title":"Welcome aboard","message":"Your workspace is ready.","read":false,"time":"Just now"},{"id":"review","title":"Build review complete","message":"The latest validation job passed.","read":true,"time":"10 min ago"},{"id":"mention","title":"You were mentioned","message":"A teammate mentioned you in a discussion.","read":false,"time":"1 hour ago"}]'></vfx-notification-center>
+<div class="status" id="status" role="status" aria-live="polite">Use the All and Unread filters, then try the notification actions.</div>
 </div>
-<p class="hint">This component keeps state in memory. Connect its events to your application store or backend for persistence and real-time delivery.</p>
-<p><a href="../../gallery/">← Back to component gallery</a></p>
+<p>Connect the component's read, dismiss, and change events to an application store or backend for persistence.</p>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
 </main>
 <script>
-const inbox=document.querySelector('#inbox');
-let next=1;
-document.querySelector('#add').addEventListener('click',()=>{inbox.items=[...inbox.items,{id:'new-'+next,title:'New activity '+next,message:'This notification was added through the items property.',read:false,time:'Just now'}];next++;});
-document.querySelector('#replace').addEventListener('click',()=>{inbox.items=[{id:'release',title:'Release published',message:'The latest release is ready to review.',read:false,time:'Just now'},{id:'security',title:'Security scan passed',message:'No new alerts were reported.',read:true,time:'A moment ago'}];});
+const inbox=document.querySelector('#inbox'),status=document.querySelector('#status');
+inbox.addEventListener('change',e=>{status.textContent=e.detail.items.length+' notifications, '+e.detail.unreadCount+' unread.';});
+inbox.addEventListener('dismiss',e=>{status.textContent='Dismissed: '+e.detail.notification.title+'.';});
 </script>
-</body>
-</html>
+</body></html>
