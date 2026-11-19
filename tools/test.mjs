@@ -849,7 +849,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("(() => {const el=document.createElement('vfx-particle-field');el.id='phase13-particles';document.body.append(el);})()");
   const defaults=await ev("(() => {const el=document.querySelector('#phase13-particles');return el.count===48&&el.speed===1&&el._particles.length===48&&el.color==='rgba(224,215,255,.7)'&&el.shadowRoot.querySelector('canvas').getAttribute('aria-hidden')==='true';})()");
   await ev("(() => {const el=document.querySelector('#phase13-particles');el.count=12;el.speed=0.5;el.color='#ff0000';})()");
-  const properties=await ev("(() => {const el=document.querySelector('#phase13-particles');return el.count===12&&el._particles.length===12&&el.speed===0.5&&el.color==='#ff0000'&&el.ctx.fillStyle.toLowerCase().includes('255, 0, 0')||el.ctx.fillStyle==='#ff0000';})()");
+  const properties=await ev("(() => {const el=document.querySelector('#phase13-particles');return el.count===12&&el._particles.length===12&&el.speed===0.5&&el.color==='#ff0000'&&(el.ctx.fillStyle.toLowerCase().includes('255, 0, 0')||el.ctx.fillStyle==='#ff0000');})()");
   await ev("(() => {const el=document.querySelector('#phase13-particles');el.speed=0;const y=el._particles[0].y;el.frame(0.5);window.__phase13StaticParticle=el._particles[0].y===y;el.speed=1;el.paused=true;const paused=el._particles[0].y;el.frame(0.5);window.__phase13PausedParticle=el._particles[0].y===paused;el.paused=false;})()");
   const staticState=await ev("window.__phase13StaticParticle&&window.__phase13PausedParticle");
   await ev("document.querySelector('#phase13-particles').count=500");
