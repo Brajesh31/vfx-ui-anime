@@ -1,1 +1,25 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Drawing Canvas</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;font:15px system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:white;box-shadow:9px 10px 0 #b8b3ff}.stage{display:grid;place-items:center;padding:24px}</style><script src="index.js"></script></head><body><main><h1>Drawing Canvas</h1><div class="stage"><vfx-drawing-canvas></vfx-drawing-canvas></div><a href="../../gallery/">Back to gallery</a></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Drawing Canvas | VFX UI Anime</title>
+  <style>
+    :root{color-scheme:light}*{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui,sans-serif}
+    main{width:min(100%,780px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}
+    h1{margin:0;font-size:clamp(24px,4vw,34px)}p{color:#686381}vfx-drawing-canvas{margin:20px auto}
+    a{color:#5146bd;font-weight:700}code{background:#f0edff;padding:2px 5px;border-radius:4px}
+  </style>
+  <script src="index.js"></script>
+</head>
+<body>
+  <main>
+    <h1>🖌️ Drawing Canvas</h1>
+    <p>Draw with a pointer or touch. You can also focus the canvas and use the arrow keys. Hold Shift for finer keyboard movement.</p>
+    <vfx-drawing-canvas label="Demo sketch pad" color="#6558d9" size="5"></vfx-drawing-canvas>
+    <p>The canvas stays in your browser. Use Undo, Clear, or Export PNG in the component toolbar.</p>
+    <a href="../../gallery/">← Back to the component gallery</a>
+  </main>
+</body>
+</html>
