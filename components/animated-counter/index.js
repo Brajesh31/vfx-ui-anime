@@ -325,7 +325,8 @@ const api = window.VFXAnimeFX = {
     get label() { return this.getAttribute('label') || 'Total'; }
     set label(value) { this.setAttribute('label', String(value ?? '')); }
     get duration() {
-      const value = Number(this.getAttribute('duration'));
+      const raw = this.getAttribute('duration');
+      const value = raw === null || raw.trim() === '' ? 900 : Number(raw);
       return Number.isFinite(value) ? clamp(value, 0, 10000) : 900;
     }
     set duration(value) {
