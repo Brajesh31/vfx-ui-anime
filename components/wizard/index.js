@@ -277,7 +277,7 @@ class VfxWizard extends Base {
   this._observePanels();
   this._bindFormReset();
  }
- connectedCallback() { super.connectedCallback(); this._observePanels(); this._bindFormReset(); }
+ connectedCallback() { super.connectedCallback(); if(this.ready){this._observePanels();this._bindFormReset();} }
  _bindFormReset() {
   const form=this.closest('form');
   if(form===this._formOwner)return;
