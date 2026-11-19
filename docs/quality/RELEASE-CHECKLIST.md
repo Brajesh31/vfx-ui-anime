@@ -46,11 +46,10 @@ The Validate browser log for the verified implementation commit records 210 succ
 - [ ] `npm pack --dry-run` output inspected.
 - [ ] Clean consumer project installation and usage tested.
 - [ ] Changelog and release notes prepared.
-- [ ] Decide whether Vercel remains an intended deployment target. The Hobby build-rate-limit failures were observed on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`; require a successful fresh deployment before marking Vercel healthy.
 - [ ] Version and tag selected after API/package freeze.
 - [ ] `private: true` removed only after explicit release approval.
 - [ ] GitHub Release and npm publication performed only after all gates pass.
 
 ## Current decision
 
-**GitHub Actions implementation/integration checks passed on current `main`. Final release approval is pending human QA, Vercel status resolution/retirement and package-consumer validation. No versioned GitHub Release or npm package exists yet.**
+**GitHub Actions implementation/integration checks passed on current `main`. Final release approval is pending human QA and package-consumer validation. No versioned GitHub Release or npm package exists yet.**

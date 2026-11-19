@@ -29,10 +29,6 @@ All four required GitHub Actions workflows passed on implementation commit `0197
 The Validate run on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18` contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
 
 
-### Separate Vercel integration status
-
-The implementation verification commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18` reported two failing Vercel status contexts: `Vercel – vfx-ui-anime` and `Vercel – vfx-ui-anime-9q9s`. Their status target pointed to a Vercel Hobby build-rate-limit notice. At the time of inspection, both linked Vercel projects were on the Hobby plan and their latest deployments were `BLOCKED`, with no live production deployment reported. The latest documentation commit `36c23cf2d514377ad9a522b987622460ba164d87` has no failing combined-status contexts. That absence does not prove a later Vercel deployment is healthy, so do not mark the separate Vercel integration resolved without a successful fresh deployment. GitHub Pages remains the configured public site target and its deployment passed. No Vercel project or billing settings were changed.
-
 The Chromium harness now allows up to 45 seconds for browser startup, selects a wider random debugging-port range, disables shared-memory pressure, and reports a specific launch/exit/timeout reason if DevTools does not become available. The assertions themselves were not weakened or skipped.
 
 ## 2. Component defects corrected

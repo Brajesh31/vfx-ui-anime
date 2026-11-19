@@ -178,8 +178,6 @@ The repository contains four GitHub Actions workflows:
 
 GitHub Pages is the configured live-site deployment target. Its workflow validates the source and uploads the static-site artifact in a `build` job, then deploys that artifact in a dependent `deploy` job. This separation allows a deployment-only retry without creating a second `github-pages` artifact. The workflow does not cancel an in-progress deployment when a new main-branch push arrives.
 
-Vercel integration status checks are separate from these repository workflows. A Vercel build-rate-limit status must not be interpreted as a GitHub Actions failure or success.
-
 Always record results against the exact release-candidate commit SHA. A green workflow from a prior phase or a different commit does not establish that the current candidate passes.
 
 ## 9. Fourteen-stage implementation history
