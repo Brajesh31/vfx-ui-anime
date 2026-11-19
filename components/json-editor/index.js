@@ -258,4 +258,109 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,560px)}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}header{display:flex;justify-content:space-between;padding:8px 10px;border-bottom:1px solid #eee;font-size:11px;font-weight:900}button{padding:5px 8px;border:1px solid #ddd;border-radius:6px;background:white}.body{display:grid;grid-template-columns:1fr 1fr;min-height:180px}textarea{min-width:0;min-height:180px;padding:10px;border:0;border-right:1px solid #eee;font:11px/1.5 monospace;resize:vertical}pre{margin:0;padding:10px;overflow:auto;background:#faf9ff;font:10px/1.5 monospace;white-space:pre-wrap}.status{padding:7px 10px;font-size:9px;color:#4a9b7c}.error{color:#c45a76}@media(max-width:500px){.body{grid-template-columns:1fr}}';}render(){return '<section class="box"><header>JSON Editor <span><button class="format">Format</button> <button class="minify">Minify</button></span></header><div class="body"><textarea aria-label="JSON source"></textarea><pre></pre></div><div class="status" aria-live="polite"></div></section>';}setup(){this.input=this.$('textarea');this.input.value=this.getAttribute('value')||'{\n  "name": "VFX UI",\n  "active": true\n}';this.input.addEventListener('input',()=>this.parse());this.$('.format').addEventListener('click',()=>this.transform(2));this.$('.minify').addEventListener('click',()=>this.transform(0));this.parse();}get value(){return this.input.value;}set value(v){this.input.value=String(v);this.parse();}get valid(){return this._valid;}parse(){try{const o=JSON.parse(this.value);this._valid=true;this.$('.status').classList.remove('error');this.$('.status').textContent='Valid JSON';this.$('pre').textContent=JSON.stringify(o,null,2);}catch(e){this._valid=false;this.$('.status').classList.add('error');this.$('.status').textContent='Invalid JSON · '+e.message;this.$('pre').textContent='Waiting for valid JSON';}this.emit('change',{value:this.value,valid:this._valid});}transform(n){try{this.input.value=JSON.stringify(JSON.parse(this.value),null,n);this.parse();}catch{}}}define('vfx-json-editor',C);})();
+(() => {
+  const { Base, define } = window.VFXAnimeFX;
+  const DEFAULT_VALUE = '{\n  "name": "VFX UI",\n  "active": true\n}';
+  class C extends Base {
+    static get observedAttributes() { return ['value', 'disabled', 'readonly', 'required']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,640px);min-width:0}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 11px;border-bottom:1px solid #eee;font-size:11px;font-weight:900}.actions{display:flex;gap:6px}button{padding:5px 9px;border:1px solid #ddd;border-radius:6px;background:white;font:inherit;font-size:10px;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:220px}textarea{display:block;width:100%;min-width:0;min-height:220px;padding:11px;border:0;border-right:1px solid #eee;font:11px/1.55 ui-monospace,monospace;resize:vertical;tab-size:2}textarea[aria-invalid=true]{background:#fffafb}pre{min-width:0;margin:0;padding:11px;overflow:auto;background:#faf9ff;color:#2a2648;font:11px/1.55 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.status{padding:8px 11px;border-top:1px solid #eee;color:#348663;font-size:10px}.status.error{color:#bd3f62}@media(max-width:520px){.body{grid-template-columns:minmax(0,1fr)}}';
+    }
+    render() {
+      return '<section class="box"><header><span>JSON Editor</span><span class="actions"><button class="format" type="button">Format</button><button class="minify" type="button">Minify</button></span></header><div class="body"><textarea aria-label="JSON source" aria-describedby="json-status" spellcheck="false"></textarea><pre aria-label="Formatted JSON preview"></pre></div><div id="json-status" class="status" role="status" aria-live="polite">Enter valid JSON.</div></section>';
+    }
+    setup() {
+      this.input = this.$('textarea');
+      this.input.value = this.hasAttribute('value') ? this.getAttribute('value') : DEFAULT_VALUE;
+      this.input.addEventListener('input', () => {
+        this.parse();
+        this.emit('input', { value: this.value, valid: this.valid });
+      });
+      this.$('.format').addEventListener('click', () => this.format());
+      this.$('.minify').addEventListener('click', () => this.minify());
+      this._syncAttributes();
+      this.parse();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'value') this.input.value = newValue || '';
+      if (name === 'disabled' || name === 'readonly' || name === 'required') this._syncAttributes();
+      this.parse();
+    }
+    get value() { return this.input ? this.input.value : (this.getAttribute('value') || ''); }
+    set value(value) { this.setAttribute('value', String(value ?? '')); }
+    get valid() { return Boolean(this._valid); }
+    get error() { return this._error || ''; }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get readOnly() { return this.hasAttribute('readonly'); }
+    set readOnly(value) { this.toggleAttribute('readonly', Boolean(value)); }
+    get required() { return this.hasAttribute('required'); }
+    set required(value) { this.toggleAttribute('required', Boolean(value)); }
+    _syncAttributes() {
+      if (!this.input) return;
+      this.input.disabled = this.disabled;
+      this.input.readOnly = this.readOnly;
+      this.input.required = this.required;
+      const locked = this.disabled || this.readOnly;
+      this.$('.format').disabled = locked;
+      this.$('.minify').disabled = locked;
+      this.input.setAttribute('aria-invalid', String(!this.valid && this.input.value.length > 0));
+    }
+    parse() {
+      if (!this.ready) return false;
+      const raw = this.value;
+      let parsed;
+      try {
+        if (this.required && !raw.trim()) throw new Error('A JSON value is required.');
+        parsed = JSON.parse(raw);
+        this._valid = true;
+        this._error = '';
+        this.$('.status').classList.remove('error');
+        this.$('.status').textContent = 'Valid JSON';
+        this.$('pre').textContent = JSON.stringify(parsed, null, 2);
+      } catch (error) {
+        this._valid = false;
+        this._error = error?.message || 'Invalid JSON';
+        this.$('.status').classList.add('error');
+        this.$('.status').textContent = this._error;
+        this.$('pre').textContent = 'Preview unavailable until the JSON is valid.';
+      }
+      this.input.setAttribute('aria-invalid', String(!this._valid));
+      this.emit('change', { value: raw, valid: this._valid, error: this._error });
+      return this._valid;
+    }
+    format() {
+      if (this.disabled || this.readOnly) return false;
+      try {
+        this.input.value = JSON.stringify(JSON.parse(this.value), null, 2);
+        const valid = this.parse();
+        if (valid) this.emit('format', { value: this.value });
+        return valid;
+      } catch (error) {
+        this._showFormatError(error);
+        return false;
+      }
+    }
+    minify() {
+      if (this.disabled || this.readOnly) return false;
+      try {
+        this.input.value = JSON.stringify(JSON.parse(this.value));
+        const valid = this.parse();
+        if (valid) this.emit('minify', { value: this.value });
+        return valid;
+      } catch (error) {
+        this._showFormatError(error);
+        return false;
+      }
+    }
+    _showFormatError(error) {
+      this.parse();
+      this.$('.status').classList.add('error');
+      this.$('.status').textContent = 'Cannot transform invalid JSON: ' + (error?.message || 'parse error');
+      this.emit('format-error', { reason: error?.message || 'invalid JSON' });
+    }
+    focus() { this.input?.focus(); }
+  }
+  define('vfx-json-editor', C);
+})();
