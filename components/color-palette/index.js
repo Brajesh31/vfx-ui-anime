@@ -258,4 +258,115 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,390px)}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}h3{font-size:12px;margin:0 0 8px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.swatch{padding:3px;border:1px solid #ddd;border-radius:7px;background:white;cursor:pointer}.color{height:33px;display:block;border-radius:4px;background:var(--c)}small{font-size:9px}.active{outline:2px solid #242047;outline-offset:2px}.foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:10px}';}render(){return '<section class="box"><h3>'+esc(this.getAttribute('title')||'Color palette')+'</h3><div class="grid"></div><div class="foot"><b class="value"></b><button class="copy" type="button">Copy</button></div></section>';}setup(){this.colors=(this.getAttribute('colors')||'#6558d9,#ff6fae,#6bcdb1,#ffc36f,#8e8af3,#242047,#b5e1f0,#ef9f9f,#c3d88a,#ffffff').split(',');this._value=this.getAttribute('value')||this.colors[0];this.$('.grid').innerHTML=this.colors.map(c=>'<button class="swatch" data-c="'+esc(c)+'" style="--c:'+esc(c)+'"><span class="color"></span><small>'+esc(c)+'</small></button>').join('');this.$('.grid').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(b){this.value=b.dataset.c;this.emit('change',{value:this.value});}});this.$('.copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(this.value);this.$('.copy').textContent='Copied';}catch{this.$('.copy').textContent=this.value;}});this.paint();}get value(){return this._value;}set value(v){this._value=String(v);if(this.ready)this.paint();}paint(){this.$('.value').textContent=this.value;this.$$('.swatch').forEach(b=>b.classList.toggle('active',b.dataset.c.toLowerCase()===this.value.toLowerCase()));}}define('vfx-color-palette',C);})();
+(() => {
+  const { Base, define, esc } = window.VFXAnimeFX;
+  const DEFAULTS = ['#6558d9','#ff6fae','#6bcdb1','#ffc36f','#8e8af3','#242047','#b5e1f0','#ef9f9f','#c3d88a','#ffffff'];
+  const validColor = (value) => {
+    const color = String(value ?? '').trim();
+    if (!color || /[;,{}]/.test(color)) return false;
+    if (/^#[0-9a-f]{3,4}$|^#[0-9a-f]{6}$|^#[0-9a-f]{8}$/i.test(color)) return true;
+    try { return typeof CSS !== 'undefined' && CSS.supports('color', color); } catch { return false; }
+  };
+  class C extends Base {
+    static get observedAttributes() { return ['title', 'colors', 'value', 'disabled']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,420px);min-width:0}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);min-width:0}h3{font-size:12px;margin:0 0 9px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:7px}.swatch{min-width:0;padding:4px;border:1px solid #ddd;border-radius:7px;background:white;cursor:pointer;text-align:center}.swatch:disabled{opacity:.45;cursor:not-allowed}.color{height:35px;display:block;border-radius:4px;border:1px solid #0001}.swatch small{display:block;margin-top:4px;font-size:9px;overflow-wrap:anywhere}.swatch[aria-pressed=true]{outline:2px solid #242047;outline-offset:2px}.foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:11px;font-size:10px}.value{font:800 11px/1.4 monospace}.copy{padding:6px 10px;border:1px solid var(--vfx-ink);border-radius:7px;background:#f7f5ff;font:inherit;cursor:pointer}.copy:disabled{opacity:.5;cursor:not-allowed}.status{min-height:1em;color:#6e688e}';
+    }
+    render() {
+      return '<section class="box"><h3></h3><div class="grid" role="group" aria-label="Available colors"></div><div class="foot"><b class="value"></b><span class="status" role="status" aria-live="polite"></span><button class="copy" type="button">Copy color</button></div></section>';
+    }
+    setup() {
+      this.$('.grid').addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-color]');
+        if (button) this.select(button.dataset.color);
+      });
+      this.$('.copy').addEventListener('click', () => this.copy());
+      this._render();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._render();
+    }
+    get colors() { return this._colors.map((color) => color); }
+    set colors(value) {
+      const values = Array.isArray(value) ? value : String(value ?? '').split(',');
+      this.setAttribute('colors', values.map((color) => String(color).trim()).filter(validColor).join(','));
+    }
+    get value() { return this._value || this._colors?.[0] || DEFAULTS[0]; }
+    set value(value) {
+      if (validColor(value)) this.setAttribute('value', String(value).trim());
+    }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get selectedIndex() { return this._colors.findIndex((color) => color.toLowerCase() === this.value.toLowerCase()); }
+    select(value) {
+      if (this.disabled || !validColor(value)) return false;
+      const match = this._colors.find((color) => color.toLowerCase() === String(value).toLowerCase());
+      if (!match) return false;
+      this.setAttribute('value', match);
+      this.$('.status').textContent = 'Color selected.';
+      this.emit('select', { value: match, index: this.selectedIndex });
+      this.emit('change', { value: match, index: this.selectedIndex });
+      return true;
+    }
+    async copy() {
+      if (this.disabled) return false;
+      const value = this.value;
+      try {
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+        else {
+          const input = document.createElement('textarea');
+          input.value = value;
+          input.setAttribute('readonly', '');
+          input.style.position = 'fixed';
+          input.style.opacity = '0';
+          document.body.append(input);
+          input.select();
+          const copied = document.execCommand('copy');
+          input.remove();
+          if (!copied) throw new Error('Clipboard fallback failed');
+        }
+        this.$('.status').textContent = 'Copied ' + value;
+        this.emit('copy', { value });
+        return true;
+      } catch (error) {
+        this.$('.status').textContent = 'Copy unavailable';
+        this.emit('copy-error', { value, reason: error?.message || 'Clipboard unavailable' });
+        return false;
+      }
+    }
+    _render() {
+      if (!this.ready) return;
+      const raw = this.hasAttribute('colors') ? this.getAttribute('colors') : DEFAULTS.join(',');
+      const colors = raw.split(',').map((value) => value.trim()).filter(validColor);
+      this._colors = [...new Set(colors.map((color) => color.toLowerCase()))];
+      if (!this._colors.length) this._colors = [DEFAULTS[0]];
+      const requested = this.getAttribute('value');
+      this._value = this._colors.find((color) => color.toLowerCase() === String(requested || '').toLowerCase()) || this._colors[0];
+      this.$('h3').textContent = this.getAttribute('title') || 'Color palette';
+      const grid = this.$('.grid');
+      grid.replaceChildren();
+      this._colors.forEach((color, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'swatch';
+        button.dataset.color = color;
+        button.disabled = this.disabled;
+        button.setAttribute('aria-label', 'Select color ' + color);
+        button.setAttribute('aria-pressed', String(color === this.value.toLowerCase()));
+        const swatch = document.createElement('span');
+        swatch.className = 'color';
+        swatch.style.backgroundColor = color;
+        const label = document.createElement('small');
+        label.textContent = color;
+        button.append(swatch, label);
+        grid.append(button);
+      });
+      this.$('.value').textContent = this.value;
+      this.$('.value').style.color = this.value;
+      this.$('.copy').disabled = this.disabled;
+      this.$('.copy').textContent = 'Copy color';
+      this.$('.grid').setAttribute('aria-label', this.getAttribute('title') || 'Available colors');
+    }
+  }
+  define('vfx-color-palette', C);
+})();
