@@ -143,7 +143,8 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 |---|---|
 | [Component index](docs/COMPONENTS.md) | All 82 elements, categories, source folders, demos, and API references |
 | [Project reference](docs/PROJECT-REFERENCE.md) | Architecture, runtime, component contract, gallery, tooling, project history across all 14 phases |
-| [Quality and release](docs/QUALITY-AND-RELEASE.md) | Current verification evidence, confirmed test failures, manual sign-off, package-release gates |
+| [Quality and release](docs/QUALITY-AND-RELEASE.md) | Current verification evidence, resolved browser regressions, manual sign-off, package-release gates |
+| [Accessibility guide](docs/ACCESSIBILITY.md) | Keyboard, focus, reduced-motion, screen-reader and manual QA guidance |
 | [Animation design system](docs/quality/ANIMATION-DESIGN-SYSTEM.md) | Visual tokens, motion principles, runtime rules, accessibility and visual QA |
 | [License](LICENSE) | MIT License |
 | [Contributing](CONTRIBUTING.md) | Contribution expectations and local checks |
@@ -157,7 +158,7 @@ The source repository is MIT-licensed. The npm package is **not published**. The
 
 Do not use an npm install command or a public version number as though a published package already exists. The current distribution is the repository and the live static gallery. Package metadata, packaging layout, public API entry points, npm tarball contents, release version, and install instructions must be finalized and tested before publication.
 
-The release gate is currently **blocked** by failures in the integrated Chromium browser suite. See [the release evidence and blockers](docs/QUALITY-AND-RELEASE.md). This repository has not been tagged or published as an npm release by this documentation update.
+The integrated validation workflow, including the full Chromium interaction suite, passed on repair candidate commit `dd4be3b0f716172aa0a3a48157c83cd1d91ae380`. CodeQL also passed on that exact commit. The release is **not yet approved**: human visual, keyboard, touch and screen-reader review remains outstanding, and package contents still need a dry-run and clean consumer installation test. See [the current release evidence](docs/QUALITY-AND-RELEASE.md).
 
 ## 📄 License
 

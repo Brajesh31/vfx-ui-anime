@@ -44,7 +44,7 @@ The event is emitted only when the state actually changes.
 
 ## Keyboard and accessibility
 
-- The flip surface is a native button and supports Enter and Space.
+- The flip surface is a native button and supports Enter and Space. The component handles both keys explicitly and prevents duplicate native activation.
 - `aria-pressed` mirrors the flipped state.
 - The button's accessible name describes the action and the next face.
 - The inactive face is marked `aria-hidden`, avoiding duplicate front/back text in the accessibility tree.

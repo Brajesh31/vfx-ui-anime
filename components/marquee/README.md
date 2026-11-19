@@ -23,7 +23,7 @@ The component registers as `<vfx-marquee>`. Its source embeds the shared VFX run
 
 The component duplicates assigned slot content to create the visual loop. Duplicate content is marked `aria-hidden` and `inert`; cloned IDs are removed, and cloned focusable descendants receive `tabindex="-1"` and `aria-hidden="true"`. The original slotted content remains the accessible and interactive copy.
 
-Slot changes rebuild the duplicate track. The listener is removed while disconnected and restored on reconnect.
+Slot changes and light-DOM subtree mutations rebuild the duplicate track, so adding or editing nested slotted content updates the visual copy. The MutationObserver and slot listener are disconnected while the component is disconnected and restored on reconnect.
 
 ## Motion behavior
 
