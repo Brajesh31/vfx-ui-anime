@@ -267,7 +267,7 @@ const api = window.VFXAnimeFX = {
       return ':host{display:block;width:min(100%,640px);min-width:0}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 11px;border-bottom:1px solid #eee;font-size:11px;font-weight:900}.actions{display:flex;gap:6px}button{padding:5px 9px;border:1px solid #ddd;border-radius:6px;background:white;font:inherit;font-size:10px;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:220px}textarea{display:block;width:100%;min-width:0;min-height:220px;padding:11px;border:0;border-right:1px solid #eee;font:11px/1.55 ui-monospace,monospace;resize:vertical;tab-size:2}textarea[aria-invalid=true]{background:#fffafb}pre{min-width:0;margin:0;padding:11px;overflow:auto;background:#faf9ff;color:#2a2648;font:11px/1.55 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.status{padding:8px 11px;border-top:1px solid #eee;color:#348663;font-size:10px}.status.error{color:#bd3f62}@media(max-width:520px){.body{grid-template-columns:minmax(0,1fr)}}';
     }
     render() {
-      return '<section class="box"><header><span>JSON Editor</span><span class="actions"><button class="format" type="button">Format</button><button class="minify" type="button">Minify</button></span></header><div class="body"><textarea aria-label="JSON source" aria-describedby="json-status" spellcheck="false"></textarea><pre aria-label="Formatted JSON preview"></pre></div><div id="json-status" class="status" role="status" aria-live="polite">Enter valid JSON.</div></section>';
+      return '<section class="box"><header><span id="json-editor-title">JSON Editor</span><span class="actions"><button class="format" type="button" aria-label="Format JSON with indentation">Format</button><button class="minify" type="button" aria-label="Minify JSON">Minify</button></span></header><div class="body"><textarea aria-label="JSON source" aria-describedby="json-status" spellcheck="false"></textarea><pre role="region" tabindex="0" aria-label="Formatted JSON preview"></pre></div><div id="json-status" class="status" role="status" aria-live="polite">Enter valid JSON.</div></section>';
     }
     setup() {
       this.input = this.$('textarea');
@@ -288,7 +288,15 @@ const api = window.VFXAnimeFX = {
       this.parse();
     }
     get value() { return this.input ? this.input.value : (this.getAttribute('value') || ''); }
-    set value(value) { this.setAttribute('value', String(value ?? '')); }
+    set value(value) {
+      const next = String(value ?? '');
+      if (this.getAttribute('value') === next && this.input && this.input.value !== next) {
+        this.input.value = next;
+        this.parse();
+        return;
+      }
+      this.setAttribute('value', next);
+    }
     get valid() { return Boolean(this._valid); }
     get error() { return this._error || ''; }
     get disabled() { return this.hasAttribute('disabled'); }
