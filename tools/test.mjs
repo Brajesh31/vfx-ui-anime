@@ -521,7 +521,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const disabled=await ev("(() => {const el=document.querySelector('#phase8-gradient'),count=el.stops.length;return !el.addStop()&&!el.removeStop(0)&&el.shadowRoot.querySelector('.add').disabled&&el.stops.length===count;})()");
   await ev("document.querySelector('#phase8-gradient').removeAttribute('disabled');window.__phase8Gradient.reset()");
   const reset=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.stops.length===2&&el.angle===135;})()");
-  check('phase 8: Gradient Picker edits 2–5 stops, parses CSS, clamps angle, supports form serialization and disabled/reset states',initial&&add&&edit&&remove&&parse&&angle&&disabled&&reset,JSON.stringify({initial,add,edit,remove,parse,angle,disabled,reset}));
+  check('phase 8: Gradient Picker edits 2–8 stops, parses CSS, clamps angle, supports form serialization and disabled/reset states',initial&&add&&edit&&remove&&parse&&angle&&disabled&&reset,JSON.stringify({initial,add,edit,remove,parse,angle,disabled,reset}));
   await ev("window.__phase8Gradient.remove();window.__phase8Gradient=null");
 }
 
