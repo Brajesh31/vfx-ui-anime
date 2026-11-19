@@ -172,3 +172,6 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Live hosting: GitHub Pages.
 - Workflow: `.github/workflows/deploy-pages.yml`, triggered by pushes to `main` and manual workflow dispatch.
 - The workflow validates the source, uploads the repository root and deploys through GitHub Pages.
+
+## Phase 6 workflow, data and creative controls
+- `docs/quality/PHASE-6-WORKFLOW-DATA-CREATIVE.md`: Kanban, Data Grid, Tree View, Signature Pad and Before & After upgrades, dynamic state contracts, keyboard operation and regression coverage.
