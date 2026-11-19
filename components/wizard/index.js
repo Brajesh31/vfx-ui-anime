@@ -266,7 +266,7 @@ class VfxWizard extends Base {
  static get css() { return ':host{display:block;width:min(100%,620px);color:var(--vfx-ink)}.shell{padding:clamp(14px,3vw,18px);border:2px solid var(--vfx-ink);border-radius:16px;background:var(--vfx-card,#fff);box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.eyebrow{font-size:9px;font-weight:950;letter-spacing:.1em;text-transform:uppercase;color:#8b83c9}.title{font-size:15px;font-weight:950;margin-top:3px}.count{font-size:10px;font-weight:850;color:var(--vfx-dim);white-space:nowrap}.track{height:7px;margin:13px 0 12px;overflow:hidden;border-radius:99px;background:#ece9fa}.fill{height:100%;width:0;background:linear-gradient(90deg,#ff6bad,#8c83f4);transition:width .25s}.steps{display:flex;gap:6px;margin-bottom:15px}.step{flex:1;min-width:0;padding:7px 3px;border:1px solid #e9e5f8;border-radius:7px;background:#fff;color:#817ba9;font-size:9px;font-weight:850;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.step[data-state=done]{border-color:#a8a3e7;background:#f3f1ff;color:#514a9a}.step[data-state=current]{border-color:var(--vfx-acc);background:#fff0f7;color:var(--vfx-ink)}.step:disabled{opacity:.5;cursor:not-allowed}.panels{min-height:110px}.panels ::slotted([data-step]){padding:2px 0}.panels ::slotted([data-step][hidden]){display:none}.panels ::slotted([data-step] h3){margin:0 0 8px;font-size:15px}.panels ::slotted([data-step] p){color:var(--vfx-dim);font-size:12px;line-height:1.55}.panels ::slotted([data-step] input),.panels ::slotted([data-step] textarea),.panels ::slotted([data-step] select){box-sizing:border-box;width:100%;margin-top:8px;padding:10px;border:1.5px solid #ded9f3;border-radius:8px;font:12px system-ui}.empty{padding:24px 8px;text-align:center;color:var(--vfx-dim);font-size:12px}.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:13px;border-top:1px solid #eeeafa}.nav button{padding:9px 13px;border:1.5px solid var(--vfx-ink);border-radius:9px;background:#fff;color:var(--vfx-ink);font-size:11px;font-weight:900;cursor:pointer}.nav .next{background:var(--vfx-acc);box-shadow:2px 3px 0 var(--vfx-ink)}.nav button:disabled{opacity:.35;cursor:not-allowed}.status{min-width:0;font-size:10px;color:var(--vfx-dim);text-align:center}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:390px){.step{font-size:8px;padding:7px 1px}.nav button{padding:8px 10px}.status{font-size:9px}}@media(prefers-reduced-motion:reduce){.fill{transition:none}}'; }
  render() { return '<section class="shell" aria-label="Multi-step form"><header class="head"><div><div class="eyebrow">Guided workflow</div><div class="title" id="wizard-title">Step 1</div></div><span class="count">0 / 0</span></header><div class="track" role="progressbar" aria-label="Wizard progress" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><div class="fill"></div></div><nav class="steps" aria-label="Wizard steps"></nav><div class="panels"><slot></slot><div class="empty" hidden>No steps have been added yet.</div></div><footer class="nav"><button class="back" type="button">← Back</button><span class="status" role="status" aria-live="polite"></span><button class="next" type="button">Continue →</button></footer></section>'; }
  setup() {
-  this._panels=[];this._index=0;this._formReset=null;this._hostObserver=null;
+  this._panels=[];this._index=0;this._formReset=()=>this.reset();this._formOwner=null;this._hostObserver=null;
   this.$('.back').addEventListener('click',()=>this.previous());
   this.$('.next').addEventListener('click',()=>this.next());
   this.$('.steps').addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(b)this.goTo(Number(b.dataset.index));});
@@ -275,15 +275,19 @@ class VfxWizard extends Base {
   this.addEventListener('change',this._onEdit);
   this._collectPanels(true);
   this._observePanels();
-  const form=this.closest('form');
-  if(form){this._formReset=()=>this.reset();form.addEventListener('reset',this._formReset);}
+  this._bindFormReset();
  }
- connectedCallback() { super.connectedCallback(); this._observePanels(); }
+ connectedCallback() { super.connectedCallback(); this._observePanels(); this._bindFormReset(); }
+ _bindFormReset() {
+  const form=this.closest('form');
+  if(form===this._formOwner)return;
+  this._formOwner?.removeEventListener('reset',this._formReset);
+  this._formOwner=form||null;
+  this._formOwner?.addEventListener('reset',this._formReset);
+ }
  disconnectedCallback() {
   this._hostObserver?.disconnect();this._hostObserver=null;
-  if(this._formReset){const form=this.closest('form');form?.removeEventListener('reset',this._formReset);}
-  this._formReset=null;
-  this.removeEventListener('input',this._onEdit);this.removeEventListener('change',this._onEdit);
+  this._formOwner?.removeEventListener('reset',this._formReset);this._formOwner=null;
   super.disconnectedCallback?.();
  }
  attributeChangedCallback(name,oldValue,newValue) {
@@ -371,7 +375,7 @@ class VfxWizard extends Base {
   this.$('.back').disabled=blocked||this._index===0;
   this.$('.next').disabled=blocked||this.complete;
   this.$('.next').textContent=this.complete?'Completed ✓':this._index===total-1?'Finish ✓':'Continue →';
-  if(!this.$('.status').textContent||this.$('.status').textContent==='All steps completed')this.$('.status').textContent=this.complete?'All steps completed':hasSteps?(total-this._index-1)+' step(s) left':'Add panels with the data-step attribute.';
+  this.$('.status').textContent=this.disabled?'Wizard is disabled.':this.complete?'All steps completed':hasSteps?(total-this._index-1)+' step(s) left':'Add panels with the data-step attribute.';
  }
 }
 define('vfx-wizard',VfxWizard);
