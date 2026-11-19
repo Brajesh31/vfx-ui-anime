@@ -75,7 +75,7 @@ The connected GitHub interface available for this task can read repository files
 - CodeQL
 - OpenSSF Scorecard
 
-The combined commit-status endpoint previously returned Vercel integration failures linked to Vercel's `build-rate-limit` page. These Vercel statuses are separate from the repository's GitHub Actions workflows. They are not proof that the GitHub Actions checks passed or failed.
+The combined commit-status endpoint for the latest Phase 14 report commit (`0f77b0b222dae4710bb45194bc1fc0a1ea6887c4`) currently returns two failing Vercel contexts, both linking to Vercel's `build-rate-limit` page. These are Vercel integration statuses, separate from the repository's GitHub Actions workflows. They do not prove that validation, Pages, CodeQL, or Scorecard passed or failed.
 
 **Automated release sign-off remains unverified.** Use the [GitHub Actions page](https://github.com/Brajesh31/vfx-ui-anime/actions) to confirm each run against the final commit and record the run links before release approval.
 
