@@ -263,18 +263,28 @@ const {Base,define,at,burst,esc}=window.VFXAnimeFX;
 class VfxGradientPicker extends Base {
  static formAssociated = true;
  static get observedAttributes() { return ['from','to','angle','value','stops','disabled','name']; }
- static get css() { return ':host{display:block;width:min(100%,430px);color:var(--vfx-ink)}.frame{padding:14px;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.preview{height:104px;border:2px solid var(--vfx-ink);border-radius:11px;box-shadow:inset 0 0 0 2px #ffffff66;transition:background .18s}.stop-list{display:grid;gap:8px;margin-top:13px}.stop-row{display:grid;grid-template-columns:minmax(0,1fr) 76px 66px 30px;align-items:center;gap:7px;padding:7px;border:1px solid #e8e3f7;border-radius:9px;background:#faf9ff}.stop-row label{font-size:10px;font-weight:900;color:#8179c8}.stop-row input[type=color]{width:100%;height:32px;min-width:0;padding:2px;border:1.5px solid #dcd6f3;border-radius:7px;background:#fff;cursor:pointer}.stop-row input[type=number]{width:100%;min-width:0;box-sizing:border-box;padding:7px 4px;border:1px solid #dcd6f3;border-radius:7px;color:var(--vfx-ink);font:700 11px system-ui}.remove{height:30px;border:1px solid #e2d8f1;border-radius:7px;background:#fff;color:var(--vfx-ink);font-weight:900;cursor:pointer}.stop-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.stop-actions button,.copy{padding:7px 10px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:#fff;font-size:10px;font-weight:900;cursor:pointer}.stop-actions button:disabled,.copy:disabled,.remove:disabled{opacity:.4;cursor:not-allowed}.angle{display:flex;align-items:center;gap:11px;margin-top:13px}.angle label{font-size:11px;font-weight:900;white-space:nowrap}.angle input{flex:1;min-width:0;accent-color:var(--vfx-acc)}.angle output{min-width:38px;text-align:right;font-size:11px;font-weight:900}.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.preset{width:39px;height:28px;border:1.5px solid var(--vfx-ink);border-radius:7px;cursor:pointer;box-shadow:2px 2px 0 var(--vfx-soft)}.css{display:block;width:100%;margin-top:12px;padding:9px;border:1px solid #e5e0f5;border-radius:8px;background:#f8f6ff;color:#7069b3;font:10px/1.4 ui-monospace,monospace;overflow-wrap:anywhere}.copy{margin-top:9px;background:var(--vfx-acc)}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:360px){.stop-row{grid-template-columns:minmax(0,1fr) 58px 54px 28px;gap:5px}}'; }
+ static get css() { return ':host{display:block;width:min(100%,450px);color:var(--vfx-ink)}.frame{padding:14px;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.preview{height:104px;border:2px solid var(--vfx-ink);border-radius:11px;box-shadow:inset 0 0 0 2px #ffffff66;transition:background .18s}.stop-list{display:grid;gap:8px;margin-top:13px}.stop-chip{display:grid;grid-template-columns:minmax(0,1fr) 76px 66px 30px;align-items:center;gap:7px;padding:7px;border:1px solid #e8e3f7;border-radius:9px;background:#faf9ff}.stop-chip label{font-size:10px;font-weight:900;color:#8179c8}.stop-chip input[type=color]{width:100%;height:32px;min-width:0;padding:2px;border:1.5px solid #dcd6f3;border-radius:7px;background:#fff;cursor:pointer}.stop-chip input[type=number]{width:100%;min-width:0;box-sizing:border-box;padding:7px 4px;border:1px solid #dcd6f3;border-radius:7px;color:var(--vfx-ink);font:700 11px system-ui}.remove{height:30px;border:1px solid #e2d8f1;border-radius:7px;background:#fff;color:var(--vfx-ink);font-weight:900;cursor:pointer}.stop-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.stop-actions button,.copy{padding:7px 10px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:#fff;font-size:10px;font-weight:900;cursor:pointer}.stop-actions button:disabled,.copy:disabled,.remove:disabled{opacity:.4;cursor:not-allowed}.angle{display:flex;align-items:center;gap:11px;margin-top:13px}.angle label{font-size:11px;font-weight:900;white-space:nowrap}.angle input{flex:1;min-width:0;accent-color:var(--vfx-acc)}.angle output{min-width:38px;text-align:right;font-size:11px;font-weight:900}.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.preset{width:39px;height:28px;border:1.5px solid var(--vfx-ink);border-radius:7px;cursor:pointer;box-shadow:2px 2px 0 var(--vfx-soft)}.css{display:block;width:100%;margin-top:12px;padding:9px;border:1px solid #e5e0f5;border-radius:8px;background:#f8f6ff;color:#7069b3;font:10px/1.4 ui-monospace,monospace;overflow-wrap:anywhere}.copy{margin-top:9px;background:var(--vfx-acc)}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:360px){.stop-chip{grid-template-columns:minmax(0,1fr) 58px 54px 28px;gap:5px}}'; }
  _presets() { return [['#ff5fa8','#8f8df7',135],['#67d8c0','#6f82e8',35],['#ffcc70','#ff7b93',90],['#242044','#827be5',145],['#71d2ee','#b6e69c',15]]; }
  _normalize(stops) {
-  const list=(Array.isArray(stops)?stops:[]).slice(0,5).map((s,i)=>({
-   color:/^#[0-9a-f]{6}$/i.test(String(s?.color||''))?String(s.color).toLowerCase():'#8f8df7',
-   position:Number.isFinite(Number(s?.position))?Math.max(0,Math.min(100,Number(s.position))):i*100/Math.max(1,stops.length-1)
-  })).sort((a,b)=>a.position-b.position);
-  return list.length>=2?list:[{color:'#ff5fa8',position:0},{color:'#8f8df7',position:100}];
+  const source=Array.isArray(stops)?stops.slice(0,8):[],seen=new Set();
+  const normalized=source.map((s,i)=>{
+   let id=String(s?.id??'').trim()||'stop-'+(i+1);
+   if(seen.has(id)){let suffix=2,base=id;while(seen.has(id=base+'-'+suffix))suffix++;}seen.add(id);
+   const color=/^#[0-9a-f]{6}$/i.test(String(s?.color||''))?String(s.color).toLowerCase():'#8f8df7';
+   const position=Number.isFinite(Number(s?.position))?Math.max(0,Math.min(100,Number(s.position))):i*100/Math.max(1,source.length-1);
+   return {id,color,position};
+  }).sort((a,b)=>a.position-b.position);
+  return normalized.length>=2?normalized:[{id:'start',color:'#ff5fa8',position:0},{id:'end',color:'#8f8df7',position:100}];
  }
  _readStops() {
-  if(this.hasAttribute('stops')){try{return this._normalize(JSON.parse(this.getAttribute('stops')||'[]'));}catch{}}
-  return this._normalize([{color:this.getAttribute('from')||'#ff5fa8',position:0},{color:this.getAttribute('to')||'#8f8df7',position:100}]);
+  if(this.hasAttribute('stops')) {
+   const raw=this.getAttribute('stops')||'';
+   try{return this._normalize(JSON.parse(raw));}catch{
+    const parsed=raw.split('|').map((part,i)=>{const [color,position]=part.split('@');return{id:'stop-'+(i+1),color,position:position===undefined?i*100/Math.max(1,raw.split('|').length-1):Number(position)};});
+    return this._normalize(parsed);
+   }
+  }
+  return this._normalize([{id:'start',color:this.getAttribute('from')||'#ff5fa8',position:0},{id:'end',color:this.getAttribute('to')||'#8f8df7',position:100}]);
  }
  _angleAttr() { const n=Number(this.getAttribute('angle'));return Number.isFinite(n)?Math.max(0,Math.min(360,n)):135; }
  render() {
@@ -282,14 +292,15 @@ class VfxGradientPicker extends Base {
   return '<div class="frame"><div class="preview" role="img" aria-label="Gradient preview"></div><div class="stop-list" aria-label="Gradient color stops"></div><div class="stop-actions"><button class="add" type="button">＋ Add color stop</button></div><div class="angle"><label for="angle">Direction</label><input id="angle" type="range" min="0" max="360" value="'+this._angleAttr()+'"><output>'+this._angleAttr()+'°</output></div><div class="presets" aria-label="Gradient presets">'+this._presets().map((p,i)=>'<button class="preset" type="button" data-preset="'+i+'" aria-label="Gradient preset '+(i+1)+'" style="background:linear-gradient('+p[2]+'deg,'+p[0]+','+p[1]+')"></button>').join('')+'</div><code class="css"></code><button class="copy" type="button">Copy CSS</button></div>';
  }
  setup() {
-  this._formDisabled=false;this._defaultStops=this._readStops();this._defaultAngle=this._angleAttr();
+  this._formDisabled=false;this._stopSequence=this._stops.length;
+  this._defaultStops=this._normalize(this._stops);this._defaultAngle=this._angleAttr();
   this.$('#angle').addEventListener('input',()=>this._update(true,'input'));
   this.$('#angle').addEventListener('change',()=>this._update(true,'change'));
   this.$('.stop-list').addEventListener('input',e=>this._handleStopInput(e,'input'));
   this.$('.stop-list').addEventListener('change',e=>this._handleStopInput(e,'change'));
-  this.$('.stop-list').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;this.removeStop(Number(b.dataset.remove));});
+  this.$('.stop-list').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(b)this.removeStop(b.dataset.remove);});
   this.$('.add').addEventListener('click',()=>this.addStop());
-  this.$('.presets').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(!b||b.disabled)return;const p=this._presets()[+b.dataset.preset];this._stops=[{color:p[0],position:0},{color:p[1],position:100}];this.$('#angle').value=p[2];this._paintStops();this._update(true,'change');});
+  this.$('.presets').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(!b||b.disabled)return;const p=this._presets()[+b.dataset.preset];this._stops=this._normalize([{id:'start',color:p[0],position:0},{id:'end',color:p[1],position:100}]);this.$('#angle').value=p[2];this._paintStops();this._update(true,'change');});
   this.$('.copy').addEventListener('click',()=>{this.emit('copy-request',{value:this.value});this.$('.copy').textContent='CSS ready';});
   this._paintStops();this._syncDisabled();this._update(false);
  }
@@ -301,13 +312,14 @@ class VfxGradientPicker extends Base {
   this._paintStops();this._syncDisabled();this._update(false);
  }
  _syncDisabled() {
+  if(!this.$('.stop-list'))return;
   const disabled=this.hasAttribute('disabled')||this._formDisabled;
-  this.$$('#angle,.add,.copy,.preset,.stop-row input,.stop-row button').forEach(x=>x.disabled=disabled);
+  this.$$('#angle,.add,.copy,.preset,.stop-chip input,.stop-chip button').forEach(x=>x.disabled=disabled);
  }
  _paintStops() {
   if(!this.$('.stop-list'))return;
-  this.$('.stop-list').innerHTML=this._stops.map((s,i)=>'<div class="stop-row" data-index="'+i+'"><label for="color-'+i+'">Stop '+(i+1)+'</label><input id="color-'+i+'" type="color" data-color="'+i+'" value="'+s.color+'" aria-label="Color for stop '+(i+1)+'"><input type="number" data-position="'+i+'" min="0" max="100" step="1" value="'+Math.round(s.position)+'" aria-label="Position for stop '+(i+1)+'" title="Position (%)"><button class="remove" type="button" data-remove="'+i+'" aria-label="Remove color stop '+(i+1)+'" '+(this._stops.length<=2?'disabled':'')+'>×</button></div>').join('');
-  if(this.$('.add'))this.$('.add').disabled=this._stops.length>=5||this.hasAttribute('disabled')||this._formDisabled;
+  this.$('.stop-list').innerHTML=this._stops.map((s,i)=>'<div class="stop-chip" data-id="'+esc(s.id)+'"><label for="'+(i===0?'stop-color':'stop-color-'+i)+'">Stop '+(i+1)+'</label><input id="'+(i===0?'stop-color':'stop-color-'+i)+'" type="color" data-color="'+i+'" value="'+s.color+'" aria-label="Color for stop '+(i+1)+'"><input type="number" data-position="'+i+'" min="0" max="100" step="1" value="'+Math.round(s.position)+'" aria-label="Position for stop '+(i+1)+'" title="Position (%)"><button class="remove" type="button" data-remove="'+esc(s.id)+'" aria-label="Remove color stop '+(i+1)+'" '+(this._stops.length<=2?'disabled':'')+'>×</button></div>').join('');
+  if(this.$('.add'))this.$('.add').disabled=this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled;
   this._syncDisabled();
  }
  _handleStopInput(e,kind) {
@@ -319,30 +331,35 @@ class VfxGradientPicker extends Base {
   this._stops=this._normalize(this._stops);this._paintStops();this._update(true,kind);
  }
  addStop() {
-  if(this._stops.length>=5||this.hasAttribute('disabled')||this._formDisabled)return false;
-  const sorted=this._normalize(this._stops),left=sorted[Math.floor((sorted.length-1)/2)],right=sorted[Math.floor(sorted.length/2)+1]||sorted[sorted.length-1];
-  const position=(left.position+right.position)/2;
-  this._stops=this._normalize([...sorted,{color:'#b8b3ff',position}]);this._paintStops();this._update(true,'change');return true;
+  if(this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled)return false;
+  const sorted=this._normalize(this._stops);let left=sorted[0],right=sorted[1],gap=-1;
+  for(let i=0;i<sorted.length-1;i++){const candidate=sorted[i+1].position-sorted[i].position;if(candidate>gap){gap=candidate;left=sorted[i];right=sorted[i+1];}}
+  if(gap<=0)return false;
+  this._stops=this._normalize([...sorted,{id:'stop-'+(++this._stopSequence),color:'#b8b3ff',position:(left.position+right.position)/2}]);
+  this._paintStops();this._update(true,'change');return true;
  }
- removeStop(index) {
-  if(this._stops.length<=2||this.hasAttribute('disabled')||this._formDisabled||!this._stops[index])return false;
+ removeStop(idOrIndex) {
+  if(this._stops.length<=2||this.hasAttribute('disabled')||this._formDisabled)return false;
+  const index=typeof idOrIndex==='number'?idOrIndex:this._stops.findIndex(s=>s.id===String(idOrIndex));
+  if(index<0||index>=this._stops.length)return false;
   this._stops=this._normalize(this._stops.filter((_,i)=>i!==index));this._paintStops();this._update(true,'change');return true;
  }
  get stops() { return this._normalize(this._stops||this._readStops()).map(s=>({...s})); }
  set stops(value) { this._stops=this._normalize(value);this._paintStops();this._update(false); }
  get from() { return this.stops[0].color; }
  set from(v) { if(/^#[0-9a-f]{6}$/i.test(String(v))){this._stops[0].color=String(v).toLowerCase();this._paintStops();this._update(false);} }
- get to() { return this.stops[this._stops.length-1].color; }
+ get to() { return this.stops[this.stops.length-1].color; }
  set to(v) { if(/^#[0-9a-f]{6}$/i.test(String(v))){this._stops[this._stops.length-1].color=String(v).toLowerCase();this._paintStops();this._update(false);} }
  get angle() { return Number(this.$('#angle')?.value||0); }
  set angle(v) { this.$('#angle').value=String(Math.max(0,Math.min(360,Number(v)||0)));this._update(false); }
- get value() { const stops=this.stops.map(s=>s.color+' '+Math.round(s.position)+'%').join(', ');return 'linear-gradient('+this.angle+'deg, '+stops+')'; }
+ get value() { return 'linear-gradient('+this.angle+'deg, '+this.stops.map(s=>s.color+' '+Math.round(s.position)+'%').join(', ')+')'; }
  set value(v) { if(this._parseValue(v)){this._paintStops();this._update(false);} }
  _parseValue(v) {
   const m=String(v).match(/linear-gradient\(\s*(\d+(?:\.\d+)?)deg\s*,([\s\S]+)\)$/i);if(!m)return false;
-  const stops=[...m[2].matchAll(/(#[0-9a-f]{6})(?:\s+(\d+(?:\.\d+)?)%)?/ig)].map((x,i)=>({color:x[1].toLowerCase(),position:x[2]===undefined?i*100/Math.max(1,[...m[2].matchAll(/#[0-9a-f]{6}/ig)].length-1):Number(x[2])}));
-  if(stops.length<2||stops.length>5)return false;
-  this._stops=this._normalize(stops);this.$('#angle').value=String(Math.max(0,Math.min(360,Number(m[1]))));return true;
+  const matches=[...m[2].matchAll(/(#[0-9a-f]{6})(?:\s+(\d+(?:\.\d+)?)%)?/ig)];
+  if(matches.length<2||matches.length>8)return false;
+  this._stops=this._normalize(matches.map((x,i)=>({id:'stop-'+(i+1),color:x[1].toLowerCase(),position:x[2]===undefined?i*100/Math.max(1,matches.length-1):Number(x[2])})));
+  this.$('#angle').value=String(Math.max(0,Math.min(360,Number(m[1]))));return true;
  }
  _update(emit,kind='change') {
   if(!this.$('.preview'))return;
