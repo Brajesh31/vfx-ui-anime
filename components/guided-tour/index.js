@@ -323,7 +323,8 @@ class VfxGuidedTour extends Base {
   for(let i=start;i>=0&&i<this._steps.length;i+=direction) {
    const target=this._targetFor(this._steps[i]);
    if(target)return i;
-   this.emit('target-missing',{index:i,selector:this._steps[i]?.selector||''});
+   const key=i+'|'+(this._steps[i]?.selector||'');
+   if(!this._missingReported.has(key)){this._missingReported.add(key);this.emit('target-missing',{index:i,selector:this._steps[i]?.selector||''});}
   }
   return -1;
  }
