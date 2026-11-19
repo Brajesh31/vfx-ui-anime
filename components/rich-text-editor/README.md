@@ -34,11 +34,12 @@ A lightweight rich-text field with inline formatting, lists, quotes, undo/redo, 
 | `value` | empty | Initial content and form-reset value. |
 | `placeholder` | `Start writing…` | Empty-editor hint. |
 | `required` | false | Requires non-whitespace text. |
-| `disabled` | false | Makes the editing surface read-only and disables toolbar actions. |
+| `disabled` | false | Disables editing and toolbar actions. |
+| `readonly` | false | Prevents editing while preserving readable and focusable content. |
 
 ### Formatting
 
-Bold, italic, underline, bulleted lists, numbered lists, block quotes, undo, redo, and clear formatting are available. Ctrl/Cmd+B, Ctrl/Cmd+I, Ctrl/Cmd+U, Ctrl/Cmd+Z, and Ctrl/Cmd+Shift+Z shortcuts are supported by the editing surface. Pasted rich content is sanitized before insertion; plain text paste is supported as a fallback.
+Bold, italic, underline, bulleted lists, numbered lists, block quotes, undo, redo, and clear formatting are available. Ctrl/Cmd+B, Ctrl/Cmd+I, Ctrl/Cmd+U, Ctrl/Cmd+Z, and Ctrl/Cmd+Shift+Z shortcuts are supported by the editing surface. Pasted rich content is sanitized before insertion; plain text paste is supported as a fallback. Drag-and-drop inserts plain text only, never dropped HTML or executable content.
 
 ### Events
 
