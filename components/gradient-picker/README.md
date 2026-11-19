@@ -1,11 +1,12 @@
-# 🌈 VFX Gradient Picker
+# 🌈 VFX UI Anime Gradient Picker
 
-A form-associated linear-gradient editor with up to eight independently editable color stops, stop positions, angle control, presets, live CSS output and change events.
+A responsive linear-gradient editor with two-to-five editable color stops, position controls, angle adjustment, presets, CSS output, and form association. The original `from`, `to`, and `angle` API remains supported.
 
 ## Quick start
 
 ```html
 <script src="/components/gradient-picker/index.js"></script>
+
 <form>
   <vfx-gradient-picker
     name="background"
@@ -17,30 +18,47 @@ A form-associated linear-gradient editor with up to eight independently editable
 </form>
 ```
 
-## Public API
+## API
 
-| API | Description |
-|---|---|
-| `value` | Read/write a supported CSS `linear-gradient(...)` string |
-| `stops` | Read/write an array of `{ id, color, position }` stops |
-| `from`, `to` | Read/write the first and last stop colors |
-| `angle` | Read/write the gradient direction from 0 to 360 degrees |
-| `addStop(color?)` | Add a stop at a useful position, up to eight stops |
-| `removeStop(id)` | Remove a stop when at least two remain |
-| `selectStop(id)` | Select a stop for editing |
+| Member | Type | Description |
+|---|---|---|
+| `value` | string | Read or set a supported `linear-gradient(...)` CSS value. |
+| `from`, `to` | hex color | Backward-compatible access to the first and last stop colors. |
+| `angle` | number | Read or set the gradient direction, clamped to 0–360 degrees. |
+| `stops` | array | Read a defensive copy or replace stops with `{ color, position }` objects. |
+| `addStop()` | method | Adds a stop between existing stops. Maximum five. |
+| `removeStop(index)` | method | Removes a stop when more than two remain. |
+| `formResetCallback()` | platform callback | Restores the initial stop list and angle when its form resets. |
 
-The `stops` attribute accepts a JSON array or the compact `#hex@position|#hex@position` format. The `value` parser supports linear gradients with two to eight six-digit hexadecimal color stops and optional percentage positions. Invalid values are ignored rather than partially applied.
+### Attributes
 
-## Events
+| Attribute | Default | Description |
+|---|---|---|
+| `name` | empty | Form field name. |
+| `from`, `to` | VFX brand colors | First and last stop colors as six-digit hex. |
+| `angle` | 135 | Direction in degrees. |
+| `stops` | none | JSON array of color and position objects. |
+| `value` | none | Initial supported two-to-five-stop linear gradient. |
+| `disabled` | false | Disables stop editing and controls. |
 
-- `input`: live detail includes CSS `value`, `from`, `to`, `angle` and a copy of `stops`.
-- `change`: committed control changes, stop additions/removals and preset changes.
-- `copy-request`: requests that the host application copy the current CSS value. The component does not access the clipboard by itself.
+Stops are normalized, clamped to 0–100%, and sorted by position. Unsupported colors and malformed CSS values are rejected rather than inserted into the preview.
 
-## Form and accessibility
+### Events
 
-With a `name` attribute the current CSS gradient is submitted as the field value. The stop selector, color input, position slider, angle slider and action buttons have accessible names and visible focus styles. A disabled host disables editing controls.
+- `input`: emitted while colors, positions, or angle change.
+- `change`: emitted when a change is committed or a preset/stop operation completes.
+- `copy-request`: emitted by the Copy CSS action with the CSS value. The host application owns clipboard permissions and actual copying.
+
+Event details include `value`, `stops`, `from`, `to`, and `angle`.
+
+## Accessibility and responsive behavior
+
+Every color and position input has a descriptive accessible name. Stop controls and angle are keyboard-operable native inputs. The stop editor wraps at narrow widths and the preview is exposed as an image with an accessible label.
 
 ## Limits
 
-The editor intentionally supports linear gradients made from six-digit hex colors. It does not parse radial/conic gradients, named colors, alpha colors, color spaces or arbitrary CSS expressions.
+The editor currently supports linear gradients with six-digit hexadecimal colors and two to five stops. It does not parse CSS variables, named colors, alpha colors, radial/conic gradients, or browser-specific color syntax.
+
+## Standalone behavior
+
+The component is dependency-free and continues to work as a single custom-element script.
