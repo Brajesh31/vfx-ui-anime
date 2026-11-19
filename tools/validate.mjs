@@ -108,6 +108,15 @@ for (const name of names) {
   if (!/<script\b[^>]*\bsrc=["'](?:\.\/)?index\.js["'][^>]*>/i.test(demo)) {
     errors.push("Standalone demo does not load its component script: " + base + "demo.html");
   }
+  const inlineScripts = [...demo.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
+  for (let index = 0; index < inlineScripts.length; index++) {
+    const attributes = inlineScripts[index][1];
+    const scriptType = attributes.match(/\btype\s*=\s*["']([^"']+)["']/i)?.[1]?.toLowerCase() || "";
+    const source = inlineScripts[index][2].trim();
+    if (!source || /\bsrc\s*=/.test(attributes) || (scriptType && !["text/javascript", "application/javascript"].includes(scriptType))) continue;
+    try { new Script(source, { filename: base + "demo.html#inline-script-" + (index + 1) }); }
+    catch (error) { errors.push("Inline demo JavaScript syntax error in " + base + "demo.html: " + error.message); }
+  }
   if (!/^#\s+\S/m.test(docs) || docs.trim().length < 80) {
     errors.push("Component README is missing a meaningful heading or usage content: " + base + "README.md");
   }
