@@ -17,9 +17,9 @@ for (const path of expected) {
   catch { errors.push("Missing required repository file: " + path); }
 }
 
-const [gallery, home, core, registryText, packageText] = await Promise.all([
+const [gallery, home, core, registryText, packageText, buildSource] = await Promise.all([
   read("gallery/index.html"), read("index.html"), read("core.js"),
-  read("registry.json"), read("package.json")
+  read("registry.json"), read("package.json"), read("tools/build.mjs")
 ]);
 let registry;
 let pkg;
@@ -34,6 +34,13 @@ const expectedFolders = names.slice().sort();
 if (JSON.stringify(folders) !== JSON.stringify(expectedFolders)) {
   errors.push("components/ must contain exactly the eighty-two VFX UI Anime component folders.");
 }
+
+const buildList = buildSource.match(/export const NAMES = \\[([\\s\\S]*?)\\];/);
+const buildNames = buildList ? [...buildList[1].matchAll(/["']([^"']+)["']/g)].map((match) => match[1]) : [];
+if (JSON.stringify(buildNames) !== JSON.stringify(names)) {
+  errors.push("tools/build.mjs and tools/validate.mjs must list the exact same component names in the same order.");
+}
+if (new Set(names).size !== names.length) errors.push("The validator component list contains duplicate names.");
 
 if (!Array.isArray(registry.items) || registry.items.length !== names.length) {
   errors.push("Registry must contain all eighty-two component types.");
@@ -104,6 +111,15 @@ for (const name of names) {
 if (!home.includes("gallery/")) errors.push("Root page must forward visitors to the gallery.");
 if (!core.includes("window.VFXAnimeFX") || !core.includes("--vfx-") || !core.includes("prefers-reduced-motion")) {
   errors.push("Shared core branding or reduced-motion handling is missing.");
+}
+
+const [toggleSource, frameAsset] = await Promise.all([
+  read("components/toggle/index.js"),
+  readFile(join(root, "components/toggle/frames.webp")).catch(() => null)
+]);
+const embeddedSheet = toggleSource.match(/const SHEET = 'data:image\\/webp;base64,([^']+)'/);
+if (!frameAsset || !embeddedSheet || embeddedSheet[1] !== frameAsset.toString("base64")) {
+  errors.push("The toggle's embedded WebP data URI does not match components/toggle/frames.webp.");
 }
 if (!gallery.includes("--vfx-")) errors.push("Gallery does not use VFX UI Anime theme names.");
 if (pkg.name !== "vfx-ui-anime") errors.push("package.json project name does not match the repository.");
