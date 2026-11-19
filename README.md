@@ -318,7 +318,7 @@ Phase 12 upgrades Video Player, Markdown Editor, JSON Editor, 3D Tilt Card, and 
 
 Phase 13 upgrades Particle Field, Marquee, Scroll Reveal, Animated Counter, and Confetti Button. Particle Field now has bounded live properties, resize lifecycle handling, and static reduced-motion behavior. Marquee pauses on focus and hover, keeps duplicate content inert, removes cloned IDs, and tracks live slot changes. Scroll Reveal supports dynamic children, configurable Intersection Observer options, repeat/conceal behavior, events, and reconnect cleanup. Animated Counter now handles finite numeric targets, locale/decimal formatting, completion announcements, interrupted animations, and reduced motion. Confetti Button uses safe text updates, a disabled guard, celebration events, and skips decorative effects for reduced motion. Five standalone demos, expanded API references, gallery/registry updates, and dedicated Chromium regressions were added. See the [Phase 13 implementation report](docs/quality/PHASE-13-ADVANCED-MOTION.md).
 
-**Component upgrade progress after Phase 13: 82 of 82 components (100%). Phase 14 remains: whole-library integration, cross-component regression, accessibility/performance review, and release hardening.**
+**Component upgrade progress after Phase 13: 82 of 82 components (100%). Phase 14 implementation is complete; automated CI execution and manual accessibility/performance sign-off remain before release approval.**
 
 ## 🧪 Phase 14: whole-library integration and release hardening
 
