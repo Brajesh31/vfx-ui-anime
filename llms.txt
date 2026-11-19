@@ -175,3 +175,7 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 ## Phase 6 workflow, data and creative controls
 - `docs/quality/PHASE-6-WORKFLOW-DATA-CREATIVE.md`: Kanban, Data Grid, Tree View, Signature Pad and Before & After upgrades, dynamic state contracts, keyboard operation and regression coverage.
+
+
+## Phase 7 advanced selection and layout controls
+- `docs/quality/PHASE-7-ADVANCED-SELECTION-LAYOUT.md`: Multi Select, Time Picker, Transfer List, Split Pane and Lightbox Gallery upgrades, API contracts, browser regression coverage, CI results and remaining manual sign-off.

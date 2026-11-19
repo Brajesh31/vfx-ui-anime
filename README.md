@@ -278,3 +278,8 @@ Phase 5 improves Drag and Drop, Carousel, Timeline, Radial Menu and Image Croppe
 ## 🗃️ Phase 6: workflow, data and creative controls
 
 Phase 6 hardens Kanban, Data Grid, Tree View, Signature Pad and Before & After. The updates cover live data/attribute synchronization, selection and focus correctness, keyboard drawing, dynamic image loading and useful empty/error fallbacks. The implementation report records the added browser regressions and passing Node/build, Chromium browser, GitHub Pages, CodeQL and OSSF checks: [Phase 6 report](docs/quality/PHASE-6-WORKFLOW-DATA-CREATIVE.md). Manual visual and assistive-technology review remains a separate sign-off step.
+
+
+## 🧭 Phase 7: advanced selection and layout controls
+
+Phase 7 upgrades Multi Select, Time Picker, Transfer List, Split Pane and Lightbox Gallery. The work covers live option and collection updates, selected-value normalization, native form validity and reset behavior, bounded time adjustment, accessible group labels, keyboard resizing and separator announcements, modal focus restoration, asynchronous image load/error handling, and useful empty states. Dedicated browser regressions cover each control, while the existing whole-gallery interaction suite and 390 px overflow check remain enabled. Automated validation, GitHub Pages deployment, CodeQL and OSSF Scorecard passed on the Phase 7 implementation commit. Manual visual and assistive-technology review remains a separate sign-off step. See the [Phase 7 implementation report](docs/quality/PHASE-7-ADVANCED-SELECTION-LAYOUT.md).
