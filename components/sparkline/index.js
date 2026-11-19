@@ -258,4 +258,77 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:inline-block}.row{display:flex;align-items:center;gap:10px}.chart{width:120px;height:42px}.line{fill:none;stroke:#9188ef;stroke-width:3;stroke-linecap:round}.label{font-size:10px;font-weight:900}.delta{font-size:9px;color:#58a989}';}render(){return '<div class="row"><div><div class="label">'+(this.getAttribute('label')||'Trend')+'</div><div class="delta"></div></div><svg class="chart" viewBox="0 0 110 40"><polyline class="line"/></svg></div>';}setup(){const v=(this.getAttribute('values')||'4,7,5,9,8,13,11,16').split(',').map(Number),mn=Math.min(...v),mx=Math.max(...v);this.$('polyline').setAttribute('points',v.map((n,i)=>(5+i*100/(v.length-1))+','+(34-(n-mn)/Math.max(1,mx-mn)*28)).join(' '));this.$('.delta').textContent=(v.at(-1)-v[0]>=0?'+':'')+(v.at(-1)-v[0]).toFixed(1)+' trend';}}define('vfx-sparkline',C);})();
+(() => {
+  const { Base, define, esc } = window.VFXAnimeFX;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svgNode = (tag, attrs = {}, text = '') => {
+    const el = document.createElementNS(NS, tag);
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, String(value));
+    if (text !== '') el.textContent = text;
+    return el;
+  };
+  const finite = (value) => Number.isFinite(Number(value)) && String(value).trim() !== '';
+  class C extends Base {
+    static get observedAttributes() { return ['label', 'values', 'color']; }
+    static get css() {
+      return ':host{display:inline-block;max-width:100%;min-width:0}.row{display:flex;align-items:center;gap:10px;min-width:0}.meta{min-width:0}.label{font-size:10px;font-weight:900;overflow-wrap:anywhere}.delta{font-size:9px;color:#58a989}.delta.negative{color:#c24667}.delta.neutral{color:#8580b0}.chart{display:block;width:min(100%,160px);min-width:76px;height:auto;overflow:visible;flex:1}.line{fill:none;stroke:var(--spark-color,#9188ef);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.area{fill:var(--spark-color,#9188ef);opacity:.13}.point{fill:var(--spark-color,#9188ef)}';
+    }
+    render() {
+      return '<div class="row"><div class="meta"><div class="label">' + esc(this.getAttribute('label') || 'Trend') + '</div><div class="delta neutral">No data</div></div><svg class="chart" viewBox="0 0 120 44" role="img" aria-label="Trend sparkline"><title></title><desc></desc><polygon class="area"></polygon><polyline class="line"></polyline><circle class="point" r="3"></circle></svg></div>';
+    }
+    setup() { this._render(); }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._render();
+    }
+    get values() {
+      return (this.getAttribute('values') || '4,7,5,9,8,13,11,16').split(',').map((v) => finite(v) ? Number(v) : null).filter((v) => Number.isFinite(v));
+    }
+    set values(value) {
+      const list = Array.isArray(value) ? value : String(value ?? '').split(',');
+      this.setAttribute('values', list.join(','));
+    }
+    get label() { return this.getAttribute('label') || 'Trend'; }
+    set label(value) { this.setAttribute('label', String(value ?? '')); }
+    _render() {
+      if (!this.ready) return;
+      const values = this.values, line = this.$('.line'), area = this.$('.area'), point = this.$('.point'), svg = this.$('svg');
+      const color = this.getAttribute('color');
+      if (color && /^#[0-9a-f]{3,8}$/i.test(color)) this.$('.chart').style.setProperty('--spark-color', color);
+      else this.$('.chart').style.removeProperty('--spark-color');
+      this.$('.label').textContent = this.label;
+      if (!values.length) {
+        line.setAttribute('points', '');
+        area.setAttribute('points', '');
+        point.setAttribute('hidden', '');
+        this.$('.delta').textContent = 'No data';
+        svg.setAttribute('aria-label', this.label + ', no trend data');
+        this.$('title').textContent = this.label;
+        this.$('desc').textContent = 'No valid numeric values';
+        return;
+      }
+      const min = Math.min(...values), max = Math.max(...values), range = max - min;
+      const coords = values.map((value, index) => {
+        const x = values.length === 1 ? 60 : 5 + index * 110 / (values.length - 1);
+        const y = range === 0 ? 22 : 38 - (value - min) / range * 32;
+        return [x, y];
+      });
+      const points = coords.map((p) => p[0] + ',' + p[1]).join(' ');
+      line.setAttribute('points', points);
+      area.setAttribute('points', '5,40 ' + points + ' 115,40');
+      const last = coords[coords.length - 1];
+      point.removeAttribute('hidden'); point.setAttribute('cx', last[0]); point.setAttribute('cy', last[1]);
+      const change = values[values.length - 1] - values[0];
+      const sign = change > 0 ? '+' : '';
+      const delta = this.$('.delta');
+      delta.textContent = sign + change.toFixed(1) + ' over period';
+      delta.classList.toggle('negative', change < 0);
+      delta.classList.toggle('neutral', change === 0);
+      delta.style.color = '';
+      const description = values.length + ' values, from ' + values[0] + ' to ' + values[values.length - 1] + ', change ' + sign + change.toFixed(1);
+      svg.setAttribute('aria-label', this.label + ': ' + description);
+      this.$('title').textContent = this.label;
+      this.$('desc').textContent = description;
+    }
+  }
+  define('vfx-sparkline', C);
+})();
