@@ -11,6 +11,9 @@ This project has not received a versioned release yet. Changes are recorded unde
 
 ## Unreleased
 
+- Added a browser-only npm package contract with an aggregate entry point and per-component subpath imports for all 82 custom elements.
+- Added an npm tarball, clean-consumer and Chromium smoke test, a one-time protected-token bootstrap workflow, and an OIDC trusted-publishing workflow with provenance.
+
 - Completed the 14-stage implementation roadmap across all 82 Web Component types.
 - Consolidated the former phase reports into the project reference and removed the 15 phase-specific report files.
 - Added the central component index, architecture reference, accessibility guide and quality/release evidence.

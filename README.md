@@ -152,13 +152,39 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 | [Code of Conduct](CODE_OF_CONDUCT.md) | Community participation standards |
 | [Support](SUPPORT.md) | Troubleshooting and usage support |
 
-## 📦 Package and release status
+## 📦 Install and use as an npm package
 
-The source repository is MIT-licensed. The project has a **source-only GitHub pre-release, `v0.1.0-rc.1`**. It is an early release candidate, not a stable production release. The npm package is **not published**, and `package.json` intentionally retains `"private": true`.
+VFX UI Anime is packaged as a browser-only ES module library with 82 dependency-free custom elements.
 
-The source pre-release is created only after `npm test`, `npm run check` and the full Chromium interaction suite pass on the exact tagged commit. See [the release workflow](.github/workflows/release.yml) and [the quality/release gates](docs/QUALITY-AND-RELEASE.md).
+```bash
+npm install vfx-ui-anime
+```
 
-The static gallery is deployed through GitHub Pages. Manual visual, keyboard-only, touch-device, screen-reader and Firefox/Safari review remains outstanding, as do npm tarball inspection and a clean consumer installation test. Do not treat this pre-release as a stable release or use an npm install command as though a public package exists.
+Register all elements from your client-side application entry:
+
+```js
+import 'vfx-ui-anime';
+```
+
+Or register one element only:
+
+```js
+import 'vfx-ui-anime/button';
+```
+
+Then use the custom element:
+
+```html
+<vfx-button>Save</vfx-button>
+```
+
+The root entry exports `version`, `componentNames`, and `componentTags`. Components are registered custom elements, not named React/Vue classes. See each component README for its attributes, methods, events, and form behavior.
+
+See [the package guide](docs/PACKAGE.md) for browser/CDN usage, subpath imports, package limitations, and verification. The package has no runtime dependencies.
+
+### Release status
+
+The npm distribution contract is verified by `npm run test:package`. The first publication requires a protected `NPM_TOKEN` Actions secret and the **Bootstrap first npm publication** workflow; after the package exists, configure npm Trusted Publisher for `publish.yml`, remove the token, and use OIDC/provenance for later releases. See [the package guide](docs/PACKAGE.md). The source-only GitHub pre-release `v0.1.0-rc.1` remains available [here](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
 
 ## 📄 License
 

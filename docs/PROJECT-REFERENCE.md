@@ -30,12 +30,17 @@ The live gallery is published at https://brajesh31.github.io/vfx-ui-anime/.
 | `tools/build.mjs` | Synchronizes the shared runtime into standalone components |
 | `tools/validate.mjs` | Structural, syntax, registry, demo and generated-runtime checks |
 | `tools/test.mjs` | Chromium browser interaction suite |
+| `tools/package-smoke.mjs` | npm tarball, offline consumer install, export resolution, and Chromium import smoke tests |
+| `index.js` | Aggregate browser entry point registering all 82 custom elements |
 | `.github/workflows/validate.yml` | Validation workflow |
 | `.github/workflows/deploy-pages.yml` | Separate GitHub Pages build/artifact and dependent deployment jobs |
 | `.github/workflows/codeql.yml` | CodeQL static analysis workflow |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard workflow |
+| `.github/workflows/publish.yml` | Stable npm publishing from version tags using GitHub OIDC and npm provenance |
+| `.github/workflows/bootstrap-publish.yml` | One-time manual first publication using a protected `NPM_TOKEN` before Trusted Publisher can be configured |
 | `.github/workflows/release.yml` | Source-only pre-release workflow; gates version creation on source, structure and full Chromium checks |
 | `docs/COMPONENTS.md` | Component directory and category index |
+| `docs/PACKAGE.md` | npm install, aggregate/subpath usage, browser restrictions and package verification |
 | `docs/QUALITY-AND-RELEASE.md` | Current automated evidence and release decision |
 | `docs/quality/ANIMATION-DESIGN-SYSTEM.md` | Visual system and motion specification |
 
