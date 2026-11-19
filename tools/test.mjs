@@ -6,11 +6,18 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 const URL_ = process.argv[2] || 'http://localhost:8000/gallery/';
 const CHROME = process.env.CHROME || ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(existsSync);
-const PORT = 9800 + Math.floor(Math.random() * 150), PROFILE = mkdtempSync(join(tmpdir(), 'skv-'));
-const chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${PORT}`, `--user-data-dir=${PROFILE}`, '--no-first-run', '--hide-scrollbars', 'about:blank'], { stdio: 'ignore' });
+if (!CHROME) throw new Error('Chrome or Chromium was not found. Set CHROME to the browser executable path.');
+const PORT = 20000 + Math.floor(Math.random() * 40000), PROFILE = mkdtempSync(join(tmpdir(), 'skv-'));
+const chrome = spawn(CHROME, ['--headless=new', '--disable-dev-shm-usage', `--remote-debugging-address=127.0.0.1`, `--remote-debugging-port=${PORT}`, `--user-data-dir=${PROFILE}`, '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--hide-scrollbars', 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-let pageTarget = null;
-for (let i = 0; i < 100 && !pageTarget; i++) {
+let pageTarget = null, launchError = null, exitInfo = null;
+chrome.once('error', (error) => { launchError = error; });
+chrome.once('exit', (code, signal) => { exitInfo = { code, signal }; });
+
+// Hosted CI runners can take longer to launch Chromium under load. Retry the DevTools
+// endpoint for up to 45 seconds rather than treating a slow startup as a component failure.
+const startupDeadline = Date.now() + 45000;
+while (!pageTarget && Date.now() < startupDeadline && !launchError && !exitInfo) {
   try {
     const response = await fetch(`http://127.0.0.1:${PORT}/json/list`);
     if (response.ok) {
@@ -18,19 +25,22 @@ for (let i = 0; i < 100 && !pageTarget; i++) {
       if (Array.isArray(targets)) pageTarget = targets.find((t) => t.type === 'page') || null;
     }
   } catch {}
-  if (!pageTarget) await sleep(150);
-}
-// Some Chromium builds do not publish the initial about:blank target until one is explicitly created.
-if (!pageTarget) {
-  try {
-    const response = await fetch(`http://127.0.0.1:${PORT}/json/new?about:blank`, { method: 'PUT' });
-    if (response.ok) pageTarget = await response.json();
-  } catch {}
+  // Some Chromium builds do not publish the initial about:blank target until one is explicitly created.
+  if (!pageTarget) {
+    try {
+      const response = await fetch(`http://127.0.0.1:${PORT}/json/new?about:blank`, { method: 'PUT' });
+      if (response.ok) pageTarget = await response.json();
+    } catch {}
+  }
+  if (!pageTarget) await sleep(200);
 }
 if (!pageTarget?.webSocketDebuggerUrl) {
   chrome.kill();
   rmSync(PROFILE, { recursive: true, force: true });
-  throw new Error(`Chrome did not expose a page target on debugging port ${PORT}.`);
+  const reason = launchError ? `launch error: ${launchError.message}`
+    : exitInfo ? `process exited with code ${exitInfo.code}, signal ${exitInfo.signal}`
+      : 'DevTools endpoint did not become available within 45 seconds';
+  throw new Error(`Could not initialize Chromium at ${CHROME} on debugging port ${PORT}: ${reason}.`);
 }
 const ws = new WebSocket(pageTarget.webSocketDebuggerUrl);
 await new Promise((r) => ws.addEventListener('open', r, { once: true }));
