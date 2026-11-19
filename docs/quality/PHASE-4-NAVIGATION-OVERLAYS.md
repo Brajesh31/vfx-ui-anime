@@ -46,7 +46,7 @@ The suite also covers Phase 3 review follow-ups for disabled Select behavior, Te
 - [ ] Manual visual review at mobile and desktop widths.
 - [ ] Keyboard and assistive-technology review.
 
-**Latest automated verification:** commit `932fd65a5339babf0c24ad2d3195f5ff4b8325db` on `main`. The Validate, GitHub Pages, CodeQL and OSSF Scorecard workflows all completed successfully. The Validate run passed the original component/generated-file checks and the full Chromium touch, keyboard and form interaction suite.
+**Latest automated verification:** commit `d9dd0240c80521c3795505dfeb3dee3883a66db0` on `main`. The Validate, GitHub Pages, CodeQL and OSSF Scorecard workflows all completed successfully. The Validate run passed the original component/generated-file checks and the full Chromium touch, keyboard and form interaction suite.
 
 ## 5. Boundaries
 
