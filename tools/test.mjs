@@ -525,6 +525,95 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("window.__phase8Gradient.remove();window.__phase8Gradient=null");
 }
 
+// Phase 9: workflow and utility controls
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-wizard');el.id='phase9-wizard';el.innerHTML='<section data-step data-title=\"Account\"><h3>Account</h3><input name=\"account\" required></section><section data-step data-title=\"Review\"><h3>Review</h3><input name=\"reviewer\" required></section><section data-step data-title=\"Finish\"><h3>Finish</h3></section>';form.append(el);document.body.append(form);window.__phase9WizardForm=form;window.__phase9WizardInvalid=0;el.addEventListener('invalid',()=>window.__phase9WizardInvalid++);})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase9-wizard');return el.totalSteps===3&&el.activeIndex===0&&el.shadowRoot.querySelector('.step[aria-current=\"step\"]')?.textContent==='Account';})()");
+  const blockedFirst=await ev("(() => {const el=document.querySelector('#phase9-wizard');return !el.goTo(2)&&el.activeIndex===0&&window.__phase9WizardInvalid===1;})()");
+  await ev("document.querySelector('#phase9-wizard').querySelector('[name=account]').value='Brajesh'");
+  const blockedMiddle=await ev("(() => {const el=document.querySelector('#phase9-wizard');return !el.goTo(2)&&el.activeIndex===1&&window.__phase9WizardInvalid===2&&el.shadowRoot.querySelector('.title').textContent==='Review';})()");
+  await ev("document.querySelector('#phase9-wizard').querySelector('[name=reviewer]').value='Reviewer'");
+  const advanced=await ev("(() => {const el=document.querySelector('#phase9-wizard');return el.goTo(2)&&el.activeIndex===2;})()");
+  const completed=await ev("(() => {const el=document.querySelector('#phase9-wizard');return el.next()&&el.complete&&!el.next()&&el.shadowRoot.querySelector('.next').disabled;})()");
+  const returned=await ev("(() => {const el=document.querySelector('#phase9-wizard');return el.previous()&&el.activeIndex===1&&!el.complete&&el.reset()&&el.activeIndex===0;})()");
+  await ev("(() => {const el=document.querySelector('#phase9-wizard'),p=document.createElement('section');p.setAttribute('data-step','');p.setAttribute('data-title','New step');el.append(p);})()"); await sleep(100);
+  const dynamic=await ev("document.querySelector('#phase9-wizard').totalSteps===4");
+  await ev("document.querySelector('#phase9-wizard').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase9-wizard');return !el.next()&&el.shadowRoot.querySelector('.next').disabled;})()");
+  await ev("document.querySelector('#phase9-wizard').removeAttribute('disabled');window.__phase9WizardForm.reset()");
+  const formReset=await ev("document.querySelector('#phase9-wizard').activeIndex===0");
+  check('phase 9: Wizard validates every skipped step, reveals invalid panels, completes once, resets and syncs dynamic/disabled state',initial&&blockedFirst&&blockedMiddle&&advanced&&completed&&returned&&dynamic&&disabled&&formReset,JSON.stringify({initial,blockedFirst,blockedMiddle,advanced,completed,returned,dynamic,disabled,formReset}));
+  await ev("window.__phase9WizardForm.remove();window.__phase9WizardForm=null");
+}
+{ await ev("(() => {const trigger=document.createElement('button');trigger.id='phase9-tour-trigger';trigger.textContent='Launch tour';document.body.append(trigger);trigger.focus();const a=document.createElement('button');a.id='phase9-tour-a';a.textContent='Target A';document.body.append(a);const b=document.createElement('button');b.id='phase9-tour-b';b.textContent='Target B';document.body.append(b);const el=document.createElement('vfx-guided-tour');el.id='phase9-tour';el.setAttribute('steps','#phase9-missing::Missing::This target is absent.|#phase9-tour-a::First::First detail.|#phase9-tour-b::Second::Second detail.');document.body.append(el);window.__phase9TourTrigger=trigger;window.__phase9TourMissing=0;el.addEventListener('target-missing',()=>window.__phase9TourMissing++);window.__phase9TourFinishes=0;el.addEventListener('finish',()=>window.__phase9TourFinishes++);})()"); await sleep(100);
+  const started=await ev("(() => {const el=document.querySelector('#phase9-tour');return el.start()&&el.active&&el.currentIndex===1&&!el.shadowRoot.querySelector('.overlay').hidden;})()");
+  await sleep(50);
+  const focus=await ev("(() => {const el=document.querySelector('#phase9-tour');return el.shadowRoot.activeElement===el.shadowRoot.querySelector('.next')&&window.__phase9TourMissing===1;})()");
+  await ev("(() => {const el=document.querySelector('#phase9-tour'),next=el.shadowRoot.querySelector('.next');next.focus();next.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true,composed:true,cancelable:true}));})()");
+  const trap=await ev("document.querySelector('#phase9-tour').shadowRoot.activeElement===document.querySelector('#phase9-tour').shadowRoot.querySelector('.skip')");
+  const advanced=await ev("(() => {const el=document.querySelector('#phase9-tour');return el.next()&&el.currentIndex===2&&el.previous()&&el.currentIndex===1;})()");
+  await ev("document.querySelector('#phase9-tour').finish('test')"); await sleep(80);
+  const restored=await ev("(() => {const el=document.querySelector('#phase9-tour');return !el.active&&el.shadowRoot.querySelector('.overlay').hidden&&document.activeElement===window.__phase9TourTrigger&&window.__phase9TourFinishes===1;})()");
+  await ev("document.querySelector('#phase9-tour').setAttribute('disabled','')");
+  const disabled=await ev("!document.querySelector('#phase9-tour').start()");
+  await ev("document.querySelector('#phase9-tour').remove();window.__phase9TourTrigger.remove();document.querySelector('#phase9-tour-a').remove();document.querySelector('#phase9-tour-b').remove()");
+  check('phase 9: Guided Tour skips missing targets, traps keyboard focus, navigates both directions, restores focus and respects disabled state',started&&focus&&trap&&advanced&&restored&&disabled,JSON.stringify({started,focus,trap,advanced,restored,disabled}));
+}
+{ await ev("(() => {const el=document.createElement('vfx-stopwatch');el.id='phase9-stopwatch';document.body.append(el);window.__phase9StopwatchEvents=[];for(const type of ['start','stop','lap','reset'])el.addEventListener(type,e=>window.__phase9StopwatchEvents.push(type));})()"); await sleep(80);
+  const started=await ev("(() => {const el=document.querySelector('#phase9-stopwatch');return el.start()&&!el.start()&&el.running;})()");
+  await sleep(120);
+  const lap=await ev("(() => {const el=document.querySelector('#phase9-stopwatch'),v=el.lap();return !!v&&v.number===1&&v.elapsed>=v.split&&el.laps.length===1;})()");
+  const stopped=await ev("(() => {const el=document.querySelector('#phase9-stopwatch');return el.stop()&&!el.running;})()");
+  const frozen=await ev("(() => {const el=document.querySelector('#phase9-stopwatch'),v=el.elapsed;return v>0;})()"); await sleep(60);
+  const stable=await ev("Math.abs(document.querySelector('#phase9-stopwatch').elapsed-window.__phase9StopwatchFrozen)<10");
+  await ev("window.__phase9StopwatchFrozen=document.querySelector('#phase9-stopwatch').elapsed");
+  await ev("(() => {const el=document.querySelector('#phase9-stopwatch');el.start();el.remove();document.body.append(el);})()"); await sleep(90);
+  const reconnect=await ev("(() => {const el=document.querySelector('#phase9-stopwatch');return el.running&&el.elapsed>window.__phase9StopwatchFrozen;})()");
+  await ev("document.querySelector('#phase9-stopwatch').stop();document.querySelector('#phase9-stopwatch')._elapsed=3720000;document.querySelector('#phase9-stopwatch')._paint()");
+  const longTime=await ev("document.querySelector('#phase9-stopwatch').shadowRoot.querySelector('.clock').textContent==='01:02:00.00'");
+  await ev("document.querySelector('#phase9-stopwatch').reset()");
+  const reset=await ev("(() => {const el=document.querySelector('#phase9-stopwatch');return el.elapsed===0&&el.laps.length===0&&!el.shadowRoot.querySelector('.reset').disabled;})()");
+  await ev("document.querySelector('#phase9-stopwatch').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase9-stopwatch');return !el.start()&&el.shadowRoot.querySelector('.start').disabled;})()");
+  const events=await ev("window.__phase9StopwatchEvents.join('|')");
+  check('phase 9: Stopwatch preserves monotonic elapsed time, splits laps, resumes rendering after reconnect, formats hours and guards disabled state',started&&lap&&stopped&&frozen&&stable&&reconnect&&longTime&&reset&&disabled,JSON.stringify({started,lap,stopped,frozen,stable,reconnect,longTime,reset,disabled,events}));
+  await ev("document.querySelector('#phase9-stopwatch').remove()");
+}
+{ await ev("(() => {const el=document.createElement('vfx-emoji-picker');el.id='phase9-emoji';document.body.append(el);window.__phase9EmojiSelect='';el.addEventListener('select',e=>window.__phase9EmojiSelect=e.detail.emoji);})()"); await sleep(80);
+  await ev("(() => {const el=document.querySelector('#phase9-emoji'),s=el.shadowRoot.querySelector('.search');s.value='rocket';s.dispatchEvent(new Event('input',{bubbles:true}));})()");
+  const search=await ev("(() => {const el=document.querySelector('#phase9-emoji');return el.shadowRoot.querySelectorAll('.emoji').length===1&&el.shadowRoot.querySelector('.emoji').dataset.emoji==='🚀';})()");
+  await ev("(() => {const el=document.querySelector('#phase9-emoji');el.shadowRoot.querySelector('.search').value='';el.shadowRoot.querySelector('.search').dispatchEvent(new Event('input',{bubbles:true}));el.shadowRoot.querySelector('[data-category=People]').click();})()");
+  const category=await ev("(() => {const el=document.querySelector('#phase9-emoji');return el.shadowRoot.querySelector('.category[aria-pressed=true]').dataset.category==='People'&&el.shadowRoot.querySelectorAll('.emoji').length>0;})()");
+  await ev("(() => {const el=document.querySelector('#phase9-emoji'),first=el.shadowRoot.querySelector('.emoji');first.focus();first.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,composed:true,cancelable:true}));})()");
+  const keyboard=await ev("document.querySelector('#phase9-emoji').shadowRoot.activeElement?.classList.contains('emoji')");
+  const selected=await ev("document.querySelector('#phase9-emoji').selectEmoji('👋')&&document.querySelector('#phase9-emoji').value==='👋'&&window.__phase9EmojiSelect==='👋'");
+  await ev("document.querySelector('#phase9-emoji').setAttribute('value','✨')");
+  const sync=await ev("document.querySelector('#phase9-emoji').value==='✨'&&document.querySelector('#phase9-emoji').shadowRoot.querySelector('.chosen').textContent==='✨'");
+  await ev("(() => {const el=document.querySelector('#phase9-emoji');el.shadowRoot.querySelector('.search').value='not-a-real-emoji';el.shadowRoot.querySelector('.search').dispatchEvent(new Event('input',{bubbles:true}));})()");
+  const empty=await ev("!!document.querySelector('#phase9-emoji').shadowRoot.querySelector('.empty')");
+  await ev("document.querySelector('#phase9-emoji').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase9-emoji');return !el.selectEmoji('😀')&&el.shadowRoot.querySelector('.search').disabled;})()");
+  check('phase 9: Emoji Picker searches names and keywords, filters categories, supports arrow keys, syncs values and exposes empty/disabled states',search&&category&&keyboard&&selected&&sync&&empty&&disabled,JSON.stringify({search,category,keyboard,selected,sync,empty,disabled}));
+  await ev("document.querySelector('#phase9-emoji').remove()");
+}
+{ await ev("(() => {const el=document.createElement('vfx-copy-code');el.id='phase9-copy';el.textContent='const x = 1;\\nconsole.log(x);\\n';document.body.append(el);window.__phase9Copied='';el.addEventListener('copy',e=>window.__phase9Copied=e.detail.value);})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase9-copy');return el.lineCount===3&&el.value.endsWith('\\n')&&el.shadowRoot.querySelector('code').textContent===el.value;})()");
+  await ev("document.querySelector('#phase9-copy').setAttribute('language','javascript')");
+  const language=await ev("document.querySelector('#phase9-copy').shadowRoot.querySelector('.lang').textContent==='javascript'");
+  await ev("document.querySelector('#phase9-copy').setAttribute('code','<script>window.__unsafeExecuted=true</script>')");
+  const safe=await ev("(() => {const el=document.querySelector('#phase9-copy');return el.value.includes('<script>')&&el.shadowRoot.querySelector('code').textContent.includes('<script>')&&!window.__unsafeExecuted;})()");
+  await ev("(() => {const el=document.querySelector('#phase9-copy');el.value='one\\ntwo';})()");
+  const property=await ev("document.querySelector('#phase9-copy').lineCount===2&&document.querySelector('#phase9-copy').value==='one\\ntwo'");
+  await ev("(() => {const el=document.querySelector('#phase9-copy');el.removeAttribute('code');el.textContent='alpha\\nbeta\\ngamma';})()"); await sleep(80);
+  const dynamic=await ev("document.querySelector('#phase9-copy').lineCount===3&&document.querySelector('#phase9-copy').value.includes('gamma')");
+  await ev("(() => {const d=Object.getOwnPropertyDescriptor(navigator,'clipboard');window.__phase9ClipboardDescriptor=d;Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.__phase9Copied=value;}}});document.querySelector('#phase9-copy').shadowRoot.querySelector('.copy').click();})()"); await sleep(50);
+  const copied=await ev("(() => {const el=document.querySelector('#phase9-copy');return window.__phase9Copied===el.value&&el.shadowRoot.querySelector('.copy').textContent.includes('Copied');})()");
+  await ev("document.querySelector('#phase9-copy').setAttribute('disabled','')");
+  const disabled=await ev("document.querySelector('#phase9-copy').shadowRoot.querySelector('.copy').disabled");
+  await ev("(() => {const d=window.__phase9ClipboardDescriptor;if(d)Object.defineProperty(navigator,'clipboard',d);else delete navigator.clipboard;})()");
+  check('phase 9: Copy Code preserves whitespace, safely renders dynamic source, syncs language, copies through Clipboard API and disables cleanly',initial&&language&&safe&&property&&dynamic&&copied&&disabled,JSON.stringify({initial,language,safe,property,dynamic,copied,disabled}));
+  await ev("document.querySelector('#phase9-copy').remove()");
+}
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
