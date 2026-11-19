@@ -835,7 +835,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const keyboard=await ev("(() => {const el=document.querySelector('#phase12-flip');return !el.flipped&&el.shadowRoot.querySelector('.inner').getAttribute('aria-pressed')==='false'&&window.__phase12FlipEvents.length===2;})()");
   await ev("(() => {const el=document.querySelector('#phase12-flip');el.front='Updated prompt';el.back='Updated answer';el.toggle(true);window.__phase12NoDuplicate=el.toggle(true)===true&&window.__phase12FlipEvents.length===3;})()");
   const props=await ev("(() => {const el=document.querySelector('#phase12-flip'),button=el.shadowRoot.querySelector('.inner');return el.flipped&&el.shadowRoot.querySelector('.front b').textContent==='Updated prompt'&&el.shadowRoot.querySelector('.back b').textContent==='Updated answer'&&button.getAttribute('aria-label')==='Show front: Updated prompt'&&window.__phase12NoDuplicate;})()");
-  await ev("(() => {const el=document.querySelector('#phase12-flip');el.setAttribute('flipped','');})()");
+  await ev("(() => {const el=document.querySelector('#phase12-flip');el.removeAttribute('flipped');el.setAttribute('flipped','');})()");
   const attribute=await ev("(() => {const el=document.querySelector('#phase12-flip');return el.flipped&&el.shadowRoot.querySelector('.inner').getAttribute('aria-pressed')==='true';})()");
   await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
   const reduced=await ev("getComputedStyle(document.querySelector('#phase12-flip').shadowRoot.querySelector('.inner')).transitionDuration==='0s'");
