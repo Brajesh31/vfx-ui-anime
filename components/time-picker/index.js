@@ -281,12 +281,12 @@ class VfxTimePicker extends Base {
   const v=this.value,minutes=this._timeMinutes(v);
   if(minutes===null)this.$('.readout').textContent='No time selected';
   else {const h=Math.floor(minutes/60),m=minutes%60,period=h>=12?'PM':'AM',hour=h%12||12;this.$('.readout').textContent='Selected time: '+hour+':'+String(m).padStart(2,'0')+' '+period;}
-  this.$('.preset').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.time===v)));
+  this.$$('.preset').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.time===v)));
   const b=this._bounds(),flags={};let message='';
   if(this.required&&!v){flags.valueMissing=true;message='Choose a time.';}
   else if(minutes!==null){if(b.min!==null&&minutes<b.min){flags.rangeUnderflow=true;message='Time is earlier than the minimum.';}if(b.max!==null&&minutes>b.max){flags.rangeOverflow=true;message='Time is later than the maximum.';}if((minutes-(b.min??0))%this._step!==0){flags.stepMismatch=true;message='Time does not match the configured minute step.';}}
   this.internals?.setValidity(flags,message,this.$('input'));this.internals?.setFormValue(this.disabled||this._formDisabled||!v?null:v);
-  const disabled=this.disabled||this._formDisabled;this.$('input').disabled=disabled;this.$('.step button,.preset').forEach(x=>x.disabled=disabled);
+  const disabled=this.disabled||this._formDisabled;this.$('input').disabled=disabled;this.$$('.step button,.preset').forEach(x=>x.disabled=disabled);
   const base=minutes??(b.min??0);this.$('.down').disabled=disabled||base-this._step<Math.max(0,b.min??0);this.$('.up').disabled=disabled||base+this._step>Math.min(1439,b.max??1439);
   if(emit&&eventName)this.emit(eventName,{value:v,hours:minutes===null?null:Math.floor(minutes/60),minutes:minutes===null?null:minutes%60});
   if(emit&&eventName==='change'&&minutes!==null){const p=at(this.$('input'));burst(p.x,p.y,{r:23,spikes:8});}
