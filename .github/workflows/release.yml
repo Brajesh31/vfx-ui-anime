@@ -79,8 +79,8 @@ jobs:
 
           The release was created only after the following checks passed on commit $RELEASE_SHA:
 
-          - `npm test`
-          - `npm run check`
+          - npm test
+          - npm run check
           - Full Chromium touch, keyboard, form and lifecycle interaction suite
 
           The repository's CodeQL, GitHub Pages and OpenSSF Scorecard workflows are maintained separately on `main`.
