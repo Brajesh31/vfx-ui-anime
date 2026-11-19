@@ -349,7 +349,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const clamped=await ev("document.querySelector('#phase7-split').value===70");
   await ev("(() => {const el=document.querySelector('#phase7-split'),d=el.shadowRoot.querySelector('.divider');d.focus();d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,composed:true,cancelable:true}));d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',shiftKey:true,bubbles:true,composed:true,cancelable:true}));})()");
   const keyboard=await ev("document.querySelector('#phase7-split').value===70");
-  await ev("document.querySelector('#phase7-split').setAttribute('value','42');document.querySelector('#phase7-split').setAttribute('min','20');");
+  await ev("document.querySelector('#phase7-split').value=42;document.querySelector('#phase7-split').setAttribute('min','20');");
   const shifted=await ev("document.querySelector('#phase7-split').value===42");
   await ev("(() => {const el=document.querySelector('#phase7-split'),d=el.shadowRoot.querySelector('.divider');d.focus();d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,composed:true,cancelable:true}));d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',shiftKey:true,bubbles:true,composed:true,cancelable:true}));})()");
   const keySteps=await ev("document.querySelector('#phase7-split').value===54");
