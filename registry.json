@@ -1137,7 +1137,7 @@
       "name": "gradient-picker",
       "type": "registry:file",
       "title": "VFX UI Anime Gradient Picker",
-      "description": "A responsive linear-gradient editor with two-to-five editable color stops, adjustable stop positions and angle, visual presets, CSS output, form support, and a standalone <vfx-gradient-picker> custom element. One file, no dependencies.",
+      "description": "A responsive linear-gradient editor with two-to-eight editable color stops, stable stop IDs, adjustable stop positions and angle, visual presets, CSS output, form support, and a standalone <vfx-gradient-picker> custom element. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "gradient-picker",
@@ -1151,7 +1151,7 @@
           "target": "~/public/vfx-ui-anime/gradient-picker.js"
         }
       ],
-      "docs": "Load /components/gradient-picker/index.js with a plain script tag. See components/gradient-picker/README.md for the two-to-five-stop API, CSS value format, events, keyboard behavior, and limits."
+      "docs": "Load /components/gradient-picker/index.js with a plain script tag. See components/gradient-picker/README.md for the two-to-eight-stop API, CSS value format, events, keyboard behavior, and limits."
     },
     {
       "name": "wizard",
