@@ -258,4 +258,192 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,600px)}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}.tabs{display:flex;gap:5px;padding:8px;border-bottom:1px solid #eee}.tabs button{padding:6px 9px;border:1px solid #ddd;border-radius:6px;background:white;font-size:10px}.body{display:grid;grid-template-columns:1fr 1fr;min-height:180px}.editor{min-width:0;min-height:180px;padding:10px;border:0;border-right:1px solid #eee;font:11px/1.6 monospace;resize:vertical}.preview{padding:10px;min-width:0;font-size:12px;overflow-wrap:anywhere}.preview pre{background:#211d3b;color:white;padding:8px;border-radius:7px;white-space:pre-wrap}@media(max-width:500px){.body{grid-template-columns:1fr}}';}render(){return '<section class="box"><nav class="tabs"><button data-v="split">Split</button><button data-v="write">Write</button><button data-v="preview">Preview</button></nav><div class="body"><textarea class="editor" aria-label="Markdown source"></textarea><div class="preview"></div></div></section>';}setup(){this.editor=this.$('textarea');this.editor.value=this.getAttribute('value')||'# Hello\n\nWrite **Markdown** here.';this.editor.addEventListener('input',()=>{this.paint();this.emit('input',{value:this.value});});this.$('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b)this.layout(b.dataset.v);});this.layout('split');this.paint();}get value(){return this.editor.value;}set value(v){this.editor.value=String(v);this.paint();}paint(){let s=esc(this.value);s=s.replace(/^### (.*)$/gm,'<h3>$1</h3>').replace(/^## (.*)$/gm,'<h2>$1</h2>').replace(/^# (.*)$/gm,'<h1>$1</h1>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');this.$('.preview').innerHTML=s.split('\n').map(x=>x.trim()?'<p>'+x+'</p>':'').join('');}layout(v){this.$('.editor').hidden=v==='preview';this.$('.preview').hidden=v==='write';this.$('.body').style.gridTemplateColumns=v==='split'?'1fr 1fr':'1fr';}}define('vfx-markdown-editor',C);})();
+(() => {
+  const { Base, define } = window.VFXAnimeFX;
+  const DEFAULT_VALUE = '# Hello\n\nWrite **Markdown** here.\n\n- Keep notes\n- Preview safely';
+  const fence = String.fromCharCode(96).repeat(3);
+  const inline = (text, parent) => {
+    const pattern = /(\*\*[^*]+\*\*|\x60[^\x60]+\x60|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g;
+    let cursor = 0, match;
+    while ((match = pattern.exec(text))) {
+      if (match.index > cursor) parent.append(document.createTextNode(text.slice(cursor, match.index)));
+      const token = match[0];
+      if (token.startsWith('**')) {
+        const strong = document.createElement('strong');
+        strong.textContent = token.slice(2, -2);
+        parent.append(strong);
+      } else if (token.charCodeAt(0) === 96) {
+        const code = document.createElement('code');
+        code.textContent = token.slice(1, -1);
+        parent.append(code);
+      } else if (token.startsWith('*')) {
+        const em = document.createElement('em');
+        em.textContent = token.slice(1, -1);
+        parent.append(em);
+      } else {
+        const split = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        const label = split?.[1] || token;
+        const href = split?.[2] || '';
+        let url;
+        try { url = new URL(href, document.baseURI); } catch {}
+        if (url && ['http:', 'https:', 'mailto:'].includes(url.protocol)) {
+          const link = document.createElement('a');
+          link.href = url.href;
+          link.textContent = label;
+          if (url.protocol !== 'mailto:' && url.origin !== location.origin) {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+          }
+          parent.append(link);
+        } else parent.append(document.createTextNode(label));
+      }
+      cursor = pattern.lastIndex;
+    }
+    if (cursor < text.length) parent.append(document.createTextNode(text.slice(cursor)));
+  };
+  const renderMarkdown = (source, target) => {
+    const lines = String(source).replace(/\r\n?/g, '\n').split('\n');
+    target.replaceChildren();
+    let i = 0;
+    const appendParagraph = (value) => {
+      const p = document.createElement('p');
+      inline(value, p);
+      target.append(p);
+    };
+    while (i < lines.length) {
+      const line = lines[i];
+      if (!line.trim()) { i++; continue; }
+      if (line.trim().startsWith(fence)) {
+        const language = line.trim().slice(3).trim();
+        const codeLines = [];
+        i++;
+        while (i < lines.length && !lines[i].trim().startsWith(fence)) codeLines.push(lines[i++]);
+        if (i < lines.length) i++;
+        const pre = document.createElement('pre'), code = document.createElement('code');
+        if (language) code.dataset.language = language.replace(/[^a-z0-9_+-]/gi, '');
+        code.textContent = codeLines.join('\n');
+        pre.append(code); target.append(pre); continue;
+      }
+      const heading = line.match(/^(#{1,3})\s+(.+)$/);
+      if (heading) {
+        const h = document.createElement('h' + heading[1].length);
+        inline(heading[2], h); target.append(h); i++; continue;
+      }
+      if (/^\s*(---+|\*\*\*+|___+)\s*$/.test(line)) {
+        target.append(document.createElement('hr')); i++; continue;
+      }
+      if (/^\s*>\s?/.test(line)) {
+        const quote = document.createElement('blockquote');
+        while (i < lines.length && /^\s*>\s?/.test(lines[i])) {
+          const p = document.createElement('p');
+          inline(lines[i++].replace(/^\s*>\s?/, ''), p);
+          quote.append(p);
+        }
+        target.append(quote); continue;
+      }
+      if (/^\s*[-+*]\s+/.test(line)) {
+        const list = document.createElement('ul');
+        while (i < lines.length && /^\s*[-+*]\s+/.test(lines[i])) {
+          const li = document.createElement('li');
+          inline(lines[i++].replace(/^\s*[-+*]\s+/, ''), li);
+          list.append(li);
+        }
+        target.append(list); continue;
+      }
+      if (/^\s*\d+\.\s+/.test(line)) {
+        const list = document.createElement('ol');
+        while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+          const li = document.createElement('li');
+          inline(lines[i++].replace(/^\s*\d+\.\s+/, ''), li);
+          list.append(li);
+        }
+        target.append(list); continue;
+      }
+      const paragraph = [line.trim()];
+      i++;
+      while (i < lines.length && lines[i].trim() &&
+        !/^(#{1,3})\s+/.test(lines[i]) && !lines[i].trim().startsWith(fence) &&
+        !/^\s*(>|[-+*]\s+|\d+\.\s+)/.test(lines[i]) &&
+        !/^\s*(---+|\*\*\*+|___+)\s*$/.test(lines[i])) paragraph.push(lines[i++].trim());
+      appendParagraph(paragraph.join(' '));
+    }
+  };
+  class C extends Base {
+    static get observedAttributes() { return ['value', 'disabled', 'readonly', 'placeholder']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,720px);min-width:0}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.tabs{display:flex;gap:5px;flex-wrap:wrap;padding:8px;border-bottom:1px solid #eee}.tabs button{padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:white;font-size:10px;cursor:pointer}.tabs button[aria-selected=true]{border-color:#6558d9;background:#f0edff;font-weight:900}.tabs button:disabled{opacity:.5;cursor:not-allowed}.body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:220px}.editor{display:block;width:100%;min-width:0;min-height:220px;padding:12px;border:0;border-right:1px solid #eee;font:12px/1.6 ui-monospace,monospace;resize:vertical;tab-size:2}.preview{min-width:0;padding:12px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.preview[hidden],.editor[hidden]{display:none}.preview h1,.preview h2,.preview h3{line-height:1.25}.preview pre{overflow:auto;padding:10px;border-radius:7px;background:#211d3b;color:white;white-space:pre-wrap;overflow-wrap:anywhere}.preview code:not(pre code){padding:1px 4px;border-radius:4px;background:#f0edff}.preview blockquote{margin:8px 0;padding:5px 10px;border-left:3px solid #a49cf5;background:#f8f6ff}.preview ul,.preview ol{padding-left:22px}.preview a{color:#5548b7}.status{padding:6px 10px;border-top:1px solid #eee;color:#756f92;font-size:10px}@media(max-width:520px){.body{grid-template-columns:minmax(0,1fr)}}';
+    }
+    render() {
+      return '<section class="box"><nav class="tabs" role="tablist" aria-label="Markdown editor view"><button type="button" role="tab" data-mode="split" aria-selected="true">Split</button><button type="button" role="tab" data-mode="write" aria-selected="false" tabindex="-1">Write</button><button type="button" role="tab" data-mode="preview" aria-selected="false" tabindex="-1">Preview</button></nav><div class="body"><textarea class="editor" aria-label="Markdown source" spellcheck="false"></textarea><div class="preview" aria-label="Markdown preview"></div></div><div class="status" role="status" aria-live="polite">Markdown preview ready.</div></section>';
+    }
+    setup() {
+      this.editor = this.$('textarea');
+      this.editor.value = this.hasAttribute('value') ? this.getAttribute('value') : DEFAULT_VALUE;
+      this._mode = 'split';
+      this.editor.addEventListener('input', () => {
+        this._paint();
+        this.$('.status').textContent = 'Markdown updated.';
+        this.emit('input', { value: this.value });
+        this.emit('change', { value: this.value });
+      });
+      this.$('.tabs').addEventListener('click', (event) => {
+        const button = event.target.closest('[data-mode]');
+        if (button) this.setMode(button.dataset.mode);
+      });
+      this.$('.tabs').addEventListener('keydown', (event) => {
+        const tabs = this.$$('.tabs [role=tab]');
+        const index = tabs.indexOf(event.target);
+        if (index < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        this.setMode(tabs[next].dataset.mode);
+        tabs[next].focus();
+      });
+      this._syncAttributes();
+      this._paint();
+      this.setMode('split');
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'value') this.editor.value = newValue || '';
+      if (name === 'placeholder') this.editor.placeholder = newValue || '';
+      if (name === 'disabled' || name === 'readonly') this._syncAttributes();
+      this._paint();
+    }
+    get value() { return this.editor ? this.editor.value : (this.getAttribute('value') || ''); }
+    set value(value) { this.setAttribute('value', String(value ?? '')); }
+    get mode() { return this._mode || 'split'; }
+    set mode(value) { this.setMode(value); }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get readOnly() { return this.hasAttribute('readonly'); }
+    set readOnly(value) { this.toggleAttribute('readonly', Boolean(value)); }
+    _syncAttributes() {
+      if (!this.editor) return;
+      this.editor.disabled = this.disabled;
+      this.editor.readOnly = this.readOnly;
+      this.editor.placeholder = this.getAttribute('placeholder') || '';
+      this.$$('.tabs button').forEach((button) => { button.disabled = this.disabled; });
+    }
+    setMode(mode) {
+      if (!['split', 'write', 'preview'].includes(mode) || !this.ready) return false;
+      this._mode = mode;
+      const editor = this.$('.editor'), preview = this.$('.preview');
+      editor.hidden = mode === 'preview';
+      preview.hidden = mode === 'write';
+      this.$('.body').style.gridTemplateColumns = mode === 'split' ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)';
+      this.$$('.tabs button').forEach((button) => {
+        const selected = button.dataset.mode === mode;
+        button.setAttribute('aria-selected', String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+      return true;
+    }
+    _paint() {
+      if (!this.ready) return;
+      renderMarkdown(this.value, this.$('.preview'));
+    }
+    focus() { this.editor?.focus(); }
+  }
+  define('vfx-markdown-editor', C);
+})();
