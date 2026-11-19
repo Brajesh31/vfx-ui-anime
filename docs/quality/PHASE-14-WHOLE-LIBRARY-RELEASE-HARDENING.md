@@ -52,7 +52,7 @@ The gallery still contains 83 examples, 82 distinct component tags, and now 83 u
 | Gallery | 83 unique demo IDs, 82 component tags |
 | GitHub Actions definitions | Required workflows and push-to-main triggers are present |
 
-The source-level audit was performed against the current files in `main`. It did not execute the repository scripts in a Node environment. The strengthened validator is committed so GitHub Actions can enforce these structural checks during a real run.
+The source-level audit was performed against the current files in `main` using static syntax parsing and direct file comparisons. It did not execute the repository scripts in a Node environment. The strengthened validator uses Node's `vm.Script` to repeat the JavaScript parse checks, so GitHub Actions can enforce them during a real run.
 
 ## 🛠️ Changed files
 
