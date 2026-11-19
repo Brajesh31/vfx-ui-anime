@@ -22,12 +22,12 @@ A responsive linear-gradient editor with two-to-eight editable color stops, posi
 
 | Member | Type | Description |
 |---|---|---|
-| `value` | string | Read or set a supported `linear-gradient(...)` CSS value. |
+| `value` | string | Read or set a supported `linear-gradient(...)` CSS value with two to eight six-digit hex stops. |
 | `from`, `to` | hex color | Backward-compatible access to the first and last stop colors. |
 | `angle` | number | Read or set the gradient direction, clamped to 0–360 degrees. |
 | `stops` | array | Read a defensive copy or replace stops with `{ id, color, position }` objects. |
 | `addStop()` | method | Adds a stop between existing stops. Maximum eight. |
-| `removeStop(index)` | method | Removes a stop when more than two remain. |
+| `removeStop(idOrIndex)` | method | Removes a stop by its stable ID or array index when more than two remain. |
 | `formResetCallback()` | platform callback | Restores the initial stop list and angle when its form resets. |
 
 ### Attributes
@@ -37,8 +37,8 @@ A responsive linear-gradient editor with two-to-eight editable color stops, posi
 | `name` | empty | Form field name. |
 | `from`, `to` | VFX brand colors | First and last stop colors as six-digit hex. |
 | `angle` | 135 | Direction in degrees. |
-| `stops` | none | JSON JSON array of objects with a unique `id`, `color`, and `position`. |
-| `value` | none | Initial supported two-to-five-stop linear gradient. |
+| `stops` | none | JSON array of objects with a unique `id`, `color`, and `position`. A compact `color@position|color@position` form is also accepted. |
+| `value` | none | Initial supported two-to-eight-stop linear gradient. |
 | `disabled` | false | Disables stop editing and controls. |
 
 Stops are normalized, clamped to 0–100%, and sorted by position. Unsupported colors and malformed CSS values are rejected rather than inserted into the preview.
