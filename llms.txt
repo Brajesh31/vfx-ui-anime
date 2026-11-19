@@ -15,9 +15,8 @@ Repository: https://github.com/Brajesh31/vfx-ui-anime
 - `tools/build.mjs`: embeds the latest core in every standalone component.
 - `tools/test.mjs`: real touch and keyboard interaction tests in Chromium.
 - `registry.json`: component registry metadata.
-- `THIRD_PARTY_NOTICES/LICENSES.md`: upstream MIT attribution and permission notice for the eleven adapted original components and artwork.
 
-## Original adapted component set
+## Signature component set
 - Button: `components/button/` `<vfx-button>`
 - Toggle: `components/toggle/` `<vfx-toggle>`
 - Slider: `components/slider/` `<vfx-slider>`
