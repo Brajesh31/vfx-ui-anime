@@ -613,6 +613,85 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase9-copy').remove()");
 }
 
+// Phase 10: charts and dashboard components
+{
+  await ev("(() => {const el=document.createElement('vfx-bar-chart');el.id='phase10-bar';el.setAttribute('values','5,-5,10,bad');el.setAttribute('labels','A,B,C,D');document.body.append(el);window.__phase10Bar=null;el.addEventListener('select',e=>window.__phase10Bar=e.detail);})()");
+  await sleep(70);
+  const initial=await ev("(() => {const el=document.querySelector('#phase10-bar');return el.shadowRoot.querySelectorAll('rect[data-index]').length===3&&el.shadowRoot.querySelector('svg').getAttribute('role')==='group'&&el.shadowRoot.querySelector('rect').getAttribute('tabindex')==='0';})()");
+  const selected=await ev("(() => {const el=document.querySelector('#phase10-bar');return el.select(1)&&el.selectedIndex===1&&window.__phase10Bar.index===1&&window.__phase10Bar.value===-5;})()");
+  await ev("(() => {const el=document.querySelector('#phase10-bar');el.values=[2,4];el.labels=['One','Two'];})()");
+  const live=await ev("(() => {const el=document.querySelector('#phase10-bar');return el.shadowRoot.querySelectorAll('rect[data-index]').length===2&&el.shadowRoot.querySelector('rect[data-index=\"1\"]').getAttribute('aria-label')==='Two: 4';})()");
+  await ev("document.querySelector('#phase10-bar').setAttribute('values','bad,NaN')");
+  const empty=await ev("(() => {const el=document.querySelector('#phase10-bar');return el.shadowRoot.querySelectorAll('rect[data-index]').length===0&&el.shadowRoot.querySelector('.empty')?.textContent==='No chart data';})()");
+  check('phase 10: Bar Chart handles positive/negative and invalid values, keyboard-operable bars, selection events, live attributes and empty data',initial&&selected&&live&&empty,JSON.stringify({initial,selected,live,empty}));
+  await ev("document.querySelector('#phase10-bar').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-donut-chart');el.id='phase10-donut';el.setAttribute('values','0,10,30,bad');el.setAttribute('labels','Zero,Search,Direct,Invalid');document.body.append(el);window.__phase10Donut=null;el.addEventListener('select',e=>window.__phase10Donut=e.detail);})()");
+  await sleep(60);
+  const initial=await ev("(() => {const el=document.querySelector('#phase10-donut');return el.shadowRoot.querySelectorAll('circle[data-index]').length===2&&el.shadowRoot.querySelectorAll('.item').length===3&&el.shadowRoot.querySelector('desc').textContent.includes('Search: 10 (25.0%)');})()");
+  const selected=await ev("(() => {const el=document.querySelector('#phase10-donut');return el.select(1)&&window.__phase10Donut.label==='Search'&&window.__phase10Donut.percent===25&&el.shadowRoot.querySelector('.item[data-index=\"1\"]').getAttribute('aria-pressed')==='true';})()");
+  await ev("document.querySelector('#phase10-donut').values=[0,0,0]");
+  const empty=await ev("(() => {const el=document.querySelector('#phase10-donut');return el.shadowRoot.querySelectorAll('circle[data-index]').length===0&&el.shadowRoot.querySelector('.empty')?.textContent==='No data'&&el.shadowRoot.querySelector('.legend').textContent.includes('No categories');})()");
+  check('phase 10: Donut Chart normalizes invalid and zero slices, synchronizes legend selection, reports percentages and renders an all-zero empty state',initial&&selected&&empty,JSON.stringify({initial,selected,empty}));
+  await ev("document.querySelector('#phase10-donut').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-sparkline');el.id='phase10-spark';el.setAttribute('label','Weekly trend');el.setAttribute('values','4,7,5');document.body.append(el);})()");
+  await sleep(50);
+  const initial=await ev("(() => {const el=document.querySelector('#phase10-spark');return el.shadowRoot.querySelector('.line').getAttribute('points').split(' ').length===3&&el.shadowRoot.querySelector('svg').getAttribute('aria-label').includes('from 4 to 5');})()");
+  await ev("document.querySelector('#phase10-spark').values=[2,2,2]");
+  const flat=await ev("(() => {const el=document.querySelector('#phase10-spark');return el.shadowRoot.querySelector('.line').getAttribute('points').split(' ').every(p=>p.endsWith(',22'))&&el.shadowRoot.querySelector('.delta').classList.contains('neutral');})()");
+  await ev("document.querySelector('#phase10-spark').setAttribute('values','invalid')");
+  const empty=await ev("(() => {const el=document.querySelector('#phase10-spark');return el.values.length===0&&el.shadowRoot.querySelector('.delta').textContent==='No data'&&el.shadowRoot.querySelector('svg').getAttribute('aria-label').includes('no trend data');})()");
+  check('phase 10: Sparkline handles changing and flat series, updates accessible descriptions, and provides a no-data state for invalid input',initial&&flat&&empty,JSON.stringify({initial,flat,empty}));
+  await ev("document.querySelector('#phase10-spark').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-kpi-card');el.id='phase10-kpi';el.setAttribute('label','Monthly revenue');el.setAttribute('value','₹24,800');el.setAttribute('delta','+8.4%');document.body.append(el);})()");
+  await sleep(50);
+  const initial=await ev("(() => {const el=document.querySelector('#phase10-kpi');return el.shadowRoot.querySelector('.value').textContent==='₹24,800'&&el.shadowRoot.querySelector('.delta').classList.contains('positive')&&el.shadowRoot.querySelector('.box').getAttribute('aria-label').includes('Monthly revenue');})()");
+  await ev("(() => {const el=document.querySelector('#phase10-kpi');el.value='0';el.delta='-2.1%';el.setAttribute('label','Net change');})()");
+  const live=await ev("(() => {const el=document.querySelector('#phase10-kpi');return el.shadowRoot.querySelector('.value').textContent==='0'&&el.shadowRoot.querySelector('.delta').classList.contains('negative')&&el.shadowRoot.querySelector('.label').textContent==='Net change';})()");
+  await ev("document.querySelector('#phase10-kpi').setAttribute('trend','neutral')");
+  const override=await ev("document.querySelector('#phase10-kpi').shadowRoot.querySelector('.delta').classList.contains('neutral')");
+  check('phase 10: KPI Card synchronizes value/label/delta properties, derives trend direction, supports explicit trend override and exposes an accessible summary',initial&&live&&override,JSON.stringify({initial,live,override}));
+  await ev("document.querySelector('#phase10-kpi').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-gauge');el.id='phase10-gauge';el.setAttribute('label','Quality score');el.setAttribute('min','10');el.setAttribute('max','30');el.setAttribute('value','40');el.setAttribute('unit',' pts');document.body.append(el);window.__phase10Gauge=0;el.addEventListener('change',()=>window.__phase10Gauge++);})()");
+  await sleep(50);
+  const initial=await ev("(() => {const el=document.querySelector('#phase10-gauge');return el.value===30&&el.getAttribute('role')==='meter'&&el.getAttribute('aria-valuemin')==='10'&&el.getAttribute('aria-valuemax')==='30'&&el.getAttribute('aria-valuenow')==='30'&&el.shadowRoot.querySelector('.num').textContent==='30 pts';})()");
+  await ev("document.querySelector('#phase10-gauge').value=-9");
+  const clamped=await ev("(() => {const el=document.querySelector('#phase10-gauge');return el.value===10&&el.getAttribute('aria-valuenow')==='10'&&window.__phase10Gauge===1;})()");
+  await ev("document.querySelector('#phase10-gauge').setAttribute('max','5')");
+  const range=await ev("(() => {const el=document.querySelector('#phase10-gauge');return el.getAttribute('aria-valuemin')==='0'&&el.getAttribute('aria-valuemax')==='100'&&el.value===0;})()");
+  check('phase 10: Gauge clamps values to valid ranges, updates SVG arc and meter semantics, emits value changes and recovers from invalid bounds',initial&&clamped&&range,JSON.stringify({initial,clamped,range}));
+  await ev("document.querySelector('#phase10-gauge').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-heatmap');el.id='phase10-heatmap';el.setAttribute('values','0,1,2,3,4,99,-3,bad');el.setAttribute('labels','Mon,Tue,Wed,Thu,Fri,Sat,Sun,Extra');el.setAttribute('columns','3');document.body.append(el);window.__phase10Heat=null;el.addEventListener('select',e=>window.__phase10Heat=e.detail);})()");
+  await sleep(50);
+  const initial=await ev("(() => {const el=document.querySelector('#phase10-heatmap'),cells=el.shadowRoot.querySelectorAll('.cell');return cells.length===8&&cells[5].dataset.level==='4'&&cells[6].dataset.level==='0'&&el.shadowRoot.querySelector('.grid').style.getPropertyValue('--columns')==='3'&&cells[0].getAttribute('aria-label').startsWith('Mon');})()");
+  const selected=await ev("(() => {const el=document.querySelector('#phase10-heatmap');return el.select(4)&&el.selectedIndex===4&&window.__phase10Heat.label==='Fri'&&window.__phase10Heat.level===4;})()");
+  await ev("document.querySelector('#phase10-heatmap').values=[]");
+  const empty=await ev("(() => {const el=document.querySelector('#phase10-heatmap');return el.shadowRoot.querySelectorAll('.cell').length===0&&el.shadowRoot.querySelector('.empty')?.textContent==='No activity data';})()");
+  check('phase 10: Heatmap clamps intensity levels, labels cells accessibly, supports configurable columns, selection events and empty data',initial&&selected&&empty,JSON.stringify({initial,selected,empty}));
+  await ev("document.querySelector('#phase10-heatmap').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-treemap');el.id='phase10-treemap';el.setAttribute('items','apps::Apps::6|web::Web::3|ops::Operations::1|empty::Zero::0');document.body.append(el);window.__phase10Tree=null;el.addEventListener('select',e=>window.__phase10Tree=e.detail);})()");
+  await sleep(50);
+  const initial=await ev("(() => {const el=document.querySelector('#phase10-treemap'),tiles=[...el.shadowRoot.querySelectorAll('.tile')],areas=tiles.map(t=>{const r=t.querySelector('rect');return +r.getAttribute('width')*+r.getAttribute('height')});return tiles.length===3&&Math.abs(areas[0]/areas.reduce((a,b)=>a+b,0)-0.6)<0.02&&tiles[0].getAttribute('role')==='button'&&tiles[0].getAttribute('tabindex')==='0';})()");
+  const selected=await ev("(() => {const el=document.querySelector('#phase10-treemap');return el.select('apps')&&el.selectedId==='apps'&&window.__phase10Tree.label==='Apps'&&Math.round(window.__phase10Tree.percent)===60;})()");
+  await ev("document.querySelector('#phase10-treemap').items=[{id:'design',label:'Design',value:2},{id:'build',label:'Build',value:8}]");
+  const property=await ev("(() => {const el=document.querySelector('#phase10-treemap');return el.shadowRoot.querySelectorAll('.tile').length===2&&el.items[1].value===8&&el.shadowRoot.querySelector('.tile[data-id=\"build\"] .name').textContent==='Build';})()");
+  await ev("document.querySelector('#phase10-treemap').setAttribute('items','invalid::Broken::NaN')");
+  const empty=await ev("(() => {const el=document.querySelector('#phase10-treemap');return el.shadowRoot.querySelectorAll('.tile').length===0&&el.shadowRoot.querySelector('.empty')?.textContent==='No items to display';})()");
+  check('phase 10: Treemap allocates proportional tile areas, supports keyboard-operable selection, object-array updates, accessible labels and invalid-data fallback',initial&&selected&&property&&empty,JSON.stringify({initial,selected,property,empty}));
+  await ev("document.querySelector('#phase10-treemap').remove()");
+}
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
