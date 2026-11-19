@@ -50,7 +50,16 @@ The repository validation workflow additionally checks the complete component re
 
 ## ✅ Verification status
 
-Automated workflow runs are recorded below once the final Phase 10 implementation and documentation commit has finished its checks.
+All four required GitHub Actions workflows passed on the final Phase 10 implementation commit `d0613ead1ac9ab40711ccfa536e826e06fea285e`:
+
+| Check | Result |
+|---|---|
+| Full repository validation and Chromium interaction suite | [Passed](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44576375081) |
+| GitHub Pages deployment | [Passed](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44576375006) |
+| CodeQL analysis | [Passed](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44576375060) |
+| OpenSSF Scorecard | [Passed](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44576375096) |
+
+The full validation workflow confirmed 82 registered component types, 83 gallery demos, generated-runtime consistency, all existing browser interaction checks, all seven Phase 10 regression groups, and the 390 px horizontal-overflow guard.
 
 Manual visual review at multiple viewport sizes, keyboard-only review with a human tester, and screen-reader testing remain separate sign-off work. Automated ARIA assertions do not replace that manual review.
 
