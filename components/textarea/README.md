@@ -51,4 +51,3 @@ Use a meaningful label. Keep the component in normal document flow and avoid cli
 
 - The component uses modern browser APIs. Test the exact browsers and assistive technologies used by your application.
 - The standalone demo is the source of truth for its current visual preview and interaction wiring.
-- This component is an original VFX UI Anime addition. The third-party notice in the repository applies to the eleven adapted original controls and their associated artwork, not this new implementation.
