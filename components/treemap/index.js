@@ -341,7 +341,7 @@ const api = window.VFXAnimeFX = {
       if (!item) return false;
       this._selectedId = item.id;
       this.$$('.tile').forEach((tile) => tile.setAttribute('aria-pressed', String(tile.dataset.id === item.id)));
-      const tile = this.$('.tile').find((node) => node.dataset.id === item.id);
+      const tile = this.$$('.tile').find((node) => node.dataset.id === item.id);
       if (tile) { const point = at(tile); burst(point.x, point.y, { r: 14, spikes: 6 }); }
       this.emit('select', { ...item, percent: item.value / this._total * 100 });
       return true;
