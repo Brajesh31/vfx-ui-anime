@@ -328,7 +328,7 @@ class VfxGradientPicker extends Base {
   const i=Number(color??position);if(!this._stops[i])return;
   if(color!==undefined&&/^#[0-9a-f]{6}$/i.test(e.target.value))this._stops[i].color=e.target.value.toLowerCase();
   if(position!==undefined&&e.target.value!=='')this._stops[i].position=Math.max(0,Math.min(100,Number(e.target.value)||0));
-  this._stops=this._normalize(this._stops);this._paintStops();this._update(true,kind);
+  if(kind==='change'){this._stops=this._normalize(this._stops);this._paintStops();}this._update(true,kind);
  }
  addStop() {
   if(this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled)return false;
