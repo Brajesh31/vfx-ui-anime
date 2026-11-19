@@ -16,7 +16,7 @@
 
 ## 🧱 Behavior and safety details
 
-- Particle Field remains decorative. Its canvas is hidden from the accessibility tree, and the component is not intended to encode data users must interpret.
+- Particle Field remains decorative. Its canvas is hidden from the accessibility tree, and the component is not intended to encode data users must interpret. No redundant accessible label property is exposed for the hidden visual canvas.
 - Particle count is clamped to 8–160, speed to 0–3, and canvas backing resolution to a maximum 3× device-pixel ratio.
 - Particle Field freezes when paused, when speed is 0, or when `prefers-reduced-motion: reduce` is active.
 - Marquee's original slotted content remains the only accessible/interactive copy. The duplicate visual track is `aria-hidden` and `inert`; cloned IDs are removed and cloned focusable descendants are made unfocusable.
