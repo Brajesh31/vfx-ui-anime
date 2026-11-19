@@ -298,7 +298,7 @@ class VfxCalendar extends Base{
  return `<button class="day${d.getMonth()!==m?' outside':''}${k===today?' today':''}${k===selected?' selected':''}" type="button" role="gridcell" data-date="${k}" aria-label="${fx.esc(new Intl.DateTimeFormat(this.locale(),{dateStyle:'full'}).format(d))}" aria-selected="${k===selected}" ${k===selected?'aria-current="date"':''} ${blocked?'disabled':''} tabindex="${k===selected||(!selected&&k===today)?0:-1}">${d.getDate()}</button>`;}).join('');
  this.$('.hint').textContent=selectedDate?new Intl.DateTimeFormat(this.locale(),{dateStyle:'medium'}).format(selectedDate):'Choose a date';this.internals?.setFormValue(selected);}
  allowed(value){const d=parse(value);return !!d&&(!this.getAttribute('min')||value>=this.getAttribute('min'))&&(!this.getAttribute('max')||value<=this.getAttribute('max'))&&!this.hasAttribute('disabled');}
- formResetCallback(){this.value=this.getAttribute('value')||'';this.paint();}
+ formResetCallback(){this.value=this.defaultValue||'';this.paint();}
  formDisabledCallback(disabled){this.toggleAttribute('disabled',disabled);}
  attributeChangedCallback(name,oldV,newV){if(oldV===newV||!this.ready)return;if(name==='value'&&parse(newV)){const d=parse(newV);this.view=new Date(d.getFullYear(),d.getMonth(),1);}this.paint();}
 }
