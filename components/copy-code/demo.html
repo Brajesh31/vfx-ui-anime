@@ -1,3 +1,34 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime Copy Code Block</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 9px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}</style><script src="index.js"></script></head><body><main><h1>VFX UI Anime Copy Code Block</h1><p>Standalone preview. Try the control and read its README for the complete API.</p><div class="stage"><vfx-copy-code language="js">const greeting = "Hello, world!";
-console.log(greeting);</vfx-copy-code></div><p><a href="../../gallery/">← Back to component gallery</a></p></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Copy Code Block Demo · VFX UI Anime</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,820px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;padding:24px 8px}.status{min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}button{padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#fff;color:#1d1a4a;font-weight:850;cursor:pointer}a{color:#6c62be}
+</style>
+<script src="index.js"></script>
+</head>
+<body><main>
+<h1>📋 Copy Code Block</h1>
+<p>Source text is shown literally, including markup-like strings. Try copying, changing the language label, and toggling line wrapping.</p>
+<div class="stage">
+<vfx-copy-code id="code" language="js" wrap>
+const greeting = "Hello, world!";
+console.log(greeting);
+
+// HTML is shown as text, not executed:
+const markup = "<script>alert('not executed')</script>";
+</vfx-copy-code>
+<div class="actions"><button id="language" type="button">Change language label</button><button id="wrap" type="button">Toggle line wrapping</button></div>
+<div class="status" id="status" role="status" aria-live="polite">Code is ready to copy.</div>
+</div>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
+</main>
+<script>
+const code=document.querySelector('#code'),status=document.querySelector('#status');
+code.addEventListener('copy',e=>{status.textContent='Copied '+code.lineCount+' lines using '+e.detail.method+'.';});
+code.addEventListener('copy-error',()=>{status.textContent='Copy failed. Select the source text manually.';});
+document.querySelector('#language').addEventListener('click',()=>{code.language=code.language==='js'?'html':'js';status.textContent='Language label changed to '+code.language+'.';});
+document.querySelector('#wrap').addEventListener('click',()=>{code.toggleAttribute('wrap');status.textContent=code.hasAttribute('wrap')?'Line wrapping enabled.':'Line wrapping disabled.';});
+</script>
+</body></html>
