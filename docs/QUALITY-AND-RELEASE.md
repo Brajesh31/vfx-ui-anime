@@ -15,7 +15,7 @@ The remaining release work is human QA and package-consumer validation. Passing 
 
 ## 1. Post-merge verification on `main`
 
-All four required GitHub Actions workflows passed on commit `e3e5a46a900dbb88930417acc854a6d96992bce7`.
+All four required GitHub Actions workflows passed on final integration commit `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9`.
 
 | Check | Result | Evidence |
 |---|---|---|
