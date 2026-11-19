@@ -1,1 +1,40 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Confetti Button</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;font:15px system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:white;box-shadow:9px 10px 0 #b8b3ff}.stage{display:grid;place-items:center;padding:24px}</style><script src="index.js"></script></head><body><main><h1>Confetti Button</h1><div class="stage"><vfx-confetti-button label="Celebrate release"></vfx-confetti-button></div><a href="../../gallery/">Back to gallery</a></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confetti Button | VFX UI Anime</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui,sans-serif}
+    main{width:min(100%,700px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff;text-align:center}
+    h1{margin:0;font-size:clamp(24px,4vw,34px)}p{color:#686381}
+    .stage{display:grid;place-items:center;min-height:150px;margin:18px 0;border:2px dashed #b8b3ff;border-radius:14px;background:#faf9ff}
+    vfx-confetti-button{font-size:16px}label{display:inline-flex;gap:8px;align-items:center;margin:8px;font-size:14px;font-weight:750}
+    a{color:#5146bd;font-weight:700}
+  </style>
+  <script src="index.js"></script>
+</head>
+<body>
+  <main>
+    <h1>🎉 Confetti Button</h1>
+    <p>Activate the button to trigger the celebration effect. The event still fires under reduced motion, but decorative particles are suppressed.</p>
+    <div class="stage">
+      <vfx-confetti-button id="celebrate" label="Celebrate release"></vfx-confetti-button>
+    </div>
+    <label><input id="disabled" type="checkbox"> Disable celebration</label>
+    <p id="status" role="status" aria-live="polite">Ready to celebrate.</p>
+    <a href="../../gallery/">← Back to the component gallery</a>
+  </main>
+  <script>
+    const button = document.querySelector('#celebrate');
+    document.querySelector('#disabled').addEventListener('change', event => {
+      button.disabled = event.target.checked;
+    });
+    button.addEventListener('celebrate', event => {
+      document.querySelector('#status').textContent = event.detail.reducedMotion
+        ? 'Celebration recorded. Motion effects were skipped.'
+        : 'Celebration triggered!';
+    });
+  </script>
+</body>
+</html>
