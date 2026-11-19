@@ -261,18 +261,80 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define}=window.VFXAnimeFX;
 class VfxStopwatch extends Base {
- static get css(){return ':host{display:block;width:min(100%,360px);color:var(--vfx-ink)}.shell{padding:18px;border:2px solid var(--vfx-ink);border-radius:17px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);text-align:center}.eyebrow{font-size:9px;font-weight:950;letter-spacing:.14em;color:#8c84c9}.clock{margin:10px 0 14px;font:900 clamp(34px,9vw,48px)/1.1 ui-monospace,monospace;letter-spacing:-.06em;font-variant-numeric:tabular-nums}.clock small{font-size:.48em;color:#8981c8;letter-spacing:0}.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.actions button{min-width:82px;padding:9px 12px;border:1.5px solid var(--vfx-ink);border-radius:9px;background:#fff;font-size:11px;font-weight:900;cursor:pointer}.actions .start{background:#ffc4df;box-shadow:2px 3px 0 var(--vfx-ink)}.actions button:disabled{opacity:.35;cursor:not-allowed}.laps{display:grid;gap:5px;max-height:130px;overflow:auto;margin-top:14px;text-align:left}.lap{display:flex;justify-content:space-between;padding:7px 9px;border-radius:7px;background:#f5f2ff;font:750 10px ui-monospace,monospace}.lap span:first-child{color:#837bc2}.empty{margin-top:13px;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- render(){return '<section class="shell"><div class="eyebrow">PRECISION TIMER</div><div class="clock" role="timer" aria-live="off">00:00<small>.00</small></div><div class="actions"><button class="start" type="button">Start</button><button class="lap" type="button" disabled>Lap</button><button class="reset" type="button" disabled>Reset</button></div><div class="empty">Your laps will appear here.</div><div class="laps"></div></section>';}
- setup(){this._elapsed=0;this._started=0;this._running=false;this._laps=[];this._frame=0;this.$('.start').addEventListener('click',()=>this._running?this.stop():this.start());this.$('.lap').addEventListener('click',()=>this.lap());this.$('.reset').addEventListener('click',()=>this.reset());this._paint();}
- get running(){return this._running;}get elapsed(){return this._running?this._elapsed+(performance.now()-this._started):this._elapsed;}get laps(){return this._laps.map(x=>({...x}));}
- start(){if(this._running)return false;this._started=performance.now();this._running=true;this.$('.start').textContent='Stop';this.$('.start').dataset.running='true';this.$('.lap').disabled=false;this.$('.reset').disabled=false;this.emit('start',{elapsed:this.elapsed});this._tick();return true;}
- stop(){if(!this._running)return false;this._elapsed=this.elapsed;this._running=false;cancelAnimationFrame(this._frame);this.$('.start').textContent='Start';delete this.$('.start').dataset.running;this.$('.lap').disabled=true;this.emit('stop',{elapsed:this._elapsed});this._paint();return true;}
- reset(){this.stop();this._elapsed=0;this._laps=[];this.$('.reset').disabled=true;this._paint();this.emit('reset',{elapsed:0});}
- lap(){if(!this._running)return false;const elapsed=this.elapsed,previous=this._laps.at(-1)?.elapsed||0,lap={number:this._laps.length+1,elapsed,split:elapsed-previous};this._laps.push(lap);this._paint();this.emit('lap',lap);return lap;}
- _tick(){if(!this._running)return;this._paint();this._frame=requestAnimationFrame(()=>this._tick());}
- _format(ms){const n=Math.floor(ms),minutes=Math.floor(n/60000),seconds=Math.floor(n/1000)%60,hundredths=Math.floor(n/10)%100;return String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0')+'.'+String(hundredths).padStart(2,'0');}
- _paint(){this.$('.clock').innerHTML=this._format(this.elapsed).replace('.', '<small>.')+'</small>';this.$('.laps').innerHTML=this._laps.slice().reverse().map(l=>'<div class="lap"><span>Lap '+l.number+' · +'+this._format(l.split)+'</span><strong>'+this._format(l.elapsed)+'</strong></div>').join('');this.$('.empty').hidden=this._laps.length>0;}
- disconnectedCallback(){cancelAnimationFrame(this._frame);super.disconnectedCallback?.();}
+ static get observedAttributes() { return ['disabled']; }
+ static get css() { return ':host{display:block;width:min(100%,390px);color:var(--vfx-ink)}.shell{padding:18px;border:2px solid var(--vfx-ink);border-radius:17px;background:var(--vfx-card,#fff);box-shadow:5px 6px 0 var(--vfx-soft);text-align:center}.eyebrow{font-size:9px;font-weight:950;letter-spacing:.14em;color:#8c84c9}.clock{display:block;margin:10px 0 14px;color:var(--vfx-ink);font:900 clamp(34px,9vw,50px)/1.1 ui-monospace,SFMono-Regular,monospace;letter-spacing:-.06em;font-variant-numeric:tabular-nums;white-space:nowrap}.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.actions button{min-width:82px;padding:9px 12px;border:1.5px solid var(--vfx-ink);border-radius:9px;background:#fff;color:var(--vfx-ink);font-size:11px;font-weight:900;cursor:pointer}.actions .start{background:#ffc4df;box-shadow:2px 3px 0 var(--vfx-ink)}.actions button:disabled{opacity:.35;cursor:not-allowed}.laps{display:grid;gap:5px;max-height:170px;overflow:auto;margin-top:14px;text-align:left}.lap{display:flex;justify-content:space-between;gap:10px;padding:8px 9px;border-radius:7px;background:#f5f2ff;font:750 10px ui-monospace,monospace}.lap span:first-child{color:#837bc2}.empty{margin-top:13px;color:var(--vfx-dim);font-size:10px}.status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(prefers-reduced-motion:reduce){.clock{transition:none}}'; }
+ render() { return '<section class="shell"><div class="eyebrow">PRECISION TIMER</div><output class="clock" role="timer" aria-label="Elapsed time">00:00.00</output><div class="actions"><button class="start" type="button" aria-label="Start stopwatch">Start</button><button class="lap" type="button" disabled>Lap</button><button class="reset" type="button" disabled>Reset</button></div><p class="empty">Your laps will appear here.</p><div class="laps" aria-label="Stopwatch laps"></div><span class="status" role="status" aria-live="polite"></span></section>'; }
+ setup() {
+  this._elapsed=0;this._started=0;this._running=false;this._laps=[];this._frame=0;
+  this.$('.start').addEventListener('click',()=>this._running?this.stop():this.start());
+  this.$('.lap').addEventListener('click',()=>this.lap());
+  this.$('.reset').addEventListener('click',()=>this.reset());
+  this._syncControls();this._paint();
+ }
+ connectedCallback() { super.connectedCallback();if(this._running)this._tick(); }
+ disconnectedCallback() { if(this._frame)cancelAnimationFrame(this._frame);this._frame=0;super.disconnectedCallback?.(); }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='disabled'){if(this.disabled&&this._running)this.stop();this._syncControls();}
+ }
+ get disabled() { return this.hasAttribute('disabled'); }
+ get running() { return this._running; }
+ get elapsed() { return this._running?this._elapsed+(performance.now()-this._started):this._elapsed; }
+ get laps() { return this._laps.map(l=>({...l})); }
+ start() {
+  if(this.disabled||this._running)return false;
+  this._started=performance.now();this._running=true;this._syncControls();
+  this.$('.status').textContent='Stopwatch started.';
+  this.emit('start',{elapsed:this.elapsed});this._tick();return true;
+ }
+ stop() {
+  if(!this._running)return false;
+  this._elapsed=this.elapsed;this._running=false;
+  if(this._frame)cancelAnimationFrame(this._frame);this._frame=0;
+  this._syncControls();this.$('.status').textContent='Stopwatch stopped at '+this._format(this._elapsed)+'.';
+  this.emit('stop',{elapsed:this._elapsed});this._paint();return true;
+ }
+ reset() {
+  if(this.disabled)return false;
+  if(this._running)this.stop();
+  this._elapsed=0;this._laps=[];
+  if(this._frame)cancelAnimationFrame(this._frame);this._frame=0;
+  this._syncControls();this._paint();this.$('.status').textContent='Stopwatch reset.';
+  this.emit('reset',{elapsed:0,laps:[]});return true;
+ }
+ lap() {
+  if(this.disabled||!this._running)return false;
+  const elapsed=this.elapsed,previous=this._laps.at(-1)?.elapsed||0;
+  const lap={number:this._laps.length+1,elapsed,split:elapsed-previous};
+  this._laps.push(lap);this._paint();
+  this.$('.status').textContent='Lap '+lap.number+' recorded, '+this._format(lap.split)+'.';
+  this.emit('lap',{...lap});return {...lap};
+ }
+ _syncControls() {
+  if(!this.ready)return;
+  const blocked=this.disabled;
+  this.$('.start').disabled=blocked;this.$('.start').textContent=this._running?'Stop':'Start';
+  this.$('.start').setAttribute('aria-label',this._running?'Stop stopwatch':'Start stopwatch');
+  this.$('.start').setAttribute('aria-pressed',String(this._running));
+  this.$('.lap').disabled=blocked||!this._running;
+  this.$('.reset').disabled=blocked||(!this._running&&this._elapsed===0&&this._laps.length===0);
+ }
+ _tick() {
+  if(!this._running||this._frame)return;
+  this._frame=requestAnimationFrame(()=>{this._frame=0;if(!this._running)return;this._paint();this._tick();});
+ }
+ _format(ms) {
+  const centiseconds=Math.floor(Math.max(0,ms)/10),hours=Math.floor(centiseconds/360000),minutes=Math.floor(centiseconds/6000)%60,seconds=Math.floor(centiseconds/100)%60,cs=centiseconds%100;
+  const pad=n=>String(n).padStart(2,'0');
+  return (hours?pad(hours)+':':'')+pad(minutes)+':'+pad(seconds)+'.'+pad(cs);
+ }
+ _paint() {
+  if(!this.$('.clock'))return;
+  this.$('.clock').textContent=this._format(this.elapsed);
+  this.$('.laps').innerHTML=this._laps.slice().reverse().map(l=>'<div class="lap"><span>Lap '+l.number+' · +'+this._format(l.split)+'</span><strong>'+this._format(l.elapsed)+'</strong></div>').join('');
+  this.$('.empty').hidden=this._laps.length>0;
+  this._syncControls();
+ }
 }
 define('vfx-stopwatch',VfxStopwatch);
 })();
