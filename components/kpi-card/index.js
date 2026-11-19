@@ -258,4 +258,42 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,220px)}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.label{font-size:10px;color:var(--vfx-dim);font-weight:850}.value{margin:7px 0 3px;font-size:27px;font-weight:950}.delta{font-size:10px;color:#42a77e;font-weight:900}';}render(){return '<section class="box"><div class="label">'+esc(this.getAttribute('label')||'Active users')+'</div><div class="value">'+esc(this.getAttribute('value')||'12,480')+'</div><div class="delta">'+esc(this.getAttribute('delta')||'+12.8%')+'</div></section>';}get value(){return this.getAttribute('value')||'';}set value(v){this.setAttribute('value',v);if(this.ready)this.$('.value').textContent=v;}}define('vfx-kpi-card',C);})();
+(() => {
+  const { Base, define, esc } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['label', 'value', 'delta', 'trend']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,260px);min-width:0}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);min-width:0}.label{font-size:10px;color:var(--vfx-dim);font-weight:850;overflow-wrap:anywhere}.value{margin:7px 0 3px;font-size:clamp(22px,7vw,29px);font-weight:950;line-height:1.15;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.delta{font-size:10px;color:#8580b0;font-weight:900}.delta.positive{color:#21845f}.delta.negative{color:#bd3f62}.delta.neutral{color:#8580b0}';
+    }
+    render() {
+      return '<article class="box"><div class="label">' + esc(this.getAttribute('label') || 'Active users') + '</div><div class="value">' + esc(this.getAttribute('value') || '12,480') + '</div><div class="delta"></div></article>';
+    }
+    setup() { this._render(); }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._render();
+    }
+    get value() { return this.getAttribute('value') || ''; }
+    set value(value) { this.setAttribute('value', String(value ?? '')); }
+    get label() { return this.getAttribute('label') || 'Active users'; }
+    set label(value) { this.setAttribute('label', String(value ?? '')); }
+    get delta() { return this.getAttribute('delta') || ''; }
+    set delta(value) { this.setAttribute('delta', String(value ?? '')); }
+    _render() {
+      if (!this.ready) return;
+      const label = this.label, value = this.value || '0', delta = this.delta;
+      this.$('.label').textContent = label;
+      this.$('.value').textContent = value;
+      const node = this.$('.delta');
+      node.textContent = delta;
+      const requested = (this.getAttribute('trend') || '').toLowerCase();
+      const direction = ['positive', 'negative', 'neutral'].includes(requested)
+        ? requested
+        : (/^\s*-/.test(delta) ? 'negative' : (/^\s*\+/.test(delta) ? 'positive' : 'neutral'));
+      node.classList.remove('positive', 'negative', 'neutral');
+      node.classList.add(direction);
+      node.hidden = !delta;
+      this.$('.box').setAttribute('aria-label', [label, value, delta].filter(Boolean).join(', '));
+    }
+  }
+  define('vfx-kpi-card', C);
+})();
