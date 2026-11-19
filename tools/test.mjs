@@ -153,7 +153,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
 { await ev(`(() => document.querySelector('vfx-guided-tour').start())()`); check('guided tour: starts and activates overlay',await ev(`document.querySelector('vfx-guided-tour').active&& !document.querySelector('vfx-guided-tour').shadowRoot.querySelector('.overlay').hidden`)); await ev(`(() => document.querySelector('vfx-guided-tour').next())()`); check('guided tour: moves to the next step',await ev(`document.querySelector('vfx-guided-tour').currentIndex===1`)); await ev(`(() => document.querySelector('vfx-guided-tour').finish('test'))()`); check('guided tour: finishes and hides overlay',!(await ev(`document.querySelector('vfx-guided-tour').active`))); }
 { await tap('vfx-stopwatch >>> .start'); await sleep(120); await tap('vfx-stopwatch >>> .lap'); await tap('vfx-stopwatch >>> .start'); check('stopwatch: records elapsed time and a lap',await ev(`document.querySelector('vfx-stopwatch').elapsed>0&&document.querySelector('vfx-stopwatch').laps.length===1`)); await tap('vfx-stopwatch >>> .reset'); check('stopwatch: reset clears elapsed time and laps',await ev(`document.querySelector('vfx-stopwatch').elapsed===0&&document.querySelector('vfx-stopwatch').laps.length===0`)); }
 { await tap('vfx-emoji-picker >>> [data-emoji="😀"]'); check('emoji picker: selecting an emoji updates its value',await ev(`document.querySelector('vfx-emoji-picker').value==='😀'`)); }
-{ check('copy code: reads source text and counts lines',await ev(`document.querySelector('vfx-copy-code').lineCount===2&&document.querySelector('vfx-copy-code').value.includes('console.log')`)); check('copy code: renders source as text without executing it',await ev(`document.querySelector('vfx-copy-code').shadowRoot.querySelector('code').textContent.includes('Hello, world!')`)); }
+{ const state=await ev(`(() => {const el=document.querySelector('vfx-copy-code');return JSON.stringify({lineCount:el.lineCount,value:el.value,code:el.shadowRoot.querySelector('code').textContent});})()`); const data=JSON.parse(state); check('copy code: reads source text and counts lines',data.lineCount===2&&data.value.includes('console.log'),state); check('copy code: renders source as text without executing it',data.code.includes('Hello, world!'),state); }
 
 { check('bar chart: renders six bars',await ev(`document.querySelector('vfx-bar-chart').shadowRoot.querySelectorAll('.bar').length===6`)); }
 { check('donut chart: renders segments',await ev(`document.querySelector('vfx-donut-chart').shadowRoot.querySelectorAll('circle').length===5`)); }
@@ -547,7 +547,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
 { await ev("(() => {const trigger=document.createElement('button');trigger.id='phase9-tour-trigger';trigger.textContent='Launch tour';document.body.append(trigger);trigger.focus();const a=document.createElement('button');a.id='phase9-tour-a';a.textContent='Target A';document.body.append(a);const b=document.createElement('button');b.id='phase9-tour-b';b.textContent='Target B';document.body.append(b);const el=document.createElement('vfx-guided-tour');el.id='phase9-tour';el.setAttribute('steps','#phase9-missing::Missing::This target is absent.|#phase9-tour-a::First::First detail.|#phase9-tour-b::Second::Second detail.');document.body.append(el);window.__phase9TourTrigger=trigger;window.__phase9TourMissing=0;el.addEventListener('target-missing',()=>window.__phase9TourMissing++);window.__phase9TourFinishes=0;el.addEventListener('finish',()=>window.__phase9TourFinishes++);})()"); await sleep(100);
   const started=await ev("(() => {const el=document.querySelector('#phase9-tour');return el.start()&&el.active&&el.currentIndex===1&&!el.shadowRoot.querySelector('.overlay').hidden;})()");
   await sleep(50);
-  const focus=await ev("(() => {const el=document.querySelector('#phase9-tour');return el.shadowRoot.activeElement===el.shadowRoot.querySelector('.next')&&window.__phase9TourMissing===1;})()");
+  const focusState=await ev("(() => {const el=document.querySelector('#phase9-tour');return JSON.stringify({active:el.shadowRoot.activeElement?.className,activeText:el.shadowRoot.activeElement?.textContent,missing:window.__phase9TourMissing,nextDisabled:el.shadowRoot.querySelector('.next').disabled});})()"); const focusData=JSON.parse(focusState);const focus=focusData.active==='next'&&focusData.missing===1&&!focusData.nextDisabled;
   await ev("(() => {const el=document.querySelector('#phase9-tour'),next=el.shadowRoot.querySelector('.next');next.focus();next.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true,composed:true,cancelable:true}));})()");
   const trap=await ev("document.querySelector('#phase9-tour').shadowRoot.activeElement===document.querySelector('#phase9-tour').shadowRoot.querySelector('.skip')");
   const advanced=await ev("(() => {const el=document.querySelector('#phase9-tour');return el.next()&&el.currentIndex===2&&el.previous()&&el.currentIndex===1;})()");
@@ -556,7 +556,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase9-tour').setAttribute('disabled','')");
   const disabled=await ev("!document.querySelector('#phase9-tour').start()");
   await ev("document.querySelector('#phase9-tour').remove();window.__phase9TourTrigger.remove();document.querySelector('#phase9-tour-a').remove();document.querySelector('#phase9-tour-b').remove()");
-  check('phase 9: Guided Tour skips missing targets, traps keyboard focus, navigates both directions, restores focus and respects disabled state',started&&focus&&trap&&advanced&&restored&&disabled,JSON.stringify({started,focus,trap,advanced,restored,disabled}));
+  check('phase 9: Guided Tour skips missing targets, traps keyboard focus, navigates both directions, restores focus and respects disabled state',started&&focus&&trap&&advanced&&restored&&disabled,JSON.stringify({started,focus,focusState,trap,advanced,restored,disabled}));
 }
 { await ev("(() => {const el=document.createElement('vfx-stopwatch');el.id='phase9-stopwatch';document.body.append(el);window.__phase9StopwatchEvents=[];for(const type of ['start','stop','lap','reset'])el.addEventListener(type,e=>window.__phase9StopwatchEvents.push(type));})()"); await sleep(80);
   const started=await ev("(() => {const el=document.querySelector('#phase9-stopwatch');return el.start()&&!el.start()&&el.running;})()");
@@ -595,7 +595,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase9-emoji').remove()");
 }
 { await ev("(() => {const el=document.createElement('vfx-copy-code');el.id='phase9-copy';el.textContent='const x = 1;\\nconsole.log(x);\\n';document.body.append(el);window.__phase9Copied='';el.addEventListener('copy',e=>window.__phase9Copied=e.detail.value);})()"); await sleep(80);
-  const initial=await ev("(() => {const el=document.querySelector('#phase9-copy');return el.lineCount===3&&el.value.endsWith('\\n')&&el.shadowRoot.querySelector('code').textContent===el.value;})()");
+  const initialState=await ev("(() => {const el=document.querySelector('#phase9-copy');return JSON.stringify({lineCount:el.lineCount,value:JSON.stringify(el.value),code:JSON.stringify(el.shadowRoot.querySelector('code').textContent),light:JSON.stringify(el.textContent)});})()"); const initialData=JSON.parse(initialState);const initial=initialData.lineCount===3&&initialData.value.endsWith('\\n')&&initialData.code===initialData.value;
   await ev("document.querySelector('#phase9-copy').setAttribute('language','javascript')");
   const language=await ev("document.querySelector('#phase9-copy').shadowRoot.querySelector('.lang').textContent==='javascript'");
   await ev("document.querySelector('#phase9-copy').setAttribute('code','<script>window.__unsafeExecuted=true</script>')");
@@ -609,7 +609,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase9-copy').setAttribute('disabled','')");
   const disabled=await ev("document.querySelector('#phase9-copy').shadowRoot.querySelector('.copy').disabled");
   await ev("(() => {const d=window.__phase9ClipboardDescriptor;if(d)Object.defineProperty(navigator,'clipboard',d);else delete navigator.clipboard;})()");
-  check('phase 9: Copy Code preserves whitespace, safely renders dynamic source, syncs language, copies through Clipboard API and disables cleanly',initial&&language&&safe&&property&&dynamic&&copied&&disabled,JSON.stringify({initial,language,safe,property,dynamic,copied,disabled}));
+  check('phase 9: Copy Code preserves whitespace, safely renders dynamic source, syncs language, copies through Clipboard API and disables cleanly',initial&&language&&safe&&property&&dynamic&&copied&&disabled,JSON.stringify({initial,initialState,language,safe,property,dynamic,copied,disabled}));
   await ev("document.querySelector('#phase9-copy').remove()");
 }
 
