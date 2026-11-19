@@ -16,16 +16,16 @@ Use this as the final go/no-go checklist. A checked source audit item is not a s
 
 ## Automated verification on merged `main`
 
-Verified on commit `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9`:
+Verified on current `main` head `${head}`:
 
-- [x] `npm test` passes. [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281)
-- [x] `npm run check` passes. [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281)
-- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281)
-- [x] CodeQL passes. [CodeQL run 44627164324](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164324)
-- [x] GitHub Pages deployment succeeds. [Pages run 44627164278](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164278)
-- [x] OpenSSF Scorecard succeeds. [Scorecard run 44627164312](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164312)
+- [x] `npm test` passes. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
+- [x] `npm run check` passes. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
+- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
+- [x] CodeQL passes. [CodeQL run 44627994531](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994531)
+- [x] GitHub Pages deployment succeeds. [Pages run 44627994707](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994707)
+- [x] OpenSSF Scorecard succeeds. [Scorecard run 44627994720](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994720)
 
-The Validate browser log for the final merge commit records 210 successful checks, zero failures and zero page-side exception lines, including Color Palette roving focus/Enter/Space and Audio Player metadata/seek coverage.
+The Validate browser log for current `main` records 210 successful checks, zero failures and zero page-side exception lines, including Color Palette roving focus/Enter/Space and Audio Player metadata/seek coverage.
 
 ## Human QA
 
@@ -46,10 +46,11 @@ The Validate browser log for the final merge commit records 210 successful check
 - [ ] `npm pack --dry-run` output inspected.
 - [ ] Clean consumer project installation and usage tested.
 - [ ] Changelog and release notes prepared.
+- [ ] Resolve or explicitly retire the two Vercel status failures caused by the Hobby build-rate limit if Vercel is still intended to be a deployment target.
 - [ ] Version and tag selected after API/package freeze.
 - [ ] `private: true` removed only after explicit release approval.
 - [ ] GitHub Release and npm publication performed only after all gates pass.
 
 ## Current decision
 
-**Automated implementation and integration checks passed on merged `main`. Final release approval is pending human QA and package-consumer validation.**
+**GitHub Actions implementation/integration checks passed on current `main`. Final release approval is pending human QA, Vercel status resolution/retirement and package-consumer validation. No versioned GitHub Release or npm package exists yet.**

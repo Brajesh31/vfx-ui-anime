@@ -108,6 +108,6 @@ Automated tests do not replace a human accessibility review. Before a public rel
 
 ## Current evidence and limitations
 
-The integrated Chromium suite passed on candidate commit `dd4be3b0f716172aa0a3a48157c83cd1d91ae380`, including the current component regressions and mobile-width overflow guard. See [QUALITY-AND-RELEASE.md](QUALITY-AND-RELEASE.md) for the exact workflow links and remaining gates.
+The integrated Chromium suite passed on current `main` head `${head}`, including the component regression groups and 390 px mobile-width overflow guard. The exact Validate run is [44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671). This automated suite does not constitute manual screen-reader, Firefox or Safari certification. See [QUALITY-AND-RELEASE.md](QUALITY-AND-RELEASE.md) for the remaining gates.
 
 No claim of manual screen-reader certification or full WCAG conformance is made. Those reviews must be performed and recorded separately.

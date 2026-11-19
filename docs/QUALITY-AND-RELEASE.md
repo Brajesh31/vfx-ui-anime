@@ -3,11 +3,11 @@
 **Last verified:** 20 November 2026  
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
-**Verified merged commit:** `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9`
+**Verified main head:** `${head}`
 
 ## Current decision
 
-**Automated component gate: passed. Final npm release approval: pending.**
+**Automated GitHub Actions gate: passed. Formal versioned release and npm publication: not completed.**
 
 The 14-stage implementation roadmap is complete in scope. The component regressions discovered during the integrated audit have been repaired, and the complete source, browser, security, deployment and Scorecard workflows have passed on the merged `main` commit.
 
@@ -15,18 +15,23 @@ The remaining release work is human QA and package-consumer validation. Passing 
 
 ## 1. Post-merge verification on `main`
 
-All four required GitHub Actions workflows passed on final integration commit `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9`.
+All four required GitHub Actions workflows passed on current `main` head `${head}`.
 
 | Check | Result | Evidence |
 |---|---|---|
-| `npm test` | Passed | [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281) |
-| `npm run check` | Passed | [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281) |
-| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281) |
-| CodeQL | Passed | [CodeQL run 44627164324](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164324) |
-| GitHub Pages deployment | Passed | [Pages run 44627164278](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164278) |
-| OpenSSF Scorecard | Passed | [Scorecard run 44627164312](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164312) |
+| `npm test` | Passed | [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671) |
+| `npm run check` | Passed | [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671) |
+| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671) |
+| CodeQL | Passed | [CodeQL run 44627994531](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994531) |
+| GitHub Pages deployment | Passed | [Pages run 44627994707](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994707) |
+| OpenSSF Scorecard | Passed | [Scorecard run 44627994720](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994720) |
 
-The final merged-main Validate log on `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9` contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
+The Validate run on current `main` head `${head}` contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
+
+
+### Separate Vercel integration status
+
+The current commit also reports two failing Vercel status contexts: `Vercel – vfx-ui-anime` and `Vercel – vfx-ui-anime-9q9s`. The linked Vercel projects are both on the Hobby plan, both report their latest deployment as `BLOCKED`, and the GitHub status target identifies a Vercel build-rate-limit. Neither project reports a live production deployment. These are provider/quota failures, not failures in the four GitHub Actions workflows or in the GitHub Pages deployment. GitHub Pages is the configured live-site target and its deployment succeeded. I have not deleted either Vercel project or changed account billing/settings.
 
 The Chromium harness now allows up to 45 seconds for browser startup, selects a wider random debugging-port range, disables shared-memory pressure, and reports a specific launch/exit/timeout reason if DevTools does not become available. The assertions themselves were not weakened or skipped.
 
@@ -94,10 +99,10 @@ The npm package remains intentionally private. `package.json` still has `"privat
 - [ ] Remove `"private": true` only after release approval.
 - [ ] Create a version tag/GitHub Release and publish to npm only after all gates pass.
 
-No npm tarball, npm publication, release tag or GitHub Release has been created by this repair.
+The GitHub Pages gallery is deployed. No npm tarball, npm publication, version tag or GitHub Release currently exists.
 
 ## 6. Release decision
 
-**Automated implementation and integration gate: passed on `main`. Final release approval: pending manual QA and package-consumer validation.**
+**Automated GitHub Actions gate: passed on current `main`. A formal versioned release remains blocked on manual QA and package-consumer validation.**
 
 The component regressions are fixed and the complete integrated Chromium suite passes on the merged repository. Do not describe the npm package as published or final-release-approved until the remaining checks above are completed.
