@@ -136,11 +136,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 
 ## Media and editor components
-- Video Player: components/video-player/, <vfx-video-player>. Custom video wrapper with play/pause control.
-- Markdown Editor: components/markdown-editor/, <vfx-markdown-editor>. Split Markdown editor with safe formatted preview.
-- JSON Editor: components/json-editor/, <vfx-json-editor>. JSON editing with validation and formatting.
-- 3D Tilt Card: components/tilt-card/, <vfx-tilt-card>. Pointer-reactive 3D perspective card.
-- 3D Flip Card: components/flip-card/, <vfx-flip-card>. Front/back 3D flip interaction.
+- Video Player: components/video-player/, <vfx-video-player>. Native video transport with accessible seeking, mute, loop, fullscreen state, and distinct metadata/duration events.
+- Markdown Editor: components/markdown-editor/, <vfx-markdown-editor>. Split/Write/Preview tabs with DOM-node Markdown rendering and HTTP, HTTPS, and mailto link checks.
+- JSON Editor: components/json-editor/, <vfx-json-editor>. Live JSON parsing, formatted text preview, validity state, formatting and minification.
+- 3D Tilt Card: components/tilt-card/, <vfx-tilt-card>. Mouse/pen perspective, dynamic text attributes, neutral reset, and reduced-motion handling.
+- 3D Flip Card: components/flip-card/, <vfx-flip-card>. Accessible button-driven front/back state with aria-pressed, inactive-face hiding, and reduced-motion support.
 
 
 ## Advanced motion components
