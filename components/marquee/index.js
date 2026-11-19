@@ -258,4 +258,75 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;overflow:hidden;width:100%}.viewport{display:flex;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}.track{display:flex;flex:none;min-width:max-content;gap:28px;animation:move var(--duration,22s) linear infinite}.copy{display:flex;gap:28px;align-items:center}.copy ::slotted(*){font-size:13px;font-weight:950;white-space:nowrap}@keyframes move{to{transform:translateX(-50%)}}:host(:hover) .track{animation-play-state:paused}@media(prefers-reduced-motion:reduce){.track{animation:none}}';}render(){return '<div class="viewport"><div class="track"><div class="copy"><slot></slot></div><div class="copy" aria-hidden="true"></div></div></div>';}setup(){this.style.setProperty('--duration',(+(this.getAttribute('duration')||22))+'s');const slot=this.$('slot'),copy=this.$('.copy[aria-hidden=true]');const clone=()=>copy.replaceChildren(...slot.assignedNodes({flatten:true}).map(n=>n.cloneNode(true)));slot.addEventListener('slotchange',clone);clone();}}define('vfx-marquee',C);})();
+(() => {
+  const { Base, define, clamp } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['duration', 'paused', 'label']; }
+    static get css() {
+      return ':host{display:block;overflow:hidden;width:100%;min-width:0}.viewport{display:flex;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}.track{display:flex;flex:none;min-width:max-content;gap:28px;animation:move var(--duration,22s) linear infinite;will-change:transform}.copy{display:flex;gap:28px;align-items:center}.copy ::slotted(*){font-size:13px;font-weight:950;white-space:nowrap}@keyframes move{to{transform:translateX(-50%)}}:host(:hover) .track,:host(:focus-within) .track,:host([paused]) .track{animation-play-state:paused}@media(prefers-reduced-motion:reduce){.track{animation:none!important;transform:none!important;will-change:auto}}';
+    }
+    render() {
+      return '<div class="viewport" aria-live="off"><div class="track"><div class="copy"><slot></slot></div><div class="copy" aria-hidden="true" inert></div></div></div>';
+    }
+    setup() {
+      this.slot = this.$('slot');
+      this.copy = this.$('.copy[aria-hidden=true]');
+      this._onSlotChange = () => this._cloneContent();
+      this.slot.addEventListener('slotchange', this._onSlotChange);
+      this._syncDuration();
+      this._syncLabel();
+      this._cloneContent();
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      if (this.ready && this.slot) {
+        this.slot.removeEventListener('slotchange', this._onSlotChange);
+        this.slot.addEventListener('slotchange', this._onSlotChange);
+        this._cloneContent();
+      }
+    }
+    disconnectedCallback() {
+      this.slot?.removeEventListener('slotchange', this._onSlotChange);
+      super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'duration') this._syncDuration();
+      if (name === 'label') this._syncLabel();
+    }
+    get duration() {
+      const number = Number(this.getAttribute('duration'));
+      return Number.isFinite(number) ? clamp(number, 4, 120) : 22;
+    }
+    set duration(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('duration', String(clamp(number, 4, 120)));
+    }
+    get paused() { return this.hasAttribute('paused'); }
+    set paused(value) { this.toggleAttribute('paused', Boolean(value)); }
+    get label() { return this.getAttribute('label') || 'Scrolling content'; }
+    set label(value) { this.setAttribute('label', String(value ?? '')); }
+    _syncDuration() {
+      if (this.ready) this.style.setProperty('--duration', this.duration + 's');
+    }
+    _syncLabel() {
+      if (this.ready) this.$('.viewport').setAttribute('aria-label', this.label);
+    }
+    _cloneContent() {
+      if (!this.copy || !this.slot) return;
+      const clones = this.slot.assignedNodes({ flatten: true }).map((node) => node.cloneNode(true));
+      for (const node of clones) {
+        if (node.nodeType !== Node.ELEMENT_NODE) continue;
+        if (node.hasAttribute('id')) node.removeAttribute('id');
+        node.querySelectorAll?.('[id]').forEach((element) => element.removeAttribute('id'));
+        node.querySelectorAll?.('a,button,input,select,textarea,[tabindex],[contenteditable=true]').forEach((element) => {
+          element.setAttribute('tabindex', '-1');
+          element.setAttribute('aria-hidden', 'true');
+        });
+      }
+      this.copy.replaceChildren(...clones);
+      this.copy.setAttribute('inert', '');
+    }
+  }
+  define('vfx-marquee', C);
+})();
