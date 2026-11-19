@@ -1,30 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VFX UI Anime Date Range Picker</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Date Range Picker Demo · VFX UI Anime</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}.hint{font-size:12px;text-align:center}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;justify-items:center;padding:24px 8px}.status{width:min(100%,440px);min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}button{padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#ff5fa8;color:#1d1a4a;font-weight:850;cursor:pointer}a{color:#6c62be}
 </style>
 <script src="index.js"></script>
 </head>
-<body>
-<main>
+<body><main>
 <h1>🗓️ Date Range Picker</h1>
-<p>Choose both dates, try a quick preset, then submit the form to inspect the serialized date range.</p>
-<div class="stage">
-<form id="booking">
+<p>Choose dates, try a preset, and test chronological and bounded validation. The quick range actions use the browser's local calendar date.</p>
+<form id="demo-form" class="stage">
 <vfx-date-range-picker name="booking" label="Booking period" min="2026-01-01" max="2027-12-31" required></vfx-date-range-picker>
-<p><button type="submit">Inspect form value</button> <button type="reset">Reset</button></p>
-<output id="result" aria-live="polite"></output>
+<button type="submit">Validate selected range</button>
+<div class="status" id="status" role="status" aria-live="polite">Both dates are required. Presets are available inside the control.</div>
 </form>
-</div>
-<p class="hint">Calendar UI and locale follow the browser's native date input implementation.</p>
-<p><a href="../../gallery/">← Back to component gallery</a></p>
+<p>The submitted value is serialized as <code>YYYY-MM-DD/YYYY-MM-DD</code>.</p>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
 </main>
 <script>
-document.querySelector('#booking').addEventListener('submit',event=>{event.preventDefault();document.querySelector('#result').textContent=new FormData(event.currentTarget).get('booking')||'No complete range';});
+const form=document.querySelector('#demo-form'),picker=document.querySelector('vfx-date-range-picker'),status=document.querySelector('#status');
+picker.addEventListener('input',e=>{status.textContent=e.detail.valid?'Range: '+(e.detail.start||'not set')+' to '+(e.detail.end||'not set'):'The selected range is invalid.';});
+picker.addEventListener('invalid',()=>{status.textContent='End date and bounds must be valid.';});
+form.addEventListener('submit',e=>{e.preventDefault();status.textContent=form.checkValidity()?'Valid range: '+new FormData(form).get('booking'):'Please complete a valid date range.';});
 </script>
-</body>
-</html>
+</body></html>
