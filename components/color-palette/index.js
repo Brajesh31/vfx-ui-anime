@@ -263,14 +263,38 @@ const api = window.VFXAnimeFX = {
   const DEFAULTS = ['#6558d9','#ff6fae','#6bcdb1','#ffc36f','#8e8af3','#242047','#b5e1f0','#ef9f9f','#c3d88a','#ffffff'];
   const validColor = (value) => {
     const color = String(value ?? '').trim();
-    if (!color || /[;,{}]/.test(color)) return false;
+    if (!color || /[;{}]/.test(color)) return false;
     if (/^#[0-9a-f]{3,4}$|^#[0-9a-f]{6}$|^#[0-9a-f]{8}$/i.test(color)) return true;
     try { return typeof CSS !== 'undefined' && CSS.supports('color', color); } catch { return false; }
+  };
+  const splitColors = (value) => {
+    const result = [];
+    let token = '', depth = 0, quote = '';
+    for (const char of String(value ?? '')) {
+      if (quote) {
+        token += char;
+        if (char === quote) quote = '';
+      } else if (char === '"' || char === "'") {
+        quote = char;
+        token += char;
+      } else if (char === '(') {
+        depth++;
+        token += char;
+      } else if (char === ')') {
+        depth = Math.max(0, depth - 1);
+        token += char;
+      } else if (char === ',' && depth === 0) {
+        if (token.trim()) result.push(token.trim());
+        token = '';
+      } else token += char;
+    }
+    if (token.trim()) result.push(token.trim());
+    return result;
   };
   class C extends Base {
     static get observedAttributes() { return ['title', 'colors', 'value', 'disabled']; }
     static get css() {
-      return ':host{display:block;width:min(100%,420px);min-width:0}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);min-width:0}h3{font-size:12px;margin:0 0 9px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:7px}.swatch{min-width:0;padding:4px;border:1px solid #ddd;border-radius:7px;background:white;cursor:pointer;text-align:center}.swatch:disabled{opacity:.45;cursor:not-allowed}.color{height:35px;display:block;border-radius:4px;border:1px solid #0001}.swatch small{display:block;margin-top:4px;font-size:9px;overflow-wrap:anywhere}.swatch[aria-pressed=true]{outline:2px solid #242047;outline-offset:2px}.foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:11px;font-size:10px}.value{font:800 11px/1.4 monospace}.copy{padding:6px 10px;border:1px solid var(--vfx-ink);border-radius:7px;background:#f7f5ff;font:inherit;cursor:pointer}.copy:disabled{opacity:.5;cursor:not-allowed}.status{min-height:1em;color:#6e688e}';
+      return ':host{display:block;width:min(100%,420px);min-width:0}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);min-width:0}h3{font-size:12px;margin:0 0 9px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:7px}.swatch{min-width:0;padding:4px;border:1px solid #ddd;border-radius:7px;background:white;cursor:pointer;text-align:center}.swatch:disabled{opacity:.45;cursor:not-allowed}.color{height:35px;display:block;border-radius:4px;border:1px solid #0001}.swatch small{display:block;margin-top:4px;font-size:9px;overflow-wrap:anywhere}.swatch[aria-pressed=true]{outline:2px solid #242047;outline-offset:2px}.swatch:focus-visible{outline:3px solid #ff6fae;outline-offset:3px}.foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:11px;font-size:10px}.value{font:800 11px/1.4 monospace}.copy{padding:6px 10px;border:1px solid var(--vfx-ink);border-radius:7px;background:#f7f5ff;font:inherit;cursor:pointer}.copy:disabled{opacity:.5;cursor:not-allowed}.status{min-height:1em;color:#6e688e}';
     }
     render() {
       return '<section class="box"><h3></h3><div class="grid" role="group" aria-label="Available colors"></div><div class="foot"><b class="value"></b><span class="status" role="status" aria-live="polite"></span><button class="copy" type="button">Copy color</button></div></section>';
@@ -280,6 +304,17 @@ const api = window.VFXAnimeFX = {
         const button = event.target.closest('button[data-color]');
         if (button) this.select(button.dataset.color);
       });
+      this.$('.grid').addEventListener('keydown', (event) => {
+        const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
+        const current = event.target.closest?.('button[data-color]');
+        if (!current || !keys.includes(event.key)) return;
+        const buttons = this.$('.swatch');
+        const index = buttons.indexOf(current);
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+          : (index + (event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
+        event.preventDefault();
+        buttons[next]?.focus();
+      });
       this.$('.copy').addEventListener('click', () => this.copy());
       this._render();
     }
@@ -288,12 +323,15 @@ const api = window.VFXAnimeFX = {
     }
     get colors() { return this._colors.map((color) => color); }
     set colors(value) {
-      const values = Array.isArray(value) ? value : String(value ?? '').split(',');
+      const values = Array.isArray(value) ? value : splitColors(value);
       this.setAttribute('colors', values.map((color) => String(color).trim()).filter(validColor).join(','));
     }
     get value() { return this._value || this._colors?.[0] || DEFAULTS[0]; }
     set value(value) {
-      if (validColor(value)) this.setAttribute('value', String(value).trim());
+      if (validColor(value)) {
+        const color = String(value).trim();
+        if (!this.ready || this._colors.some((item) => item.toLowerCase() === color.toLowerCase())) this.setAttribute('value', color);
+      }
     }
     get disabled() { return this.hasAttribute('disabled'); }
     set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
@@ -308,23 +346,28 @@ const api = window.VFXAnimeFX = {
       this.emit('change', { value: match, index: this.selectedIndex });
       return true;
     }
+    _copyFallback(value) {
+      const input = document.createElement('textarea');
+      input.value = value;
+      input.setAttribute('readonly', '');
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.append(input);
+      try {
+        input.select();
+        return document.execCommand('copy');
+      } finally {
+        input.remove();
+      }
+    }
     async copy() {
       if (this.disabled) return false;
       const value = this.value;
       try {
-        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
-        else {
-          const input = document.createElement('textarea');
-          input.value = value;
-          input.setAttribute('readonly', '');
-          input.style.position = 'fixed';
-          input.style.opacity = '0';
-          document.body.append(input);
-          input.select();
-          const copied = document.execCommand('copy');
-          input.remove();
-          if (!copied) throw new Error('Clipboard fallback failed');
-        }
+        if (navigator.clipboard?.writeText) {
+          try { await navigator.clipboard.writeText(value); }
+          catch (error) { if (!this._copyFallback(value)) throw error; }
+        } else if (!this._copyFallback(value)) throw new Error('Clipboard fallback failed');
         this.$('.status').textContent = 'Copied ' + value;
         this.emit('copy', { value });
         return true;
@@ -337,7 +380,7 @@ const api = window.VFXAnimeFX = {
     _render() {
       if (!this.ready) return;
       const raw = this.hasAttribute('colors') ? this.getAttribute('colors') : DEFAULTS.join(',');
-      const colors = raw.split(',').map((value) => value.trim()).filter(validColor);
+      const colors = splitColors(raw).map((value) => value.trim()).filter(validColor);
       this._colors = [...new Set(colors.map((color) => color.toLowerCase()))];
       if (!this._colors.length) this._colors = [DEFAULTS[0]];
       const requested = this.getAttribute('value');
@@ -353,6 +396,7 @@ const api = window.VFXAnimeFX = {
         button.disabled = this.disabled;
         button.setAttribute('aria-label', 'Select color ' + color);
         button.setAttribute('aria-pressed', String(color === this.value.toLowerCase()));
+        button.tabIndex = color === this.value.toLowerCase() ? 0 : -1;
         const swatch = document.createElement('span');
         swatch.className = 'color';
         swatch.style.backgroundColor = color;
