@@ -282,11 +282,11 @@ class VfxDatePicker extends Base{
  this.trigger.addEventListener('click',()=>this.opened?this.hide():this.show());this.$('.prev').addEventListener('click',()=>this.move(-1));this.$('.next').addEventListener('click',()=>this.move(1));
  this.grid.addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(b&&!b.disabled)this.choose(b.dataset.date);});this.popup.addEventListener('keydown',e=>this.onKey(e));
  this.onOutside=e=>{if(!e.composedPath().includes(this))this.hide(false);};this.defaultValue=this.getAttribute('value')||'';this.syncDisabled();this.syncValue();this.paint();}
- get opened(){return !this.popup.hidden;}
+ get opened(){return !!this.popup&&!this.popup.hidden;}
  isDisabled(){return this.hasAttribute('disabled')||this._fieldsetDisabled;}
  syncDisabled(){const disabled=this.isDisabled();if(this.trigger)this.trigger.disabled=disabled;if(disabled)this.hide(false);if(this.$('.value'))this.syncValue();}
  show(){if(this.isDisabled()||this.opened)return;this.popup.hidden=false;this.trigger.setAttribute('aria-expanded','true');this.paint();const p=at(this.popup);burst(p.x+p.w/2,p.y+10,{r:28,spikes:9,life:.28});this.popup.animate?.([{opacity:0,transform:'translateY(-8px) scale(.94)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:220,easing:'cubic-bezier(.2,.9,.25,1)'});(this.grid.querySelector('.selected')||this.grid.querySelector('.day:not(:disabled)'))?.focus();}
- hide(restore=true){if(!this.opened)return;this.popup.hidden=true;this.trigger.setAttribute('aria-expanded','false');if(restore&&this.isConnected)this.trigger.focus();}
+ hide(restore=true){if(!this.opened)return;this.popup.hidden=true;this.trigger?.setAttribute('aria-expanded','false');if(restore&&this.isConnected)this.trigger?.focus();}
  move(n){if(this.isDisabled())return;const p=at(this.popup);slash(p.x+p.w/2,p.y+36,{len:45,ang:n>0?-.2:Math.PI+.2,thick:7,life:.3});this.view=new Date(this.view.getFullYear(),this.view.getMonth()+n,1);this.paint();}
  choose(v){if(!parse(v)||this.isDisabled()||(this.getAttribute('min')&&v<this.getAttribute('min'))||(this.getAttribute('max')&&v>this.getAttribute('max')))return;this.value=v;this.syncValue();const p=at(this.trigger);puff(p.x+p.w/2,p.y,{size:10,n:5,life:.4});ticks(p.x+p.w/2,p.y-14,{n:4,len:12,life:.28});this.emit('input',{value:v});this.emit('change',{value:v,date:parse(v)});this.hide(true);}
  syncValue(){const d=parse(this.value);this.$('.value').textContent=d?new Intl.DateTimeFormat(navigator.language||'en',{dateStyle:'medium'}).format(d):(this.getAttribute('placeholder')||'Choose a date');this.internals?.setFormValue(this.isDisabled()?null:this.value);}
