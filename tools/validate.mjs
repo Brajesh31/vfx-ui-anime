@@ -8,7 +8,8 @@ const expected = [
   "index.html","gallery/index.html","README.md","core.js","registry.json","llms.txt","LICENSE",
   "components/toggle/frames.webp","tools/build.mjs","tools/shot.mjs","tools/test.mjs","tools/trace.py",
   ".github/workflows/validate.yml",".github/workflows/deploy-pages.yml",
-  ".github/workflows/codeql.yml",".github/workflows/scorecard.yml"
+  ".github/workflows/codeql.yml",".github/workflows/scorecard.yml",".github/workflows/publish.yml",
+  "index.js","docs/PACKAGE.md","tools/package-smoke.mjs"
 ];
 const errors = [];
 const read = (path) => readFile(join(root, path), "utf8").catch(() => "");
@@ -18,11 +19,12 @@ for (const path of expected) {
   catch { errors.push("Missing required repository file: " + path); }
 }
 
-const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow] = await Promise.all([
+const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow, publishWorkflow, packageIndex, packageDocs, packageSmoke] = await Promise.all([
   read("gallery/index.html"), read("index.html"), read("core.js"),
   read("registry.json"), read("package.json"), read("tools/build.mjs"),
   read(".github/workflows/validate.yml"), read(".github/workflows/deploy-pages.yml"),
-  read(".github/workflows/codeql.yml"), read(".github/workflows/scorecard.yml")
+  read(".github/workflows/codeql.yml"), read(".github/workflows/scorecard.yml"),
+  read(".github/workflows/publish.yml"), read("index.js"), read("docs/PACKAGE.md"), read("tools/package-smoke.mjs")
 ]);
 let registry;
 let pkg;
@@ -137,6 +139,19 @@ if (!frameAsset || !embeddedSheet || embeddedSheet[1] !== frameAsset.toString("b
 }
 if (!gallery.includes("--vfx-")) errors.push("Gallery does not use VFX UI Anime theme names.");
 if (pkg.name !== "vfx-ui-anime") errors.push("package.json project name does not match the repository.");
+if (pkg.private === true) errors.push("package.json must not be private when preparing the npm distribution.");
+if (pkg.version !== "0.1.0") errors.push("package.json version must match the initial v0.1.0 package release.");
+if (pkg.main !== "./index.js" || pkg.module !== "./index.js" || pkg.browser !== "./index.js") errors.push("The package browser entry points must resolve to index.js.");
+if (pkg.exports?.["."] !== "./index.js" || pkg.exports?.["./*"] !== "./components/*/index.js" || pkg.exports?.["./components/*"] !== "./components/*/index.js") errors.push("The package exports map must expose aggregate and component subpaths.");
+if (pkg.sideEffects !== true) errors.push("The package must preserve side-effect custom-element registration imports.");
+if (pkg.repository?.url !== "git+https://github.com/Brajesh31/vfx-ui-anime.git") errors.push("package.json repository URL must match GitHub for npm provenance.");
+if (!Array.isArray(pkg.files) || !pkg.files.includes("components/*/index.js") || !pkg.files.includes("components/*/README.md")) errors.push("The npm file allowlist must include component scripts and API READMEs.");
+if (!pkg.scripts?.["test:package"]?.includes("tools/package-smoke.mjs")) errors.push("The package smoke-test script is missing.");
+if (!pkg.scripts?.prepublishOnly?.includes("npm run check")) errors.push("prepublishOnly must run repository structural and generated-runtime checks.");
+if (!packageIndex.includes("export const componentNames") || !packageIndex.includes("export const componentTags")) errors.push("Aggregate entry must export component name and tag metadata.");
+for (const name of names) if (!packageIndex.includes("./components/" + name + "/index.js")) errors.push("Aggregate entry is missing component " + name + ".");
+if (!packageDocs.includes("browser-only") || !packageDocs.includes("vfx-ui-anime/button") || !packageDocs.includes("server-side")) errors.push("Package documentation must explain browser-only use, subpaths and SSR limitations.");
+if (!packageSmoke.includes("npm pack --dry-run") || !packageSmoke.includes("--offline") || !packageSmoke.includes("Chromium")) errors.push("Package smoke test must inspect the tarball, install in a clean offline consumer, and exercise browser imports.");
 if (!pkg.scripts?.check?.includes("tools/build.mjs --check") || !pkg.scripts?.check?.includes("tools/validate.mjs")) {
   errors.push("The check script must validate generated runtime copies and repository structure.");
 }
@@ -144,12 +159,13 @@ if (!pkg.scripts?.["test:browser"]?.includes("tools/test.mjs")) {
   errors.push("The test:browser script must run the Chromium interaction suite.");
 }
 
-if (!validateWorkflow.includes("npm test") || !validateWorkflow.includes("npm run check") || !validateWorkflow.includes("npm run test:browser")) {
+if (!validateWorkflow.includes("npm test") || !validateWorkflow.includes("npm run check") || !validateWorkflow.includes("npm run test:browser") || !validateWorkflow.includes("npm run test:package")) {
   errors.push("The Validate workflow must run structural, generated-build, and Chromium browser checks.");
 }
 if (!pagesWorkflow.includes("npm test") || !pagesWorkflow.includes("npm run check")) {
   errors.push("The Pages workflow must validate the repository before deployment.");
 }
+if (!publishWorkflow.includes("id-token: write") || !publishWorkflow.includes("npm publish --provenance") || !publishWorkflow.includes("tags:")) errors.push("npm publishing workflow must use OIDC, provenance, and version tags.");
 for (const [name, workflow] of [["Validate", validateWorkflow], ["Pages", pagesWorkflow], ["CodeQL", codeqlWorkflow], ["Scorecard", scorecardWorkflow]]) {
   if (!/push:\s*\n\s*branches:\s*\[main\]/.test(workflow)) errors.push(name + " workflow must run on pushes to main.");
 }

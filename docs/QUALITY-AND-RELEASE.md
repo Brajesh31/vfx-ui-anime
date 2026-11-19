@@ -7,7 +7,7 @@
 
 ## Current decision
 
-**Automated GitHub Actions gate: passed. Source-only GitHub pre-release: `v0.1.0-rc.1`. Stable release and npm publication: not completed.**
+**Source-only GitHub pre-release: `v0.1.0-rc.1`. npm package contract and automated consumer verification are being added. Public npm publication is gated on the npm bootstrap authorization and subsequent Trusted Publisher setup.**
 
 The 14-stage implementation roadmap is complete in scope. The component regressions discovered during the integrated audit have been repaired, and the complete source, browser, security, deployment and Scorecard workflows have passed on the merged `main` commit.
 
@@ -79,26 +79,28 @@ Complete and record the following before declaring a public release production-a
 
 Use [ACCESSIBILITY.md](ACCESSIBILITY.md) for the review matrix. Automated DOM assertions do not certify assistive-technology behavior or complete WCAG conformance.
 
-## 5. Package publication readiness
+## 5. npm package contract and publication
 
 The repository is MIT-licensed and contains Code of Conduct, Contributing, Security, Support, Citation and project documentation. The existing license remains attributed to Brajesh Kumar.
 
-The npm package remains intentionally private. `package.json` still has `"private": true`. Before publication:
+The package now has an aggregate browser entry point (`index.js`), a direct import subpath for each of the 82 elements, a restricted tarball file allowlist, and a clean-consumer smoke-test runner. Component implementation scripts are unchanged. Before publication:
 
-- [ ] Freeze the public API and document the supported browser-script/CDN consumption model.
-- [ ] Define the package entry-point and exports contract. The existing component files are standalone browser scripts, not named ES-module exports.
-- [ ] Define and review the exact package file allowlist.
-- [ ] Run `npm pack --dry-run` and inspect the tarball contents.
-- [ ] Install the tarball into a clean consumer project and test representative components.
+- [x] Freeze the browser-only API: an aggregate import, per-component side-effect subpaths, and exported component name/tag metadata.
+- [x] Document browser/CDN usage and the server-side rendering limitation.
+- [x] Define the package entry point, exports map, and file allowlist.
+- [ ] Pass `npm run test:package`, which inspects the tarball, installs it offline in a clean consumer, resolves every component subpath, and tests browser registration.
 - [ ] Complete all manual QA items above.
 - [ ] Prepare release notes, changelog and version only after package contents and API are frozen.
-- [ ] Remove `"private": true` only after release approval.
-- [ ] Create a version tag/GitHub Release and publish to npm only after all gates pass.
+- [x] Remove `"private": true` and set package version `0.1.0` on the package branch.
+- [x] Add a version-tagged npm publishing workflow using GitHub OIDC and provenance.
+- [ ] Bootstrap the first npm publication with an authorized npm granular token stored as the repository Actions secret `NPM_TOKEN` (do not commit or paste the token into chat).
+- [ ] After the first package exists, configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`, then remove the bootstrap token.
+- [ ] Create stable tag `v0.1.0` only after package smoke tests and the npm publisher configuration are verified.
 
-The GitHub Pages gallery is deployed. The source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). No npm tarball or npm publication has been created. Exact release-candidate test results are available in [the release workflow runs](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/release.yml).
+The GitHub Pages gallery is deployed. The source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). The package tarball and clean-consumer installation are exercised by the new package smoke test. Public npm publication is not yet completed because the first publish needs npm authorization; npm Trusted Publisher can be configured after the initial package exists.
 
 ## 6. Release decision
 
-**Automated GitHub Actions gate: passed. A source-only `v0.1.0-rc.1` GitHub pre-release exists. Stable release and npm publication remain blocked on manual QA and package-consumer validation.**
+**The source-only `v0.1.0-rc.1` pre-release exists. The npm package contract and publish workflows are prepared; stable npm publication remains gated on package smoke-test success and npm account authorization. Manual cross-browser/accessibility QA also remains outstanding.**
 
 The component regressions are fixed and the complete integrated Chromium suite passed on the verified implementation commit. Do not describe the npm package as published or final-release-approved until the remaining checks above are completed.
