@@ -258,4 +258,151 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,420px)}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}.row{display:flex;align-items:center;gap:10px}.cover{display:grid;place-items:center;width:45px;height:45px;border-radius:9px;background:linear-gradient(135deg,#ffc0df,#aaa0f7);font-size:22px}.meta{flex:1}.title{font-size:12px;font-weight:900}.artist{font-size:10px;color:var(--vfx-dim)}button{width:36px;height:36px;border:1px solid var(--vfx-ink);border-radius:50%;background:#ffcae4}.seek{display:flex;align-items:center;gap:7px;margin-top:12px;font:9px monospace}input{flex:1;min-width:0;accent-color:#9288ef}audio{display:none}';}render(){return '<section class="box"><div class="row"><div class="cover">♫</div><div class="meta"><div class="title">'+esc(this.getAttribute('title')||'Audio track')+'</div><div class="artist">'+esc(this.getAttribute('artist')||'Artist')+'</div></div><button class="play" type="button">▶</button></div><div class="seek"><span class="now">0:00</span><input type="range" min="0" max="100" value="0"><span class="duration">0:00</span></div><audio preload="metadata"></audio></section>';}setup(){this.audio=this.$('audio');this.audio.src=this.getAttribute('src')||'';this.$('.play').addEventListener('click',()=>this.toggle());this.audio.addEventListener('timeupdate',()=>this.paint());this.audio.addEventListener('loadedmetadata',()=>this.paint());this.$('input').addEventListener('input',e=>{if(this.audio.duration)this.audio.currentTime=+e.target.value/100*this.audio.duration;});}get playing(){return !this.audio.paused;}async toggle(){if(this.audio.paused){try{await this.audio.play();this.emit('play',{});}catch{this.emit('error',{reason:'source unavailable'});}}else{this.audio.pause();this.emit('pause',{});}this.$('button').textContent=this.audio.paused?'▶':'Ⅱ';}fmt(n){return Math.floor((n||0)/60)+':'+String(Math.floor((n||0)%60)).padStart(2,'0');}paint(){this.$('input').value=this.audio.duration?this.audio.currentTime/this.audio.duration*100:0;this.$('.now').textContent=this.fmt(this.audio.currentTime);this.$('.duration').textContent=this.fmt(this.audio.duration);}}define('vfx-audio-player',C);})();
+(() => {
+  const { Base, define, esc, clamp } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['src', 'title', 'artist', 'disabled', 'preload', 'loop']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,460px);min-width:0}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.row{display:flex;align-items:center;gap:10px;min-width:0}.cover{display:grid;place-items:center;flex:none;width:45px;height:45px;border-radius:9px;background:linear-gradient(135deg,#ffc0df,#aaa0f7);font-size:22px}.meta{flex:1;min-width:0}.title{font-size:12px;font-weight:900;overflow-wrap:anywhere}.artist{font-size:10px;color:var(--vfx-dim);overflow-wrap:anywhere}.play{width:38px;height:38px;flex:none;border:1px solid var(--vfx-ink);border-radius:50%;background:#ffcae4;font:inherit;font-weight:900;cursor:pointer}.play:disabled{opacity:.45;cursor:not-allowed}.seek{display:flex;align-items:center;gap:8px;margin-top:12px;font:10px/1.3 ui-monospace,monospace}.seek input{flex:1;min-width:0;accent-color:#9288ef}.seek input:disabled{opacity:.45}.time{min-width:34px;text-align:center}.status{margin-top:8px;min-height:1em;color:#716b90;font-size:10px}.status.error{color:#b33b5b}audio{display:none}';
+    }
+    render() {
+      return '<section class="box"><div class="row"><div class="cover" aria-hidden="true">♫</div><div class="meta"><div class="title"></div><div class="artist"></div></div><button class="play" type="button" aria-label="Play audio">▶</button></div><div class="seek"><span class="time now">0:00</span><input type="range" min="0" max="1000" value="0" aria-label="Seek audio" disabled><span class="time duration">0:00</span></div><div class="status" role="status" aria-live="polite">Add a media source to play audio.</div><audio preload="metadata"></audio></section>';
+    }
+    setup() {
+      this.audio = this.$('audio');
+      this.audio.preload = this.getAttribute('preload') || 'metadata';
+      this.audio.loop = this.hasAttribute('loop');
+      this._onPlay = () => { this._paint(); this.$('.status').textContent = ''; this.emit('play', { currentTime: this.currentTime }); };
+      this._onPause = () => { this._paint(); this.emit('pause', { currentTime: this.currentTime }); };
+      this._onEnded = () => { this._paint(); this.emit('ended', { currentTime: this.currentTime }); };
+      this._onTime = () => { this._paint(); this.emit('timeupdate', { currentTime: this.currentTime, duration: this.duration }); };
+      this._onMetadata = () => { this._paint(); this.$('.status').textContent = ''; this.emit('loadedmetadata', { duration: this.duration }); };
+      this._onError = () => {
+        this._paint();
+        this.$('.status').textContent = 'Unable to load this audio source.';
+        this.$('.status').classList.add('error');
+        this.emit('error', { code: this.audio.error?.code || 0, reason: 'media source unavailable' });
+      };
+      this.audio.addEventListener('play', this._onPlay);
+      this.audio.addEventListener('pause', this._onPause);
+      this.audio.addEventListener('ended', this._onEnded);
+      this.audio.addEventListener('timeupdate', this._onTime);
+      this.audio.addEventListener('loadedmetadata', this._onMetadata);
+      this.audio.addEventListener('durationchange', this._onMetadata);
+      this.audio.addEventListener('error', this._onError);
+      this.$('.play').addEventListener('click', () => this.toggle());
+      this.$('input').addEventListener('input', (event) => this.seek(Number(event.target.value) / 1000));
+      this._syncAttributes();
+      this._syncDisabled();
+      this._paint();
+    }
+    connectedCallback() { super.connectedCallback(); }
+    disconnectedCallback() {
+      if (this.audio && !this.audio.paused) this.audio.pause();
+      super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'src') this._loadSource(newValue);
+      if (name === 'title') this.$('.title').textContent = newValue || 'Audio track';
+      if (name === 'artist') this.$('.artist').textContent = newValue || 'Artist';
+      if (name === 'loop') this.audio.loop = this.hasAttribute('loop');
+      if (name === 'preload') this.audio.preload = newValue || 'metadata';
+      if (name === 'disabled') this._syncDisabled();
+    }
+    get src() { return this.getAttribute('src') || ''; }
+    set src(value) { if (value) this.setAttribute('src', String(value)); else this.removeAttribute('src'); }
+    get title() { return this.getAttribute('title') || 'Audio track'; }
+    set title(value) { this.setAttribute('title', String(value ?? '')); }
+    get artist() { return this.getAttribute('artist') || 'Artist'; }
+    set artist(value) { this.setAttribute('artist', String(value ?? '')); }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get playing() { return Boolean(this.audio && !this.audio.paused && !this.audio.ended); }
+    get currentTime() { return Number.isFinite(this.audio?.currentTime) ? this.audio.currentTime : 0; }
+    set currentTime(value) { this.seekTime(value); }
+    get duration() { return Number.isFinite(this.audio?.duration) && this.audio.duration > 0 ? this.audio.duration : 0; }
+    _syncAttributes() {
+      this.$('.title').textContent = this.title;
+      this.$('.artist').textContent = this.artist;
+      if (this.hasAttribute('src')) this._loadSource(this.getAttribute('src'));
+    }
+    _loadSource(source) {
+      if (!this.audio) return;
+      this.audio.pause();
+      if (source) {
+        this.audio.src = source;
+        this.audio.load();
+        this.$('.status').classList.remove('error');
+        this.$('.status').textContent = 'Loading audio…';
+      } else {
+        this.audio.removeAttribute('src');
+        this.audio.load();
+        this.$('.status').textContent = 'Add a media source to play audio.';
+      }
+      this._paint();
+    }
+    _syncDisabled() {
+      if (!this.ready) return;
+      this.$('.play').disabled = this.disabled;
+      this.$('input').disabled = this.disabled || !this.duration;
+      if (this.disabled && this.audio && !this.audio.paused) this.audio.pause();
+    }
+    fmt(value) {
+      if (!Number.isFinite(value) || value < 0) return '0:00';
+      const seconds = Math.floor(value);
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      return hours ? hours + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0') : minutes + ':' + String(seconds % 60).padStart(2, '0');
+    }
+    _paint() {
+      if (!this.ready || !this.audio) return;
+      const duration = this.duration, current = this.currentTime;
+      this.$('.now').textContent = this.fmt(current);
+      this.$('.duration').textContent = this.fmt(duration);
+      const range = this.$('input');
+      range.value = duration ? String(Math.round(clamp(current / duration, 0, 1) * 1000)) : '0';
+      range.disabled = this.disabled || !duration;
+      const playing = this.playing;
+      this.$('.play').textContent = playing ? 'Ⅱ' : '▶';
+      this.$('.play').setAttribute('aria-label', playing ? 'Pause audio' : 'Play audio');
+    }
+    async play() {
+      if (this.disabled) return false;
+      if (!this.src) {
+        this.$('.status').textContent = 'Add a media source before playing.';
+        this.$('.status').classList.add('error');
+        this.emit('error', { reason: 'missing source' });
+        return false;
+      }
+      try { await this.audio.play(); return true; }
+      catch (error) {
+        this.$('.status').textContent = 'Playback could not start.';
+        this.$('.status').classList.add('error');
+        this.emit('error', { reason: error?.message || 'playback failed' });
+        return false;
+      }
+    }
+    pause() {
+      if (!this.audio || this.audio.paused) return false;
+      this.audio.pause();
+      return true;
+    }
+    async toggle() { return this.playing ? this.pause() : this.play(); }
+    seek(percent) {
+      if (this.disabled || !this.duration || !Number.isFinite(Number(percent))) return false;
+      this.audio.currentTime = clamp(Number(percent), 0, 1) * this.duration;
+      this._paint();
+      this.emit('seek', { currentTime: this.currentTime, duration: this.duration });
+      return true;
+    }
+    seekTime(seconds) {
+      if (this.disabled || !this.duration || !Number.isFinite(Number(seconds))) return false;
+      this.audio.currentTime = clamp(Number(seconds), 0, this.duration);
+      this._paint();
+      this.emit('seek', { currentTime: this.currentTime, duration: this.duration });
+      return true;
+    }
+  }
+  define('vfx-audio-player', C);
+})();
