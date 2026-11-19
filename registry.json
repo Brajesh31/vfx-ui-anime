@@ -1257,7 +1257,7 @@
       "name": "bar-chart",
       "type": "registry:file",
       "title": "VFX UI Anime Bar Chart",
-      "description": "Responsive SVG bar chart with interactive bars. One file, no dependencies.",
+      "description": "Responsive signed-value SVG bar chart with live array updates, keyboard-operable bars, accessible chart descriptions, and selection events. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "bar-chart",
@@ -1271,13 +1271,13 @@
           "target": "~/public/vfx-ui-anime/bar-chart.js"
         }
       ],
-      "docs": "Load the standalone component file. See components/bar-chart/README.md."
+      "docs": "Load components/bar-chart/index.js with a plain script tag. See components/bar-chart/README.md for data formats, properties, events, accessibility, and limitations."
     },
     {
       "name": "donut-chart",
       "type": "registry:file",
       "title": "VFX UI Anime Donut Chart",
-      "description": "Proportional SVG donut chart with legend. One file, no dependencies.",
+      "description": "Responsive proportional SVG donut chart with synchronized legend selection, percentage calculations, keyboard support, and explicit empty states. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "donut-chart",
@@ -1291,13 +1291,13 @@
           "target": "~/public/vfx-ui-anime/donut-chart.js"
         }
       ],
-      "docs": "Load the standalone component file. See components/donut-chart/README.md."
+      "docs": "Load components/donut-chart/index.js with a plain script tag. See components/donut-chart/README.md for data formats, properties, events, accessibility, and limitations."
     },
     {
       "name": "sparkline",
       "type": "registry:file",
       "title": "VFX UI Anime Sparkline",
-      "description": "Inline SVG trend sparkline. One file, no dependencies.",
+      "description": "Responsive SVG sparkline with live numeric-series updates, accessible trend summaries, single/flat-series handling, and invalid-data fallbacks. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "sparkline",
@@ -1311,13 +1311,13 @@
           "target": "~/public/vfx-ui-anime/sparkline.js"
         }
       ],
-      "docs": "Load the standalone component file. See components/sparkline/README.md."
+      "docs": "Load components/sparkline/index.js with a plain script tag. See components/sparkline/README.md for data formats, properties, events, accessibility, and limitations."
     },
     {
       "name": "kpi-card",
       "type": "registry:file",
       "title": "VFX UI Anime KPI Card",
-      "description": "Compact dashboard metric tile. One file, no dependencies.",
+      "description": "Responsive KPI metric card with synchronized label/value/delta properties and explicit positive, negative, or neutral trend states. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "kpi-card",
@@ -1331,13 +1331,13 @@
           "target": "~/public/vfx-ui-anime/kpi-card.js"
         }
       ],
-      "docs": "Load the standalone component file. See components/kpi-card/README.md."
+      "docs": "Load components/kpi-card/index.js with a plain script tag. See components/kpi-card/README.md for data formats, properties, events, accessibility, and limitations."
     },
     {
       "name": "gauge",
       "type": "registry:file",
       "title": "VFX UI Anime Gauge",
-      "description": "Semicircular metric gauge. One file, no dependencies.",
+      "description": "Semicircular SVG meter with bounded values, configurable min/max/unit, clamped readings, meter accessibility semantics, and change events. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "gauge",
@@ -1351,13 +1351,13 @@
           "target": "~/public/vfx-ui-anime/gauge.js"
         }
       ],
-      "docs": "Load the standalone component file. See components/gauge/README.md."
+      "docs": "Load components/gauge/index.js with a plain script tag. See components/gauge/README.md for data formats, properties, events, accessibility, and limitations."
     },
     {
       "name": "heatmap",
       "type": "registry:file",
       "title": "VFX UI Anime Heatmap",
-      "description": "Seven-column activity intensity grid. One file, no dependencies.",
+      "description": "Responsive five-level activity grid with configurable columns, cell labels, keyboard selection, live updates, and select events. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "heatmap",
@@ -1371,13 +1371,13 @@
           "target": "~/public/vfx-ui-anime/heatmap.js"
         }
       ],
-      "docs": "Load the standalone component file. See components/heatmap/README.md."
+      "docs": "Load components/heatmap/index.js with a plain script tag. See components/heatmap/README.md for data formats, properties, events, accessibility, and limitations."
     },
     {
       "name": "treemap",
       "type": "registry:file",
       "title": "VFX UI Anime Treemap",
-      "description": "Proportional category tile map. One file, no dependencies.",
+      "description": "Proportional SVG treemap with recursive area layout, object-array or compact attribute data, keyboard-operable tiles, and selection events. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "treemap",
@@ -1391,7 +1391,7 @@
           "target": "~/public/vfx-ui-anime/treemap.js"
         }
       ],
-      "docs": "Load the standalone component file. See components/treemap/README.md."
+      "docs": "Load components/treemap/index.js with a plain script tag. See components/treemap/README.md for data formats, properties, events, accessibility, and limitations."
     },
     {
       "name": "drawing-canvas",
