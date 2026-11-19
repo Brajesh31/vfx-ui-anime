@@ -261,15 +261,109 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define,at,burst,esc}=window.VFXAnimeFX;
 class VfxRichTextEditor extends Base {
- static formAssociated=true;
- static get css(){return ':host{display:block;width:min(100%,560px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.toolbar{display:flex;flex-wrap:wrap;gap:5px;padding:9px;border-bottom:1px solid #e9e5fa;background:#faf9ff}.tool{min-width:31px;height:29px;padding:0 8px;border:1px solid #dcd6f3;border-radius:7px;background:#fff;font-size:11px;font-weight:900;cursor:pointer}.divider{width:1px;margin:3px 2px;background:#dfdaf2}.editor{min-height:160px;max-height:340px;overflow:auto;padding:14px;outline:0;font:13px/1.65 system-ui}.editor:empty:before{content:attr(data-placeholder);color:#aaa4ce;pointer-events:none}.editor p{margin:0 0 8px}.editor ul,.editor ol{padding-left:23px}.editor a{color:#7169c8;text-decoration:underline}.status{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- render(){return '<div class="shell"><div class="toolbar" role="toolbar" aria-label="Text formatting"><button class="tool" type="button" data-command="bold" aria-label="Bold"><b>B</b></button><button class="tool" type="button" data-command="italic" aria-label="Italic"><i>I</i></button><button class="tool" type="button" data-command="underline" aria-label="Underline"><u>U</u></button><span class="divider"></span><button class="tool" type="button" data-command="insertUnorderedList" aria-label="Bulleted list">☷</button><button class="tool" type="button" data-command="insertOrderedList" aria-label="Numbered list">1.</button><span class="divider"></span><button class="tool" type="button" data-command="undo" aria-label="Undo">↶</button><button class="tool" type="button" data-command="redo" aria-label="Redo">↷</button><button class="tool" type="button" data-command="removeFormat" aria-label="Clear formatting">Tx</button></div><div class="editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="'+esc(this.getAttribute('placeholder')||'Start writing…')+'"></div><div class="status"><span class="count">0 words</span><span class="saved">Ready</span></div></div>';}
- setup(){this.editor=this.$('.editor');this.editor.addEventListener('input',()=>this._update(true));this.editor.addEventListener('paste',e=>{e.preventDefault();const text=e.clipboardData?.getData('text/plain')||'';document.execCommand('insertText',false,text);});this.$('.toolbar').addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault();});this.$('.toolbar').addEventListener('click',e=>{const b=e.target.closest('[data-command]');if(!b)return;this.editor.focus();document.execCommand(b.dataset.command,false,null);this._update(true);const p=at(this.editor);burst(p.x,p.y,{r:12,spikes:7});});this.value=this.getAttribute('value')||'';this._update(false);}
- static sanitize(html){const doc=new DOMParser().parseFromString(String(html),'text/html'),allowed=new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','BLOCKQUOTE','H2','H3','CODE','A']);const clean=node=>{for(const child of [...node.childNodes]){if(child.nodeType===1){if(!allowed.has(child.tagName)){child.replaceWith(...child.childNodes);continue;}const href=child.tagName==='A'?child.getAttribute('href'):null;for(const attr of [...child.attributes])child.removeAttribute(attr.name);if(href&&/^(https?:|mailto:)/i.test(href))child.setAttribute('href',href);clean(child);}else if(child.nodeType!==3)child.remove();}};clean(doc.body);return doc.body.innerHTML;}
- get value(){return VfxRichTextEditor.sanitize(this.editor?.innerHTML||'');}set value(v){if(this.editor){this.editor.innerHTML=VfxRichTextEditor.sanitize(v||'');this._update(false);}}
- get text(){return this.editor?.innerText||'';}focus(){this.editor.focus();}
- _update(emit){const html=this.value,text=this.text.trim(),words=text?text.split(/\s+/).length:0;this.$('.count').textContent=words+' word'+(words===1?'':'s');this.$('.saved').textContent='Edited locally';this.internals?.setFormValue(html);if(emit)this.emit('input',{value:html,text,words});}
- formResetCallback(){this.value=this.getAttribute('value')||'';}
+ static formAssociated = true;
+ static get observedAttributes() { return ['label','placeholder','required','disabled','readonly','value']; }
+ static get css() { return ':host{display:block;width:min(100%,620px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.label{display:block;padding:11px 12px 0;font-size:12px;font-weight:900}.toolbar{display:flex;flex-wrap:wrap;gap:5px;padding:9px;border-bottom:1px solid #e9e5fa;background:#faf9ff}.tool{min-width:33px;height:31px;padding:0 8px;border:1px solid #dcd6f3;border-radius:7px;background:#fff;font-size:11px;font-weight:900;cursor:pointer}.tool[aria-pressed=true]{background:#eeeaff;border-color:var(--vfx-ink);box-shadow:2px 2px 0 var(--vfx-soft)}.tool:disabled{opacity:.4;cursor:not-allowed}.divider{width:1px;margin:3px 2px;background:#dfdaf2}.editor{min-height:170px;max-height:380px;overflow:auto;padding:14px;outline:0;font:13px/1.65 system-ui;overflow-wrap:anywhere}.editor:empty:before{content:attr(data-placeholder);color:#aaa4ce;pointer-events:none}.editor p{margin:0 0 8px}.editor ul,.editor ol{padding-left:23px}.editor a{color:#7169c8;text-decoration:underline}.editor[contenteditable=false]{background:#faf9ff;color:#7771a8}.status{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}'; }
+ render() {
+  return '<div class="shell"><span class="label" id="editor-label">'+esc(this.getAttribute('label')||'Rich text')+'</span><div class="toolbar" role="toolbar" aria-label="Text formatting"><button class="tool" type="button" data-command="bold" aria-label="Bold" aria-pressed="false"><b>B</b></button><button class="tool" type="button" data-command="italic" aria-label="Italic" aria-pressed="false"><i>I</i></button><button class="tool" type="button" data-command="underline" aria-label="Underline" aria-pressed="false"><u>U</u></button><span class="divider" aria-hidden="true"></span><button class="tool" type="button" data-command="insertUnorderedList" aria-label="Bulleted list" aria-pressed="false">☷</button><button class="tool" type="button" data-command="insertOrderedList" aria-label="Numbered list" aria-pressed="false">1.</button><span class="divider" aria-hidden="true"></span><button class="tool" type="button" data-command="undo" aria-label="Undo">↶</button><button class="tool" type="button" data-command="redo" aria-label="Redo">↷</button><button class="tool" type="button" data-command="removeFormat" aria-label="Clear formatting">Tx</button></div><div class="editor" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="editor-label" aria-describedby="editor-status" data-placeholder="'+esc(this.getAttribute('placeholder')||'Start writing…')+'"></div><div class="status" id="editor-status" aria-live="polite"><span class="count">0 words</span><span class="saved">Ready</span></div></div>';
+ }
+ setup() {
+  this.editor=this.$('.editor');this._formDisabled=false;
+  this.editor.addEventListener('input',()=>this._update(true,'input'));
+  this.editor.addEventListener('blur',()=>this._update(true,'change'));
+  this.editor.addEventListener('paste',e=>{
+   if(this._isReadOnly())return;
+   e.preventDefault();const text=e.clipboardData?.getData('text/plain')||'';
+   document.execCommand('insertText',false,text);this._update(true,'input');
+  });
+  this.editor.addEventListener('drop',e=>{
+   if(this._isReadOnly())return;
+   e.preventDefault();const text=e.dataTransfer?.getData('text/plain')||'';
+   if(text)document.execCommand('insertText',false,text);
+   this._update(true,'input');
+  });
+  this.editor.addEventListener('keydown',e=>{
+   if(!(e.ctrlKey||e.metaKey)||e.altKey)return;
+   const command={b:'bold',i:'italic',u:'underline'}[e.key.toLowerCase()];
+   if(command&&!this._isReadOnly()){e.preventDefault();document.execCommand(command,false,null);this._update(true,'input');this._refreshToolbar();}
+  });
+  this.$('.toolbar').addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault();});
+  this.$('.toolbar').addEventListener('click',e=>{
+   const b=e.target.closest('[data-command]');if(!b||b.disabled||this._isReadOnly())return;
+   this.editor.focus();document.execCommand(b.dataset.command,false,null);this._update(true,'input');this._refreshToolbar();
+   const p=at(this.editor);burst(p.x,p.y,{r:12,spikes:7});
+  });
+  this.value=this.getAttribute('value')||'';this._sync();
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='value'){this.value=newValue||'';return;}
+  this._sync();
+ }
+ _isReadOnly() { return this.hasAttribute('disabled')||this.hasAttribute('readonly')||!!this._formDisabled; }
+ _sync() {
+  if(!this.editor)return;
+  const disabled=this.hasAttribute('disabled')||!!this._formDisabled,readonly=this.hasAttribute('readonly');
+  this.$('.label').textContent=this.getAttribute('label')||'Rich text';
+  this.editor.dataset.placeholder=this.getAttribute('placeholder')||'Start writing…';
+  this.editor.contentEditable=String(!disabled&&!readonly);
+  this.editor.setAttribute('aria-disabled',String(disabled));
+  this.editor.setAttribute('aria-readonly',String(readonly));
+  this.editor.setAttribute('aria-required',String(this.hasAttribute('required')));
+  this.$$('.tool').forEach(b=>b.disabled=disabled||readonly);
+  this._update(false);
+ }
+ static sanitize(html) {
+  const doc=new DOMParser().parseFromString(String(html??''),'text/html');
+  const allowed=new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','BLOCKQUOTE','H2','H3','CODE','PRE','A']);
+  const forbidden=new Set(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','SVG','MATH','TEMPLATE']);
+  const clean=node=>{
+   for(const child of [...node.childNodes]){
+    if(child.nodeType===1){
+     if(forbidden.has(child.tagName)){child.remove();continue;}
+     if(!allowed.has(child.tagName)){clean(child);child.replaceWith(...child.childNodes);continue;}
+     const href=child.tagName==='A'?child.getAttribute('href'):null;
+     for(const attr of [...child.attributes])child.removeAttribute(attr.name);
+     if(href&&/^(https?:\/\/|mailto:)/i.test(href))child.setAttribute('href',href);
+     if(child.tagName==='A')child.setAttribute('rel','noopener noreferrer');
+     clean(child);
+    } else if(child.nodeType!==3) child.remove();
+   }
+  };
+  clean(doc.body);return doc.body.innerHTML;
+ }
+ get value() { return VfxRichTextEditor.sanitize(this.editor?.innerHTML||''); }
+ set value(v) { if(!this.editor)return;this.editor.innerHTML=VfxRichTextEditor.sanitize(v||'');this._update(false); }
+ get text() { return this.editor?.innerText||''; }
+ focus() { this.editor?.focus(); }
+ clear() {
+  if(!this.editor||this._isReadOnly())return false;
+  this.editor.innerHTML='';this._update(true,'input');return true;
+ }
+ _refreshToolbar() {
+  for(const b of this.$$('.tool[data-command]')){
+   if(!['bold','italic','underline','insertUnorderedList','insertOrderedList'].includes(b.dataset.command))continue;
+   let active=false;try{active=document.queryCommandState(b.dataset.command);}catch{}
+   b.setAttribute('aria-pressed',String(!!active));
+  }
+ }
+ _update(emit,kind='input') {
+  if(!this.editor)return;
+  const html=this.value,text=this.text.trim(),words=text?text.split(/\s+/).length:0;
+  this.$('.count').textContent=words+' word'+(words===1?'':'s');
+  this.$('.saved').textContent='Edited locally';
+  this.editor.setAttribute('aria-invalid',String(this.hasAttribute('required')&&!text));
+  const flags={};let message='';
+  if(this.hasAttribute('required')&&!text){flags.valueMissing=true;message='Enter some text.';}
+  this.internals?.setFormValue(this._isReadOnly()&&this.hasAttribute('disabled')?null:html);
+  this.internals?.setValidity(flags,message,this.editor);
+  if(emit) {
+   const detail={value:html,text,words};
+   this.emit(kind==='change'?'change':'input',detail);
+  }
+ }
+ formDisabledCallback(disabled) { this._formDisabled=!!disabled;this._sync(); }
+ formResetCallback() { this.value=this.getAttribute('value')||'';this._sync(); }
 }
 define('vfx-rich-text-editor',VfxRichTextEditor);
 })();
