@@ -1,6 +1,6 @@
 # 🚦 Release checklist
 
-Use this as the final go/no-go checklist for a release candidate. A checked source audit item is not a substitute for an executed test or human sign-off.
+Use this as the final go/no-go checklist. A source audit item or a green workflow from an earlier commit is not a substitute for evidence on the release candidate.
 
 ## Source and repository structure
 
@@ -10,20 +10,23 @@ Use this as the final go/no-go checklist for a release candidate. A checked sour
 - [x] Registry contains 82 component entries.
 - [x] Gallery contains 83 unique demo IDs and coverage for all 82 component tags.
 - [x] Generated shared-runtime copies are checked against `core.js`.
-- [x] Structural checks passed on the latest audited commit before this documentation pass.
+- [x] Required GitHub Actions workflow definitions are present.
 
-## Automated checks
+## Automated candidate checks
 
-- [x] `npm test` passed on commit `0169832aa1efbe657ab951b7e00f8edc44ef5bdc`.
-- [x] `npm run check` passed on commit `0169832aa1efbe657ab951b7e00f8edc44ef5bdc`.
-- [x] GitHub Pages deployment passed on commit `4dee151d4e26ed15047c1951071c3fbd8c86acee`.
-- [x] OpenSSF Scorecard passed on commit `4dee151d4e26ed15047c1951071c3fbd8c86acee`.
-- [ ] Chromium browser suite passes on the final release-candidate SHA.
-- [ ] CodeQL passes on the final release-candidate SHA.
-- [ ] GitHub Pages deployment passes on the final release-candidate SHA.
-- [ ] OpenSSF Scorecard passes on the final release-candidate SHA.
+Verified on candidate commit `dd4be3b0f716172aa0a3a48157c83cd1d91ae380`:
 
-The latest corrected browser workflow failed. See [QUALITY-AND-RELEASE.md](../QUALITY-AND-RELEASE.md) for run links, logs, and component-level findings.
+- [x] `npm test` passes.
+- [x] `npm run check` passes.
+- [x] Full Chromium browser suite passes, including touch, keyboard, form, lifecycle and 390 px overflow checks. [Validate run 44618353514](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44618353514)
+- [x] CodeQL passes. [CodeQL run 44618353959](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44618353959)
+
+Post-merge checks that must be verified on the exact resulting `main` commit:
+
+- [ ] Validate workflow remains green on `main`.
+- [ ] CodeQL remains green on `main`.
+- [ ] GitHub Pages deployment succeeds on `main`.
+- [ ] OpenSSF Scorecard succeeds on `main`.
 
 ## Human QA
 
@@ -31,21 +34,23 @@ The latest corrected browser workflow failed. See [QUALITY-AND-RELEASE.md](../QU
 - [ ] Keyboard-only review of controls, menus, dialogs, editors, cards and overlays.
 - [ ] Screen-reader review of names, roles, values, status announcements, focus management and dynamic content.
 - [ ] Reduced-motion review at initial load and when the preference changes during runtime.
-- [ ] Touch/coarse-pointer review.
+- [ ] Touch/coarse-pointer review on a real device.
 - [ ] Cross-browser review in Chromium, Firefox and Safari.
 - [ ] Browser console review for uncaught exceptions and failed asset requests.
+- [ ] Contrast and focus-visible review for relevant interactive states.
 
 ## Package and release
 
-- [ ] Final public API and package consumption model documented.
-- [ ] Public package entry points and published file allowlist established.
-- [ ] `npm pack --dry-run` inspected.
-- [ ] Clean consumer project install and usage tested.
+- [ ] Public API and supported browser-script/CDN consumption model documented.
+- [ ] Package entry points/exports contract finalized.
+- [ ] Package published-file allowlist reviewed.
+- [ ] `npm pack --dry-run` output inspected.
+- [ ] Clean consumer project installation and usage tested.
 - [ ] Changelog and release notes prepared.
-- [ ] Version and tag selected after API freeze.
+- [ ] Version and tag selected after API/package freeze.
 - [ ] `private: true` removed only after explicit release approval.
 - [ ] GitHub Release and npm publication performed only after all gates pass.
 
 ## Current decision
 
-**Not approved for release.** Structural validation passed, but the latest full Chromium browser suite failed in several Phase 11–13 component scenarios. Manual visual and accessibility sign-off is also outstanding.
+**Automated candidate checks passed. Final release approval is pending human accessibility/visual QA, post-merge workflow confirmation and package-consumer validation.**

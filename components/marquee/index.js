@@ -269,24 +269,30 @@ const api = window.VFXAnimeFX = {
       return '<div class="viewport" aria-live="off"><div class="track"><div class="copy"><slot></slot></div><div class="copy" aria-hidden="true" inert></div></div></div>';
     }
     setup() {
-      this.slot = this.$('slot');
+      this._slotElement = this.$('slot');
       this.copy = this.$('.copy[aria-hidden=true]');
       this._onSlotChange = () => this._cloneContent();
-      this.slot.addEventListener('slotchange', this._onSlotChange);
+      this._contentObserver = typeof MutationObserver === 'function'
+        ? new MutationObserver(() => this._cloneContent())
+        : null;
+      this._slotElement.addEventListener('slotchange', this._onSlotChange);
+      this._observeLightDom();
       this._syncDuration();
       this._syncLabel();
       this._cloneContent();
     }
     connectedCallback() {
       super.connectedCallback();
-      if (this.ready && this.slot) {
-        this.slot.removeEventListener('slotchange', this._onSlotChange);
-        this.slot.addEventListener('slotchange', this._onSlotChange);
+      if (this.ready && this._slotElement) {
+        this._slotElement.removeEventListener('slotchange', this._onSlotChange);
+        this._slotElement.addEventListener('slotchange', this._onSlotChange);
+        this._observeLightDom();
         this._cloneContent();
       }
     }
     disconnectedCallback() {
-      this.slot?.removeEventListener('slotchange', this._onSlotChange);
+      this._slotElement?.removeEventListener('slotchange', this._onSlotChange);
+      this._contentObserver?.disconnect();
       super.disconnectedCallback();
     }
     attributeChangedCallback(name, oldValue, newValue) {
@@ -313,19 +319,32 @@ const api = window.VFXAnimeFX = {
     _syncLabel() {
       if (this.ready) this.$('.viewport').setAttribute('aria-label', this.label);
     }
+    _observeLightDom() {
+      if (!this._contentObserver || !this.isConnected) return;
+      this._contentObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ['id', 'href', 'tabindex', 'aria-hidden', 'contenteditable', 'disabled', 'title'],
+      });
+    }
     _cloneContent() {
-      if (!this.copy || !this.slot) return;
-      const clones = this.slot.assignedNodes({ flatten: true }).map((node) => node.cloneNode(true));
+      if (!this.copy || !this._slotElement) return;
+      const clones = this._slotElement.assignedNodes({ flatten: true }).map((node) => node.cloneNode(true));
       for (const node of clones) {
         if (node.nodeType !== Node.ELEMENT_NODE) continue;
-        if (node.hasAttribute('id')) node.removeAttribute('id');
-        node.querySelectorAll?.('[id]').forEach((element) => element.removeAttribute('id'));
-        node.querySelectorAll?.('a,button,input,select,textarea,[tabindex],[contenteditable=true]').forEach((element) => {
-          element.setAttribute('tabindex', '-1');
-          element.setAttribute('aria-hidden', 'true');
-        });
+        const elements = [node, ...node.querySelectorAll('*')];
+        for (const element of elements) {
+          element.removeAttribute('id');
+          if (element.matches('a,button,input,select,textarea,[tabindex],[contenteditable="true"]')) {
+            element.setAttribute('tabindex', '-1');
+            element.setAttribute('aria-hidden', 'true');
+          }
+        }
       }
       this.copy.replaceChildren(...clones);
+      this.copy.setAttribute('aria-hidden', 'true');
       this.copy.setAttribute('inert', '');
     }
   }

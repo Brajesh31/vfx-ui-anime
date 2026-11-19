@@ -36,7 +36,7 @@ The event fires when the action is activated even under reduced motion. In that 
 
 ## Accessibility and motion
 
-- Uses a native button with Enter/Space keyboard activation.
+- Uses a native button with explicit Enter/Space activation. Default key activation is prevented before the action runs, avoiding duplicate celebrations.
 - Label text is safely assigned with `textContent`.
 - Native disabled state is reflected on the internal button.
 - Visible focus styling is provided.

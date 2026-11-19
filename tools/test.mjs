@@ -37,7 +37,14 @@ await new Promise((r) => ws.addEventListener('open', r, { once: true }));
 let id = 0; const pending = new Map(), logs = [];
 ws.addEventListener('message', (e) => { const m = JSON.parse(e.data); if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); } if (m.method === 'Runtime.exceptionThrown') logs.push('EXC ' + (m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text)); });
 const send = (method, params = {}) => new Promise((res, rej) => { const i = ++id; pending.set(i, (m) => (m.error ? rej(new Error(`${method}: ${m.error.message}`)) : res(m.result))); ws.send(JSON.stringify({ id: i, method, params })); });
-const ev = async (expr) => (await send('Runtime.evaluate', { expression: expr, returnByValue: true })).result.value;
+const ev = async (expr) => {
+  const response = await send('Runtime.evaluate', { expression: expr, returnByValue: true });
+  if (response.exceptionDetails) {
+    const detail = response.exceptionDetails.exception?.description || response.exceptionDetails.text || 'Unknown page evaluation error';
+    throw new Error(`Runtime.evaluate failed: ${detail}\nExpression: ${expr}`);
+  }
+  return response.result?.value;
+};
 await send('Runtime.enable');
 await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 900, deviceScaleFactor: 2, mobile: true });
 await send('Emulation.setTouchEmulationEnabled', { enabled: true });
@@ -48,7 +55,7 @@ const find = (s) => { const [host, inner] = s.split(' >>> '); return inner ? `do
 const at = async (s, fx = 0.5, fy = 0.5) => JSON.parse(await ev(`(() => { const e = ${find(s)}; e.scrollIntoView({ block: 'center' }); const b = e.getBoundingClientRect(); return JSON.stringify([b.left + b.width * ${fx}, b.top + b.height * ${fy}]); })()`));
 const touch = (type, x, y) => send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
 const tap = async (s, fx, fy) => { const [x, y] = await at(s, fx, fy); await sleep(150); await touch('touchStart', x, y); await touch('touchEnd', x, y); };
-const key = async (k, code) => { await send('Input.dispatchKeyEvent', { type: 'keyDown', key: k, code: k, windowsVirtualKeyCode: code }); await send('Input.dispatchKeyEvent', { type: 'keyUp', key: k, code: k, windowsVirtualKeyCode: code }); };
+const key = async (k, virtualKeyCode) => { const code = k === ' ' ? 'Space' : k; await send('Input.dispatchKeyEvent', { type: 'keyDown', key: k, code, windowsVirtualKeyCode: virtualKeyCode }); await send('Input.dispatchKeyEvent', { type: 'keyUp', key: k, code, windowsVirtualKeyCode: virtualKeyCode }); };
 const type = async (text) => { for (const ch of text) { await send('Input.dispatchKeyEvent', { type: 'keyDown', key: ch, text: ch }); await send('Input.dispatchKeyEvent', { type: 'keyUp', key: ch }); await sleep(40); } };
 let fails = 0;
 const check = (name, ok, got) => { if (!ok) fails++; console.log(`${ok ? 'ok  ' : 'FAIL'} ${name}${got !== undefined ? `  ->  ${got}` : ''}`); };
@@ -249,7 +256,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const exported=!!result&&result.type==='image/png'&&result.width===result.height&&result.width>50;
   await ev(`(() => {const el=document.querySelector('#phase5-cropper');const observer=!!el.resizeObserver;el.remove();const disconnected=el.resizeObserver===null;document.body.append(el);window.__phase5CropReconnect=observer&&disconnected&&!!el.resizeObserver;el.remove();})()`);
   check('phase 5: cropper handles local image loading, keyboard crop geometry, source-resolution export and reconnect',loaded&&controls&&keyboard&&exported&&await ev(`window.__phase5CropReconnect`),JSON.stringify(result));
-  await ev(`document.querySelector('#phase5-cropper').remove()`);
+  await ev(`document.querySelector('#phase5-cropper')?.remove()`);
 }
 
 
@@ -832,7 +839,9 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const click=await ev("(() => {const el=document.querySelector('#phase12-flip'),button=el.shadowRoot.querySelector('.inner');return el.flipped&&button.getAttribute('aria-pressed')==='true'&&button.getAttribute('aria-label')==='Show front: Prompt'&&el.shadowRoot.querySelector('.front').getAttribute('aria-hidden')==='true'&&el.shadowRoot.querySelector('.back').getAttribute('aria-hidden')==='false'&&window.__phase12FlipEvents.length===1;})()");
   await ev("document.querySelector('#phase12-flip').shadowRoot.querySelector('.inner').focus()");
   await key('Enter',13);
-  const keyboard=await ev("(() => {const el=document.querySelector('#phase12-flip');return !el.flipped&&el.shadowRoot.querySelector('.inner').getAttribute('aria-pressed')==='false'&&window.__phase12FlipEvents.length===2;})()");
+  const keyboard=await ev("(() => {const el=document.querySelector('#phase12-flip'),button=el.shadowRoot.querySelector('.inner');window.__phase12FlipKeyboardDebug={focused:el.shadowRoot.activeElement===button,documentFocused:document.activeElement===el,flipped:el.flipped,pressed:button.getAttribute('aria-pressed'),events:window.__phase12FlipEvents.length};return !el.flipped&&button.getAttribute('aria-pressed')==='false'&&window.__phase12FlipEvents.length===2;})()");
+  await key(' ',32);
+  const space=await ev("(() => {const el=document.querySelector('#phase12-flip');return el.flipped&&el.shadowRoot.querySelector('.inner').getAttribute('aria-pressed')==='true'&&window.__phase12FlipEvents.length===3;})()");
   await ev("(() => {const el=document.querySelector('#phase12-flip');el.front='Updated prompt';el.back='Updated answer';el.toggle(true);window.__phase12NoDuplicate=el.toggle(true)===true&&window.__phase12FlipEvents.length===3;})()");
   const props=await ev("(() => {const el=document.querySelector('#phase12-flip'),button=el.shadowRoot.querySelector('.inner');return el.flipped&&el.shadowRoot.querySelector('.front b').textContent==='Updated prompt'&&el.shadowRoot.querySelector('.back b').textContent==='Updated answer'&&button.getAttribute('aria-label')==='Show front: Updated prompt'&&window.__phase12NoDuplicate;})()");
   await ev("(() => {const el=document.querySelector('#phase12-flip');el.removeAttribute('flipped');el.setAttribute('flipped','');})()");
@@ -841,7 +850,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const reduced=await ev("getComputedStyle(document.querySelector('#phase12-flip').shadowRoot.querySelector('.inner')).transitionDuration==='0s'");
   await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
   await ev("document.querySelector('#phase12-flip').remove()");
-  check('phase 12: 3D Flip Card activates by click and keyboard, exposes aria-pressed and next-face name, hides the inactive face, updates front/back properties, avoids duplicate state events and removes transitions for reduced motion',initial&&click&&keyboard&&props&&attribute&&reduced,JSON.stringify({initial,click,keyboard,props,attribute,reduced}));
+  check('phase 12: 3D Flip Card activates by click and keyboard, exposes aria-pressed and next-face name, hides the inactive face, updates front/back properties, avoids duplicate state events and removes transitions for reduced motion',initial&&click&&keyboard&&space&&props&&attribute&&reduced,JSON.stringify({initial,click,keyboard,space,keyboardDebug:await ev("JSON.stringify(window.__phase12FlipKeyboardDebug)"),props,attribute,reduced}));
 }
 
 // Phase 13: advanced motion and celebration components
@@ -900,15 +909,15 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   check('phase 13: Scroll Reveal observes initial and dynamically assigned children, supports once=false reveal/conceal events, bounded options, disabled visibility and observer cleanup/reconnect',defaults&&reveal&&conceal&&dynamic&&disabled&&reconnect,JSON.stringify({defaults,reveal,conceal,dynamic,disabled,reconnect}));
 }
 {
-  await ev("(() => {const el=document.createElement('vfx-animated-counter');el.id='phase13-counter';el.setAttribute('value','12.5');el.setAttribute('label','Active users');el.setAttribute('duration','90');el.setAttribute('decimals','1');el.setAttribute('locale','en-US');window.__phase13CounterEvents=[];el.addEventListener('complete',event=>window.__phase13CounterEvents.push(event.detail.value));document.body.append(el);})()");
+  await ev("(() => {const el=document.createElement('vfx-animated-counter');el.id='phase13-counter';window.__phase13Counter=el;el.setAttribute('value','12.5');el.setAttribute('label','Active users');el.setAttribute('duration','90');el.setAttribute('decimals','1');el.setAttribute('locale','en-US');window.__phase13CounterEvents=[];el.addEventListener('complete',event=>window.__phase13CounterEvents.push(event.detail.value));document.body.append(el);})()");
   const initial=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.value===12.5&&el.shadowRoot.querySelector('.value').textContent==='12.5'&&el.shadowRoot.querySelector('.label').textContent==='Active users'&&window.__phase13CounterEvents.length===0;})()");
   const immediate=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.setValue(100,false)&&el.value===100&&el.shadowRoot.querySelector('.value').textContent==='100.0'&&window.__phase13CounterEvents.at(-1)===100;})()");
   const invalid=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.setValue(Number.NaN)===false&&el.value===100;})()");
   await ev("(() => {const el=document.querySelector('#phase13-counter');el.setValue(200,true);})()");
   await sleep(25);
-  await ev("document.querySelector('#phase13-counter').remove()");
-  const detach=await ev("(() => {const el=document.querySelector('#phase13-counter');return el._raf===null&&el._current===200&&el.shadowRoot.querySelector('.value').textContent==='200.0';})()");
-  await ev("document.body.append(document.querySelector('#phase13-counter'))");
+  await ev("window.__phase13Counter.remove()");
+  const detach=await ev("(() => {const el=window.__phase13Counter;return !el.isConnected&&el._raf===null&&el._current===200&&el.shadowRoot.querySelector('.value').textContent==='200.0';})()");
+  await ev("document.body.append(window.__phase13Counter)");
   await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
   await ev("(() => {const el=document.querySelector('#phase13-counter');el.value=25;})()");
   const reduced=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.value===25&&el._raf===null&&el.shadowRoot.querySelector('.value').textContent==='25.0';})()");
@@ -917,7 +926,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const reset=await ev("document.querySelector('#phase13-counter').shadowRoot.querySelector('.value').textContent==='25.0'");
   await ev("(() => {const el=document.querySelector('#phase13-counter');el.locale='de-DE';el.decimals=2;el.setValue(1234.5,false);el.label='Revenue';el.duration=-500;})()");
   const format=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.shadowRoot.querySelector('.value').textContent==='1.234,50'&&el.shadowRoot.querySelector('.label').textContent==='Revenue'&&el.duration===0;})()");
-  check('phase 13: Animated Counter formats locales/decimals, rejects non-finite targets, emits completion once, finalizes cleanly on detach, restores same-valued properties and honors reduced motion',initial&&immediate&&invalid&&detach&&reduced&&reset&&format,JSON.stringify({initial,immediate,invalid,detach,reduced,reset,format}));
+  check('phase 13: Animated Counter formats locales/decimals, rejects non-finite targets, emits completion once, finalizes cleanly on detach, restores same-valued properties and honors reduced motion',initial&&immediate&&invalid&&detach&&reduced&&reset&&format,JSON.stringify({initial,immediate,invalid,detach,reduced,reset,format,finalState:await ev("JSON.stringify((()=>{const el=document.querySelector('#phase13-counter');return {connected:el.isConnected,raf:el._raf,current:el._current,target:el._target,text:el.shadowRoot.querySelector('.value').textContent,media:el._media?.matches,query:matchMedia('(prefers-reduced-motion: reduce)').matches,events:window.__phase13CounterEvents};})())")}));
   await ev("document.querySelector('#phase13-counter').remove()");
 }
 {
@@ -934,8 +943,10 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
   await ev("document.querySelector('#phase13-confetti').shadowRoot.querySelector('.btn').focus()");
   await key('Enter',13);
-  const keyboard=await ev("window.__phase13Celebrate.length===3");
-  check('phase 13: Confetti Button safely renders dynamic labels as text, emits celebration events, blocks disabled triggers, suppresses effects for reduced motion, and supports keyboard activation',safe&&event&&disabled&&reduced&&keyboard,JSON.stringify({safe,event,disabled,reduced,keyboard}));
+  const keyboard=await ev("(() => {const el=document.querySelector('#phase13-confetti'),button=el.shadowRoot.querySelector('.btn');window.__phase13ConfettiKeyboardDebug={focused:el.shadowRoot.activeElement===button,documentFocused:document.activeElement===el,events:window.__phase13Celebrate.length,disabled:button.disabled};return window.__phase13Celebrate.length===3;})()");
+  await key(' ',32);
+  const space=await ev("window.__phase13Celebrate.length===4");
+  check('phase 13: Confetti Button safely renders dynamic labels as text, emits celebration events, blocks disabled triggers, suppresses effects for reduced motion, and supports keyboard activation',safe&&event&&disabled&&reduced&&keyboard&&space,JSON.stringify({safe,event,disabled,reduced,keyboard,space,keyboardDebug:await ev("JSON.stringify(window.__phase13ConfettiKeyboardDebug)")}));
   await ev("document.querySelector('#phase13-confetti').remove()");
 }
 

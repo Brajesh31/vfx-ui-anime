@@ -440,7 +440,7 @@ const api = window.VFXAnimeFX = {
       editor.hidden = mode === 'preview';
       preview.hidden = mode === 'write';
       this.$('.body').style.gridTemplateColumns = mode === 'split' ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)';
-      this.$('.tabs button').forEach((button) => {
+      this.$$('.tabs button').forEach((button) => {
         const selected = button.dataset.mode === mode;
         button.setAttribute('aria-selected', String(selected));
         button.tabIndex = selected ? 0 : -1;
