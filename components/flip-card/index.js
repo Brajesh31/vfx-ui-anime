@@ -289,7 +289,7 @@ const api = window.VFXAnimeFX = {
       this.$('.front').setAttribute('aria-hidden', String(this.flipped));
       this.$('.back').setAttribute('aria-hidden', String(!this.flipped));
       this.$('.inner').setAttribute('aria-pressed', String(this.flipped));
-      this.$('.inner').setAttribute('aria-label', this.flipped ? 'Show ' + this.front : 'Reveal ' + this.back);
+      this.$('.inner').setAttribute('aria-label', this.flipped ? 'Show front: ' + this.front : 'Show back: ' + this.back);
     }
     toggle(value) {
       const next = typeof value === 'boolean' ? value : !this.flipped;
