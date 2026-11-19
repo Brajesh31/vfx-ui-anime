@@ -1057,7 +1057,7 @@
       "name": "password-field",
       "type": "registry:file",
       "title": "VFX UI Anime Password Field",
-      "description": "A password field with show/hide control, rule hints, heuristic strength meter, and form support. One file, no dependencies, defines <vfx-password-field>.",
+      "description": "A password field with accessible reveal state, configurable strength rules, native form validity and reset support. One file, no dependencies, defines <vfx-password-field>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "password-field",
@@ -1077,7 +1077,7 @@
       "name": "date-range-picker",
       "type": "registry:file",
       "title": "VFX UI Anime Date Range Picker",
-      "description": "A constrained start/end date picker with quick presets, chronological validation, and form support. One file, no dependencies, defines <vfx-date-range-picker>.",
+      "description": "A form-associated start/end date picker with inclusive quick presets, chronological validation and min/max bounds. One file, no dependencies, defines <vfx-date-range-picker>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "date-range-picker",
@@ -1097,7 +1097,7 @@
       "name": "notification-center",
       "type": "registry:file",
       "title": "VFX UI Anime Notification Center",
-      "description": "A local notification inbox with unread filtering, mark-read, bulk mark-read, dismiss, and state events. One file, no dependencies, defines <vfx-notification-center>.",
+      "description": "An in-memory notification inbox with JSON and legacy data input, live replacement, unread filtering, read/dismiss actions and change events. One file, no dependencies, defines <vfx-notification-center>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "notification-center",
@@ -1117,7 +1117,7 @@
       "name": "rich-text-editor",
       "type": "registry:file",
       "title": "VFX UI Anime Rich Text Editor",
-      "description": "A lightweight rich text editor with inline formatting, lists, undo/redo, word count, and sanitized HTML value. One file, no dependencies, defines <vfx-rich-text-editor>.",
+      "description": "A lightweight rich text editor with formatting, lists, undo/redo, keyboard shortcuts, required form validity and allowlist-sanitized HTML. One file, no dependencies, defines <vfx-rich-text-editor>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "rich-text-editor",
@@ -1137,7 +1137,7 @@
       "name": "gradient-picker",
       "type": "registry:file",
       "title": "VFX UI Anime Gradient Picker",
-      "description": "A two-color linear gradient editor with adjustable angle, live preview, presets, and form support. One file, no dependencies, defines <vfx-gradient-picker>.",
+      "description": "A form-associated linear gradient editor with two to eight editable color stops, adjustable positions, angle, presets and CSS output. One file, no dependencies, defines <vfx-gradient-picker>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "gradient-picker",
