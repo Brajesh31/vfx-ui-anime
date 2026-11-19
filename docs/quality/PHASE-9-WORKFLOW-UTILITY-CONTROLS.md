@@ -1,6 +1,6 @@
 # Phase 9: workflow and utility controls
 
-**Status:** Implementation and automated CI verification complete on `main` (19 November 2026); CodeQL final status pending at report creation  
+**Status:** Implementation and automated CI verification complete on `main` (19 November 2026)  
 **Scope:** Multi-step Wizard, Guided Tour, Stopwatch, Emoji Picker, and Copy Code Block  
 **Baseline:** Phase 1 component audit, animation design system, acceptance matrix, and Phase 8 implementation standard  
 **Compatibility:** Existing custom-element tags and primary public methods/properties/events are retained. No dependencies or component types were added.
@@ -48,8 +48,9 @@ The final implementation/test commit is `5bf0ca92ce798f0b4eaf4e0c01c00bfe09e914e
 | Validate: 82-component inventory, generated runtime, full Chromium suite and Phase 9 regressions | Passed | [Run 44570448183](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44570448183) |
 | GitHub Pages deployment | Passed | [Run 44570448346](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44570448346) |
 | OSSF Scorecard | Passed | [Run 44570448212](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44570448212) |
+| CodeQL | Passed | [Run 44570448149](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44570448149) |
 
-CodeQL was still running at the time this report was written. Its result must be confirmed before treating all security checks as green.
+CodeQL also passed on the same implementation commit. All four automated workflows are green for the Phase 9 implementation.
 
 The Chromium log confirms all five Phase 9 regression groups passed, the original gallery interactions passed, and the 390 px horizontal-overflow check passed.
 
