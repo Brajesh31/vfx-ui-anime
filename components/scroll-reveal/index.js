@@ -258,4 +258,123 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block}.wrap ::slotted(*){opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}.wrap ::slotted(.revealed){opacity:1;transform:none}@media(prefers-reduced-motion:reduce){.wrap ::slotted(*){opacity:1;transform:none;transition:none}}';}render(){return '<div class="wrap"><slot></slot></div>';}setup(){const nodes=[...this.children];this.observer=typeof IntersectionObserver!=='undefined'?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed');this.observer.unobserve(e.target);}}),{threshold:.12}):null;nodes.forEach(n=>this.observer?this.observer.observe(n):n.classList.add('revealed'));}disconnectedCallback(){this.observer?.disconnect();super.disconnectedCallback?.();}}define('vfx-scroll-reveal',C);})();
+(() => {
+  const { Base, define, clamp } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['threshold', 'once', 'disabled', 'distance', 'duration']; }
+    static get css() {
+      return ':host{display:block;--reveal-distance:20px;--reveal-duration:600ms}.wrap ::slotted(*){opacity:0;transform:translateY(var(--reveal-distance));transition:opacity var(--reveal-duration) ease,transform var(--reveal-duration) ease}.wrap ::slotted(.revealed){opacity:1;transform:none}:host([disabled]) .wrap ::slotted(*){opacity:1;transform:none;transition:none}@media(prefers-reduced-motion:reduce){.wrap ::slotted(*){opacity:1!important;transform:none!important;transition:none!important}}';
+    }
+    render() { return '<div class="wrap"><slot></slot></div>'; }
+    setup() {
+      this.slot = this.$('slot');
+      this._observedNodes = new Set();
+      this._onSlotChange = () => this._syncChildren();
+      this.slot.addEventListener('slotchange', this._onSlotChange);
+      this._syncStyles();
+      this._syncChildren();
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      if (!this.ready) return;
+      this.slot.removeEventListener('slotchange', this._onSlotChange);
+      this.slot.addEventListener('slotchange', this._onSlotChange);
+      this._syncChildren();
+      this._observe();
+    }
+    disconnectedCallback() {
+      this.slot?.removeEventListener('slotchange', this._onSlotChange);
+      this.observer?.disconnect();
+      this.observer = null;
+      super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      this._syncStyles();
+      if (name === 'disabled' || name === 'threshold' || name === 'once') {
+        this.observer?.disconnect();
+        this.observer = null;
+        if (this.isConnected) this._observe();
+      }
+    }
+    get threshold() {
+      const value = Number(this.getAttribute('threshold'));
+      return Number.isFinite(value) ? clamp(value, .01, .95) : .12;
+    }
+    set threshold(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('threshold', String(clamp(number, .01, .95)));
+    }
+    get once() { return this.getAttribute('once') !== 'false'; }
+    set once(value) { this.setAttribute('once', value ? 'true' : 'false'); }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get distance() {
+      const value = Number(this.getAttribute('distance'));
+      return Number.isFinite(value) ? clamp(value, 0, 200) : 20;
+    }
+    set distance(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('distance', String(clamp(number, 0, 200)));
+    }
+    get duration() {
+      const value = Number(this.getAttribute('duration'));
+      return Number.isFinite(value) ? clamp(value, 0, 5000) : 600;
+    }
+    set duration(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('duration', String(clamp(number, 0, 5000)));
+    }
+    _syncStyles() {
+      if (!this.ready) return;
+      this.style.setProperty('--reveal-distance', this.distance + 'px');
+      this.style.setProperty('--reveal-duration', this.duration + 'ms');
+    }
+    _syncChildren() {
+      if (!this.slot) return;
+      const nodes = new Set(this.slot.assignedElements({ flatten: true }));
+      for (const old of this._observedNodes) {
+        if (!nodes.has(old)) this.observer?.unobserve(old);
+      }
+      this._observedNodes = nodes;
+      if (this.disabled) {
+        for (const node of nodes) this._show(node, false);
+      } else if (this.isConnected) this._observe();
+    }
+    _show(node, announce = true) {
+      const changed = !node.classList.contains('revealed');
+      node.classList.add('revealed');
+      if (changed && announce) this.emit('reveal', { target: node, index: [...this._observedNodes].indexOf(node) });
+    }
+    _hide(node) {
+      const changed = node.classList.contains('revealed');
+      node.classList.remove('revealed');
+      if (changed) this.emit('conceal', { target: node, index: [...this._observedNodes].indexOf(node) });
+    }
+    _observe() {
+      if (!this.slot || !this.isConnected) return;
+      this.observer?.disconnect();
+      this.observer = null;
+      if (this.disabled) {
+        for (const node of this._observedNodes) this._show(node, false);
+        return;
+      }
+      const pending = [...this._observedNodes].filter(node => !(this.once && node.classList.contains('revealed')));
+      if (!pending.length) return;
+      if (typeof IntersectionObserver === 'undefined') {
+        pending.forEach(node => this._show(node));
+        return;
+      }
+      this.observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            this._show(entry.target);
+            if (this.once) this.observer?.unobserve(entry.target);
+          } else if (!this.once) this._hide(entry.target);
+        }
+      }, { threshold: this.threshold });
+      pending.forEach(node => this.observer.observe(node));
+    }
+  }
+  define('vfx-scroll-reveal', C);
+})();
