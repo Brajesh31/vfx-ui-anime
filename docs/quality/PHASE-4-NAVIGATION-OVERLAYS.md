@@ -1,6 +1,6 @@
 # Phase 4: navigation and overlays
 
-**Status:** In progress on `main`  
+**Status:** Implementation and automated verification complete on `main`; final manual QA remains open  
 **Scope:** Menu, Dialog, Drawer, Calendar, Date Picker, Command Palette, Context Menu and Combobox  
 **Deployment target:** GitHub Pages
 
@@ -35,7 +35,7 @@ The browser suite includes Phase 4 assertions for:
 - Combobox external value synchronization.
 - Calendar date-bound enforcement.
 
-Additional coverage is being added for Phase 3 code-review follow-ups discovered after the merge.
+The suite also covers Phase 3 review follow-ups for disabled Select behavior, Textarea validity and naming, Stepper fieldset/reset behavior, mixed file-upload acceptance feedback, Alert defaults, OTP completion de-duplication, Tag Input accessible naming, Search suggestion refresh, and related disabled-state lifecycle cases.
 
 ## 4. Verification status
 
@@ -46,10 +46,10 @@ Additional coverage is being added for Phase 3 code-review follow-ups discovered
 - [ ] Manual visual review at mobile and desktop widths.
 - [ ] Keyboard and assistive-technology review.
 
-**Latest automated verification:** commit `ac65a6bffaf5cbb4420efadcca800bbe160e8935` on `main`. The Validate, GitHub Pages, CodeQL and OSSF Scorecard workflows all completed successfully. The full Chromium browser test step passed, including the corrected Menu Escape assertion and Drawer fixture/focus tests.
+**Latest automated verification:** commit `932fd65a5339babf0c24ad2d3195f5ff4b8325db` on `main`. The Validate, GitHub Pages, CodeQL and OSSF Scorecard workflows all completed successfully. The Validate run passed the original component/generated-file checks and the full Chromium touch, keyboard and form interaction suite.
 
 ## 5. Boundaries
 
 No new component types, dependencies, build tools or hosting providers are introduced. GitHub Pages remains the production hosting target. Visual and interaction changes stay within the existing component implementations and regression suite.
 
-**Phase 4 automated implementation and CI gates are passing. Final sign-off remains pending manual visual review and keyboard/assistive-technology review.**
+**Phase 4 implementation and automated verification are complete. The phase is not fully signed off until the live UI receives manual visual review at mobile and desktop widths and a keyboard/screen-reader review.**
