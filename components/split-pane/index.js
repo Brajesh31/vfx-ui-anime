@@ -259,7 +259,7 @@ const api = window.VFXAnimeFX = {
 })();
 // <<< vfx core
 (() => {
-const { Base, define, at, burst } = window.VFXAnimeFX;
+const { Base, define, esc, at, burst } = window.VFXAnimeFX;
 class VfxSplitPane extends Base {
  static get observedAttributes(){return ['value','orientation','min','label','disabled'];}
  static get css(){return ':host{display:block;width:100%;min-height:220px;color:var(--vfx-ink)}.layout{display:grid;width:100%;height:100%;min-height:220px;overflow:hidden;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.layout.vertical{grid-template-columns:minmax(0,var(--primary,50%)) 12px minmax(0,1fr)}.layout.horizontal{grid-template-rows:minmax(0,var(--primary,50%)) 12px minmax(0,1fr)}.panel{min-width:0;min-height:0;overflow:auto;padding:14px;background:#fff}.panel.secondary{background:#f7f5ff}.panel h3{margin:0 0 8px;font-size:13px}.panel p{margin:0;color:var(--vfx-dim);font-size:11px;line-height:1.5}.divider{position:relative;display:grid;place-items:center;background:#e9e5fb;cursor:col-resize;touch-action:none;outline-offset:-2px}.horizontal .divider{cursor:row-resize}.divider:after{content:"";width:4px;height:38px;border-radius:9px;background:var(--vfx-acc);box-shadow:2px 2px 0 var(--vfx-ink)}.horizontal .divider:after{width:38px;height:4px}.divider:hover{background:#dbd5ff}.layout.vertical .panel.primary{grid-column:1}.layout.vertical .divider{grid-column:2;grid-row:1}.layout.vertical .panel.secondary{grid-column:3;grid-row:1}.layout.horizontal .panel.primary{grid-row:1}.layout.horizontal .divider{grid-row:2}.layout.horizontal .panel.secondary{grid-row:3}.divider:focus-visible{outline:2px solid var(--vfx-acc);background:#fff0f7}';}
