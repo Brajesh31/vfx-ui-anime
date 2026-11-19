@@ -323,7 +323,7 @@ class VfxGradientPicker extends Base {
  get from() { return this._stops[0]?.color||'#ff5fa8'; }
  set from(v) { if(this._stops.length){this._stops[0].color=this._hex(v);this._renderStops();this._update(false);} }
  get to() { return this._stops[this._stops.length-1]?.color||'#8f8df7'; }
- set to(v) { if(this._stops.length){this._stops[this._stops.length-1].color=this._hex(v);this._update(false);} }
+ set to(v) { if(this._stops.length){this._stops[this._stops.length-1].color=this._hex(v);this._renderStops();this._update(false);} }
  get angle() { return Number(this.$('#angle')?.value||0); }
  set angle(v) { if(!this.$('#angle'))return;this.$('#angle').value=Math.max(0,Math.min(360,Number(v)||0));this._update(false); }
  get value() { return this._gradient(); }
