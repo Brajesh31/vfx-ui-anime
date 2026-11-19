@@ -261,18 +261,161 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define}=window.VFXAnimeFX;
 class VfxGuidedTour extends Base {
- static get css(){return ':host{position:fixed;inset:0;z-index:2147483000;pointer-events:none;color:#1d193e;font-family:system-ui}.overlay{position:fixed;inset:0;pointer-events:auto}.shade{position:absolute;background:rgba(15,10,39,.68);pointer-events:auto}.spot{position:fixed;border:2px solid #ff75b2;border-radius:10px;box-shadow:0 0 0 3px #fff8,0 0 28px #ff72b8;pointer-events:none;transition:all .18s}.card{position:fixed;width:min(330px,calc(100vw - 28px));padding:15px;border:2px solid #1d193e;border-radius:15px;background:#fff;box-shadow:6px 7px 0 #a7a0ed;pointer-events:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.step{font-size:9px;font-weight:950;letter-spacing:.1em;text-transform:uppercase;color:#8179bf}.skip{border:0;background:none;color:#8a84b6;font-size:10px;font-weight:850;cursor:pointer}.title{margin:8px 0 5px;font-size:16px;font-weight:950}.body{margin:0;color:#706b91;font-size:12px;line-height:1.5}.foot{display:flex;align-items:center;justify-content:space-between;margin-top:13px}.foot button{padding:7px 10px;border:1.5px solid #1d193e;border-radius:8px;background:#fff;font-size:10px;font-weight:900;cursor:pointer}.foot .next{background:#ffcae1}.dots{display:flex;gap:4px}.dots i{width:5px;height:5px;border-radius:50%;background:#e5e0f6}.dots i[data-current=true]{background:#ff68aa}:focus-visible{outline:2px solid #8c83f4;outline-offset:2px}';}
- render(){return '<div class="overlay" hidden><div class="shade top"></div><div class="shade bottom"></div><div class="shade left"></div><div class="shade right"></div><div class="spot"></div><section class="card" role="dialog" aria-modal="true" aria-labelledby="tour-title"><div class="top"><span class="step">STEP 1</span><button class="skip" type="button">Skip tour</button></div><h2 class="title" id="tour-title"></h2><p class="body"></p><footer class="foot"><div class="dots"></div><div><button class="back" type="button">Back</button> <button class="next" type="button">Next →</button></div></footer></section></div>';}
- setup(){this._steps=this._parse();this._index=0;this._active=false;this.$('.next').addEventListener('click',()=>this.next());this.$('.back').addEventListener('click',()=>this.previous());this.$('.skip').addEventListener('click',()=>this.finish('skip'));this._key=e=>{if(!this._active)return;if(e.key==='Escape'){e.preventDefault();this.finish('escape');}else if(e.key==='ArrowRight')this.next();else if(e.key==='ArrowLeft')this.previous();};document.addEventListener('keydown',this._key);this._resize=()=>this._position();window.addEventListener('resize',this._resize);window.addEventListener('scroll',this._resize,true);}
- disconnectedCallback(){document.removeEventListener('keydown',this._key);window.removeEventListener('resize',this._resize);window.removeEventListener('scroll',this._resize,true);super.disconnectedCallback?.();}
- _parse(){const raw=this.getAttribute('steps')||'body::Welcome::Explore the page with this short guided tour.|body::Next step::Use the controls to move through the tour.';return raw.split('|').map(s=>{const p=s.split('::');return {selector:p[0]||'body',title:p[1]||'Step',body:p.slice(2).join('::')||''};});}
- get active(){return this._active;}get currentIndex(){return this._index;}
- start(){this._steps=this._parse();if(!this._steps.length)return false;this._index=0;this._active=true;this.$('.overlay').hidden=false;this._show();this.emit('start',{total:this._steps.length});return true;}
- next(){if(!this._active)return false;if(this._index>=this._steps.length-1){this.finish('complete');return true;}this._index++;this._show();return true;}
- previous(){if(!this._active||this._index===0)return false;this._index--;this._show();return true;}
- finish(reason='complete'){if(!this._active)return;this._active=false;this.$('.overlay').hidden=true;this.emit('finish',{reason,index:this._index});}
- _show(){const s=this._steps[this._index];let target;try{target=document.querySelector(s.selector);}catch{}if(!target)target=document.body;target.scrollIntoView?.({behavior:'smooth',block:'center'});this.$('.step').textContent='STEP '+(this._index+1)+' OF '+this._steps.length;this.$('.title').textContent=s.title;this.$('.body').textContent=s.body;this.$('.dots').innerHTML=this._steps.map((_,i)=>'<i data-current="'+(i===this._index)+'"></i>').join('');this.$('.back').disabled=this._index===0;this.$('.next').textContent=this._index===this._steps.length-1?'Finish ✓':'Next →';requestAnimationFrame(()=>this._position(target));}
- _position(target){if(!this._active)return;const rect=(target||document.body).getBoundingClientRect(),w=innerWidth,h=innerHeight,x=Math.max(0,Math.min(w,rect.left)),y=Math.max(0,Math.min(h,rect.top)),r=Math.max(x,Math.min(w,rect.right)),b=Math.max(y,Math.min(h,rect.bottom));const set=(sel,style)=>Object.assign(this.$(sel).style,style);set('.top',{left:'0',top:'0',width:'100%',height:y+'px'});set('.bottom',{left:'0',top:b+'px',width:'100%',height:Math.max(0,h-b)+'px'});set('.left',{left:'0',top:y+'px',width:x+'px',height:Math.max(0,b-y)+'px'});set('.right',{left:r+'px',top:y+'px',width:Math.max(0,w-r)+'px',height:Math.max(0,b-y)+'px'});set('.spot',{left:x+'px',top:y+'px',width:Math.max(0,r-x)+'px',height:Math.max(0,b-y)+'px'});const card=this.$('.card'),cw=Math.min(330,w-28),ch=card.offsetHeight,left=Math.max(14,Math.min(w-cw-14,x+(r-x)/2-cw/2)),top=b+ch+18<h?b+16:Math.max(14,y-ch-16);set('.card',{left:left+'px',top:top+'px'});}
+ static get observedAttributes() { return ['steps','disabled']; }
+ static get css() { return ':host{position:fixed;inset:0;z-index:2147483000;pointer-events:none;color:#1d193e;font-family:system-ui}.overlay{position:fixed;inset:0;pointer-events:auto}.shade{position:absolute;background:rgba(15,10,39,.68);pointer-events:auto}.spot{position:fixed;border:2px solid #ff75b2;border-radius:10px;box-shadow:0 0 0 3px #fff8,0 0 28px #ff72b8;pointer-events:none;transition:left .18s,top .18s,width .18s,height .18s}.card{position:fixed;box-sizing:border-box;width:min(350px,calc(100vw - 28px));max-height:calc(100vh - 28px);overflow:auto;padding:15px;border:2px solid #1d193e;border-radius:15px;background:#fff;box-shadow:6px 7px 0 #a7a0ed;pointer-events:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.step{font-size:9px;font-weight:950;letter-spacing:.1em;text-transform:uppercase;color:#8179bf}.skip{border:0;background:none;color:#8a84b6;font-size:10px;font-weight:850;cursor:pointer}.title{margin:8px 0 5px;font-size:16px;font-weight:950}.body{margin:0;color:#706b91;font-size:12px;line-height:1.5;overflow-wrap:anywhere}.foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px}.foot button{padding:8px 10px;border:1.5px solid #1d193e;border-radius:8px;background:#fff;color:#1d193e;font-size:10px;font-weight:900;cursor:pointer}.foot .next{background:#ffcae1}.foot button:disabled{opacity:.35;cursor:not-allowed}.dots{display:flex;gap:4px}.dots i{width:5px;height:5px;border-radius:50%;background:#e5e0f6}.dots i[data-current=true]{background:#ff68aa}:focus-visible{outline:2px solid #8c83f4;outline-offset:2px}@media(prefers-reduced-motion:reduce){.spot{transition:none}}'; }
+ render() { return '<div class="overlay" hidden><div class="shade top" aria-hidden="true"></div><div class="shade bottom" aria-hidden="true"></div><div class="shade left" aria-hidden="true"></div><div class="shade right" aria-hidden="true"></div><div class="spot" aria-hidden="true"></div><section class="card" role="dialog" aria-modal="true" aria-labelledby="tour-title" aria-describedby="tour-body" tabindex="-1"><div class="top"><span class="step">STEP 1</span><button class="skip" type="button">Skip tour</button></div><h2 class="title" id="tour-title" aria-live="polite"></h2><p class="body" id="tour-body"></p><footer class="foot"><div class="dots" aria-hidden="true"></div><div><button class="back" type="button">Back</button> <button class="next" type="button">Next →</button></div></footer></section></div>'; }
+ setup() {
+  this._steps=this._parse();this._index=0;this._active=false;this._target=null;this._returnFocus=null;this._frame=0;this._resizeObserver=null;
+  this.$('.next').addEventListener('click',()=>this.next());
+  this.$('.back').addEventListener('click',()=>this.previous());
+  this.$('.skip').addEventListener('click',()=>this.finish('skip'));
+  this._key=e=>this._onKey(e);
+  this._refresh=()=>this._schedulePosition();
+  this._bindWindow();
+ }
+ connectedCallback() { super.connectedCallback();this._bindWindow(); }
+ disconnectedCallback() {
+  if(this._active)this.finish('disconnect');
+  document.removeEventListener('keydown',this._key,true);
+  window.removeEventListener('resize',this._refresh);window.removeEventListener('scroll',this._refresh,true);
+  this._resizeObserver?.disconnect();this._resizeObserver=null;
+  if(this._frame)cancelAnimationFrame(this._frame);this._frame=0;
+  super.disconnectedCallback?.();
+ }
+ _bindWindow() {
+  if(!this._key)return;
+  document.removeEventListener('keydown',this._key,true);
+  document.addEventListener('keydown',this._key,true);
+  window.removeEventListener('resize',this._refresh);window.addEventListener('resize',this._refresh);
+  window.removeEventListener('scroll',this._refresh,true);window.addEventListener('scroll',this._refresh,true);
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='steps') { this._steps=this._parse();if(this._active){const found=this._findFrom(Math.min(this._index,this._steps.length-1),1,true);if(found<0)this.finish('no-targets');else{this._index=found;this._show();}} }
+  if(name==='disabled'&&this.hasAttribute('disabled')&&this._active)this.finish('disabled');
+ }
+ _normalise(steps) {
+  return (Array.isArray(steps)?steps:[]).slice(0,50).map((s,i)=>{
+   if(typeof s==='string'){const p=s.split('::');return {selector:(p[0]||'body').trim(),title:(p[1]||'Step '+(i+1)).trim(),body:p.slice(2).join('::').trim()};}
+   if(!s||typeof s!=='object')return null;
+   return {selector:String(s.selector||s.target||'').trim(),title:String(s.title||'Step '+(i+1)),body:String(s.description??s.body??'')};
+  }).filter(s=>s&&s.selector);
+ }
+ _parse() {
+  const raw=this.getAttribute('steps');
+  if(raw){try{const json=JSON.parse(raw);if(Array.isArray(json))return this._normalise(json);}catch{}return this._normalise(raw.split('|'));}
+  return this._normalise(['body::Welcome::Explore the page with this short guided tour.','body::Next step::Use the controls to move through the tour.']);
+ }
+ get steps() { return this._steps.map(s=>({...s})); }
+ set steps(value) {
+  this._steps=this._normalise(value);
+  if(this.ready&&this._active){const found=this._findFrom(Math.min(this._index,this._steps.length-1),1,true);if(found<0)this.finish('no-targets');else{this._index=found;this._show();}}
+ }
+ get active() { return this._active; }
+ get currentIndex() { return this._index; }
+ get disabled() { return this.hasAttribute('disabled'); }
+ _targetFor(step) {
+  if(!step)return null;
+  try { const target=document.querySelector(step.selector);return target&&target.isConnected?target:null; } catch { return null; }
+ }
+ _findFrom(index,direction,includeIndex=false) {
+  const start=includeIndex?index:index+direction;
+  for(let i=start;i>=0&&i<this._steps.length;i+=direction) {
+   const target=this._targetFor(this._steps[i]);
+   if(target)return i;
+   this.emit('target-missing',{index:i,selector:this._steps[i]?.selector||''});
+  }
+  return -1;
+ }
+ start() {
+  if(this.disabled||this._active)return false;
+  this._steps=this._steps.length?this._steps:this._parse();
+  if(!this._steps.length)return false;
+  this._returnFocus=document.activeElement;
+  this._active=true;this.$('.overlay').hidden=false;
+  const index=this._findFrom(0,1,true);
+  if(index<0){this._active=false;this.$('.overlay').hidden=true;this.emit('finish',{reason:'no-targets',index:-1});return false;}
+  this._index=index;this._show();this.emit('start',{total:this._steps.length,index});
+  requestAnimationFrame(()=>this.$('.next').focus({preventScroll:true}));
+  return true;
+ }
+ goTo(index) {
+  if(!this._active||!Number.isFinite(Number(index)))return false;
+  const n=Math.max(0,Math.min(this._steps.length-1,Math.floor(Number(index))));
+  const target=this._targetFor(this._steps[n]);
+  if(!target){this.emit('target-missing',{index:n,selector:this._steps[n]?.selector||''});return false;}
+  const previous=this._index;this._index=n;this._show();this.emit('change',{index:n,previousIndex:previous,step:this._steps[n].title});return true;
+ }
+ next() {
+  if(!this._active)return false;
+  const index=this._findFrom(this._index,1,false);
+  if(index<0){this.finish('complete');return true;}
+  const previous=this._index;this._index=index;this._show();this.emit('change',{index,previousIndex:previous,step:this._steps[index].title});return true;
+ }
+ previous() {
+  if(!this._active)return false;
+  const index=this._findFrom(this._index,-1,false);
+  if(index<0)return false;
+  const previous=this._index;this._index=index;this._show();this.emit('change',{index,previousIndex:previous,step:this._steps[index].title});return true;
+ }
+ finish(reason='complete') {
+  if(!this._active)return false;
+  this._active=false;this.$('.overlay').hidden=true;
+  this._resizeObserver?.disconnect();this._resizeObserver=null;
+  if(this._frame)cancelAnimationFrame(this._frame);this._frame=0;
+  const focus=this._returnFocus;this._returnFocus=null;this._target=null;
+  if(focus?.isConnected&&typeof focus.focus==='function')requestAnimationFrame(()=>focus.focus({preventScroll:true}));
+  this.emit('finish',{reason,index:this._index});return true;
+ }
+ _onKey(e) {
+  if(!this._active)return;
+  if(e.key==='Escape'){e.preventDefault();e.stopPropagation();this.finish('escape');return;}
+  if(e.key==='ArrowRight'){e.preventDefault();this.next();return;}
+  if(e.key==='ArrowLeft'){e.preventDefault();this.previous();return;}
+  if(e.key==='Tab'){
+   const buttons=[...this.$('.card').querySelectorAll('button:not([disabled])')];
+   if(!buttons.length)return;
+   const first=buttons[0],last=buttons[buttons.length-1],active=this.shadowRoot.activeElement;
+   if(e.shiftKey&&(active===first||!this.$('.card').contains(active))){e.preventDefault();last.focus();}
+   else if(!e.shiftKey&&(active===last||!this.$('.card').contains(active))){e.preventDefault();first.focus();}
+  }
+ }
+ _show() {
+  const step=this._steps[this._index],target=this._targetFor(step);
+  if(!target){this.next();return;}
+  this._target=target;
+  const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView?.({behavior:reduce?'auto':'smooth',block:'center',inline:'nearest'});
+  this.$('.step').textContent='STEP '+(this._index+1)+' OF '+this._steps.length;
+  this.$('.title').textContent=step.title;this.$('.body').textContent=step.body;
+  this.$('.dots').innerHTML=this._steps.map((_,i)=>'<i data-current="'+(i===this._index)+'"></i>').join('');
+  this.$('.back').disabled=this._findFrom(this._index,-1,false)<0;
+  this.$('.next').textContent=this._findFrom(this._index,1,false)<0?'Finish ✓':'Next →';
+  this._resizeObserver?.disconnect();
+  if(window.ResizeObserver){this._resizeObserver=new ResizeObserver(()=>this._schedulePosition());this._resizeObserver.observe(target);this._resizeObserver.observe(this.$('.card'));}
+  this._schedulePosition();
+ }
+ _schedulePosition() {
+  if(!this._active||this._frame)return;
+  this._frame=requestAnimationFrame(()=>{this._frame=0;this._position(this._target);});
+ }
+ _position(target) {
+  if(!this._active||!target)return;
+  if(!target.isConnected){this.next();return;}
+  const rect=target.getBoundingClientRect(),w=innerWidth,h=innerHeight;
+  const x=Math.max(0,Math.min(w,rect.left)),y=Math.max(0,Math.min(h,rect.top));
+  const r=Math.max(x,Math.min(w,rect.right)),b=Math.max(y,Math.min(h,rect.bottom));
+  const set=(selector,style)=>Object.assign(this.$(selector).style,style);
+  set('.top',{left:'0',top:'0',width:'100%',height:y+'px'});
+  set('.bottom',{left:'0',top:b+'px',width:'100%',height:Math.max(0,h-b)+'px'});
+  set('.left',{left:'0',top:y+'px',width:x+'px',height:Math.max(0,b-y)+'px'});
+  set('.right',{left:r+'px',top:y+'px',width:Math.max(0,w-r)+'px',height:Math.max(0,b-y)+'px'});
+  set('.spot',{left:x+'px',top:y+'px',width:Math.max(0,r-x)+'px',height:Math.max(0,b-y)+'px'});
+  const card=this.$('.card'),cw=Math.min(350,w-28),ch=card.offsetHeight;
+  const left=Math.max(14,Math.min(w-cw-14,x+(r-x)/2-cw/2));
+  const below=b+ch+18<h,top=below?b+16:Math.max(14,Math.min(h-ch-14,y-ch-16));
+  set('.card',{left:left+'px',top:top+'px',width:cw+'px'});
+ }
 }
 define('vfx-guided-tour',VfxGuidedTour);
 })();
