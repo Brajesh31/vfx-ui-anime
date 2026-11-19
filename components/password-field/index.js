@@ -261,15 +261,72 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define,esc,at,burst}=window.VFXAnimeFX;
 class VfxPasswordField extends Base {
- static formAssociated=true;
- static get css(){return ':host{display:block;width:min(100%,340px);color:var(--vfx-ink)}.field{position:relative;display:flex;align-items:center;border:2px solid var(--vfx-ink);border-radius:12px;background:#fff;box-shadow:4px 5px 0 var(--vfx-soft);overflow:hidden}.field:focus-within{outline:2px solid var(--vfx-acc);outline-offset:3px}input{width:100%;min-width:0;padding:12px 46px 12px 13px;border:0;outline:0;background:transparent;color:var(--vfx-ink);font:650 13px system-ui;letter-spacing:.04em}.reveal{position:absolute;right:7px;width:34px;height:32px;border:1.5px solid #dedaf6;border-radius:8px;background:#fff;font-size:15px;cursor:pointer}.meta{display:flex;justify-content:space-between;gap:8px;margin:12px 1px 7px;font-size:11px;font-weight:850}.strength{color:var(--vfx-dim)}.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.meter span{height:6px;border-radius:99px;background:#e8e4f7;transition:background .2s}.meter[data-level="1"] span:nth-child(-n+1){background:#ff8a9a}.meter[data-level="2"] span:nth-child(-n+2){background:#ffc36e}.meter[data-level="3"] span:nth-child(-n+3){background:#9e9af2}.meter[data-level="4"] span:nth-child(-n+4){background:#63cba3}.rules{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;margin:10px 0 0;padding:0;list-style:none}.rules li{font-size:10px;color:var(--vfx-dim)}.rules li:before{content:"○";margin-right:6px;color:#b5afd9}.rules li.ok{color:#4e9d83}.rules li.ok:before{content:"✓";color:#4e9d83}.status{margin:9px 0 0;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- render(){return '<div class="field"><input type="password" autocomplete="new-password" aria-label="'+esc(this.getAttribute('label')||'Password')+'" placeholder="'+esc(this.getAttribute('placeholder')||'Create a password')+'"><button class="reveal" type="button" aria-label="Show password" aria-pressed="false">◉</button></div><div class="meta"><span>Password strength</span><span class="strength">Not set</span></div><div class="meter" data-level="0" aria-label="Password strength"><span></span><span></span><span></span><span></span></div><ul class="rules"><li data-rule="length">8+ characters</li><li data-rule="upper">Uppercase letter</li><li data-rule="number">A number</li><li data-rule="symbol">A symbol</li></ul><p class="status" aria-live="polite">Use a unique password for this account.</p>';}
- setup(){this.input=this.$('input');this.input.name=this.getAttribute('name')||'';this.input.required=this.hasAttribute('required');this.input.minLength=Number(this.getAttribute('minlength'))||8;this.input.autocomplete=this.getAttribute('autocomplete')||'new-password';this.input.addEventListener('input',()=>this._update(true));this.input.addEventListener('change',()=>this.emit('change',{value:this.value,strength:this.strength}));this.$('.reveal').addEventListener('click',()=>{const show=this.input.type==='password';this.input.type=show?'text':'password';this.$('.reveal').textContent=show?'◎':'◉';this.$('.reveal').setAttribute('aria-label',show?'Hide password':'Show password');this.$('.reveal').setAttribute('aria-pressed',String(show));});this.value=this.getAttribute('value')||'';}
- get value(){return this.input?.value||'';}set value(v){if(!this.input)return;this.input.value=String(v??'');this._update(false);}
- get strength(){return this._score().level;}
- _score(){const v=this.value,r={length:v.length>=8,upper:/[A-Z]/.test(v),number:/\d/.test(v),symbol:/[^A-Za-z0-9]/.test(v)};const n=Object.values(r).filter(Boolean).length;return {rules:r,level:v?Math.min(4,n):0,label:!v?'Not set':n<=1?'Weak':n===2?'Fair':n===3?'Good':'Strong'};}
- _update(emit){const s=this._score();this.$('.meter').dataset.level=s.level;this.$('.strength').textContent=s.label;Object.entries(s.rules).forEach(([k,v])=>this.$('[data-rule="'+k+'"]').classList.toggle('ok',v));this.internals?.setFormValue(this.value);if(emit)this.emit('input',{value:this.value,strength:s.level});}
- formResetCallback(){this.value=this.getAttribute('value')||'';}
+ static formAssociated = true;
+ static get observedAttributes() { return ['label','placeholder','name','minlength','required','autocomplete','disabled','value']; }
+ static get css() { return ':host{display:block;width:min(100%,360px);color:var(--vfx-ink)}.label{display:block;margin:0 0 7px;font-size:12px;font-weight:900}.field{position:relative;display:flex;align-items:center;border:2px solid var(--vfx-ink);border-radius:12px;background:#fff;box-shadow:4px 5px 0 var(--vfx-soft);overflow:hidden}.field:focus-within{outline:2px solid var(--vfx-acc);outline-offset:3px}input{width:100%;min-width:0;padding:12px 48px 12px 13px;border:0;outline:0;background:transparent;color:var(--vfx-ink);font:650 13px system-ui;letter-spacing:.035em}input:disabled{opacity:.6;cursor:not-allowed}.reveal{position:absolute;right:7px;width:36px;height:34px;border:1.5px solid #dedaf6;border-radius:8px;background:#fff;font-size:15px;cursor:pointer}.reveal:disabled{opacity:.45;cursor:not-allowed}.meta{display:flex;justify-content:space-between;gap:8px;margin:12px 1px 7px;font-size:11px;font-weight:850}.strength{color:var(--vfx-dim)}.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.meter span{height:6px;border-radius:99px;background:#e8e4f7;transition:background .2s}.meter[data-level="1"] span:nth-child(-n+1){background:#ff8a9a}.meter[data-level="2"] span:nth-child(-n+2){background:#ffc36e}.meter[data-level="3"] span:nth-child(-n+3){background:#9e9af2}.meter[data-level="4"] span:nth-child(-n+4){background:#63cba3}.rules{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;margin:10px 0 0;padding:0;list-style:none}.rules li{font-size:10px;color:var(--vfx-dim)}.rules li:before{content:"○";margin-right:6px;color:#b5afd9}.rules li.ok{color:#4e9d83}.rules li.ok:before{content:"✓";color:#4e9d83}.status{margin:9px 0 0;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:360px){.rules{grid-template-columns:1fr}}'; }
+ render() { return '<label class="label" for="password">'+esc(this.getAttribute('label')||'Password')+'</label><div class="field"><input id="password" type="password" autocomplete="new-password" aria-describedby="password-help password-strength"><button class="reveal" type="button" aria-controls="password" aria-label="Show password" aria-pressed="false">◉</button></div><div class="meta"><span id="password-strength">Password strength</span><span class="strength">Not set</span></div><div class="meter" data-level="0" role="img" aria-label="Password strength: not set"><span></span><span></span><span></span><span></span></div><ul class="rules"><li data-rule="length">Minimum length</li><li data-rule="upper">Uppercase letter</li><li data-rule="number">A number</li><li data-rule="symbol">A symbol</li></ul><p class="status" id="password-help" aria-live="polite">Use a unique password for this account.</p>'; }
+ setup() {
+  this.input=this.$('#password'); this._formDisabled=false; this._defaultValue=this.getAttribute('value')||'';
+  this.input.addEventListener('input',()=>this._update(true));
+  this.input.addEventListener('change',()=>this.emit('change',{value:this.value,strength:this.strength}));
+  this.$('.reveal').addEventListener('click',()=>this.toggleVisibility());
+  this.value=this._defaultValue; this._sync();
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if (!this.ready || oldValue===newValue) return;
+  if (name==='value') { this._defaultValue=newValue||''; this.value=this._defaultValue; return; }
+  this._sync();
+ }
+ _minLength() { const n=Number(this.getAttribute('minlength')); return Number.isFinite(n)&&this.hasAttribute('minlength')?Math.max(0,Math.floor(n)):8; }
+ _sync() {
+  if (!this.input) return;
+  const label=this.getAttribute('label')||'Password';
+  this.$('.label').textContent=label; this.input.setAttribute('aria-label',label);
+  this.input.placeholder=this.getAttribute('placeholder')||'Create a password';
+  this.input.autocomplete=this.getAttribute('autocomplete')||'new-password';
+  this.input.minLength=this._minLength(); this.input.required=this.hasAttribute('required');
+  this.input.disabled=this.hasAttribute('disabled')||!!this._formDisabled;
+  this.$('.reveal').disabled=this.input.disabled;
+  this.$('.reveal').setAttribute('aria-controls','password');
+  this._update(false);
+ }
+ toggleVisibility() {
+  if (!this.input||this.input.disabled) return false;
+  const show=this.input.type==='password';
+  this.input.type=show?'text':'password';
+  this.$('.reveal').textContent=show?'◎':'◉';
+  this.$('.reveal').setAttribute('aria-label',show?'Hide password':'Show password');
+  this.$('.reveal').setAttribute('aria-pressed',String(show));
+  return show;
+ }
+ get value() { return this.input?.value||''; }
+ set value(v) { if (!this.input) return; this.input.value=String(v??''); this._update(false); }
+ get strength() { return this._score().level; }
+ _score() {
+  const v=this.value, min=this._minLength();
+  const rules={length:v.length>=min,upper:/[A-Z]/.test(v),number:/\d/.test(v),symbol:/[^A-Za-z0-9]/.test(v)};
+  const n=Object.values(rules).filter(Boolean).length;
+  return {rules,level:v?Math.min(4,n):0,label:!v?'Not set':n<=1?'Weak':n===2?'Fair':n===3?'Good':'Strong'};
+ }
+ _update(emit) {
+  if (!this.input) return;
+  const s=this._score(); this.$('.meter').dataset.level=s.level;
+  this.$('.meter').setAttribute('aria-label','Password strength: '+s.label.toLowerCase());
+  this.$('.strength').textContent=s.label;
+  Object.entries(s.rules).forEach(([k,v])=>this.$('[data-rule="'+k+'"]').classList.toggle('ok',v));
+  this.$('[data-rule="length"]').textContent='At least '+this._minLength()+' characters';
+  this.internals?.setFormValue(this.value);
+  const flags={}; if(this.input.validity.valueMissing)flags.valueMissing=true; if(this.input.validity.tooShort)flags.tooShort=true;
+  this.internals?.setValidity(flags,this.input.validationMessage||'',this.input);
+  if(emit)this.emit('input',{value:this.value,strength:s.level,minimumLength:this._minLength(),rules:{...s.rules}});
+ }
+ formDisabledCallback(disabled) { this._formDisabled=!!disabled; this._sync(); }
+ formResetCallback() {
+  this.input.type='password'; this.$('.reveal').textContent='◉';
+  this.$('.reveal').setAttribute('aria-label','Show password');
+  this.$('.reveal').setAttribute('aria-pressed','false');
+  this.value=this.getAttribute('value')||'';
+ }
 }
 define('vfx-password-field',VfxPasswordField);
 })();
