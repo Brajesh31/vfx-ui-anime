@@ -323,7 +323,8 @@ const api = window.VFXAnimeFX = {
       if (Number.isFinite(number)) this.setAttribute('count', String(Math.round(clamp(number, 8, 160))));
     }
     get speed() {
-      const number = Number(this.getAttribute('speed'));
+      const raw = this.getAttribute('speed');
+      const number = raw === null || raw.trim() === '' ? 1 : Number(raw);
       return Number.isFinite(number) ? clamp(number, 0, 3) : 1;
     }
     set speed(value) {
@@ -338,7 +339,7 @@ const api = window.VFXAnimeFX = {
     set label(value) { this.setAttribute('label', String(value ?? '')); }
     get reducedMotion() { return Boolean(this._media?.matches); }
     _readCount(value) {
-      const number = Number(value);
+      const number = value === null || String(value).trim() === '' ? 48 : Number(value);
       return Number.isFinite(number) ? Math.round(clamp(number, 8, 160)) : 48;
     }
     _syncColor() {
