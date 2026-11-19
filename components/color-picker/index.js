@@ -264,6 +264,7 @@ const fx=window.VFXAnimeFX;
 const {Base,Spring,at,burst,shards,kira,sfx}=fx;
 class VfxColorPicker extends Base {
   static formAssociated=true;
+  static observedAttributes=['value','disabled','label'];
   static css=':host{display:inline-block;width:210px;max-width:100%}.field{display:grid;gap:8px}.label{font-size:13px;font-weight:850}.picker{display:flex;align-items:center;gap:11px;min-height:55px;padding:7px 11px;border:var(--vfx-bw) solid var(--vfx-ink);border-radius:var(--vfx-r);background:#fff;box-shadow:var(--vfx-sh)}.swatch{position:relative;width:38px;height:38px;flex:none;border:2px solid var(--vfx-ink);border-radius:10px;background:var(--swatch);overflow:hidden}.swatch input{position:absolute;inset:-10px;width:58px;height:58px;opacity:0;cursor:pointer}.hex{font:800 13px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.05em}.hint{color:var(--vfx-dim);font-size:12px}';
   constructor(){super();this._value='#ff5fa8';this.spring=new Spring(1,580,18);}
   render(){return '<label class="field"><span class="label">'+fx.esc(this.getAttribute('label')||'Accent color')+'</span><span class="picker"><span class="swatch"><input type="color" aria-label="'+fx.esc(this.getAttribute('label')||'Choose a color')+'"></span><code class="hex"></code></span><span class="hint">Choose a color for your theme</span></label>';}
@@ -271,6 +272,7 @@ class VfxColorPicker extends Base {
   get value(){return this._value;}
   set value(v){const c=String(v||'').match(/^#[0-9a-f]{6}$/i)?String(v):'#ff5fa8';this._value=c;if(this.input){this.input.value=c;this.sync();}}
   sync(){if(!this.input)return;this.$('.swatch').style.setProperty('--swatch',this._value);this.$('.hex').textContent=this._value.toUpperCase();if(this.internals)this.internals.setFormValue(this.input.disabled?null:this._value);}
+  attributeChangedCallback(name,oldValue,newValue){if(!this.ready||oldValue===newValue)return;if(name==='value')this.value=newValue||'#ff5fa8';if(name==='disabled'){this.input.disabled=this.hasAttribute('disabled');this.sync();}if(name==='label'){this.$('.label').textContent=newValue||'Accent color';this.input.setAttribute('aria-label',newValue||'Choose a color');}}
   formResetCallback(){this.value=this.getAttribute('value')||'#ff5fa8';}
   formDisabledCallback(disabled){if(this.input)this.input.disabled=disabled;}
   frame(dt){const s=this.spring.step(dt);if(this.$('.swatch'))this.$('.swatch').style.transform='scale('+s.toFixed(3)+')';}
