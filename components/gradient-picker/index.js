@@ -261,17 +261,144 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define,at,burst,esc}=window.VFXAnimeFX;
 class VfxGradientPicker extends Base {
- static formAssociated=true;
- static get css(){return ':host{display:block;width:min(100%,360px);color:var(--vfx-ink)}.frame{padding:14px;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.preview{height:100px;border:2px solid var(--vfx-ink);border-radius:11px;box-shadow:inset 0 0 0 2px #ffffff66;transition:background .18s}.colors{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}.color label{display:block;margin-bottom:5px;color:#8179c8;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.color input{width:100%;height:39px;padding:3px;border:1.5px solid #dcd6f3;border-radius:8px;background:#fff;cursor:pointer}.angle{display:flex;align-items:center;gap:11px;margin-top:12px}.angle label{font-size:11px;font-weight:900;white-space:nowrap}.angle input{flex:1;accent-color:var(--vfx-acc)}.angle output{min-width:37px;text-align:right;font-size:11px;font-weight:900}.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.preset{width:39px;height:28px;border:1.5px solid var(--vfx-ink);border-radius:7px;cursor:pointer;box-shadow:2px 2px 0 var(--vfx-soft)}.css{display:block;width:100%;margin-top:12px;padding:9px;border:1px solid #e5e0f5;border-radius:8px;background:#f8f6ff;color:#7069b3;font:10px/1.4 ui-monospace,monospace;overflow-wrap:anywhere}.copy{margin-top:9px;padding:7px 10px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:var(--vfx-acc);font-size:10px;font-weight:900;cursor:pointer}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- _presets(){return [['#ff5fa8','#8f8df7',135],['#67d8c0','#6f82e8',35],['#ffcc70','#ff7b93',90],['#242044','#827be5',145],['#71d2ee','#b6e69c',15]];}
- render(){return '<div class="frame"><div class="preview" aria-label="Gradient preview"></div><div class="colors"><div class="color"><label for="from">Start color</label><input id="from" type="color" value="#ff5fa8"></div><div class="color"><label for="to">End color</label><input id="to" type="color" value="#8f8df7"></div></div><div class="angle"><label for="angle">Direction</label><input id="angle" type="range" min="0" max="360" value="135"><output>135°</output></div><div class="presets" aria-label="Gradient presets">'+this._presets().map((p,i)=>'<button class="preset" type="button" data-preset="'+i+'" aria-label="Gradient preset '+(i+1)+'" style="background:linear-gradient('+p[2]+'deg,'+p[0]+','+p[1]+')"></button>').join('')+'</div><code class="css"></code><button class="copy" type="button">Copy CSS</button></div>';}
- setup(){this.$('#from').value=this.getAttribute('from')||'#ff5fa8';this.$('#to').value=this.getAttribute('to')||'#8f8df7';this.$('#angle').value=this.getAttribute('angle')||135;for(const i of [this.$('#from'),this.$('#to'),this.$('#angle')]){i.addEventListener('input',()=>this._update(true));i.addEventListener('change',()=>{this._update(true);const p=at(this.$('.preview'));burst(p.x,p.y,{r:18,spikes:8});});}this.$('.presets').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(!b)return;const p=this._presets()[+b.dataset.preset];this.$('#from').value=p[0];this.$('#to').value=p[1];this.$('#angle').value=p[2];this._update(true);});this.$('.copy').addEventListener('click',()=>{this.emit('copy-request',{value:this.value});this.$('.copy').textContent='CSS ready';});this._update(false);}
- get from(){return this.$('#from').value;}set from(v){this.$('#from').value=v;this._update(false);}
- get to(){return this.$('#to').value;}set to(v){this.$('#to').value=v;this._update(false);}
- get angle(){return Number(this.$('#angle').value);}
- get value(){return 'linear-gradient('+this.angle+'deg, '+this.from+', '+this.to+')';}
- set value(v){const m=String(v).match(/linear-gradient\(\s*(\d+)deg\s*,\s*(#[0-9a-f]{6})\s*,\s*(#[0-9a-f]{6})\s*\)/i);if(!m)return;this.$('#angle').value=m[1];this.$('#from').value=m[2];this.$('#to').value=m[3];this._update(false);}
- _update(emit){const v=this.value;this.$('.preview').style.background=v;this.$('.css').textContent=v;this.$('.angle output').textContent=this.angle+'°';this.internals?.setFormValue(v);if(emit)this.emit('change',{value:v,from:this.from,to:this.to,angle:this.angle});}
+ static formAssociated = true;
+ static get observedAttributes() { return ['from','to','angle','value','stops','disabled']; }
+ static get css() { return ':host{display:block;width:min(100%,420px);color:var(--vfx-ink)}.frame{padding:14px;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.preview{height:112px;border:2px solid var(--vfx-ink);border-radius:11px;box-shadow:inset 0 0 0 2px #ffffff66;background:linear-gradient(135deg,#ff5fa8,#8f8df7)}.stop-track{position:relative;height:24px;margin:13px 4px 6px;border-radius:999px;background:#e9e5f5}.stop-marker{position:absolute;top:50%;width:17px;height:17px;transform:translate(-50%,-50%);border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 2px var(--vfx-ink);cursor:pointer}.stop-marker[aria-pressed=true]{width:21px;height:21px;box-shadow:0 0 0 3px var(--vfx-acc),0 0 0 5px #fff}.stop-list{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}.stop-chip{display:flex;align-items:center;gap:6px;padding:5px 8px;border:1.5px solid #dedaf1;border-radius:999px;background:#fff;font-size:10px;font-weight:850;cursor:pointer}.stop-chip[aria-pressed=true]{border-color:var(--vfx-ink);background:#f3f0ff;box-shadow:2px 2px 0 var(--vfx-soft)}.swatch{width:13px;height:13px;border:1px solid #aaa;border-radius:50%}.controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.control label{display:block;margin-bottom:5px;color:#8179c8;font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.control input[type=color]{width:100%;height:39px;padding:3px;border:1.5px solid #dcd6f3;border-radius:8px;background:#fff;cursor:pointer}.control input[type=range]{width:100%;accent-color:var(--vfx-acc)}.position-output{font-size:10px;font-weight:850}.angle{display:flex;align-items:center;gap:11px;margin-top:12px}.angle label{font-size:11px;font-weight:900;white-space:nowrap}.angle input{flex:1;min-width:0;accent-color:var(--vfx-acc)}.angle output{min-width:40px;text-align:right;font-size:11px;font-weight:900}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.action{padding:7px 10px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:#fff;font-size:10px;font-weight:900;cursor:pointer}.action.primary{background:var(--vfx-acc)}.action:disabled,.stop-marker:disabled{opacity:.42;cursor:not-allowed}.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.preset{width:39px;height:28px;border:1.5px solid var(--vfx-ink);border-radius:7px;cursor:pointer;box-shadow:2px 2px 0 var(--vfx-soft)}.preset:disabled{opacity:.4;cursor:not-allowed}.css{display:block;width:100%;margin-top:12px;padding:9px;border:1px solid #e5e0f5;border-radius:8px;background:#f8f6ff;color:#7069b3;font:10px/1.4 ui-monospace,monospace;overflow-wrap:anywhere}.status{min-height:1.3em;margin:8px 0 0;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:3px}@media(max-width:340px){.controls{grid-template-columns:1fr}}'; }
+ _presets() { return [['#ff5fa8','#8f8df7',135],['#67d8c0','#6f82e8',35],['#ffcc70','#ff7b93',90],['#242044','#827be5',145],['#71d2ee','#b6e69c',15]]; }
+ _hex(v) { return /^#[0-9a-f]{6}$/i.test(String(v))?String(v).toLowerCase():'#8f8df7'; }
+ _normalise(stops) {
+  if(!Array.isArray(stops))return [];
+  return stops.slice(0,8).map((s,i)=>({id:String(s?.id??'stop-'+i),color:this._hex(s?.color??s?.hex),position:Math.max(0,Math.min(100,Number.isFinite(Number(s?.position))?Number(s.position):i*100/Math.max(1,stops.length-1)))})).sort((a,b)=>a.position-b.position);
+ }
+ _initialStops() {
+  const raw=this.getAttribute('stops');
+  if(raw) {
+   try { const parsed=JSON.parse(raw);const list=this._normalise(parsed);if(list.length>=2)return list; } catch {}
+   const list=raw.split('|').map((part,i)=>{const [color,position]=part.split('@');return{id:'stop-'+i,color,position:position??i*100/Math.max(1,raw.split('|').length-1)};});
+   const normal=this._normalise(list);if(normal.length>=2)return normal;
+  }
+  return [{id:'stop-0',color:this._hex(this.getAttribute('from')||'#ff5fa8'),position:0},{id:'stop-1',color:this._hex(this.getAttribute('to')||'#8f8df7'),position:100}];
+ }
+ render() {
+  return '<div class="frame"><div class="preview" role="img" aria-label="Gradient preview"></div><div class="stop-track" aria-label="Gradient color stops"></div><div class="stop-list" role="group" aria-label="Select a gradient stop"></div><div class="controls"><div class="control"><label for="stop-color">Selected stop color</label><input id="stop-color" type="color" value="#ff5fa8"></div><div class="control"><label for="stop-position">Stop position</label><input id="stop-position" type="range" min="0" max="100" value="0"><output class="position-output" for="stop-position">0%</output></div></div><div class="angle"><label for="angle">Direction</label><input id="angle" type="range" min="0" max="360" value="135"><output>135°</output></div><div class="actions"><button class="action primary add" type="button">+ Add stop</button><button class="action remove" type="button">Remove selected</button><button class="action copy" type="button">Copy CSS</button></div><div class="presets" role="group" aria-label="Gradient presets">'+this._presets().map((p,i)=>'<button class="preset" type="button" data-preset="'+i+'" aria-label="Gradient preset '+(i+1)+'" style="background:linear-gradient('+p[2]+'deg,'+p[0]+','+p[1]+')"></button>').join('')+'</div><code class="css"></code><p class="status" aria-live="polite">Select a stop to edit its color and position.</p></div>';
+ }
+ setup() {
+  this._stops=this._initialStops();this._selectedId=this._stops[0].id;this._formDisabled=false;
+  if(this.hasAttribute('value'))this._parseValue(this.getAttribute('value'));
+  this.$('#angle').value=this.getAttribute('angle')||135;
+  this.$('.stop-track').addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)this.selectStop(b.dataset.id);});
+  this.$('.stop-list').addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)this.selectStop(b.dataset.id);});
+  this.$('#stop-color').addEventListener('input',()=>{const s=this._selected();if(s){s.color=this._hex(this.$('#stop-color').value);this._update(true,'input');}});
+  this.$('#stop-color').addEventListener('change',()=>{const p=at(this.$('.preview'));burst(p.x,p.y,{r:17,spikes:8});this._update(true,'change');});
+  this.$('#stop-position').addEventListener('input',()=>{const s=this._selected();if(!s)return;s.position=Number(this.$('#stop-position').value);this._sort();this._update(true,'input');});
+  this.$('#stop-position').addEventListener('change',()=>this._update(true,'change'));
+  this.$('#angle').addEventListener('input',()=>this._update(true,'input'));
+  this.$('#angle').addEventListener('change',()=>{const p=at(this.$('.preview'));burst(p.x,p.y,{r:14,spikes:7});this._update(true,'change');});
+  this.$('.add').addEventListener('click',()=>this.addStop());
+  this.$('.remove').addEventListener('click',()=>this.removeStop(this._selectedId));
+  this.$('.copy').addEventListener('click',()=>{this.emit('copy-request',{value:this.value});this.$('.status').textContent='CSS value ready to copy.';this.$('.copy').textContent='CSS ready';});
+  this.$('.presets').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(b&&!b.disabled)this._applyPreset(+b.dataset.preset);});
+  this._renderStops();this._syncDisabled();this._update(false);
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='value'){if(newValue)this._parseValue(newValue);return;}
+  if(name==='stops'){const prev=this._stops;this._stops=this._initialStops();this._selectedId=this._stops.some(s=>s.id===this._selectedId)?this._selectedId:this._stops[0].id;this._update(false);return;}
+  if(name==='from'){this._stops[0].color=this._hex(newValue||'#ff5fa8');this._update(false);return;}
+  if(name==='to'){this._stops[this._stops.length-1].color=this._hex(newValue||'#8f8df7');this._update(false);return;}
+  if(name==='angle'){this.$('#angle').value=Math.max(0,Math.min(360,Number(newValue)||0));this._update(false);return;}
+  this._syncDisabled();
+ }
+ _selected() { return this._stops.find(s=>s.id===this._selectedId)||this._stops[0]||null; }
+ _sort() {
+  this._stops.sort((a,b)=>a.position-b.position);
+  if(!this._stops.some(s=>s.id===this._selectedId))this._selectedId=this._stops[0]?.id||null;
+ }
+ _gradient() { return 'linear-gradient('+this.angle+'deg, '+this._stops.map(s=>s.color+' '+Math.round(s.position*100)/100+'%').join(', ')+')'; }
+ get stops() { return this._stops.map(s=>({...s})); }
+ set stops(v) {
+  const next=this._normalise(v);if(next.length<2)return;
+  this._stops=next;this._selectedId=next[0].id;this._renderStops();this._update(false);
+ }
+ get from() { return this._stops[0]?.color||'#ff5fa8'; }
+ set from(v) { if(this._stops.length){this._stops[0].color=this._hex(v);this._update(false);} }
+ get to() { return this._stops[this._stops.length-1]?.color||'#8f8df7'; }
+ set to(v) { if(this._stops.length){this._stops[this._stops.length-1].color=this._hex(v);this._update(false);} }
+ get angle() { return Number(this.$('#angle')?.value||0); }
+ set angle(v) { if(!this.$('#angle'))return;this.$('#angle').value=Math.max(0,Math.min(360,Number(v)||0));this._update(false); }
+ get value() { return this._gradient(); }
+ set value(v) { if(this._parseValue(v)){this._renderStops();this._update(false);} }
+ _parseValue(v) {
+  const match=String(v??'').match(/linear-gradient\(\s*(\d+(?:\.\d+)?)deg\s*,([\s\S]*)\)$/i);
+  if(!match)return false;
+  const re=/(#[0-9a-f]{6})(?:\s+(\d+(?:\.\d+)?)%)?/ig,tail=match[2],next=[];let m;
+  while((m=re.exec(tail))&&next.length<8)next.push({id:'stop-'+next.length,color:m[1],position:m[2]===undefined?next.length*100/Math.max(1,tail.match(/#[0-9a-f]{6}/ig).length-1):Number(m[2])});
+  if(next.length<2)return false;
+  this._stops=this._normalise(next);this._selectedId=this._stops[0].id;
+  if(this.$('#angle'))this.$('#angle').value=Math.max(0,Math.min(360,Number(match[1])||0));
+  return true;
+ }
+ selectStop(id) {
+  const s=this._stops.find(x=>x.id===String(id));if(!s)return false;
+  this._selectedId=s.id;this._renderStops();return true;
+ }
+ _blend(a,b) {
+  const x=this._hex(a).slice(1),y=this._hex(b).slice(1),n=[0,2,4].map(i=>Math.round((parseInt(x.slice(i,i+2),16)+parseInt(y.slice(i,i+2),16))/2));
+  return '#'+n.map(v=>v.toString(16).padStart(2,'0')).join('');
+ }
+ addStop(color) {
+  if(this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled)return false;
+  const current=this._selected(),index=this._stops.indexOf(current),next=this._stops[Math.min(index+1,this._stops.length-1)];
+  let position;
+  if(current&&next&&next!==current&&next.position-current.position>1)position=(current.position+next.position)/2;
+  else {const gaps=this._stops.slice(1).map((s,i)=>({start:this._stops[i].position,end:s.position})).sort((a,b)=>(b.end-b.start)-(a.end-a.start));const gap=gaps[0]||{start:0,end:100};position=(gap.start+gap.end)/2;}
+  const stop={id:'vfx-stop-'+Date.now().toString(36)+'-'+this._stops.length,color:this._hex(color||(current&&next?this._blend(current.color,next.color):current?.color)),position};
+  this._stops.push(stop);this._selectedId=stop.id;this._sort();this._renderStops();this._update(true,'change');return true;
+ }
+ removeStop(id) {
+  if(this._stops.length<=2||this.hasAttribute('disabled')||this._formDisabled)return false;
+  const index=this._stops.findIndex(s=>s.id===String(id));if(index<0)return false;
+  this._stops.splice(index,1);this._selectedId=this._stops[Math.min(index,this._stops.length-1)].id;
+  this._renderStops();this._update(true,'change');return true;
+ }
+ _renderStops() {
+  if(!this.$('.stop-list'))return;
+  const selected=this._selected();
+  this.$('.stop-track').style.background=this._gradient();
+  this.$('.stop-track').innerHTML=this._stops.map(s=>'<button class="stop-marker" type="button" data-id="'+esc(s.id)+'" aria-label="Select stop at '+Math.round(s.position)+' percent" aria-pressed="'+String(s.id===this._selectedId)+'" style="left:'+s.position+'%;background:'+s.color+'"></button>').join('');
+  this.$('.stop-list').innerHTML=this._stops.map((s,i)=>'<button class="stop-chip" type="button" data-id="'+esc(s.id)+'" aria-pressed="'+String(s.id===this._selectedId)+'"><span class="swatch" style="background:'+s.color+'"></span>Stop '+(i+1)+' · '+Math.round(s.position)+'%</button>').join('');
+  if(selected){this.$('#stop-color').value=selected.color;this.$('#stop-position').value=selected.position;this.$('.position-output').textContent=Math.round(selected.position)+'%';}
+  this.$('.add').disabled=this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled;
+  this.$('.remove').disabled=this._stops.length<=2||this.hasAttribute('disabled')||this._formDisabled;
+ }
+ _syncDisabled() {
+  const disabled=this.hasAttribute('disabled')||!!this._formDisabled;
+  ['#stop-color','#stop-position','#angle','.add','.remove','.copy','.preset'].forEach(s=>this.$$(s).forEach(e=>e.disabled=disabled));
+  this.$$('.stop-marker,.stop-chip').forEach(e=>e.disabled=disabled);
+ }
+ _applyPreset(index) {
+  const p=this._presets()[index];if(!p)return false;
+  this._stops=[{id:'stop-0',color:p[0],position:0},{id:'stop-1',color:p[1],position:100}];
+  this._selectedId='stop-0';this.angle=p[2];this._renderStops();this._update(true,'change');return true;
+ }
+ _update(emit,kind='change') {
+  if(!this.$('.preview'))return;
+  const value=this.value;this.$('.preview').style.background=value;this.$('.preview').setAttribute('aria-label','Gradient preview: '+value);
+  this.$('.css').textContent=value;this.$('.angle output').textContent=this.angle+'°';
+  this.$('.stop-track').style.background=value;
+  const selected=this._selected();if(selected){this.$('#stop-color').value=selected.color;this.$('#stop-position').value=selected.position;this.$('.position-output').textContent=Math.round(selected.position)+'%';}
+  this.$('.add').disabled=this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled;
+  this.$('.remove').disabled=this._stops.length<=2||this.hasAttribute('disabled')||this._formDisabled;
+  this.internals?.setFormValue(value);
+  if(emit)this.emit(kind==='input'?'input':'change',{value,from:this.from,to:this.to,angle:this.angle,stops:this.stops});
+ }
+ formDisabledCallback(disabled) { this._formDisabled=!!disabled;this._syncDisabled(); }
+ formResetCallback() {
+  this._stops=this._initialStops();this._selectedId=this._stops[0].id;
+  if(this.hasAttribute('value'))this._parseValue(this.getAttribute('value'));
+  this.$('#angle').value=this.getAttribute('angle')||135;
+  this._renderStops();this._update(false);
+ }
 }
 define('vfx-gradient-picker',VfxGradientPicker);
 })();
