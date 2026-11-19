@@ -258,4 +258,117 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc,at,burst}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,520px)}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}h3{font-size:13px;margin:0 0 8px}.plot{width:100%}.bar{fill:#a49cf5;cursor:pointer}.bar:hover{fill:#ff70b0}.axis{fill:#8982b6;font:9px system-ui}';}render(){return '<section class="box"><h3>'+esc(this.getAttribute('title')||'Bar chart')+'</h3><svg class="plot" viewBox="0 0 340 170" role="img" aria-label="Bar chart"></svg></section>';}setup(){const v=(this.getAttribute('values')||'18,32,24,48,38,64').split(',').map(Number),l=(this.getAttribute('labels')||'Jan,Feb,Mar,Apr,May,Jun').split(','),m=Math.max(1,...v),w=300/v.length,bw=Math.max(8,w-12),s=this.$('svg');s.innerHTML='<line x1="20" y1="140" x2="330" y2="140" stroke="#eee"/>'+v.map((n,i)=>{const h=Math.max(0,n)/m*110,x=24+i*w,y=140-h;return '<rect class="bar" data-i="'+i+'" x="'+x+'" y="'+y+'" width="'+bw+'" height="'+h+'" rx="4"/><text class="axis" x="'+(x+bw/2)+'" y="158" text-anchor="middle">'+esc(l[i]||i+1)+'</text>';}).join('');s.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;const i=+b.dataset.i,p=at(b);burst(p.x,p.y,{r:18,spikes:7});this.emit('select',{index:i,label:l[i],value:v[i]});});}}define('vfx-bar-chart',C);})();
+(() => {
+  const { Base, define, esc, at, burst } = window.VFXAnimeFX;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svgNode = (tag, attrs = {}, text = '') => {
+    const el = document.createElementNS(NS, tag);
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, String(value));
+    if (text !== '') el.textContent = text;
+    return el;
+  };
+  const finite = (value) => Number.isFinite(Number(value)) && String(value).trim() !== '';
+  class C extends Base {
+    static get observedAttributes() { return ['title', 'values', 'labels']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,560px);min-width:0}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);min-width:0}h3{font-size:13px;margin:0 0 8px}.plot{display:block;width:100%;height:auto;overflow:visible}.bar{fill:#a49cf5;cursor:pointer;outline:none;transition:fill .15s}.bar:hover,.bar:focus-visible,.bar.selected{fill:#ff70b0}.axis{fill:#8982b6;font:10px system-ui}.baseline{stroke:#d9d6e8;stroke-width:1}.empty{fill:#8982b6;font:12px system-ui}';
+    }
+    render() {
+      return '<section class="box"><h3>' + esc(this.getAttribute('title') || 'Bar chart') + '</h3><svg class="plot" viewBox="0 0 360 190" role="group" aria-label="Interactive bar chart"></svg></section>';
+    }
+    setup() {
+      this._selectedIndex = -1;
+      const svg = this.$('svg');
+      svg.addEventListener('click', (event) => {
+        const bar = event.target.closest('[data-index]');
+        if (bar) this.select(Number(bar.getAttribute('data-index')));
+      });
+      svg.addEventListener('keydown', (event) => {
+        const bar = event.target.closest('[data-index]');
+        if (!bar || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        this.select(Number(bar.getAttribute('data-index')));
+      });
+      this._render();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._render();
+    }
+    get values() {
+      return (this.getAttribute('values') || '18,32,24,48,38,64').split(',').map((v) => finite(v) ? Number(v) : null);
+    }
+    set values(value) {
+      const list = Array.isArray(value) ? value : String(value ?? '').split(',');
+      this.setAttribute('values', list.join(','));
+    }
+    get labels() {
+      return (this.getAttribute('labels') || 'Jan,Feb,Mar,Apr,May,Jun').split(',').map((v) => v.trim());
+    }
+    set labels(value) {
+      const list = Array.isArray(value) ? value : String(value ?? '').split(',');
+      this.setAttribute('labels', list.join(','));
+    }
+    get selectedIndex() { return this._selectedIndex; }
+    select(index) {
+      const data = this._data || [];
+      if (!Number.isInteger(index) || !data.some((item) => item.index === index)) return false;
+      this._selectedIndex = index;
+      this.$$('rect[data-index]').forEach((bar) => {
+        const selected = Number(bar.getAttribute('data-index')) === index;
+        bar.classList.toggle('selected', selected);
+        bar.setAttribute('aria-pressed', String(selected));
+      });
+      const item = data.find((entry) => entry.index === index);
+      const rect = this.$('rect[data-index="' + index + '"]');
+      if (rect) {
+        const point = at(rect);
+        burst(point.x, point.y, { r: 16, spikes: 6 });
+      }
+      this.emit('select', { index, label: item.label, value: item.value });
+      return true;
+    }
+    _render() {
+      if (!this.ready) return;
+      const svg = this.$('svg');
+      const labels = this.labels;
+      const data = this.values.map((value, index) => ({ index, value, label: labels[index] || 'Item ' + (index + 1) })).filter((item) => Number.isFinite(item.value));
+      this._data = data;
+      svg.replaceChildren();
+      const title = svgNode('title', {}, (this.getAttribute('title') || 'Bar chart') + ', ' + data.length + ' data points');
+      const description = svgNode('desc', {}, data.map((d) => d.label + ': ' + d.value).join('; '));
+      svg.append(title, description);
+      if (!data.length) {
+        svg.append(svgNode('text', { x: 180, y: 95, 'text-anchor': 'middle', class: 'empty' }, 'No chart data'));
+        svg.setAttribute('aria-label', 'Bar chart, no valid data');
+        return;
+      }
+      const min = Math.min(0, ...data.map((d) => d.value));
+      const max = Math.max(0, ...data.map((d) => d.value));
+      const range = max - min || 1;
+      const top = 18, bottom = 148, chartHeight = bottom - top, left = 28, width = 310;
+      const baseline = bottom - ((0 - min) / range) * chartHeight;
+      svg.append(svgNode('line', { x1: left, y1: baseline, x2: left + width, y2: baseline, class: 'baseline' }));
+      const slot = width / data.length;
+      const barWidth = Math.max(2, Math.min(42, slot * 0.68));
+      for (const item of data) {
+        const x = left + slot * item.index + (slot - barWidth) / 2;
+        const valueY = bottom - ((item.value - min) / range) * chartHeight;
+        const y = Math.min(valueY, baseline);
+        const height = Math.max(1, Math.abs(baseline - valueY));
+        const bar = svgNode('rect', {
+          x, y, width: barWidth, height, rx: Math.min(5, barWidth / 3), class: 'bar',
+          'data-index': item.index, tabindex: 0, role: 'button',
+          'aria-label': item.label + ': ' + item.value,
+          'aria-pressed': String(this._selectedIndex === item.index)
+        });
+        if (this._selectedIndex === item.index) bar.classList.add('selected');
+        svg.append(bar);
+        svg.append(svgNode('text', {
+          x: left + slot * item.index + slot / 2, y: 170, class: 'axis', 'text-anchor': 'middle'
+        }, item.label));
+      }
+      svg.setAttribute('aria-label', 'Interactive bar chart with ' + data.length + ' values');
+    }
+  }
+  define('vfx-bar-chart', C);
+})();
