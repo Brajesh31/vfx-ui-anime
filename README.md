@@ -154,11 +154,11 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 
 ## 📦 Package and release status
 
-The source repository is MIT-licensed. The npm package is **not published**. The current `package.json` intentionally retains `"private": true`.
+The source repository is MIT-licensed. The project has a **source-only GitHub pre-release, `v0.1.0-rc.1`**. It is an early release candidate, not a stable production release. The npm package is **not published**, and `package.json` intentionally retains `"private": true`.
 
-The complete integrated validation suite, CodeQL, GitHub Pages deployment and OpenSSF Scorecard all passed on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`. See [the exact run links and remaining release gates](docs/QUALITY-AND-RELEASE.md).
+The source pre-release is created only after `npm test`, `npm run check` and the full Chromium interaction suite pass on the exact tagged commit. See [the release workflow](.github/workflows/release.yml) and [the quality/release gates](docs/QUALITY-AND-RELEASE.md).
 
-The source gallery is deployed through GitHub Pages, but no versioned GitHub Release or npm package has been published. The package is not release-approved. Manual visual, keyboard-only, touch, screen-reader and cross-browser review remains outstanding, as do package tarball inspection and a clean consumer installation test. Do not use an npm install command as though a public version already exists.
+The static gallery is deployed through GitHub Pages. Manual visual, keyboard-only, touch-device, screen-reader and Firefox/Safari review remains outstanding, as do npm tarball inspection and a clean consumer installation test. Do not treat this pre-release as a stable release or use an npm install command as though a public package exists.
 
 ## 📄 License
 

@@ -34,6 +34,7 @@ The live gallery is published at https://brajesh31.github.io/vfx-ui-anime/.
 | `.github/workflows/deploy-pages.yml` | Separate GitHub Pages build/artifact and dependent deployment jobs |
 | `.github/workflows/codeql.yml` | CodeQL static analysis workflow |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard workflow |
+| `.github/workflows/release.yml` | Source-only pre-release workflow; gates version creation on source, structure and full Chromium checks |
 | `docs/COMPONENTS.md` | Component directory and category index |
 | `docs/QUALITY-AND-RELEASE.md` | Current automated evidence and release decision |
 | `docs/quality/ANIMATION-DESIGN-SYSTEM.md` | Visual system and motion specification |

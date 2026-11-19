@@ -40,6 +40,7 @@ The Validate browser log for the verified implementation commit records 210 succ
 
 ## Package and release
 
+- [x] Publish source-only GitHub pre-release `v0.1.0-rc.1` after source, structure and Chromium checks pass on the release commit. See [the release workflow](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/release.yml).
 - [ ] Public API and supported browser-script/CDN consumption model documented.
 - [ ] Package entry points/exports contract finalized.
 - [ ] Package published-file allowlist reviewed.
@@ -52,4 +53,4 @@ The Validate browser log for the verified implementation commit records 210 succ
 
 ## Current decision
 
-**GitHub Actions implementation/integration checks passed on current `main`. Final release approval is pending human QA and package-consumer validation. No versioned GitHub Release or npm package exists yet.**
+**GitHub Actions checks passed. Source-only GitHub pre-release `v0.1.0-rc.1` is available. Stable release and npm publication remain pending manual QA and package-consumer validation.**

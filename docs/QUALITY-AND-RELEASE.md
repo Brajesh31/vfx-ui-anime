@@ -7,7 +7,7 @@
 
 ## Current decision
 
-**Automated GitHub Actions gate: passed. Formal versioned release and npm publication: not completed.**
+**Automated GitHub Actions gate: passed. Source-only GitHub pre-release: `v0.1.0-rc.1`. Stable release and npm publication: not completed.**
 
 The 14-stage implementation roadmap is complete in scope. The component regressions discovered during the integrated audit have been repaired, and the complete source, browser, security, deployment and Scorecard workflows have passed on the merged `main` commit.
 
@@ -95,10 +95,10 @@ The npm package remains intentionally private. `package.json` still has `"privat
 - [ ] Remove `"private": true` only after release approval.
 - [ ] Create a version tag/GitHub Release and publish to npm only after all gates pass.
 
-The GitHub Pages gallery is deployed. No npm tarball, npm publication, version tag or GitHub Release currently exists.
+The GitHub Pages gallery is deployed. The source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). No npm tarball or npm publication has been created. Exact release-candidate test results are available in [the release workflow runs](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/release.yml).
 
 ## 6. Release decision
 
-**Automated GitHub Actions gate: passed on current `main`. A formal versioned release remains blocked on manual QA and package-consumer validation.**
+**Automated GitHub Actions gate: passed. A source-only `v0.1.0-rc.1` GitHub pre-release exists. Stable release and npm publication remain blocked on manual QA and package-consumer validation.**
 
 The component regressions are fixed and the complete integrated Chromium suite passed on the verified implementation commit. Do not describe the npm package as published or final-release-approved until the remaining checks above are completed.
