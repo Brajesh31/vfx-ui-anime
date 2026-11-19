@@ -35,7 +35,7 @@ if (JSON.stringify(folders) !== JSON.stringify(expectedFolders)) {
   errors.push("components/ must contain exactly the eighty-two VFX UI Anime component folders.");
 }
 
-const buildList = buildSource.match(/export const NAMES = \\[([\\s\\S]*?)\\];/);
+const buildList = buildSource.match(/export const NAMES = \[([\s\S]*?)\];/);
 const buildNames = buildList ? [...buildList[1].matchAll(/["']([^"']+)["']/g)].map((match) => match[1]) : [];
 if (JSON.stringify(buildNames) !== JSON.stringify(names)) {
   errors.push("tools/build.mjs and tools/validate.mjs must list the exact same component names in the same order.");
@@ -117,7 +117,7 @@ const [toggleSource, frameAsset] = await Promise.all([
   read("components/toggle/index.js"),
   readFile(join(root, "components/toggle/frames.webp")).catch(() => null)
 ]);
-const embeddedSheet = toggleSource.match(/const SHEET = 'data:image\\/webp;base64,([^']+)'/);
+const embeddedSheet = toggleSource.match(/const SHEET = 'data:image\/webp;base64,([^']+)'/);
 if (!frameAsset || !embeddedSheet || embeddedSheet[1] !== frameAsset.toString("base64")) {
   errors.push("The toggle's embedded WebP data URI does not match components/toggle/frames.webp.");
 }
