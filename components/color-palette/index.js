@@ -305,21 +305,52 @@ const api = window.VFXAnimeFX = {
         if (button) this.select(button.dataset.color);
       });
       this.$('.grid').addEventListener('keydown', (event) => {
-        const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
         const current = event.target.closest?.('button[data-color]');
-        if (!current || !keys.includes(event.key)) return;
-        const buttons = this.$$('.swatch');
+        if (!current) return;
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          if (!event.repeat) this.select(current.dataset.color);
+          return;
+        }
+        if (event.key === ' ' || event.key === 'Spacebar') {
+          event.preventDefault();
+          if (!event.repeat) this._spaceActivationColor = current.dataset.color;
+          return;
+        }
+        const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
+        if (!keys.includes(event.key)) return;
+        const buttons = [...this.root.querySelectorAll('.swatch')];
         const index = buttons.indexOf(current);
+        if (index < 0 || buttons.length === 0) return;
         const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
           : (index + (event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
+        const target = buttons[next];
+        if (!target || target.disabled) return;
         event.preventDefault();
-        buttons[next]?.focus();
+        buttons.forEach((button, buttonIndex) => { button.tabIndex = buttonIndex === next ? 0 : -1; });
+        target.focus();
+      });
+      this.root.addEventListener('keyup', (event) => {
+        if (event.key !== ' ' && event.key !== 'Spacebar') return;
+        event.preventDefault();
+        const pendingColor = this._spaceActivationColor;
+        this._spaceActivationColor = null;
+        const current = event.target.closest?.('button[data-color]');
+        if (pendingColor && current?.dataset.color === pendingColor) this.select(pendingColor);
+      });
+      this.$('.grid').addEventListener('focusout', (event) => {
+        if (!this.$('.grid').contains(event.relatedTarget)) this._spaceActivationColor = null;
       });
       this.$('.copy').addEventListener('click', () => this.copy());
       this._render();
     }
     attributeChangedCallback(name, oldValue, newValue) {
-      if (oldValue !== newValue && this.ready) this._render();
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'value') {
+        this._syncSelection();
+        return;
+      }
+      this._render();
     }
     get colors() { return this._colors.map((color) => color); }
     set colors(value) {
@@ -377,26 +408,45 @@ const api = window.VFXAnimeFX = {
         return false;
       }
     }
+    _syncSelection() {
+      if (!this.ready) return;
+      const requested = this.getAttribute('value');
+      this._value = this._colors.find((color) => color.toLowerCase() === String(requested || '').toLowerCase()) || this._colors[0];
+      const selectedColor = this.value.toLowerCase();
+      const activeElement = this.root.activeElement;
+      const activeColor = activeElement?.matches?.('button[data-color]') ? activeElement.dataset.color : null;
+      const rovingColor = activeColor && this._colors.includes(activeColor) ? activeColor : selectedColor;
+      this.root.querySelectorAll('.swatch').forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.color === selectedColor));
+        button.tabIndex = button.dataset.color === rovingColor ? 0 : -1;
+      });
+      this.$('.value').textContent = this.value;
+      this.$('.value').style.color = this.value;
+    }
     _render() {
       if (!this.ready) return;
+      const activeElement = this.root.activeElement;
+      const activeColor = activeElement?.matches?.('button[data-color]') ? activeElement.dataset.color : null;
       const raw = this.hasAttribute('colors') ? this.getAttribute('colors') : DEFAULTS.join(',');
       const colors = splitColors(raw).map((value) => value.trim()).filter(validColor);
       this._colors = [...new Set(colors.map((color) => color.toLowerCase()))];
       if (!this._colors.length) this._colors = [DEFAULTS[0]];
       const requested = this.getAttribute('value');
       this._value = this._colors.find((color) => color.toLowerCase() === String(requested || '').toLowerCase()) || this._colors[0];
+      const selectedColor = this.value.toLowerCase();
+      const rovingColor = activeColor && this._colors.includes(activeColor) ? activeColor : selectedColor;
       this.$('h3').textContent = this.getAttribute('title') || 'Color palette';
       const grid = this.$('.grid');
       grid.replaceChildren();
-      this._colors.forEach((color, index) => {
+      this._colors.forEach((color) => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'swatch';
         button.dataset.color = color;
         button.disabled = this.disabled;
         button.setAttribute('aria-label', 'Select color ' + color);
-        button.setAttribute('aria-pressed', String(color === this.value.toLowerCase()));
-        button.tabIndex = color === this.value.toLowerCase() ? 0 : -1;
+        button.setAttribute('aria-pressed', String(color === selectedColor));
+        button.tabIndex = color === rovingColor ? 0 : -1;
         const swatch = document.createElement('span');
         swatch.className = 'color';
         swatch.style.backgroundColor = color;
@@ -405,6 +455,11 @@ const api = window.VFXAnimeFX = {
         button.append(swatch, label);
         grid.append(button);
       });
+      if (activeColor && !this.disabled) {
+        const focusTarget = [...grid.querySelectorAll('.swatch')].find((button) => button.dataset.color === activeColor)
+          || grid.querySelector('.swatch[tabindex="0"]');
+        focusTarget?.focus();
+      }
       this.$('.value').textContent = this.value;
       this.$('.value').style.color = this.value;
       this.$('.copy').disabled = this.disabled;
