@@ -1,6 +1,6 @@
 # Phase 5: creative-workflow controls
 
-**Status:** Implementation and regression coverage added on \`main\`; automated workflow verification is pending  
+**Status:** Implementation and automated verification complete on `main` (commit `3802002046221547c694fde55af1bd21290a6fca`, 19 November 2026)  
 **Scope:** Drag and Drop, Carousel, Timeline, Radial Menu and Image Cropper  
 **Baseline:** Phase 1 component audit, animation design system and acceptance matrix  
 **Compatibility:** Existing custom-element tags and established properties, methods and events are retained
@@ -13,7 +13,7 @@ Make the creative-workflow controls reliable when application data changes after
 
 | Component | Phase 5 focus |
 |---|---|
-| Drag and Drop | Synchronize the \`items\` attribute and property, render a useful empty state, preserve keyboard focus after arrow-based reorder, and report committed order changes |
+| Drag and Drop | Synchronize the `items` attribute and property, render a useful empty state, preserve keyboard focus after arrow-based reorder, and report committed order changes |
 | Carousel | Rebuild on slide changes, clamp the active index, prevent invalid navigation for zero/one slide, add Home/End navigation, and keep inactive slides out of the focus order |
 | Timeline | Synchronize milestone data, support object or pipe-delimited items, add roving keyboard focus and Home/End navigation, and safely handle empty data |
 | Radial Menu | Synchronize action data, constrain focus to open actions, focus the first item on open, restore focus on dismissal, and support Home/End navigation |
@@ -33,7 +33,14 @@ The existing whole-gallery checks remain enabled. The component registry and num
 
 ## 4. Verification and sign-off
 
-Automated checks are being run against the commit containing this report. The phase will be described as automated-verification complete only after the full Node/build checks, Chromium browser suite, GitHub Pages deployment, CodeQL and OSSF Scorecard finish successfully.
+All required GitHub Actions workflows passed on the Phase 5 implementation commit. The full Chromium browser suite passed, including every Phase 5 regression below, alongside the existing whole-gallery interactions and the 390 px horizontal-overflow check.
+
+| Check | Result | Run |
+|---|---|---|
+| Validate, Node/build checks and Chromium browser suite | Passed | [Run 44528845891](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44528845891) |
+| GitHub Pages deployment | Passed | [Run 44528845983](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44528845983) |
+| CodeQL | Passed | [Run 44528845737](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44528845737) |
+| OSSF Scorecard | Passed | [Run 44528845995](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44528845995) |
 
 Manual visual review at mobile and desktop widths, keyboard-only review with a real browser, and screen-reader/assistive-technology review remain separate sign-off tasks. Automated assertions do not replace those reviews.
 
