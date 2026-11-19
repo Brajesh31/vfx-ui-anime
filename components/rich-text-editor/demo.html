@@ -1,2 +1,30 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime Rich Text Editor</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 9px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}</style><script src="index.js"></script></head><body><main><h1>VFX UI Anime Rich Text Editor</h1><p>Standalone preview. Try the control and read its README for the complete API.</p><div class="stage"><vfx-rich-text-editor placeholder="Write a project description…"></vfx-rich-text-editor></div><p><a href="../../gallery/">← Back to component gallery</a></p></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VFX UI Anime Rich Text Editor</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,860px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 0}.hint{font-size:12px}a{color:inherit}
+</style>
+<script src="index.js"></script>
+</head>
+<body>
+<main>
+<h1>✍️ Rich Text Editor</h1>
+<p>Format content, create lists, use Ctrl/Cmd+B, Ctrl/Cmd+I or Ctrl/Cmd+U, and inspect the live word count.</p>
+<div class="stage">
+<vfx-rich-text-editor id="editor" label="Project description" placeholder="Describe your project…" required></vfx-rich-text-editor>
+</div>
+<p class="hint" id="summary" aria-live="polite">Editor output is sanitized using a narrow allowlist. Paste and drop content is inserted as plain text.</p>
+<p><button id="inspect" type="button">Inspect sanitized value</button></p>
+<pre id="output" style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f8f6ff;border-radius:8px;padding:12px"></pre>
+<p><a href="../../gallery/">← Back to component gallery</a></p>
+</main>
+<script>
+const editor=document.querySelector('#editor');
+document.querySelector('#inspect').addEventListener('click',()=>{document.querySelector('#output').textContent=editor.value;});
+editor.addEventListener('input',event=>{document.querySelector('#summary').textContent=event.detail.words+' words · '+event.detail.text.length+' characters';});
+</script>
+</body>
+</html>
