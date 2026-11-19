@@ -258,4 +258,57 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,300px);perspective:900px}.card{position:relative;display:grid;place-items:center;min-height:180px;padding:20px;border:2px solid var(--vfx-ink);border-radius:18px;background:linear-gradient(135deg,#ffe1ef,#d8d2ff 55%,#c8f1e4);box-shadow:8px 9px 0 var(--vfx-soft);transform-style:preserve-3d;transition:transform .12s}.inside{text-align:center;transform:translateZ(35px)}strong{font-size:17px}.desc{margin-top:7px;font-size:11px;color:#635d88}.shine{position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--x,50%) var(--y,50%),#fff9,transparent 48%);pointer-events:none}';}render(){return '<article class="card"><div class="shine"></div><div class="inside"><strong>'+esc(this.getAttribute('title')||'3D perspective')+'</strong><div class="desc">'+esc(this.getAttribute('description')||'Move your pointer over this card')+'</div><slot></slot></div></article>';}setup(){const card=this.$('.card');this.addEventListener('pointermove',e=>{const r=this.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;card.style.transform='rotateX('+((.5-y)*14)+'deg) rotateY('+((x-.5)*16)+'deg)';this.$('.shine').style.setProperty('--x',x*100+'%');this.$('.shine').style.setProperty('--y',y*100+'%');});this.addEventListener('pointerleave',()=>card.style.transform='rotateX(0) rotateY(0)');}}define('vfx-tilt-card',C);})();
+
+(() => {
+  const { Base, define, clamp } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['title', 'description']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,300px);min-width:0;perspective:900px}.card{position:relative;display:grid;place-items:center;min-height:180px;padding:20px;border:2px solid var(--vfx-ink);border-radius:18px;background:linear-gradient(135deg,#ffe1ef,#d8d2ff 55%,#c8f1e4);box-shadow:8px 9px 0 var(--vfx-soft);transform-style:preserve-3d;transition:transform .12s;will-change:transform}.inside{position:relative;z-index:1;text-align:center;transform:translateZ(35px)}strong{font-size:17px}.desc{margin-top:7px;font-size:11px;color:#635d88}.shine{position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--x,50%) var(--y,50%),#fff9,transparent 48%);pointer-events:none}@media(prefers-reduced-motion:reduce){.card{transition:none!important;transform:none!important;will-change:auto}}';
+    }
+    render() {
+      return '<article class="card"><div class="shine" aria-hidden="true"></div><div class="inside"><strong></strong><div class="desc"></div><slot></slot></div></article>';
+    }
+    setup() {
+      this.card = this.$('.card');
+      this._reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches || false;
+      this._syncContent();
+      this.addEventListener('pointermove', (event) => this._tilt(event));
+      this.addEventListener('pointerleave', () => this.reset());
+      this.addEventListener('pointercancel', () => this.reset());
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._syncContent();
+    }
+    get title() { return this.getAttribute('title') || '3D perspective'; }
+    set title(value) { this.setAttribute('title', String(value ?? '')); }
+    get description() { return this.getAttribute('description') || 'Move your pointer over this card'; }
+    set description(value) { this.setAttribute('description', String(value ?? '')); }
+    _syncContent() {
+      if (!this.ready) return;
+      this.$('strong').textContent = this.title;
+      this.$('.desc').textContent = this.description;
+    }
+    _tilt(event) {
+      if (event.pointerType === 'touch' || this._reducedMotion || window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+        this.reset();
+        return;
+      }
+      const rect = this.getBoundingClientRect();
+      if (!(rect.width > 0 && rect.height > 0)) return;
+      const x = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+      const y = clamp((event.clientY - rect.top) / rect.height, 0, 1);
+      this.card.style.transform = 'rotateX(' + ((0.5 - y) * 14) + 'deg) rotateY(' + ((x - 0.5) * 16) + 'deg)';
+      this.$('.shine').style.setProperty('--x', x * 100 + '%');
+      this.$('.shine').style.setProperty('--y', y * 100 + '%');
+    }
+    reset() {
+      if (!this.card) return false;
+      this.card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      this.$('.shine').style.setProperty('--x', '50%');
+      this.$('.shine').style.setProperty('--y', '50%');
+      return true;
+    }
+  }
+  define('vfx-tilt-card', C);
+})();
