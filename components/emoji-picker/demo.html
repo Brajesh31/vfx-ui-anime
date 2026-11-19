@@ -1,2 +1,24 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime Emoji Picker</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 9px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}</style><script src="index.js"></script></head><body><main><h1>VFX UI Anime Emoji Picker</h1><p>Standalone preview. Try the control and read its README for the complete API.</p><div class="stage"><vfx-emoji-picker value="✨"></vfx-emoji-picker></div><p><a href="../../gallery/">← Back to component gallery</a></p></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emoji Picker Demo · VFX UI Anime</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;justify-items:center;padding:24px 8px}.result{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid #e5e0f5;border-radius:10px;background:#faf9ff}.result strong{font-size:28px}.result span{color:#7771a8;font-size:12px}a{color:#6c62be}
+</style>
+<script src="index.js"></script>
+</head>
+<body><main>
+<h1>😀 Emoji Picker</h1>
+<p>Search by emoji, descriptive name, or keyword. Combine search with category filters. Arrow keys move through the visible emoji buttons.</p>
+<div class="stage">
+<vfx-emoji-picker id="picker" value="✨"></vfx-emoji-picker>
+<div class="result" aria-live="polite"><strong id="chosen">✨</strong><span id="name">Selected emoji</span></div>
+</div>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
+</main>
+<script>
+const picker=document.querySelector('#picker'),chosen=document.querySelector('#chosen'),name=document.querySelector('#name');
+picker.addEventListener('select',e=>{chosen.textContent=e.detail.emoji;name.textContent=e.detail.name+' · '+e.detail.category;});
+</script>
+</body></html>
