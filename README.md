@@ -2,7 +2,9 @@
 
 **Anime-impact motion for real interface controls.**
 
-VFX UI Anime is a dependency-free Web Component collection. The original 11 adapted component types are retained with their spring behavior, painted toggle sequence, sound-effect artwork, impact effects, and standalone demos. Seventy-one additional controls extend the same design and interaction language.
+VFX UI Anime is a dependency-free Web Component collection featuring expressive spring motion, impact effects, illustrated feedback, and standalone demos.
+
+The collection contains 82 component types and 83 live gallery demonstrations.
 
 **Current library: 82 component types and 83 live gallery demos.** The gallery includes primary and secondary Button examples.
 
