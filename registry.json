@@ -1557,7 +1557,7 @@
       "name": "particle-field",
       "type": "registry:file",
       "title": "VFX UI Anime Particle Field",
-      "description": "Ambient canvas particle animation. One file, no dependencies.",
+      "description": "Responsive canvas particle field with bounded count, speed and color properties, resize cleanup, and reduced-motion freeze. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "particle-field",
@@ -1577,7 +1577,7 @@
       "name": "marquee",
       "type": "registry:file",
       "title": "VFX UI Anime Marquee",
-      "description": "Looping content marquee with pause-on-hover and reduced-motion support. One file, no dependencies.",
+      "description": "Looping slot-content marquee with inert duplicate track, focus/hover pause, live slot updates, and reduced-motion support. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "marquee",
@@ -1597,7 +1597,7 @@
       "name": "scroll-reveal",
       "type": "registry:file",
       "title": "VFX UI Anime Scroll Reveal",
-      "description": "Viewport-triggered content reveal with observer cleanup. One file, no dependencies.",
+      "description": "Intersection Observer reveal with live slotted children, configurable repeat mode, reveal/conceal events, and reconnect cleanup. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "scroll-reveal",
@@ -1617,7 +1617,7 @@
       "name": "animated-counter",
       "type": "registry:file",
       "title": "VFX UI Anime Animated Counter",
-      "description": "Animated numeric counter with completion event. One file, no dependencies.",
+      "description": "Locale-aware numeric counter with decimal formatting, finite-value guards, completion events, and reduced-motion finalization. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "animated-counter",
@@ -1637,7 +1637,7 @@
       "name": "confetti-button",
       "type": "registry:file",
       "title": "VFX UI Anime Confetti Button",
-      "description": "VFX celebration button with burst and shard effects. One file, no dependencies.",
+      "description": "Safe text-updating native button with celebration events, disabled guard, and reduced-motion effect suppression. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "confetti-button",
