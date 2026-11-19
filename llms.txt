@@ -144,11 +144,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 
 ## Advanced motion components
-- Particle Field: components/particle-field/, <vfx-particle-field>. Ambient canvas particle animation.
-- Marquee: components/marquee/, <vfx-marquee>. Looping content marquee with pause-on-hover and reduced-motion support.
-- Scroll Reveal: components/scroll-reveal/, <vfx-scroll-reveal>. Viewport-triggered content reveal with observer cleanup.
-- Animated Counter: components/animated-counter/, <vfx-animated-counter>. Animated numeric counter with completion event.
-- Confetti Button: components/confetti-button/, <vfx-confetti-button>. VFX celebration button with burst and shard effects.
+- Particle Field: components/particle-field/, <vfx-particle-field>. Responsive canvas field with live count/speed/color properties, pause, resize cleanup, and reduced-motion freeze.
+- Marquee: components/marquee/, <vfx-marquee>. Looping slot content with pause-on-hover/focus, inert duplicate content, dynamic slot updates, and reduced-motion support.
+- Scroll Reveal: components/scroll-reveal/, <vfx-scroll-reveal>. Configurable Intersection Observer reveal with dynamic slots, once/repeat modes, reveal/conceal events, and reconnect cleanup.
+- Animated Counter: components/animated-counter/, <vfx-animated-counter>. Locale/decimal formatting, finite numeric targets, completion announcements, and reduced-motion finalization.
+- Confetti Button: components/confetti-button/, <vfx-confetti-button>. Safe label updates, celebrate event, disabled guard, and reduced-motion effect suppression.
 
 
 ## Quality and redesign standards
@@ -186,3 +186,6 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 ## Phase 12 media, editors, and 3D cards
 - docs/quality/PHASE-12-MEDIA-EDITORS-CARDS.md: Video Player, Markdown Editor, JSON Editor, 3D Tilt Card, and 3D Flip Card behavior, accessibility, media lifecycle, safe preview rendering, and browser regression coverage.
+
+## Phase 13 advanced motion and celebration components
+- docs/quality/PHASE-13-ADVANCED-MOTION.md: Particle Field, Marquee, Scroll Reveal, Animated Counter, and Confetti Button configuration, lifecycle, accessibility, and browser regression coverage.
