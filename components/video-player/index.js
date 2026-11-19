@@ -258,4 +258,171 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,520px)}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#211d3b;box-shadow:5px 6px 0 var(--vfx-soft)}video{display:block;width:100%;max-height:290px;background:#111}.bar{display:flex;align-items:center;gap:10px;padding:8px;color:#fff}button{border:1px solid #aaa;border-radius:7px;background:#393451;color:white;padding:6px 10px}.time{font:10px monospace}';}render(){return '<section class="box"><video playsinline preload="metadata"></video><div class="bar"><button type="button">▶</button><span class="time">0:00 / 0:00</span></div></section>';}setup(){this.video=this.$('video');this.video.src=this.getAttribute('src')||'';this.video.poster=this.getAttribute('poster')||'';this.$('button').addEventListener('click',()=>this.toggle());this.video.addEventListener('timeupdate',()=>this.paint());this.video.addEventListener('loadedmetadata',()=>this.paint());}get playing(){return !this.video.paused;}async toggle(){if(this.video.paused){try{await this.video.play();this.emit('play',{});}catch{this.emit('error',{reason:'source unavailable'});}}else{this.video.pause();this.emit('pause',{});}this.$('button').textContent=this.video.paused?'▶':'Ⅱ';}fmt(n){return Number.isFinite(n)?Math.floor(n/60)+':'+String(Math.floor(n%60)).padStart(2,'0'):'0:00';}paint(){this.$('.time').textContent=this.fmt(this.video.currentTime)+' / '+this.fmt(this.video.duration);}}define('vfx-video-player',C);})();
+(() => {
+  const { Base, define, clamp } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['src', 'poster', 'label', 'disabled', 'muted', 'loop', 'preload']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,600px);min-width:0}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#211d3b;box-shadow:5px 6px 0 var(--vfx-soft)}video{display:block;width:100%;max-height:360px;aspect-ratio:16/9;object-fit:contain;background:#111}video:focus-visible{outline:3px solid #ff70b0;outline-offset:-3px}.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px;color:#fff}.bar button{flex:none;border:1px solid #aaa;border-radius:7px;background:#393451;color:white;padding:6px 9px;font:inherit;font-size:11px;cursor:pointer}.bar button:disabled{opacity:.45;cursor:not-allowed}.seek{flex:1;min-width:90px;accent-color:#b6aaff}.time{font:10px/1.3 ui-monospace,monospace;white-space:nowrap}.status{padding:0 10px 8px;min-height:1em;color:#ded9f5;font-size:10px}.status.error{color:#ffb7cb}';
+    }
+    render() {
+      return '<section class="box"><video playsinline preload="metadata" aria-label="Video player"></video><div class="bar"><button class="play" type="button" aria-label="Play video">▶</button><span class="time">0:00 / 0:00</span><input class="seek" type="range" min="0" max="1000" value="0" aria-label="Seek video" disabled><button class="mute" type="button" aria-label="Mute video">Mute</button><button class="fullscreen" type="button" aria-label="Enter fullscreen">⛶</button></div><div class="status" role="status" aria-live="polite">Add a media source to play video.</div></section>';
+    }
+    setup() {
+      this.video = this.$('video');
+      this._onPlay = () => { this._paint(); this.$('.status').textContent = ''; this.emit('play', { currentTime: this.currentTime }); };
+      this._onPause = () => { this._paint(); this.emit('pause', { currentTime: this.currentTime }); };
+      this._onEnded = () => { this._paint(); this.emit('ended', { currentTime: this.currentTime }); };
+      this._onTime = () => { this._paint(); this.emit('timeupdate', { currentTime: this.currentTime, duration: this.duration }); };
+      this._onMetadata = () => { this._paint(); this.$('.status').textContent = ''; this.emit('loadedmetadata', { duration: this.duration }); };
+      this._onError = () => {
+        this._paint();
+        this.$('.status').textContent = 'Unable to load this video source.';
+        this.$('.status').classList.add('error');
+        this.emit('error', { code: this.video.error?.code || 0, reason: 'media source unavailable' });
+      };
+      this.video.addEventListener('play', this._onPlay);
+      this.video.addEventListener('pause', this._onPause);
+      this.video.addEventListener('ended', this._onEnded);
+      this.video.addEventListener('timeupdate', this._onTime);
+      this.video.addEventListener('loadedmetadata', this._onMetadata);
+      this.video.addEventListener('durationchange', this._onMetadata);
+      this.video.addEventListener('error', this._onError);
+      this.video.addEventListener('volumechange', () => this._paint());
+      this.$('.play').addEventListener('click', () => this.toggle());
+      this.$('.seek').addEventListener('input', (event) => this.seek(Number(event.target.value) / 1000));
+      this.$('.mute').addEventListener('click', () => this.toggleMuted());
+      this.$('.fullscreen').addEventListener('click', () => this.toggleFullscreen());
+      this.video.addEventListener('click', () => { if (!this.disabled && this.src) this.toggle(); });
+      this._syncAttributes();
+      this._syncDisabled();
+      this._paint();
+    }
+    disconnectedCallback() {
+      if (this.video && !this.video.paused) this.video.pause();
+      super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'src') this._loadSource(newValue);
+      if (name === 'poster') this.video.poster = newValue || '';
+      if (name === 'label') this.video.setAttribute('aria-label', newValue || 'Video player');
+      if (name === 'muted') { this.video.muted = this.hasAttribute('muted'); this._paint(); }
+      if (name === 'loop') this.video.loop = this.hasAttribute('loop');
+      if (name === 'preload') this.video.preload = newValue || 'metadata';
+      if (name === 'disabled') this._syncDisabled();
+    }
+    get src() { return this.getAttribute('src') || ''; }
+    set src(value) { if (value) this.setAttribute('src', String(value)); else this.removeAttribute('src'); }
+    get poster() { return this.getAttribute('poster') || ''; }
+    set poster(value) { if (value) this.setAttribute('poster', String(value)); else this.removeAttribute('poster'); }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get playing() { return Boolean(this.video && !this.video.paused && !this.video.ended); }
+    get currentTime() { return Number.isFinite(this.video?.currentTime) ? this.video.currentTime : 0; }
+    set currentTime(value) { this.seekTime(value); }
+    get duration() { return Number.isFinite(this.video?.duration) && this.video.duration > 0 ? this.video.duration : 0; }
+    get muted() { return Boolean(this.video?.muted); }
+    set muted(value) { this.toggleAttribute('muted', Boolean(value)); }
+    _syncAttributes() {
+      this.video.setAttribute('aria-label', this.getAttribute('label') || 'Video player');
+      this.video.preload = this.getAttribute('preload') || 'metadata';
+      this.video.muted = this.hasAttribute('muted');
+      this.video.loop = this.hasAttribute('loop');
+      if (this.getAttribute('poster')) this.video.poster = this.getAttribute('poster');
+      if (this.src) this._loadSource(this.src);
+    }
+    _loadSource(source) {
+      if (!this.video) return;
+      this.video.pause();
+      if (source) {
+        this.video.src = source;
+        this.video.load();
+        this.$('.status').classList.remove('error');
+        this.$('.status').textContent = 'Loading video…';
+      } else {
+        this.video.removeAttribute('src');
+        this.video.load();
+        this.$('.status').textContent = 'Add a media source to play video.';
+      }
+      this._paint();
+    }
+    _syncDisabled() {
+      if (!this.ready) return;
+      this.$$('.bar button').forEach((button) => { button.disabled = this.disabled; });
+      this.$('.seek').disabled = this.disabled || !this.duration;
+      if (this.disabled && this.video && !this.video.paused) this.video.pause();
+    }
+    fmt(value) {
+      if (!Number.isFinite(value) || value < 0) return '0:00';
+      const seconds = Math.floor(value), hours = Math.floor(seconds / 3600), minutes = Math.floor((seconds % 3600) / 60);
+      return hours ? hours + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0') : minutes + ':' + String(seconds % 60).padStart(2, '0');
+    }
+    _paint() {
+      if (!this.ready || !this.video) return;
+      const duration = this.duration, current = this.currentTime;
+      this.$('.time').textContent = this.fmt(current) + ' / ' + this.fmt(duration);
+      this.$('.seek').value = duration ? String(Math.round(clamp(current / duration, 0, 1) * 1000)) : '0';
+      this.$('.seek').disabled = this.disabled || !duration;
+      const playing = this.playing;
+      this.$('.play').textContent = playing ? 'Ⅱ' : '▶';
+      this.$('.play').setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
+      this.$('.mute').textContent = this.muted ? 'Unmute' : 'Mute';
+      this.$('.mute').setAttribute('aria-label', this.muted ? 'Unmute video' : 'Mute video');
+    }
+    async play() {
+      if (this.disabled) return false;
+      if (!this.src) {
+        this.$('.status').textContent = 'Add a media source before playing.';
+        this.$('.status').classList.add('error');
+        this.emit('error', { reason: 'missing source' });
+        return false;
+      }
+      try { await this.video.play(); return true; }
+      catch (error) {
+        this.$('.status').textContent = 'Playback could not start.';
+        this.$('.status').classList.add('error');
+        this.emit('error', { reason: error?.message || 'playback failed' });
+        return false;
+      }
+    }
+    pause() {
+      if (!this.video || this.video.paused) return false;
+      this.video.pause();
+      return true;
+    }
+    async toggle() { return this.playing ? this.pause() : this.play(); }
+    seek(percent) {
+      if (this.disabled || !this.duration || !Number.isFinite(Number(percent))) return false;
+      return this.seekTime(clamp(Number(percent), 0, 1) * this.duration);
+    }
+    seekTime(seconds) {
+      if (this.disabled || !this.duration || !Number.isFinite(Number(seconds))) return false;
+      this.video.currentTime = clamp(Number(seconds), 0, this.duration);
+      this._paint();
+      this.emit('seek', { currentTime: this.currentTime, duration: this.duration });
+      return true;
+    }
+    toggleMuted() {
+      if (this.disabled) return false;
+      this.video.muted = !this.video.muted;
+      this._paint();
+      this.emit('volumechange', { muted: this.muted });
+      return true;
+    }
+    async toggleFullscreen() {
+      if (this.disabled) return false;
+      try {
+        if (document.fullscreenElement === this.$('.box')) await document.exitFullscreen();
+        else if (this.$('.box').requestFullscreen) await this.$('.box').requestFullscreen();
+        else return false;
+        this.emit('fullscreenchange', { fullscreen: document.fullscreenElement === this.$('.box') });
+        return true;
+      } catch (error) {
+        this.emit('error', { reason: error?.message || 'fullscreen unavailable' });
+        return false;
+      }
+    }
+  }
+  define('vfx-video-player', C);
+})();
