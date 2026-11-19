@@ -1,2 +1,30 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime Date Range Picker</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 9px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}</style><script src="index.js"></script></head><body><main><h1>VFX UI Anime Date Range Picker</h1><p>Standalone preview. Try the control and read its README for the complete API.</p><div class="stage"><vfx-date-range-picker label="Booking period"></vfx-date-range-picker></div><p><a href="../../gallery/">← Back to component gallery</a></p></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VFX UI Anime Date Range Picker</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}.hint{font-size:12px;text-align:center}
+</style>
+<script src="index.js"></script>
+</head>
+<body>
+<main>
+<h1>🗓️ Date Range Picker</h1>
+<p>Choose both dates, try a quick preset, then submit the form to inspect the serialized date range.</p>
+<div class="stage">
+<form id="booking">
+<vfx-date-range-picker name="booking" label="Booking period" min="2026-01-01" max="2027-12-31" required></vfx-date-range-picker>
+<p><button type="submit">Inspect form value</button> <button type="reset">Reset</button></p>
+<output id="result" aria-live="polite"></output>
+</form>
+</div>
+<p class="hint">Calendar UI and locale follow the browser's native date input implementation.</p>
+<p><a href="../../gallery/">← Back to component gallery</a></p>
+</main>
+<script>
+document.querySelector('#booking').addEventListener('submit',event=>{event.preventDefault();document.querySelector('#result').textContent=new FormData(event.currentTarget).get('booking')||'No complete range';});
+</script>
+</body>
+</html>
