@@ -281,7 +281,7 @@ class VfxCalendar extends Base{
  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:11px;padding-top:9px;border-top:1px solid var(--vfx-track);color:var(--vfx-dim);font-size:11px}.clear{border:0;background:none;color:var(--vfx-acc);font:800 11px system-ui;cursor:pointer}`;
  render(){return `<section class="calendar" aria-label="Calendar"><header class="head"><strong class="month"></strong><div class="nav"><button class="prev" type="button" aria-label="Previous month">‹</button><button class="next" type="button" aria-label="Next month">›</button></div></header><div class="week" aria-hidden="true"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div><div class="days" role="grid" aria-label="Days"></div><footer class="foot"><span class="hint">Choose a date</span><button class="clear" type="button">Clear</button></footer></section>`;}
  get value(){return this.getAttribute('value')||'';}set value(v){if(v)this.setAttribute('value',v);else this.removeAttribute('value');}
- setup(){this.view=parse(this.value)||new Date();this.view=new Date(this.view.getFullYear(),this.view.getMonth(),1);this.grid=this.$('.days');
+ setup(){this.defaultValue=this.getAttribute('value')||'';this.view=parse(this.value)||new Date();this.view=new Date(this.view.getFullYear(),this.view.getMonth(),1);this.grid=this.$('.days');
  this.$('.prev').addEventListener('click',()=>this.move(-1));this.$('.next').addEventListener('click',()=>this.move(1));
  this.$('.clear').addEventListener('click',()=>this.choose(''));
  this.grid.addEventListener('click',e=>{const b=e.target.closest('button[data-date]');if(b&&!b.disabled)this.choose(b.dataset.date);});
