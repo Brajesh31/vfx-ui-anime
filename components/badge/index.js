@@ -285,7 +285,7 @@ class VfxBadge extends Base {
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue || !this.ready) return;
-    if (name === 'label') this.$('.label').textContent = newValue || '';
+    if (name === 'label') this.$('.label').textContent = newValue || this.textContent.trim() || 'Status';
     if (name === 'pulse') this.badge.dataset.pulse = String(this.hasAttribute('pulse'));
     if (name === 'status') {
       this.badge.dataset.status = newValue || 'info';

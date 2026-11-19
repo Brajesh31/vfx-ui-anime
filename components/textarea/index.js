@@ -264,25 +264,28 @@ const fx=window.VFXAnimeFX;
 const {Base,Spring,at,puff,lines,ticks,sfx}=fx;
 class VfxTextarea extends Base {
   static formAssociated=true;
+  static observedAttributes=['value','placeholder','rows','maxlength','required','disabled','label','hint'];
   static css=':host{display:block;width:290px;max-width:100%}.field{display:grid;gap:7px}.label{font-size:13px;font-weight:800;color:var(--vfx-ink)}textarea{display:block;width:100%;min-height:112px;max-height:360px;resize:vertical;padding:13px 14px;border:var(--vfx-bw) solid var(--vfx-ink);border-radius:var(--vfx-r);background:var(--vfx-card);box-shadow:var(--vfx-sh);line-height:1.5;outline:none}textarea:focus{border-color:var(--vfx-pri);box-shadow:6px 7px 0 var(--vfx-soft),0 0 0 2px var(--vfx-acc)}.foot{display:flex;justify-content:space-between;gap:10px;color:var(--vfx-dim);font-size:12px}.count{font-variant-numeric:tabular-nums}.count.near{color:var(--vfx-acc);font-weight:800}';
   constructor(){super();this._value='';this.spring=new Spring(1,520,17);this.lastSfx=0;}
   render(){return '<label class="field"><span class="label">'+fx.esc(this.getAttribute('label')||'Message')+'</span><textarea part="textarea" aria-label="'+fx.esc(this.getAttribute('label')||'Message')+'"></textarea><span class="foot"><span class="hint">'+fx.esc(this.getAttribute('hint')||'')+'</span><span class="count"></span></span></label>';}
   setup(){
     this.input=this.$('textarea');this.input.placeholder=this.getAttribute('placeholder')||'Write something…';
-    this.input.rows=+(this.getAttribute('rows')||4);this.max=+(this.getAttribute('maxlength')||0);if(this.max)this.input.maxLength=this.max;
+    this.input.rows=+(this.getAttribute('rows')||4);this.max=+(this.getAttribute('maxlength')||0);this.input.maxLength=this.max||-1;
     this.input.required=this.hasAttribute('required');this.input.disabled=this.hasAttribute('disabled');
     this.input.value=this.getAttribute('value')||'';this._value=this.input.value;this.update();
     this.input.addEventListener('input',()=>{this._value=this.input.value;this.spring.x=.92;this.spring.v=-1.2;this.update();this.emit('input',{value:this._value});const r=this.input.getBoundingClientRect();const n=this.input.selectionStart;const col=n%(Math.max(1,Math.floor(r.width/8)));puff(r.left+14+col*7,r.top+16+Math.min(4,Math.floor(n/40))*21,{size:3.5,n:2,vx:8,life:.28});if(performance.now()-this.lastSfx>950){this.lastSfx=performance.now();ticks(r.right-12,r.top+13,{n:2,r:4,len:4,life:.2});}});
     this.input.addEventListener('change',()=>this.emit('change',{value:this._value}));
-    this.input.addEventListener('blur',()=>{if(this.hasAttribute('required'))this.internals.setValidity(this._value?{}:{valueMissing:true},'Enter a value',this.input);});
+    this.input.addEventListener('blur',()=>this.validate());
     this.input.addEventListener('focus',()=>{if(this.internals)this.internals.setValidity({});});
     this.resize();
   }
   get value(){return this._value;}
   set value(v){this._value=String(v??'');if(this.input){this.input.value=this._value;this.update();}}
-  update(){if(!this.input)return;if(this.internals)this.internals.setFormValue(this.hasAttribute('disabled')?null:this._value);const c=this.$('.count');if(c){c.textContent=this.max?this._value.length+' / '+this.max:this._value.length+' characters';c.classList.toggle('near',!!this.max&&this._value.length>=this.max*.85);}this.resize();}
+  validate(){if(!this.internals)return;const validity=this.input.validity;if(!validity.valid)this.internals.setValidity({valueMissing:validity.valueMissing,tooLong:validity.tooLong},this.input.validationMessage,this.input);else this.internals.setValidity({});}
+  update(){if(!this.input)return;if(this.internals){this.internals.setFormValue(this.hasAttribute('disabled')?null:this._value);this.validate();}const c=this.$('.count');if(c){c.textContent=this.max?this._value.length+' / '+this.max:this._value.length+' characters';c.classList.toggle('near',!!this.max&&this._value.length>=this.max*.85);}this.resize();}
   resize(){if(!this.input||!this.hasAttribute('auto-grow'))return;this.input.style.height='auto';this.input.style.height=Math.min(360,this.input.scrollHeight)+'px';}
   focus(){this.input?.focus();}
+  attributeChangedCallback(name,oldValue,newValue){if(!this.ready||oldValue===newValue)return;if(name==='value')this.value=newValue||'';if(name==='placeholder')this.input.placeholder=newValue||'';if(name==='rows')this.input.rows=Math.max(1,+(newValue||4));if(name==='maxlength'){this.max=Math.max(0,+(newValue||0));this.input.maxLength=this.max||-1;this.update();}if(name==='required')this.input.required=this.hasAttribute('required');if(name==='disabled'){this.input.disabled=this.hasAttribute('disabled');this.update();}if(name==='label')this.$('.label').textContent=newValue||'Message';if(name==='hint')this.$('.hint').textContent=newValue||'';}
   formResetCallback(){this.value=this.getAttribute('value')||'';}
   formDisabledCallback(disabled){if(this.input)this.input.disabled=disabled;}
   frame(dt){const s=this.spring.step(dt);if(this.input)this.input.style.transform='scale('+s.toFixed(3)+')';}
