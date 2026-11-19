@@ -314,7 +314,7 @@ class VfxEmojiPicker extends Base {
   this.$$('.category').forEach(b=>b.disabled=this.disabled);
   this.$$('.emoji').forEach(b=>b.disabled=this.disabled);
  }
- _escape(value) { return String(value??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }
+ _escape(value) { return String(value??'').replace(/[&<>"']/g,ch=>ch==='&'?'&amp;':ch==='<'?'&lt;':ch==='>'?'&gt;':ch==='"'?'&quot;':'&#39;'); }
  _paint() {
   if(!this.$('.grid'))return;
   const q=this.$('.search').value.trim().toLocaleLowerCase();
