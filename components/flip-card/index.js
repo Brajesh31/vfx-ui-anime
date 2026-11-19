@@ -269,7 +269,10 @@ const api = window.VFXAnimeFX = {
     render() {
       return '<button class="inner" type="button" aria-label="Reveal answer" aria-pressed="false"><span class="side front"><b></b><small>Activate to reveal</small></span><span class="side back" aria-hidden="true"><b></b><small>Activate to return</small></span></button>';
     }
-    setup() { this._sync(); }
+    setup() {
+      this.$('.inner').addEventListener('click', () => this.toggle());
+      this._sync();
+    }
     attributeChangedCallback(name, oldValue, newValue) {
       if (oldValue !== newValue && this.ready) this._sync();
     }
