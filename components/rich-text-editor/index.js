@@ -355,7 +355,7 @@ class VfxRichTextEditor extends Base {
   this.editor.setAttribute('aria-invalid',String(this.hasAttribute('required')&&!text));
   const flags={};let message='';
   if(this.hasAttribute('required')&&!text){flags.valueMissing=true;message='Enter some text.';}
-  this.internals?.setFormValue(this._isReadOnly()&&this.hasAttribute('disabled')?null:html);
+  this.internals?.setFormValue(this.hasAttribute('disabled')||this._formDisabled?null:html);
   this.internals?.setValidity(flags,message,this.editor);
   if(emit) {
    const detail={value:html,text,words};
