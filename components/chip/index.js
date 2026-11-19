@@ -309,7 +309,7 @@ class VfxChip extends Base {
     if (name === 'selected') this.btn.setAttribute('aria-pressed', String(this.hasAttribute('selected')));
     if (name === 'disabled') { this.btn.disabled = this.hasAttribute('disabled'); this.removeBtn.disabled = this.hasAttribute('disabled'); }
     if (name === 'removable') this.removeBtn.hidden = !this.hasAttribute('removable');
-    if (name === 'label') { this.$('.label').textContent = newValue || ''; this.removeBtn.setAttribute('aria-label', `Remove ${newValue || ''}`); }
+    if (name === 'label') { const label=newValue || this.textContent.trim() || 'Filter'; this.$('.label').textContent=label; this.removeBtn.setAttribute('aria-label', `Remove ${label}`); }
   }
   frame(dt) {
     const s = this.spring.step(dt);
