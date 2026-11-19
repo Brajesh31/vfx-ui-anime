@@ -61,8 +61,9 @@ jobs:
             echo "Tag v${RELEASE_VERSION} already exists. Refusing to bootstrap a second time."
             exit 1
           fi
-          if npm view "vfx-ui-anime@${RELEASE_VERSION}" version >/dev/null 2>&1; then
-            echo "vfx-ui-anime@${RELEASE_VERSION} is already published. Use the OIDC publish workflow for later versions."
+          if npm view "vfx-ui-anime" name >/dev/null 2>&1; then
+            echo "The npm package name vfx-ui-anime already exists. Refusing to bootstrap or overwrite it."
+            echo "Confirm package ownership. If you own it, configure npm Trusted Publisher and use the OIDC publish workflow."
             exit 1
           fi
 
