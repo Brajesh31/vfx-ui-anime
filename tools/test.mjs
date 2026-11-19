@@ -252,6 +252,53 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev(`document.querySelector('#phase5-cropper').remove()`);
 }
 
+
+{ await ev("(() => {const el=document.createElement('vfx-kanban');el.id='phase6-kanban';el.setAttribute('lanes','Todo|Doing|Done');el.setAttribute('items','a::Draft::0|b::Review::1');document.body.append(el);window.__phase6KanbanChanges=0;el.addEventListener('change',()=>window.__phase6KanbanChanges++);})()"); await sleep(80);
+  const moved=await ev("(() => {const el=document.querySelector('#phase6-kanban');return el.move('a',2)&&el.cards.find(x=>x.id==='a').lane===2&&window.__phase6KanbanChanges===1;})()");
+  const added=await ev("(() => {const el=document.querySelector('#phase6-kanban'),card=el.addCard('Ship',1,'c');let duplicate=false;try{el.addCard('Duplicate',0,'c');}catch{duplicate=true;}return card.id==='c'&&el.cards.length===3&&duplicate;})()");
+  await ev("document.querySelector('#phase6-kanban').setAttribute('items','')"); const emptyCards=await ev("document.querySelector('#phase6-kanban').cards.length===0");
+  await ev("document.querySelector('#phase6-kanban').setAttribute('lanes','')"); const emptyLanes=await ev("document.querySelector('#phase6-kanban').shadowRoot.querySelector('.empty')?.textContent.includes('No lanes')");
+  await ev("document.querySelector('#phase6-kanban').setAttribute('lanes','Backlog|Done')"); const restored=await ev("document.querySelector('#phase6-kanban').shadowRoot.querySelectorAll('.lane').length===2");
+  check('phase 6: Kanban moves/adds cards, rejects duplicate ids and handles live empty/replaced data',moved&&added&&emptyCards&&emptyLanes&&restored,JSON.stringify({moved,added,emptyCards,emptyLanes,restored})); await ev("document.querySelector('#phase6-kanban').remove()");
+}
+{ await ev("(() => {const el=document.createElement('vfx-data-grid');el.id='phase6-grid';el.setAttribute('columns','name:Name|role:Role');el.setAttribute('rows','1::Ari::Designer|2::Bea::Engineer|3::Cy::Artist|4::Dee::Writer');el.setAttribute('page-size','2');document.body.append(el);window.__phase6GridSelection=0;el.addEventListener('selection',()=>window.__phase6GridSelection++);})()"); await sleep(80);
+  const page=await ev("(() => {const el=document.querySelector('#phase6-grid');el.page=2;return el.page===2&&el.shadowRoot.querySelector('.range').textContent==='3–4 of 4 rows';})()");
+  await ev("(() => {const el=document.querySelector('#phase6-grid'),c=el.shadowRoot.querySelector('[data-row-check]');c.checked=true;c.dispatchEvent(new Event('change',{bubbles:true}));})()");
+  const selected=await ev("(() => {const el=document.querySelector('#phase6-grid');return el.selectedRows.length===1&&el.shadowRoot.querySelector('.selected').textContent==='1 selected'&&window.__phase6GridSelection===1;})()");
+  await ev("document.querySelector('#phase6-grid').setAttribute('columns','name:Display Name|status:State')");
+  const columns=await ev("(() => {const el=document.querySelector('#phase6-grid');return el.shadowRoot.querySelectorAll('thead [data-sort]').length===2&&el.shadowRoot.querySelector('thead').textContent.includes('Display Name')&&el.shadowRoot.querySelector('thead').textContent.includes('State');})()");
+  await ev("document.querySelector('#phase6-grid').setAttribute('rows','9::Eli::Analyst')");
+  const pruned=await ev("(() => {const el=document.querySelector('#phase6-grid');return el.selectedRows.length===0&&el.shadowRoot.querySelector('.selected').textContent==='0 selected'&&el.page===1;})()");
+  await ev("document.querySelector('#phase6-grid').setAttribute('rows','')");
+  const empty=await ev("(() => {const el=document.querySelector('#phase6-grid');return el.rows.length===0&&el.shadowRoot.querySelector('.range').textContent==='0 rows'&&el.shadowRoot.querySelector('.empty').textContent==='No matching rows';})()");
+  check('phase 6: Data Grid synchronizes columns/rows, selection, pagination and empty states',page&&selected&&columns&&pruned&&empty,JSON.stringify({page,selected,columns,pruned,empty})); await ev("document.querySelector('#phase6-grid').remove()");
+}
+{ await ev("(() => {const el=document.createElement('vfx-tree-view');el.id='phase6-tree';el.setAttribute('items','root::Project::-|src::Source::root|app::App.js::src');document.body.append(el);window.__phase6TreeSelects=0;el.addEventListener('select',()=>window.__phase6TreeSelects++);})()"); await sleep(80);
+  const right=await ev("(() => {const el=document.querySelector('#phase6-tree');el.collapseAll();const root=el.shadowRoot.querySelector('.node[data-id=\\\"root\\\"]');root.focus();root.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,composed:true,cancelable:true}));return el.shadowRoot.activeElement?.dataset.id==='src'&&el.shadowRoot.querySelector('.node[data-id=\\\"root\\\"]').getAttribute('aria-expanded')==='true';})()");
+  const selected=await ev("(() => {const el=document.querySelector('#phase6-tree'),node=el.shadowRoot.querySelector('.node[data-id=\\\"app\\\"]');node.focus();node.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,composed:true,cancelable:true}));return el.value==='app'&&window.__phase6TreeSelects===1;})()");
+  await ev("document.querySelector('#phase6-tree').setAttribute('items','')"); const empty=await ev("(() => {const el=document.querySelector('#phase6-tree');return el.items.length===0&&el.value===''&&el.shadowRoot.querySelector('.empty')!==null;})()");
+  await ev("document.querySelector('#phase6-tree').items=[{id:'root',label:'Root',parent:'-'},{id:'leaf',label:'Leaf',parent:'root'}]");
+  const property=await ev("(() => {const el=document.querySelector('#phase6-tree');return el.select('leaf')&&el.value==='leaf';})()");
+  check('phase 6: Tree View expands to its first child, selects by keyboard and handles empty/property data',right&&selected&&empty&&property,JSON.stringify({right,selected,empty,property})); await ev("document.querySelector('#phase6-tree').remove()");
+}
+{ await ev("(() => {const el=document.createElement('vfx-signature-pad');el.id='phase6-signature';document.body.append(el);window.__phase6SignatureExport=false;})()"); await sleep(80);
+  const drawn=await ev("(() => {const el=document.querySelector('#phase6-signature'),canvas=el.shadowRoot.querySelector('canvas');canvas.focus();for(const [key,code] of [[' ','Space'],['ArrowRight','ArrowRight'],['ArrowDown','ArrowDown'],['ArrowRight','ArrowRight'],[' ','Space']])canvas.dispatchEvent(new KeyboardEvent('keydown',{key,code,bubbles:true,composed:true,cancelable:true}));return el.hasSignature&&el.strokes[0].length>=3;})()");
+  await ev("document.querySelector('#phase6-signature').exportPNG().then(blob=>window.__phase6SignatureExport=!!blob&&blob.type==='image/png'&&blob.size>0)");
+  let exported=await ev("window.__phase6SignatureExport"); for(let i=0;i<15&&!exported;i++){await sleep(80);exported=await ev("window.__phase6SignatureExport");}
+  const undone=await ev("(() => {const el=document.querySelector('#phase6-signature');return el.undo()&&!el.hasSignature&&!el.undo();})()");
+  const cleared=await ev("(() => {const el=document.querySelector('#phase6-signature');el.strokes=[[{x:1,y:1}]];el._draw();return el.clear()&&!el.hasSignature&&!el.clear();})()");
+  check('phase 6: Signature Pad supports keyboard pen drawing, PNG export, undo and safe clearing',drawn&&exported&&undone&&cleared,JSON.stringify({drawn,exported,undone,cleared})); await ev("document.querySelector('#phase6-signature').remove()");
+}
+{ await ev("(() => {const el=document.createElement('vfx-before-after');el.id='phase6-comparison';document.body.append(el);window.__phase6CompareInputs=0;el.addEventListener('input',()=>window.__phase6CompareInputs++);window.__phase6CompareLoaded=false;el.addEventListener('image-load',()=>window.__phase6CompareLoaded=true);})()"); await sleep(80);
+  const value=await ev("(() => {const el=document.querySelector('#phase6-comparison'),range=el.shadowRoot.querySelector('input');range.value='72';range.dispatchEvent(new Event('input',{bubbles:true}));el.setAttribute('before-label','Original');el.setAttribute('after-label','Enhanced');el.value=NaN;return el.value===50&&window.__phase6CompareInputs===1&&el.shadowRoot.querySelector('.before-label').textContent==='Original'&&el.shadowRoot.querySelector('.after-label').textContent==='Enhanced';})()");
+  await ev("(() => {const el=document.querySelector('#phase6-comparison'),svg='<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" width=\\\"8\\\" height=\\\"8\\\"><rect width=\\\"8\\\" height=\\\"8\\\" fill=\\\"red\\\"/></svg>';el.setAttribute('before-src','data:image/svg+xml,'+encodeURIComponent(svg));})()");
+  let loaded=await ev("window.__phase6CompareLoaded"); for(let i=0;i<20&&!loaded;i++){await sleep(80);loaded=await ev("window.__phase6CompareLoaded");}
+  const image=await ev("(() => {const el=document.querySelector('#phase6-comparison');return !!el.shadowRoot.querySelector('.before .comparison-image')&&el.shadowRoot.querySelector('.before .scene').hidden;})()");
+  await ev("document.querySelector('#phase6-comparison').removeAttribute('before-src')");
+  const fallback=await ev("(() => {const el=document.querySelector('#phase6-comparison');return !el.shadowRoot.querySelector('.before .comparison-image')&&!el.shadowRoot.querySelector('.before .scene').hidden;})()");
+  check('phase 6: Before/After handles live labels and values, asynchronous image loading and fallback',value&&loaded&&image&&fallback,JSON.stringify({value,loaded,image,fallback})); await ev("document.querySelector('#phase6-comparison').remove()");
+}
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
