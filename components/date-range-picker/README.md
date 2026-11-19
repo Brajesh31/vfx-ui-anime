@@ -1,46 +1,66 @@
-# 🗓️ VFX Date Range Picker
+# 🗓️ VFX UI Anime Date Range Picker
 
-A form-associated start/end date control with quick presets, inclusive date ranges, chronological validation and configurable minimum/maximum dates.
+A start/end date control with chronological validation, minimum and maximum bounds, quick presets, clear action, live feedback, and native form association.
 
 ## Quick start
 
 ```html
 <script src="/components/date-range-picker/index.js"></script>
+
 <form>
   <vfx-date-range-picker
     name="booking"
     label="Booking period"
-    min="2026-11-01"
+    min="2026-11-20"
     max="2026-12-31"
+    start="2026-11-20"
+    end="2026-11-27"
     required
   ></vfx-date-range-picker>
-  <button type="submit">Book dates</button>
+  <button type="submit">Continue</button>
 </form>
 ```
 
-## Public API
+## API
 
-| API | Description |
-|---|---|
-| `value` | Read `{ start, end }`, or set an object or a `YYYY-MM-DD/YYYY-MM-DD` string |
-| `valid` | Reports required, chronological and min/max validity |
-| `preset("7")` | Select today through the next six days, inclusive |
-| `preset("30")` | Select today through the next 29 days, inclusive |
-| `preset("month")` | Select the current calendar month |
-| `clear()` | Clear both dates unless disabled |
+| Member | Type | Description |
+|---|---|---|
+| `value` | object or string | Read `{ start, end }`; set with the same object or a `YYYY-MM-DD/YYYY-MM-DD` string. |
+| `valid` | boolean | True when the range satisfies ordering, required, and bound constraints. |
+| `preset(kind)` | method | Selects `7`, `30`, or `month`. Presets include the current date. |
+| `clear()` | method | Clears both dates. Returns false when disabled. |
 
-Attributes: `name`, `label`, `start`, `end`, `min`, `max`, `required` and `disabled`. Date, label and disabled constraints synchronize while the component is connected. Form reset restores the `start` and `end` attributes.
+### Attributes
 
-## Events
+| Attribute | Default | Description |
+|---|---|---|
+| `name` | empty | Form field name. |
+| `label` | `Choose date range` | Visible control label. |
+| `start`, `end` | empty | Initial dates and reset values, in ISO date format. |
+| `min`, `max` | none | Inclusive ISO date bounds. |
+| `required` | false | Requires both dates. |
+| `disabled` | false | Disables fields, presets, and clear action. |
 
-- `input`: date editing detail includes `start`, `end`, `valid`, `complete` and `value`.
-- `change`: emitted when a valid selection is committed.
-- `invalid`: emitted when a committed selection violates the range order or bounds.
+### Events
 
-## Form behavior
+- `input`: reports interim date edits with `start`, `end`, `valid`, `complete`, and `value`.
+- `change`: reports a committed valid selection.
+- `invalid`: reports an invalid committed selection.
 
-A complete valid range submits as `YYYY-MM-DD/YYYY-MM-DD`. Incomplete optional ranges submit an empty value. A required range must contain both dates. The end date cannot precede the start date. Min/max constraints apply to both endpoints.
+Events bubble and cross the shadow boundary.
 
-## Notes
+## Form behavior and validation
 
-The component uses the browser's native date inputs. Calendar presentation and locale are controlled by the user's browser and operating system.
+A complete valid range is submitted as `YYYY-MM-DD/YYYY-MM-DD`. Incomplete or invalid ranges submit an empty value. Required, chronological, minimum, and maximum constraints participate in form validity. Native date inputs provide their platform date-entry behavior.
+
+## Accessibility and responsive behavior
+
+Both fields have explicit labels and connect to a live validation summary. Invalid state is exposed on the affected input. Buttons remain keyboard-operable, and the field layout collapses to one column on narrow screens.
+
+## Limits
+
+The component handles local calendar dates, not time zones or instants. Applications that convert these dates to timestamps must define their own time-zone policy. Presets use the user's local calendar date.
+
+## Standalone behavior
+
+The component is dependency-free and can be loaded with a plain script tag.
