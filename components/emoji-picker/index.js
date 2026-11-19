@@ -261,12 +261,80 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define,esc,at,burst}=window.VFXAnimeFX;
 class VfxEmojiPicker extends Base {
- static get css(){return ':host{display:block;width:min(100%,350px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.head{padding:11px;border-bottom:1px solid #eeeafa}.search{box-sizing:border-box;width:100%;padding:9px 11px;border:1.5px solid #ded9f3;border-radius:8px;font:12px system-ui}.categories{display:flex;gap:5px;overflow:auto;padding:9px 10px;border-bottom:1px solid #eeeafa}.category{flex:none;padding:6px 8px;border:1px solid #e2ddf5;border-radius:99px;background:#fff;color:#827bb8;font-size:10px;font-weight:850;cursor:pointer}.category[aria-pressed=true]{background:#f0edff;border-color:var(--vfx-ink);color:var(--vfx-ink)}.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;max-height:210px;overflow:auto;padding:10px}.emoji{aspect-ratio:1;border:0;border-radius:8px;background:#fff;font-size:22px;cursor:pointer}.emoji:hover,.emoji:focus-visible{background:#fff0f7;transform:scale(1.08)}.foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}.chosen{font-size:22px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- _data(){return ['😀','😃','😄','😁','😆','🥹','😂','🤣','😊','😍','🥰','😎','🤔','🙌','👏','🙏','💪','🔥','✨','🎉','❤️','💜','💙','💚','💯','🚀','⭐','🌈','☀️','🌸','🍀','🎯','🎨','🎧','📚','💻','🧠','🏆','⚡','✅'];}
- render(){this._all=this._data();return '<section class="shell"><header class="head"><input class="search" type="search" placeholder="Search emoji…" aria-label="Search emoji"></header><nav class="categories"><button class="category" type="button" aria-pressed="true" data-category="All">All</button><button class="category" type="button" aria-pressed="false" data-category="Smile">Smile & people</button></nav><div class="grid" role="listbox" aria-label="Emoji choices"></div><footer class="foot"><span>Select an emoji</span><span class="chosen">🙂</span></footer></section>';}
- setup(){this._all=this._data();this._value=this.getAttribute('value')||'';this.$('.search').addEventListener('input',()=>this._paint());this.$('.categories').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(!b)return;this.$$('.category').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));this._paint();});this.$('.grid').addEventListener('click',e=>{const b=e.target.closest('[data-emoji]');if(!b)return;this.value=b.dataset.emoji;const p=at(b);burst(p.x,p.y,{r:22,spikes:8});this.emit('select',{emoji:this.value});this.emit('change',{value:this.value});});this.value=this._value;this._paint();}
- get value(){return this._value||'';}set value(v){this._value=String(v||'');if(this.$('.chosen'))this.$('.chosen').textContent=this._value||'🙂';}
- _paint(){const q=this.$('.search').value.trim(),list=this._all.filter(e=>!q||e.includes(q));this.$('.grid').innerHTML=list.map(e=>'<button class="emoji" type="button" data-emoji="'+esc(e)+'" role="option" aria-label="Select '+esc(e)+'">'+e+'</button>').join('')||'<span class="empty">No matches</span>';}
+ static get observedAttributes() { return ['value','placeholder','disabled']; }
+ static get css() { return ':host{display:block;width:min(100%,390px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:15px;background:var(--vfx-card,#fff);box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;gap:7px;padding:11px;border-bottom:1px solid #eeeafa}.search{box-sizing:border-box;width:100%;min-width:0;padding:9px 11px;border:1.5px solid #ded9f3;border-radius:8px;font:12px system-ui}.search:disabled{opacity:.55}.categories{display:flex;gap:5px;overflow:auto;padding:9px 10px;border-bottom:1px solid #eeeafa;scrollbar-width:thin}.category{flex:none;padding:6px 9px;border:1px solid #e2ddf5;border-radius:99px;background:#fff;color:#827bb8;font-size:10px;font-weight:850;cursor:pointer}.category[aria-pressed=true]{background:#f0edff;border-color:var(--vfx-ink);color:var(--vfx-ink)}.category:disabled{opacity:.4;cursor:not-allowed}.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;max-height:235px;overflow:auto;padding:10px}.emoji{display:grid;place-items:center;min-width:0;aspect-ratio:1;border:0;border-radius:8px;background:#fff;font-size:clamp(18px,5vw,23px);cursor:pointer;transition:background .14s,transform .14s}.emoji:hover,.emoji:focus-visible{background:#fff0f7;transform:scale(1.06)}.emoji[aria-pressed=true]{background:#f0edff;box-shadow:inset 0 0 0 1.5px var(--vfx-pri)}.emoji:disabled{opacity:.35;cursor:not-allowed;transform:none}.empty{grid-column:1/-1;padding:25px 8px;text-align:center;color:var(--vfx-dim);font-size:11px}.foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}.chosen{font-size:22px;min-width:28px;text-align:center}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:330px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}}'; }
+ _data() {
+  return [
+   ['😀','Grinning face','Smile',['happy','smile','grin']],['😃','Grinning face with big eyes','Smile',['happy','smile']],['😄','Grinning face smiling eyes','Smile',['happy','laugh']],['😁','Beaming face','Smile',['happy','grin']],['😆','Squinting face','Smile',['laugh','happy']],['🥹','Holding back tears','Smile',['touched','emotion']],['😂','Face with tears of joy','Smile',['laugh','lol']],['🤣','Rolling on the floor laughing','Smile',['rofl','laugh']],['😊','Smiling face with smiling eyes','Smile',['blush','happy']],['😍','Heart eyes','Smile',['love','like']],['🥰','Smiling face with hearts','Smile',['love','affection']],['😎','Smiling face with sunglasses','Smile',['cool','sunglasses']],['🤔','Thinking face','Smile',['think','hmm']],['😴','Sleeping face','Smile',['sleep','tired']],['😭','Loudly crying face','Smile',['cry','sad']],['😡','Angry face','Smile',['angry','mad']],
+   ['👋','Waving hand','People',['hello','wave','hi']],['🙌','Raising hands','People',['celebrate','yay']],['👏','Clapping hands','People',['applause','clap']],['🙏','Folded hands','People',['please','thanks','pray']],['💪','Flexed biceps','People',['strong','muscle']],['🤝','Handshake','People',['deal','agreement']],['👍','Thumbs up','People',['yes','like','approve']],['👎','Thumbs down','People',['no','dislike']],['🫶','Heart hands','People',['love','support']],
+   ['🔥','Fire','Nature',['hot','flame','trending']],['✨','Sparkles','Nature',['shine','magic','star']],['⭐','Star','Nature',['favorite','rating']],['🌈','Rainbow','Nature',['color','pride']],['☀️','Sun','Nature',['weather','bright','day']],['🌸','Cherry blossom','Nature',['flower','spring']],['🍀','Four leaf clover','Nature',['luck','plant']],['🌙','Crescent moon','Nature',['night','sleep']],['🌻','Sunflower','Nature',['flower','plant']],['🌊','Wave','Nature',['water','ocean']],
+   ['🍕','Pizza','Food',['food','cheese']],['🍔','Hamburger','Food',['food','burger']],['🍟','French fries','Food',['food','potato']],['🍩','Doughnut','Food',['dessert','sweet']],['☕','Hot beverage','Food',['coffee','tea']],['🍉','Watermelon','Food',['fruit','summer']],
+   ['⚽','Soccer ball','Activities',['sport','football']],['🏆','Trophy','Activities',['win','award']],['🎯','Bullseye','Activities',['target','goal']],['🎨','Artist palette','Activities',['art','paint']],['🎧','Headphone','Activities',['music','audio']],['🎮','Video game','Activities',['gaming','play']],['🎉','Party popper','Activities',['party','celebrate']],['🚀','Rocket','Travel',['space','launch','startup']],['✈️','Airplane','Travel',['travel','flight']],['🚗','Car','Travel',['drive','vehicle']],
+   ['📚','Books','Objects',['read','study','library']],['💻','Laptop','Objects',['computer','code','tech']],['📱','Mobile phone','Objects',['phone','device']],['🧠','Brain','Objects',['mind','smart','idea']],['💡','Light bulb','Objects',['idea','inspiration']],['📝','Memo','Objects',['note','write']],['🔒','Locked','Objects',['secure','privacy']],
+   ['✅','Check mark button','Symbols',['done','success','yes']],['❌','Cross mark','Symbols',['no','error']],['⚡','High voltage','Symbols',['energy','fast']],['❤️','Red heart','Symbols',['love','heart']],['💜','Purple heart','Symbols',['love','heart']],['💙','Blue heart','Symbols',['love','heart']],['💚','Green heart','Symbols',['love','heart']],['💯','Hundred points','Symbols',['perfect','score']],['♻️','Recycling symbol','Symbols',['reuse','environment']]
+  ].map(([emoji,name,category,keywords])=>({emoji,name,category,keywords}));
+ }
+ _categories() { return ['All','Smile','People','Nature','Food','Activities','Travel','Objects','Symbols']; }
+ render() {
+  this._all=this._data();
+  return '<section class="shell"><header class="head"><input class="search" type="search" placeholder="Search by emoji or keyword…" aria-label="Search emoji"></header><nav class="categories" aria-label="Emoji categories"></nav><div class="grid" role="group" aria-label="Emoji choices"></div><footer class="foot"><span class="selection-label">Select an emoji</span><span class="chosen" aria-label="Selected emoji"></span></footer></section>';
+ }
+ setup() {
+  this._all=this._data();this._value=this.getAttribute('value')||'';this._category='All';
+  this.$('.search').addEventListener('input',()=>this._paint());
+  this.$('.categories').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(!b||b.disabled)return;this._category=b.dataset.category;this._paintCategories();this._paint();});
+  this.$('.grid').addEventListener('click',e=>{const b=e.target.closest('[data-emoji]');if(!b||b.disabled)return;this.selectEmoji(b.dataset.emoji);const p=at(b);if(!this.calm)burst(p.x,p.y,{r:20,spikes:7});});
+  this.$('.grid').addEventListener('keydown',e=>this._onGridKey(e));
+  this._paintCategories();this._syncDisabled();this._paint();
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='value')this.value=newValue||'';
+  if(name==='placeholder')this.$('.search').placeholder=newValue||'Search by emoji or keyword…';
+  if(name==='disabled'){this._syncDisabled();this._paint();}
+ }
+ get disabled() { return this.hasAttribute('disabled'); }
+ get value() { return this._value||''; }
+ set value(v) { this._value=String(v??'');if(this.$('.chosen')){this.$('.chosen').textContent=this._value;this.$('.selection-label').textContent=this._value?'Selected':'Select an emoji';this.$('.grid').querySelectorAll('[data-emoji]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.emoji===this._value)));} }
+ get items() { return this._all.map(x=>({...x,keywords:x.keywords.slice()})); }
+ selectEmoji(emoji) {
+  if(this.disabled)return false;
+  const item=this._all.find(x=>x.emoji===String(emoji));if(!item)return false;
+  this.value=item.emoji;
+  const detail={emoji:item.emoji,value:item.emoji,name:item.name,category:item.category};
+  this.emit('select',detail);this.emit('change',detail);return true;
+ }
+ _paintCategories() {
+  this.$('.categories').innerHTML=this._categories().map(c=>'<button class="category" type="button" data-category="'+c+'" aria-pressed="'+String(c===this._category)+'">'+(c==='Smile'?'Faces':c)+'</button>').join('');
+  this.$$('.category').forEach(b=>b.disabled=this.disabled);
+ }
+ _syncDisabled() {
+  if(!this.$('.search'))return;
+  this.$('.search').disabled=this.disabled;
+  this.$$('.category').forEach(b=>b.disabled=this.disabled);
+  this.$$('.emoji').forEach(b=>b.disabled=this.disabled);
+ }
+ _paint() {
+  if(!this.$('.grid'))return;
+  const q=this.$('.search').value.trim().toLocaleLowerCase();
+  const list=this._all.filter(item=>(this._category==='All'||item.category===this._category)&&(!q||item.emoji.includes(q)||item.name.toLocaleLowerCase().includes(q)||item.keywords.some(k=>k.includes(q))));
+  this.$('.grid').innerHTML=list.length?list.map(item=>'<button class="emoji" type="button" data-emoji="'+esc(item.emoji)+'" aria-label="'+esc(item.name)+' '+esc(item.emoji)+'" aria-pressed="'+String(item.emoji===this.value)+'" title="'+esc(item.name)+'">'+item.emoji+'</button>').join(''):'<div class="empty" role="status">No matching emoji.</div>';
+  this._syncDisabled();
+ }
+ _onGridKey(e) {
+  const button=e.target.closest('[data-emoji]');if(!button)return;
+  const buttons=[...this.$$('.emoji')],index=buttons.indexOf(button);if(index<0)return;
+  let next=index;
+  if(e.key==='ArrowRight')next=Math.min(buttons.length-1,index+1);
+  else if(e.key==='ArrowLeft')next=Math.max(0,index-1);
+  else if(e.key==='ArrowDown')next=Math.min(buttons.length-1,index+7);
+  else if(e.key==='ArrowUp')next=Math.max(0,index-7);
+  else if(e.key==='Home')next=0;
+  else if(e.key==='End')next=buttons.length-1;
+  else if(e.key==='Escape'){this.$('.search').focus();return;}
+  else return;
+  e.preventDefault();buttons[next]?.focus();
+ }
 }
 define('vfx-emoji-picker',VfxEmojiPicker);
 })();
