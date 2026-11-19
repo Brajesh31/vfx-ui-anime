@@ -300,6 +300,81 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   check('phase 6: Before/After handles live labels and values, asynchronous image loading and fallback',value&&loaded&&image&&fallback,JSON.stringify({value,loaded,image,fallback})); await ev("document.querySelector('#phase6-comparison').remove()");
 }
 
+
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-multi-select');el.id='phase7-multi';el.setAttribute('name','frameworks');el.setAttribute('options','a::Alpha|b::Beta|c::Gamma');el.setAttribute('value','a');el.setAttribute('required','');form.append(el);document.body.append(form);window.__phase7Multi=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase7-multi'),form=window.__phase7Multi;return el.value.join('|')==='a'&&new FormData(form).get('frameworks')==='a'&&form.checkValidity();})()");
+  await ev("document.querySelector('#phase7-multi').setAttribute('options','b::Beta|d::Delta|b::Duplicate')");
+  const pruned=await ev("(() => {const el=document.querySelector('#phase7-multi');return el.value.length===0&&el.selectedOptions.length===0&&el.shadowRoot.querySelectorAll('.option').length===2;})()");
+  await ev("document.querySelector('#phase7-multi').setAttribute('value','b')");
+  const liveValue=await ev("(() => {const el=document.querySelector('#phase7-multi');return el.value.join('|')==='b'&&new FormData(window.__phase7Multi).get('frameworks')==='b'&&window.__phase7Multi.checkValidity();})()");
+  await ev("(() => {const el=document.querySelector('#phase7-multi');el.open();el.shadowRoot.querySelector('.search').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true,composed:true,cancelable:true}));el.shadowRoot.activeElement.dispatchEvent(new KeyboardEvent('keydown',{key:'End',bubbles:true,composed:true,cancelable:true}));el.shadowRoot.activeElement.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,composed:true,cancelable:true}));})()");
+  const keyboard=await ev("(() => {const el=document.querySelector('#phase7-multi');return el.value.join('|')==='b|d'&&el.shadowRoot.querySelector('[data-value=\"d\"]').getAttribute('aria-selected')==='true';})()");
+  await ev("document.querySelector('#phase7-multi').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase7-multi');return !el.open()&&!el.toggleValue('b')&&el.shadowRoot.querySelector('.trigger').disabled;})()");
+  check('phase 7: Multi Select synchronizes options and values, filters duplicate ids, supports keyboard selection, form validity and disabled guards',initial&&pruned&&liveValue&&keyboard&&disabled,JSON.stringify({initial,pruned,liveValue,keyboard,disabled}));
+  await ev("window.__phase7Multi.remove();window.__phase7Multi=null");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-time-picker');el.id='phase7-time';el.setAttribute('name','meeting');el.setAttribute('value','09:30');el.setAttribute('min','09:00');el.setAttribute('max','10:00');el.setAttribute('step','15');el.setAttribute('required','');form.append(el);document.body.append(form);window.__phase7Time=form;})()"); await sleep(80);
+  const inRange=await ev("(() => {const el=document.querySelector('#phase7-time');return el.value==='09:30'&&el.adjust(-15)&&el.value==='09:15'&&new FormData(window.__phase7Time).get('meeting')==='09:15';})()");
+  const bounded=await ev("(() => {const el=document.querySelector('#phase7-time'),blocked=el.adjust(-30);return blocked===false&&el.value==='09:15';})()");
+  await ev("document.querySelector('#phase7-time').setTime('10:15',false)");
+  const overflow=await ev("(() => {const el=document.querySelector('#phase7-time');return !window.__phase7Time.checkValidity()&&el.internals?.validity?.rangeOverflow===true;})()");
+  await ev("document.querySelector('#phase7-time').setAttribute('max','10:30')");
+  const liveBounds=await ev("(() => {const el=document.querySelector('#phase7-time');return window.__phase7Time.checkValidity()&&new FormData(window.__phase7Time).get('meeting')==='10:15';})()");
+  await ev("document.querySelector('#phase7-time').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase7-time');return el.shadowRoot.querySelector('input').disabled&&el.shadowRoot.querySelector('.up').disabled;})()");
+  await ev("document.querySelector('#phase7-time').removeAttribute('disabled');window.__phase7Time.reset()");
+  const reset=await ev("document.querySelector('#phase7-time').value==='09:30'");
+  check('phase 7: Time Picker enforces bounds and minute steps, updates form values, synchronizes attributes and resets safely',inRange&&bounded&&overflow&&liveBounds&&disabled&&reset,JSON.stringify({inRange,bounded,overflow,liveBounds,disabled,reset}));
+  await ev("window.__phase7Time.remove();window.__phase7Time=null");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-transfer-list');el.id='phase7-transfer';el.setAttribute('name','frameworks');el.setAttribute('items','a::Alpha|b::Beta|a::Duplicate|c::Gamma');el.setAttribute('value','b');form.append(el);document.body.append(form);window.__phase7Transfer=form;})()"); await sleep(80);
+  const normalised=await ev("(() => {const el=document.querySelector('#phase7-transfer');return el.items.length===3&&el.value.join('|')==='b'&&new FormData(window.__phase7Transfer).get('frameworks')==='b';})()");
+  await ev("(() => {const el=document.querySelector('#phase7-transfer');el.shadowRoot.querySelector('.left [data-id=\"a\"]').click();el.shadowRoot.querySelector('.add').click();})()");
+  const moved=await ev("(() => {const el=document.querySelector('#phase7-transfer');return el.value.join('|')==='a|b'&&new FormData(window.__phase7Transfer).get('frameworks')==='a,b';})()");
+  await ev("document.querySelector('#phase7-transfer').setAttribute('items','b::Beta|d::Delta')");
+  const dynamic=await ev("(() => {const el=document.querySelector('#phase7-transfer');return el.items.length===2&&el.value.join('|')==='b';})()");
+  await ev("document.querySelector('#phase7-transfer').items=[{id:'x',label:'Ex'},{id:'x',label:'Duplicate'},{id:'y',label:'Why'}];document.querySelector('#phase7-transfer').value=['y','missing']");
+  const property=await ev("(() => {const el=document.querySelector('#phase7-transfer');return el.items.length===2&&el.value.join('|')==='y';})()");
+  await ev("document.querySelector('#phase7-transfer').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase7-transfer'),before=el.value.join('|');return el.moveToSelected(true)===false&&el.value.join('|')===before&&el.shadowRoot.querySelector('.search').disabled;})()");
+  await ev("document.querySelector('#phase7-transfer').setAttribute('items','')");
+  const empty=await ev("(() => {const el=document.querySelector('#phase7-transfer');return el.items.length===0&&el.shadowRoot.querySelectorAll('.empty').length===2;})()");
+  check('phase 7: Transfer List normalizes items, synchronizes form and live data, moves selections, rejects stale ids and guards disabled/empty states',normalised&&moved&&dynamic&&property&&disabled&&empty,JSON.stringify({normalised,moved,dynamic,property,disabled,empty}));
+  await ev("window.__phase7Transfer.remove();window.__phase7Transfer=null");
+}
+{ await ev("(() => {const el=document.createElement('vfx-split-pane');el.id='phase7-split';el.setAttribute('value','42');el.setAttribute('min','30');document.body.append(el);})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase7-split'),d=el.shadowRoot.querySelector('.divider');return el.value===42&&d.getAttribute('aria-valuemin')==='30'&&d.getAttribute('aria-valuemax')==='70';})()");
+  await ev("document.querySelector('#phase7-split').value=95");
+  const clamped=await ev("document.querySelector('#phase7-split').value===70");
+  await ev("(() => {const el=document.querySelector('#phase7-split'),d=el.shadowRoot.querySelector('.divider');d.focus();d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,composed:true,cancelable:true}));d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',shiftKey:true,bubbles:true,composed:true,cancelable:true}));})()");
+  const keyboard=await ev("document.querySelector('#phase7-split').value===70");
+  await ev("document.querySelector('#phase7-split').setAttribute('value','42');document.querySelector('#phase7-split').setAttribute('min','20');");
+  const shifted=await ev("document.querySelector('#phase7-split').value===42");
+  await ev("(() => {const el=document.querySelector('#phase7-split'),d=el.shadowRoot.querySelector('.divider');d.focus();d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,composed:true,cancelable:true}));d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',shiftKey:true,bubbles:true,composed:true,cancelable:true}));})()");
+  const keySteps=await ev("document.querySelector('#phase7-split').value===54");
+  await ev("document.querySelector('#phase7-split').setAttribute('orientation','horizontal')");
+  const orientation=await ev("(() => {const el=document.querySelector('#phase7-split');return el.shadowRoot.querySelector('.layout').classList.contains('horizontal')&&el.shadowRoot.querySelector('.divider').getAttribute('aria-orientation')==='horizontal';})()");
+  await ev("document.querySelector('#phase7-split').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase7-split'),d=el.shadowRoot.querySelector('.divider'),before=el.value;d.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true,composed:true,cancelable:true}));return d.tabIndex===-1&&el.value===before;})()");
+  check('phase 7: Split Pane clamps symmetric limits, synchronizes orientation, supports keyboard step sizes and blocks disabled resizing',initial&&clamped&&keyboard&&shifted&&keySteps&&orientation&&disabled,JSON.stringify({initial,clamped,keyboard,shifted,keySteps,orientation,disabled}));
+  await ev("document.querySelector('#phase7-split').remove()");
+}
+{ await ev("(() => {const el=document.createElement('vfx-lightbox-gallery');el.id='phase7-lightbox';el.setAttribute('items','Sun::|Cloud::|Night::');document.body.append(el);window.__phase7CloseEvents=0;el.addEventListener('close',()=>window.__phase7CloseEvents++);})()"); await sleep(80);
+  const rendered=await ev("document.querySelector('#phase7-lightbox').shadowRoot.querySelectorAll('.thumb').length===3");
+  await ev("(() => {const el=document.querySelector('#phase7-lightbox'),thumb=el.shadowRoot.querySelector('.thumb[data-index=\"1\"]');thumb.focus();el.open(1);})()");
+  const opened=await ev("(() => {const el=document.querySelector('#phase7-lightbox');return el.shadowRoot.querySelector('.viewer').open&&el.activeIndex===1&&el.shadowRoot.activeElement===el.shadowRoot.querySelector('.close');})()");
+  const navigation=await ev("(() => {const el=document.querySelector('#phase7-lightbox'),viewer=el.shadowRoot.querySelector('.viewer');el.next();const next=el.activeIndex===2;viewer.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowLeft',bubbles:true,composed:true,cancelable:true}));return next&&el.activeIndex===1&&el.previous();})()");
+  await ev("document.querySelector('#phase7-lightbox').close()"); await sleep(100);
+  const focusReturn=await ev("(() => {const el=document.querySelector('#phase7-lightbox');return !el.shadowRoot.querySelector('.viewer').open&&el.shadowRoot.activeElement===el.shadowRoot.querySelector('.thumb[data-index=\"1\"]')&&window.__phase7CloseEvents===1;})()");
+  await ev("document.querySelector('#phase7-lightbox').open(2);document.querySelector('#phase7-lightbox').setAttribute('items','Only::')");
+  const liveClamp=await ev("(() => {const el=document.querySelector('#phase7-lightbox');return el.activeIndex===0&&el.shadowRoot.querySelectorAll('.thumb').length===1&&el.shadowRoot.querySelector('.viewer').open;})()");
+  await ev("document.querySelector('#phase7-lightbox').setAttribute('items','')");
+  const empty=await ev("(() => {const el=document.querySelector('#phase7-lightbox');return el.items.length===0&&!el.next()&&!el.previous()&&!el.shadowRoot.querySelector('.viewer').open&&!!el.shadowRoot.querySelector('.empty');})()");
+  check('phase 7: Lightbox Gallery handles live gallery updates, bounded navigation, keyboard controls, empty data and focus return',rendered&&opened&&navigation&&focusReturn&&liveClamp&&empty,JSON.stringify({rendered,opened,navigation,focusReturn,liveClamp,empty}));
+  await ev("document.querySelector('#phase7-lightbox').remove()");
+}
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
