@@ -303,7 +303,7 @@ class VfxGradientPicker extends Base {
  attributeChangedCallback(name,oldValue,newValue) {
   if(!this.ready||oldValue===newValue)return;
   if(name==='value'){if(newValue)this._parseValue(newValue);return;}
-  if(name==='stops'){const prev=this._stops;this._stops=this._initialStops();this._selectedId=this._stops.some(s=>s.id===this._selectedId)?this._selectedId:this._stops[0].id;this._update(false);return;}
+  if(name==='stops'){this._stops=this._initialStops();this._selectedId=this._stops.some(s=>s.id===this._selectedId)?this._selectedId:this._stops[0].id;this._renderStops();this._syncDisabled();this._update(false);return;}
   if(name==='from'){this._stops[0].color=this._hex(newValue||'#ff5fa8');this._update(false);return;}
   if(name==='to'){this._stops[this._stops.length-1].color=this._hex(newValue||'#8f8df7');this._update(false);return;}
   if(name==='angle'){this.$('#angle').value=Math.max(0,Math.min(360,Number(newValue)||0));this._update(false);return;}
