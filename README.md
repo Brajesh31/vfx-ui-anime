@@ -273,3 +273,8 @@ Phase 4 upgrades Menu, Dialog, Drawer, Calendar, Date Picker, Command Palette, C
 ## 🧰 Phase 5: creative-workflow controls
 
 Phase 5 improves Drag and Drop, Carousel, Timeline, Radial Menu and Image Cropper. The work focuses on dynamic data updates, keyboard operation and focus management, empty states, image export geometry, asynchronous image loading and component reconnect behavior. Automated browser, build, deployment, CodeQL and OSSF checks passed on the Phase 5 implementation commit. Results are recorded in the [Phase 5 implementation report](docs/quality/PHASE-5-CREATIVE-WORKFLOW.md). Manual visual and assistive-technology review remains a separate sign-off step.
+
+
+## 🗃️ Phase 6: workflow, data and creative controls
+
+Phase 6 hardens Kanban, Data Grid, Tree View, Signature Pad and Before & After. The updates cover live data/attribute synchronization, selection and focus correctness, keyboard drawing, dynamic image loading and useful empty/error fallbacks. The implementation report tracks the added browser regressions and CI sign-off: [Phase 6 report](docs/quality/PHASE-6-WORKFLOW-DATA-CREATIVE.md). Automated workflow verification and manual visual/assistive-technology sign-off are tracked separately.
