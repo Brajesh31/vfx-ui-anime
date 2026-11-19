@@ -268,7 +268,16 @@ class VfxGradientPicker extends Base {
  _hex(v) { return /^#[0-9a-f]{6}$/i.test(String(v))?String(v).toLowerCase():'#8f8df7'; }
  _normalise(stops) {
   if(!Array.isArray(stops))return [];
-  return stops.slice(0,8).map((s,i)=>({id:String(s?.id??'stop-'+i),color:this._hex(s?.color??s?.hex),position:Math.max(0,Math.min(100,Number.isFinite(Number(s?.position))?Number(s.position):i*100/Math.max(1,stops.length-1)))})).sort((a,b)=>a.position-b.position);
+  const seen=new Set(),out=[];
+  for(const [i,s] of stops.slice(0,8).entries()) {
+   if(!s||typeof s!=='object')continue;
+   let id=String(s.id??'').trim()||'stop-'+i,base=id,suffix=1;
+   while(seen.has(id))id=base+'-'+suffix++;
+   seen.add(id);
+   const position=Number(s.position);
+   out.push({id,color:this._hex(s.color??s.hex),position:Math.max(0,Math.min(100,Number.isFinite(position)?position:i*100/Math.max(1,stops.length-1)))});
+  }
+  return out.sort((a,b)=>a.position-b.position);
  }
  _initialStops() {
   const raw=this.getAttribute('stops');
@@ -368,8 +377,10 @@ class VfxGradientPicker extends Base {
   this.$('.stop-track').innerHTML=this._stops.map(s=>'<button class="stop-marker" type="button" data-id="'+esc(s.id)+'" aria-label="Select stop at '+Math.round(s.position)+' percent" aria-pressed="'+String(s.id===this._selectedId)+'" style="left:'+s.position+'%;background:'+s.color+'"></button>').join('');
   this.$('.stop-list').innerHTML=this._stops.map((s,i)=>'<button class="stop-chip" type="button" data-id="'+esc(s.id)+'" aria-pressed="'+String(s.id===this._selectedId)+'"><span class="swatch" style="background:'+s.color+'"></span>Stop '+(i+1)+' · '+Math.round(s.position)+'%</button>').join('');
   if(selected){this.$('#stop-color').value=selected.color;this.$('#stop-position').value=selected.position;this.$('.position-output').textContent=Math.round(selected.position)+'%';}
-  this.$('.add').disabled=this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled;
-  this.$('.remove').disabled=this._stops.length<=2||this.hasAttribute('disabled')||this._formDisabled;
+  const disabled=this.hasAttribute('disabled')||!!this._formDisabled;
+  this.$('.stop-marker,.stop-chip').forEach(button=>button.disabled=disabled);
+  this.$('.add').disabled=this._stops.length>=8||disabled;
+  this.$('.remove').disabled=this._stops.length<=2||disabled;
  }
  _syncDisabled() {
   const disabled=this.hasAttribute('disabled')||!!this._formDisabled;
@@ -383,6 +394,7 @@ class VfxGradientPicker extends Base {
  }
  _update(emit,kind='change') {
   if(!this.$('.preview'))return;
+  this._renderStops();
   const value=this.value;this.$('.preview').style.background=value;this.$('.preview').setAttribute('aria-label','Gradient preview: '+value);
   this.$('.css').textContent=value;this.$('.angle output').textContent=this.angle+'°';
   this.$('.stop-track').style.background=value;
