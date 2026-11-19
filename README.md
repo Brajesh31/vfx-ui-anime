@@ -156,9 +156,9 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 
 The source repository is MIT-licensed. The npm package is **not published**. The current `package.json` intentionally retains `"private": true`.
 
-Do not use an npm install command or a public version number as though a published package already exists. The current distribution is the repository and the live static gallery. Package metadata, packaging layout, public API entry points, npm tarball contents, release version, and install instructions must be finalized and tested before publication.
+The complete integrated validation suite, CodeQL, GitHub Pages deployment and OpenSSF Scorecard all passed on merged `main` commit `acb9c6f392b180ce974d7f8ea60aaf2046472677`. See [the exact run links and remaining release gates](docs/QUALITY-AND-RELEASE.md).
 
-The integrated validation workflow, including the full Chromium interaction suite, passed on repair candidate commit `dd4be3b0f716172aa0a3a48157c83cd1d91ae380`. CodeQL also passed on that exact commit. The release is **not yet approved**: human visual, keyboard, touch and screen-reader review remains outstanding, and package contents still need a dry-run and clean consumer installation test. See [the current release evidence](docs/QUALITY-AND-RELEASE.md).
+The package is not yet release-approved. Manual visual, keyboard-only, touch and screen-reader review remains outstanding, as do package tarball inspection and a clean consumer installation test. Do not use an npm install command as though a public version already exists.
 
 ## 📄 License
 

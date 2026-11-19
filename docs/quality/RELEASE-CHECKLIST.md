@@ -1,6 +1,6 @@
 # 🚦 Release checklist
 
-Use this as the final go/no-go checklist. A source audit item or a green workflow from an earlier commit is not a substitute for evidence on the release candidate.
+Use this as the final go/no-go checklist. A checked source audit item is not a substitute for executed tests or human sign-off.
 
 ## Source and repository structure
 
@@ -11,22 +11,20 @@ Use this as the final go/no-go checklist. A source audit item or a green workflo
 - [x] Gallery contains 83 unique demo IDs and coverage for all 82 component tags.
 - [x] Generated shared-runtime copies are checked against `core.js`.
 - [x] Required GitHub Actions workflow definitions are present.
+- [x] All 15 phase-specific reports have been consolidated into the project reference and removed.
 
-## Automated candidate checks
+## Automated verification on merged `main`
 
-Verified on candidate commit `dd4be3b0f716172aa0a3a48157c83cd1d91ae380`:
+Verified on commit `acb9c6f392b180ce974d7f8ea60aaf2046472677`:
 
-- [x] `npm test` passes.
-- [x] `npm run check` passes.
-- [x] Full Chromium browser suite passes, including touch, keyboard, form, lifecycle and 390 px overflow checks. [Validate run 44618353514](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44618353514)
-- [x] CodeQL passes. [CodeQL run 44618353959](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44618353959)
+- [x] `npm test` passes. [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665)
+- [x] `npm run check` passes. [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665)
+- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665)
+- [x] CodeQL passes. [CodeQL run 44620469592](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469592)
+- [x] GitHub Pages deployment succeeds. [Pages run 44620469669](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469669)
+- [x] OpenSSF Scorecard succeeds. [Scorecard run 44620469530](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469530)
 
-Post-merge checks that must be verified on the exact resulting `main` commit:
-
-- [ ] Validate workflow remains green on `main`.
-- [ ] CodeQL remains green on `main`.
-- [ ] GitHub Pages deployment succeeds on `main`.
-- [ ] OpenSSF Scorecard succeeds on `main`.
+The Validate browser log records 210 successful checks, zero failures and zero page-side exception lines.
 
 ## Human QA
 
@@ -53,4 +51,4 @@ Post-merge checks that must be verified on the exact resulting `main` commit:
 
 ## Current decision
 
-**Automated candidate checks passed. Final release approval is pending human accessibility/visual QA, post-merge workflow confirmation and package-consumer validation.**
+**Automated implementation and integration checks passed on merged `main`. Final release approval is pending human QA and package-consumer validation.**
