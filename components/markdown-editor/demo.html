@@ -1,1 +1,45 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Markdown Editor</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;font:15px system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:white;box-shadow:9px 10px 0 #b8b3ff}.stage{display:grid;place-items:center;padding:24px}</style><script src="index.js"></script></head><body><main><h1>Markdown Editor</h1><div class="stage"><vfx-markdown-editor></vfx-markdown-editor></div><a href="../../gallery/">Back to gallery</a></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Markdown Editor | VFX UI Anime</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui,sans-serif}
+    main{width:min(100%,900px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}
+    h1{margin:0;font-size:clamp(24px,4vw,34px)}p{color:#686381}vfx-markdown-editor{margin:20px auto}
+    a{color:#5146bd;font-weight:700}.hint{font-size:13px}
+  </style>
+  <script src="index.js"></script>
+</head>
+<body>
+  <main>
+    <h1>📝 Markdown Editor</h1>
+    <p>Edit the Markdown source, switch between Split, Write and Preview modes, and use the keyboard to navigate the view tabs.</p>
+    <vfx-markdown-editor id="editor" placeholder="Write documentation here..."></vfx-markdown-editor>
+    <p class="hint">The preview is intentionally limited to a safe subset of Markdown. Raw HTML and unsafe link protocols are not rendered as active content.</p>
+    <a href="../../gallery/">← Back to the component gallery</a>
+  </main>
+  <script>
+    const editor = document.querySelector('#editor');
+    editor.value = [
+      '# Project notes',
+      '',
+      'This editor renders **safe Markdown** as you type.',
+      '',
+      '## Checklist',
+      '- Build the component',
+      '- Review the *keyboard* behavior',
+      '- Publish the inline-code value',
+      '',
+      '> Preview content is created with DOM nodes, not HTML injection.',
+      '',
+      '[Project gallery](../../gallery/)',
+      '',
+      '~~~js',
+      'const ready = true;',
+      '~~~'
+    ].join('\n');
+  </script>
+</body>
+</html>
