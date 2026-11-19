@@ -1,0 +1,101 @@
+name: Source pre-release
+
+on:
+  push:
+    branches:
+      - "release/v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-prerelease-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-and-release:
+    name: Verify and publish source pre-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact release candidate
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Validate source, generated runtime and registry
+        run: |
+          npm test
+          npm run check
+
+      - name: Start local gallery server
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/vfx-ui-anime-http.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:8000/gallery/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/vfx-ui-anime-http.log
+          exit 1
+
+      - name: Run full Chromium interaction suite
+        run: npm run test:browser
+
+      - name: Create verified GitHub source pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_REF: ${{ github.ref_name }}
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          TAG="${RELEASE_REF#release/}"
+
+          if [[ ! "$TAG" =~ ^v0\.1\.0-rc\.[0-9]+$ ]]; then
+            echo "Refusing unexpected prerelease tag: $TAG"
+            exit 1
+          fi
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "A release for $TAG already exists. Refusing to overwrite it."
+            exit 1
+          fi
+
+          cat > release-notes.md <<EOF
+          # VFX UI Anime $TAG
+
+          **Source-only pre-release. This is not a stable release and is not an npm package publication.**
+
+          This candidate contains 82 dependency-free Web Components, 82 standalone demos and 83 gallery examples.
+
+          ## Verification
+
+          The release was created only after the following checks passed on commit $RELEASE_SHA:
+
+          - `npm test`
+          - `npm run check`
+          - Full Chromium touch, keyboard, form and lifecycle interaction suite
+
+          The repository's CodeQL, GitHub Pages and OpenSSF Scorecard workflows are maintained separately on `main`.
+
+          ## Known release limitations
+
+          - Manual visual, keyboard-only, screen-reader, touch-device and Firefox/Safari review is still required.
+          - Full WCAG conformance has not been certified.
+          - The npm package is not published. The package manifest remains private while its distribution and exports contract are finalized.
+
+          Use this pre-release to inspect the source and provide feedback. Do not treat it as a stable production release.
+          EOF
+
+          gh release create "$TAG" \
+            --target "$RELEASE_SHA" \
+            --title "VFX UI Anime $TAG" \
+            --notes-file release-notes.md \
+            --prerelease
