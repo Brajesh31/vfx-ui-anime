@@ -692,6 +692,72 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase10-treemap').remove()");
 }
 
+// Phase 11: creative tools and audio controls
+{
+  await ev("(() => {const el=document.createElement('vfx-drawing-canvas');el.id='phase11-drawing';el.label='Sketch pad';el.color='#123456';el.size=7;window.__phase11DrawEvents=[];['change','clear','undo','export','export-error'].forEach(type=>el.addEventListener(type,event=>window.__phase11DrawEvents.push({type,input:event.detail?.input,mimeType:event.detail?.mimeType})));window.__phase11PixelCount=canvas=>{const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;let count=0;for(let i=3;i<data.length;i+=4)if(data[i])count++;return count;};document.body.append(el);})()");
+  await sleep(80);
+  const accessible=await ev("(() => {const el=document.querySelector('#phase11-drawing'),canvas=el.shadowRoot.querySelector('.canvas');return canvas.getAttribute('aria-label')==='Sketch pad'&&canvas.getAttribute('aria-describedby')==='canvas-status'&&el.shadowRoot.querySelector('.color').value==='#123456'&&el.shadowRoot.querySelector('.size').value==='7';})()");
+  const [drawX,drawY]=await at('#phase11-drawing >>> .canvas',0.3,0.45);
+  await touch('touchStart',drawX,drawY);
+  await touch('touchMove',drawX+38,drawY+20);
+  await touch('touchEnd',drawX+38,drawY+20);
+  await sleep(50);
+  const pointer=await ev("(() => {const el=document.querySelector('#phase11-drawing'),canvas=el.shadowRoot.querySelector('.canvas');return window.__phase11PixelCount(canvas)>0&&window.__phase11DrawEvents.some(item=>item.type==='change'&&item.input==='pointer');})()");
+  const undo=await ev("(() => {const el=document.querySelector('#phase11-drawing'),canvas=el.shadowRoot.querySelector('.canvas');return el.undo()&&window.__phase11PixelCount(canvas)===0&&window.__phase11DrawEvents.some(item=>item.type==='undo');})()");
+  await ev("(() => {const el=document.querySelector('#phase11-drawing'),canvas=el.shadowRoot.querySelector('.canvas');canvas.focus();canvas.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));canvas.dispatchEvent(new KeyboardEvent('keyup',{key:'ArrowRight',bubbles:true,cancelable:true}));})()");
+  const keyboard=await ev("(() => {const el=document.querySelector('#phase11-drawing');return window.__phase11PixelCount(el.shadowRoot.querySelector('.canvas'))>0&&window.__phase11DrawEvents.some(item=>item.type==='change'&&item.input==='keyboard');})()");
+  const clear=await ev("(() => {const el=document.querySelector('#phase11-drawing'),canvas=el.shadowRoot.querySelector('.canvas');return el.clear()&&window.__phase11PixelCount(canvas)===0&&window.__phase11DrawEvents.some(item=>item.type==='clear')&&window.__phase11DrawEvents.some(item=>item.type==='change'&&item.input==='clear');})()");
+  await ev("(() => {const el=document.querySelector('#phase11-drawing');el.label='Updated sketch';el.color='#abcdef';el.size=12;})()");
+  const updates=await ev("(() => {const el=document.querySelector('#phase11-drawing');return el.shadowRoot.querySelector('.canvas').getAttribute('aria-label')==='Updated sketch'&&el.shadowRoot.querySelector('.color').value==='#abcdef'&&el.shadowRoot.querySelector('.size').value==='12'&&el.toDataURL().startsWith('data:image/png');})()");
+  const [resizeX,resizeY]=await at('#phase11-drawing >>> .canvas',0.35,0.5);
+  await touch('touchStart',resizeX,resizeY);
+  await touch('touchMove',resizeX+22,resizeY+14);
+  await touch('touchEnd',resizeX+22,resizeY+14);
+  await ev("document.querySelector('#phase11-drawing').style.width='280px'");
+  await sleep(120);
+  const resize=await ev("(() => {const el=document.querySelector('#phase11-drawing');return window.__phase11PixelCount(el.shadowRoot.querySelector('.canvas'))>0;})()");
+  const download=await ev("(() => {const el=document.querySelector('#phase11-drawing');return el.download()&&window.__phase11DrawEvents.some(item=>item.type==='export'&&item.mimeType==='image/png');})()");
+  await ev("(() => {const el=document.querySelector('#phase11-drawing');el.disabled=true;window.__phase11DisabledDrawing=!el.clear()&&el.shadowRoot.querySelector('.clear').disabled&&el.shadowRoot.querySelector('.canvas').getAttribute('aria-disabled')==='true';el.disabled=false;el.remove();document.body.append(el);})()");
+  await sleep(50);
+  const reconnect=await ev("(() => {const el=document.querySelector('#phase11-drawing');return window.__phase11DisabledDrawing&&el.isConnected&&(!('ResizeObserver' in window)||!!el._resizeObserver);})()");
+  check('phase 11: Drawing Canvas preserves responsive pixels, supports pointer and keyboard strokes, emits clear/change/undo/export events, syncs attributes and reconnects cleanly',accessible&&pointer&&undo&&keyboard&&clear&&updates&&resize&&download&&reconnect,JSON.stringify({accessible,pointer,undo,keyboard,clear,updates,resize,download,reconnect}));
+  await ev("document.querySelector('#phase11-drawing').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-color-palette');el.id='phase11-palette';el.setAttribute('colors','red, rgb(0, 128, 255), hsl(120 100% 50%), #ff6fae');window.__phase11PaletteEvents=[];['select','change','copy','copy-error'].forEach(type=>el.addEventListener(type,event=>window.__phase11PaletteEvents.push({type,value:event.detail?.value,index:event.detail?.index})));document.body.append(el);})()");
+  await sleep(60);
+  const parsed=await ev("(() => {const el=document.querySelector('#phase11-palette'),buttons=el.shadowRoot.querySelectorAll('.swatch');return el.colors.length===4&&buttons.length===4&&buttons[0].tabIndex===0&&[...buttons].filter(button=>button.tabIndex===0).length===1;})()");
+  await ev("(() => {const el=document.querySelector('#phase11-palette'),first=el.shadowRoot.querySelector('.swatch');first.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));})()");
+  const keyboard=await ev("(() => {const el=document.querySelector('#phase11-palette');return el.shadowRoot.activeElement?.dataset.color==='rgb(0, 128, 255)';})()");
+  await ev("document.querySelector('#phase11-palette').shadowRoot.querySelectorAll('.swatch')[1].click()");
+  const selected=await ev("(() => {const el=document.querySelector('#phase11-palette');return el.value==='rgb(0, 128, 255)'&&el.selectedIndex===1&&window.__phase11PaletteEvents.some(item=>item.type==='select'&&item.index===1)&&window.__phase11PaletteEvents.some(item=>item.type==='change'&&item.value==='rgb(0, 128, 255)');})()");
+  await ev("(() => {const el=document.querySelector('#phase11-palette');el.colors=['#111111','rgb(1, 2, 3)','#abcdef'];el.value='#abcdef';el.value='#999999';})()");
+  const properties=await ev("(() => {const el=document.querySelector('#phase11-palette');return el.colors.length===3&&el.colors[1]==='rgb(1, 2, 3)'&&el.value==='#abcdef'&&el.selectedIndex===2;})()");
+  await ev("(() => {const el=document.querySelector('#phase11-palette');window.__phase11ClipboardDescriptor=Object.getOwnPropertyDescriptor(navigator,'clipboard');window.__phase11ExecCommand=document.execCommand;Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:()=>Promise.reject(new Error('permission denied'))}});document.execCommand=()=>true;window.__phase11CopyResult=null;el.copy().then(result=>window.__phase11CopyResult=result);})()");
+  await sleep(60);
+  const copied=await ev("(() => {const el=document.querySelector('#phase11-palette');return window.__phase11CopyResult===true&&window.__phase11PaletteEvents.some(item=>item.type==='copy'&&item.value==='#abcdef')&&document.body.querySelectorAll('textarea').length===0;})()");
+  await ev("(() => {const el=document.querySelector('#phase11-palette');el.disabled=true;window.__phase11BlockedSelect=el.select('#111111')===false&&[...el.shadowRoot.querySelectorAll('.swatch')].every(button=>button.disabled);el.disabled=false;document.execCommand=window.__phase11ExecCommand;if(window.__phase11ClipboardDescriptor)Object.defineProperty(navigator,'clipboard',window.__phase11ClipboardDescriptor);else delete navigator.clipboard;})()");
+  const disabled=await ev("window.__phase11BlockedSelect===true");
+  check('phase 11: Color Palette parses CSS functional colors, keeps one roving tab stop, navigates by keyboard, syncs array/value properties, emits selection events and falls back when clipboard permission is denied',parsed&&keyboard&&selected&&properties&&copied&&disabled,JSON.stringify({parsed,keyboard,selected,properties,copied,disabled}));
+  await ev("document.querySelector('#phase11-palette').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-audio-player');el.id='phase11-audio';el.title='Sample tone';el.artist='Local test';el.preload='metadata';el.loop=true;window.__phase11AudioEvents=[];['loadedmetadata','durationchange','seek','play','pause','ended','error'].forEach(type=>el.addEventListener(type,event=>window.__phase11AudioEvents.push({type,detail:event.detail})));document.body.append(el);})()");
+  const sampleUrl=await ev("(() => {const rate=8000,count=rate,buffer=new ArrayBuffer(44+count),view=new DataView(buffer),write=(offset,value)=>{for(let i=0;i<value.length;i++)view.setUint8(offset+i,value.charCodeAt(i));};write(0,'RIFF');view.setUint32(4,36+count,true);write(8,'WAVE');write(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,rate,true);view.setUint32(28,rate,true);view.setUint16(32,1,true);view.setUint16(34,8,true);write(36,'data');view.setUint32(40,count,true);for(let i=0;i<count;i++){const fade=Math.min(1,i/160,(count-i)/160);view.setUint8(44+i,128+Math.round(42*fade*Math.sin(2*Math.PI*440*i/rate)));}return URL.createObjectURL(new Blob([buffer],{type:'audio/wav'}));})()");
+  await ev("document.querySelector('#phase11-audio').src="+JSON.stringify(sampleUrl));
+  await sleep(500);
+  const metadata=await ev("(() => {const el=document.querySelector('#phase11-audio');return el.duration>0.9&&el.duration<1.1&&window.__phase11AudioEvents.filter(item=>item.type==='loadedmetadata').length===1&&window.__phase11AudioEvents.some(item=>item.type==='durationchange')&&!el.shadowRoot.querySelector('.seek input').disabled;})()");
+  await ev("(() => {const el=document.querySelector('#phase11-audio');el.seekTime(9);window.__phase11SeekEnd=el.currentTime;el.seek(-3);window.__phase11SeekStart=el.currentTime;el.currentTime=0.35;el.title='Updated tone';el.artist='Updated artist';el.preload='invalid';el.loop=false;})()");
+  const api=await ev("(() => {const el=document.querySelector('#phase11-audio');return Math.abs(window.__phase11SeekEnd-el.duration)<0.02&&window.__phase11SeekStart===0&&Math.abs(el.currentTime-0.35)<0.02&&el.title==='Updated tone'&&el.shadowRoot.querySelector('.title').textContent==='Updated tone'&&el.shadowRoot.querySelector('.artist').textContent==='Updated artist'&&el.preload==='metadata'&&el.loop===false&&window.__phase11AudioEvents.some(item=>item.type==='seek');})()");
+  await ev("(() => {const el=document.querySelector('#phase11-audio');el.disabled=true;window.__phase11DisabledPlay=null;el.play().then(result=>window.__phase11DisabledPlay=result);})()");
+  await sleep(30);
+  const disabled=await ev("(() => {const el=document.querySelector('#phase11-audio');return window.__phase11DisabledPlay===false&&el.shadowRoot.querySelector('.play').disabled&&el.shadowRoot.querySelector('.seek input').disabled;})()");
+  await ev("(() => {const el=document.querySelector('#phase11-audio');el.disabled=false;el.src='';return el.src===''&&el.shadowRoot.querySelector('.status').textContent==='Add a media source to play audio.';})()");
+  const sourceReset=await ev("document.querySelector('#phase11-audio').src===''");
+  await ev("(() => {const el=document.querySelector('#phase11-audio');el.remove();URL.revokeObjectURL("+JSON.stringify(sampleUrl)+");})()");
+  check('phase 11: Audio Player loads a local WAV source, separates metadata/duration events, updates live properties, clamps seeks, normalizes preload, reflects loop/disabled state and clears sources',metadata&&api&&disabled&&sourceReset,JSON.stringify({metadata,api,disabled,sourceReset}));
+}
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
