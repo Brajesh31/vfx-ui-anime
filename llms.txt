@@ -183,3 +183,6 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 ## Phase 11 creative tools and media controls
 - docs/quality/PHASE-11-CREATIVE-TOOLS-AUDIO.md: Drawing Canvas, Color Palette, and Audio Player reliability, accessibility, data parsing, media lifecycle, and browser regression coverage.
+
+## Phase 12 media, editors, and 3D cards
+- docs/quality/PHASE-12-MEDIA-EDITORS-CARDS.md: Video Player, Markdown Editor, JSON Editor, 3D Tilt Card, and 3D Flip Card behavior, accessibility, media lifecycle, safe preview rendering, and browser regression coverage.
