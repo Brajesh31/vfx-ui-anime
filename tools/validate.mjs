@@ -1,5 +1,6 @@
 import { readdir, readFile, access } from "node:fs/promises";
 import { join } from "node:path";
+import { Script } from "node:vm";
 
 const root = process.cwd();
 const names = ["button","toggle","slider","checkbox","radio","input","tabs","progress","rating","toast","tooltip","select","textarea","number","search","menu","dialog","file-upload","color-picker","accordion","segmented","otp","tag-input","pagination","alert","drawer","skeleton","badge","avatar","chip","breadcrumb","stepper","calendar","date-picker","command-palette","context-menu","combobox","drag-drop","carousel","timeline","radial-menu","image-cropper","kanban","data-grid","tree-view","signature-pad","before-after","multi-select","time-picker","transfer-list","split-pane","lightbox-gallery","password-field","date-range-picker","notification-center","rich-text-editor","gradient-picker","wizard","guided-tour","stopwatch","emoji-picker","copy-code","bar-chart","donut-chart","sparkline","kpi-card","gauge","heatmap","treemap","drawing-canvas","color-palette","audio-player","video-player","markdown-editor","json-editor","tilt-card","flip-card","particle-field","marquee","scroll-reveal","animated-counter","confetti-button"];
@@ -98,6 +99,8 @@ for (const name of names) {
     read(base + "index.js"), read(base + "demo.html"), read(base + "README.md")
   ]);
   if (!js.includes("vfx-" + name)) errors.push("Component tag missing: vfx-" + name);
+  try { new Script(js, { filename: base + "index.js" }); }
+  catch (error) { errors.push("Component JavaScript syntax error in " + base + "index.js: " + error.message); }
   const embedded = js.match(/\/\/ >>> vfx core[^\n]*\n([\s\S]*?)\n\/\/ <<< vfx core/);
   if (!embedded) errors.push("Embedded core markers are missing or out of order in " + name + ".");
   else if (embedded[1].trim() !== core.trim()) errors.push("Embedded shared runtime is stale in " + name + ". Run node tools/build.mjs.");
