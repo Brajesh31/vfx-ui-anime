@@ -151,9 +151,6 @@ The browser suite exercises the original controls and the new controls, includin
 
 The public project name is **VFX UI Anime**. Component tags use the `vfx-*` prefix, the shared runtime uses `window.VFXAnimeFX`, and theme tokens use the `--vfx-*` prefix.
 
-## ⚖️ Licensing and attribution
-
-VFX UI Anime retains eleven adapted component implementations and associated artwork from the MIT-licensed Sakuga VFX project. Their original copyright and permission terms are preserved in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md). The root [LICENSE](LICENSE) covers Brajesh Kumar's original repository contributions and does not replace the upstream terms for adapted material.
 
 
 ## Components added in the previous batch
@@ -255,7 +252,7 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 
 ## 🎴 Phase 2: signature controls upgraded
 
-The original 11 controls have received a focused behavior, lifecycle, accessibility and reduced-motion pass. Their signature animation identities remain intact. The implementation adds form reset/disabled synchronization, validation support, stale-animation protection, safer overlay behavior and expanded browser regression tests. See the [Phase 2 upgrade report](docs/quality/PHASE-2-SIGNATURE-CONTROLS.md).
+The eleven signature controls have received a focused behavior, lifecycle, accessibility and reduced-motion pass. Their signature animation identities remain intact. The implementation adds form reset/disabled synchronization, validation support, stale-animation protection, safer overlay behavior and expanded browser regression tests. See the [Phase 2 upgrade report](docs/quality/PHASE-2-SIGNATURE-CONTROLS.md).
 
 
 ## 🧩 Phase 3: core interface and feedback controls
