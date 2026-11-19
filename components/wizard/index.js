@@ -261,14 +261,118 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define}=window.VFXAnimeFX;
 class VfxWizard extends Base {
- static get css(){return ':host{display:block;width:min(100%,560px);color:var(--vfx-ink)}.shell{padding:16px;border:2px solid var(--vfx-ink);border-radius:16px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;justify-content:space-between;gap:12px;align-items:center}.eyebrow{font-size:9px;font-weight:950;letter-spacing:.1em;text-transform:uppercase;color:#8b83c9}.title{font-size:14px;font-weight:950;margin-top:3px}.count{font-size:10px;font-weight:850;color:var(--vfx-dim)}.track{height:7px;margin:13px 0 16px;overflow:hidden;border-radius:99px;background:#ece9fa}.fill{height:100%;width:0;background:linear-gradient(90deg,#ff6bad,#8c83f4);transition:width .25s}.steps{display:flex;gap:6px;margin-bottom:15px}.step{flex:1;min-width:0;height:4px;border-radius:99px;background:#e9e5f8}.step[data-state=done]{background:#8b85eb}.step[data-state=current]{background:#ff75ad}.panels{min-height:110px}.panels ::slotted([data-step]){padding:2px 0}.panels ::slotted([data-step][hidden]){display:none}.panels ::slotted([data-step] h3){margin:0 0 8px;font-size:15px}.panels ::slotted([data-step] p){color:var(--vfx-dim);font-size:12px;line-height:1.55}.panels ::slotted([data-step] input),.panels ::slotted([data-step] textarea){box-sizing:border-box;width:100%;margin-top:8px;padding:10px;border:1.5px solid #ded9f3;border-radius:8px;font:12px system-ui}.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:13px;border-top:1px solid #eeeafa}.nav button{padding:9px 13px;border:1.5px solid var(--vfx-ink);border-radius:9px;background:#fff;font-size:11px;font-weight:900;cursor:pointer}.nav .next{background:var(--vfx-acc);box-shadow:2px 3px 0 var(--vfx-ink)}.nav button:disabled{opacity:.35;cursor:not-allowed}.status{font-size:10px;color:var(--vfx-dim)}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- render(){return '<section class="shell"><header class="head"><div><div class="eyebrow">Guided workflow</div><div class="title">Step 1</div></div><span class="count">1 / 1</span></header><div class="track"><div class="fill"></div></div><div class="steps"></div><div class="panels"><slot></slot></div><footer class="nav"><button class="back" type="button">Back</button><span class="status" aria-live="polite"></span><button class="next" type="button">Continue →</button></footer></section>';}
- setup(){this._panels=[...this.children].filter(x=>x.hasAttribute('data-step'));this._index=0;this.$('.back').addEventListener('click',()=>this.previous());this.$('.next').addEventListener('click',()=>this.next());this._paint();}
- get activeIndex(){return this._index;}get totalSteps(){return this._panels.length;}get complete(){return this.hasAttribute('complete');}
- goTo(index){const n=Math.max(0,Math.min(this.totalSteps-1,Number(index)||0));if(!this.totalSteps||n===this._index)return false;this._index=n;this.removeAttribute('complete');this._paint();this.emit('change',{index:n,step:this._panels[n].dataset.title||String(n+1)});return true;}
- next(){const panel=this._panels[this._index];if(!panel)return false;const invalid=[...panel.querySelectorAll('input,select,textarea')].find(f=>!f.checkValidity());if(invalid){invalid.reportValidity?.();this.emit('invalid',{index:this._index,field:invalid.name||invalid.id||''});return false;}if(this._index<this.totalSteps-1)return this.goTo(this._index+1);this.setAttribute('complete','');this.$('.next').textContent='Completed ✓';this.$('.status').textContent='All steps completed';this.emit('complete',{steps:this.totalSteps});return true;}
- previous(){return this.goTo(this._index-1);}
- _paint(){this._panels.forEach((p,i)=>{p.hidden=i!==this._index;p.setAttribute('aria-current',i===this._index?'step':'false');});const panel=this._panels[this._index],total=this.totalSteps;this.$('.title').textContent=panel?.dataset.title||'Step '+(this._index+1);this.$('.count').textContent=(this._index+1)+' / '+total;this.$('.fill').style.width=(total?(this._index+1)/total*100:0)+'%';this.$('.steps').innerHTML=this._panels.map((p,i)=>'<span class="step" data-state="'+(i===this._index?'current':i<this._index?'done':'todo')+'"></span>').join('');this.$('.back').disabled=this._index===0;this.$('.next').textContent=this._index===total-1?'Finish ✓':'Continue →';this.$('.status').textContent=this.complete?'Completed':(total-this._index-1)+' step(s) left';}
+ static fromChildren = true;
+ static get observedAttributes() { return ['disabled','complete']; }
+ static get css() { return ':host{display:block;width:min(100%,620px);color:var(--vfx-ink)}.shell{padding:clamp(14px,3vw,18px);border:2px solid var(--vfx-ink);border-radius:16px;background:var(--vfx-card,#fff);box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.eyebrow{font-size:9px;font-weight:950;letter-spacing:.1em;text-transform:uppercase;color:#8b83c9}.title{font-size:15px;font-weight:950;margin-top:3px}.count{font-size:10px;font-weight:850;color:var(--vfx-dim);white-space:nowrap}.track{height:7px;margin:13px 0 12px;overflow:hidden;border-radius:99px;background:#ece9fa}.fill{height:100%;width:0;background:linear-gradient(90deg,#ff6bad,#8c83f4);transition:width .25s}.steps{display:flex;gap:6px;margin-bottom:15px}.step{flex:1;min-width:0;padding:7px 3px;border:1px solid #e9e5f8;border-radius:7px;background:#fff;color:#817ba9;font-size:9px;font-weight:850;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.step[data-state=done]{border-color:#a8a3e7;background:#f3f1ff;color:#514a9a}.step[data-state=current]{border-color:var(--vfx-acc);background:#fff0f7;color:var(--vfx-ink)}.step:disabled{opacity:.5;cursor:not-allowed}.panels{min-height:110px}.panels ::slotted([data-step]){padding:2px 0}.panels ::slotted([data-step][hidden]){display:none}.panels ::slotted([data-step] h3){margin:0 0 8px;font-size:15px}.panels ::slotted([data-step] p){color:var(--vfx-dim);font-size:12px;line-height:1.55}.panels ::slotted([data-step] input),.panels ::slotted([data-step] textarea),.panels ::slotted([data-step] select){box-sizing:border-box;width:100%;margin-top:8px;padding:10px;border:1.5px solid #ded9f3;border-radius:8px;font:12px system-ui}.empty{padding:24px 8px;text-align:center;color:var(--vfx-dim);font-size:12px}.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:13px;border-top:1px solid #eeeafa}.nav button{padding:9px 13px;border:1.5px solid var(--vfx-ink);border-radius:9px;background:#fff;color:var(--vfx-ink);font-size:11px;font-weight:900;cursor:pointer}.nav .next{background:var(--vfx-acc);box-shadow:2px 3px 0 var(--vfx-ink)}.nav button:disabled{opacity:.35;cursor:not-allowed}.status{min-width:0;font-size:10px;color:var(--vfx-dim);text-align:center}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:390px){.step{font-size:8px;padding:7px 1px}.nav button{padding:8px 10px}.status{font-size:9px}}@media(prefers-reduced-motion:reduce){.fill{transition:none}}'; }
+ render() { return '<section class="shell" aria-label="Multi-step form"><header class="head"><div><div class="eyebrow">Guided workflow</div><div class="title" id="wizard-title">Step 1</div></div><span class="count">0 / 0</span></header><div class="track" role="progressbar" aria-label="Wizard progress" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><div class="fill"></div></div><nav class="steps" aria-label="Wizard steps"></nav><div class="panels"><slot></slot><div class="empty" hidden>No steps have been added yet.</div></div><footer class="nav"><button class="back" type="button">← Back</button><span class="status" role="status" aria-live="polite"></span><button class="next" type="button">Continue →</button></footer></section>'; }
+ setup() {
+  this._panels=[];this._index=0;this._formReset=null;this._hostObserver=null;
+  this.$('.back').addEventListener('click',()=>this.previous());
+  this.$('.next').addEventListener('click',()=>this.next());
+  this.$('.steps').addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(b)this.goTo(Number(b.dataset.index));});
+  this._onEdit=()=>{if(this.complete){this.removeAttribute('complete');this._paint();}};
+  this.addEventListener('input',this._onEdit);
+  this.addEventListener('change',this._onEdit);
+  this._collectPanels(true);
+  this._observePanels();
+  const form=this.closest('form');
+  if(form){this._formReset=()=>this.reset();form.addEventListener('reset',this._formReset);}
+ }
+ connectedCallback() { super.connectedCallback(); this._observePanels(); }
+ disconnectedCallback() {
+  this._hostObserver?.disconnect();this._hostObserver=null;
+  if(this._formReset){const form=this.closest('form');form?.removeEventListener('reset',this._formReset);}
+  this._formReset=null;
+  this.removeEventListener('input',this._onEdit);this.removeEventListener('change',this._onEdit);
+  super.disconnectedCallback?.();
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='disabled')this._paint();
+  if(name==='complete')this._paint();
+ }
+ _observePanels() {
+  if(!this.isConnected||!window.MutationObserver)return;
+  this._hostObserver?.disconnect();
+  this._hostObserver=new MutationObserver(()=>this._collectPanels());
+  this._hostObserver.observe(this,{childList:true,subtree:true,attributes:true,attributeFilter:['data-step','data-title']});
+ }
+ _collectPanels(initial=false) {
+  const current=this._panels?.[this._index]||null;
+  const next=[...this.children].filter(x=>x.hasAttribute('data-step'));
+  const changed=next.length!==this._panels.length||next.some((x,i)=>x!==this._panels[i]);
+  if(!changed&&!initial)return;
+  let index=current?next.indexOf(current):-1;
+  if(index<0)index=Math.max(0,Math.min(this._index,next.length-1));
+  this._panels=next;this._index=next.length?index:0;
+  if(changed&&this.complete)this.removeAttribute('complete');
+  this._paint();
+ }
+ get activeIndex() { return this._index; }
+ set activeIndex(value) { this.goTo(value); }
+ get totalSteps() { return this._panels.length; }
+ get complete() { return this.hasAttribute('complete'); }
+ get disabled() { return this.hasAttribute('disabled'); }
+ _validatePanel(index) {
+  const panel=this._panels[index];if(!panel)return true;
+  const fields=[...panel.querySelectorAll('input,select,textarea,[data-validate]')];
+  const invalid=fields.find(field=>typeof field.checkValidity==='function'&&!field.checkValidity());
+  if(!invalid)return true;
+  invalid.reportValidity?.();invalid.focus?.();
+  const field=invalid.name||invalid.id||invalid.getAttribute('aria-label')||invalid.tagName.toLowerCase();
+  const message=invalid.validationMessage||'Complete the required field before continuing.';
+  this.$('.status').textContent=message;
+  this.emit('invalid',{index,field,message});
+  return false;
+ }
+ goTo(index) {
+  if(this.disabled||!this.totalSteps||!Number.isFinite(Number(index)))return false;
+  const n=Math.max(0,Math.min(this.totalSteps-1,Math.floor(Number(index))));
+  if(n===this._index)return false;
+  if(n>this._index){for(let i=this._index;i<n;i++)if(!this._validatePanel(i))return false;}
+  const previous=this._index;this._index=n;this.removeAttribute('complete');this._paint();
+  this.emit('change',{index:n,previousIndex:previous,step:this._panels[n].dataset.title||'Step '+(n+1)});
+  this._focusPanel();return true;
+ }
+ next() {
+  if(this.disabled||!this.totalSteps||this.complete)return false;
+  if(!this._validatePanel(this._index))return false;
+  if(this._index<this.totalSteps-1)return this.goTo(this._index+1);
+  this.setAttribute('complete','');this._paint();
+  this.emit('complete',{steps:this.totalSteps,index:this._index});
+  return true;
+ }
+ previous() { return this.disabled?false:this.goTo(this._index-1); }
+ reset() {
+  if(!this.totalSteps)return false;
+  const previous=this._index;this._index=0;this.removeAttribute('complete');this._paint();
+  if(previous!==0)this._focusPanel();
+  this.emit('reset',{index:0});return true;
+ }
+ _focusPanel() {
+  const panel=this._panels[this._index];if(!panel)return;
+  panel.setAttribute('tabindex','-1');
+  requestAnimationFrame(()=>{if(this.isConnected&&panel.isConnected&&this._panels[this._index]===panel)panel.focus({preventScroll:true});});
+ }
+ _paint() {
+  if(!this.ready)return;
+  const total=this.totalSteps,hasSteps=total>0,panel=this._panels[this._index];
+  this.$('.empty').hidden=hasSteps;
+  this.$('.panels slot').hidden=!hasSteps;
+  this.$('.title').textContent=panel?.dataset.title||'Step '+(this._index+1);
+  this.$('.count').textContent=hasSteps?(this._index+1)+' / '+total:'0 / 0';
+  const progress=hasSteps?Math.round((this._index+1)/total*100):0;
+  this.$('.fill').style.width=progress+'%';
+  const bar=this.$('.track');bar.setAttribute('aria-valuemax',String(total));bar.setAttribute('aria-valuenow',String(hasSteps?this._index+1:0));bar.setAttribute('aria-valuetext',hasSteps?'Step '+(this._index+1)+' of '+total:'No steps');
+  this.$('.steps').innerHTML=this._panels.map((p,i)=>'<button class="step" type="button" data-index="'+i+'" data-state="'+(i===this._index?'current':i<this._index?'done':'todo')+'" aria-label="Go to step '+(i+1)+': '+esc(p.dataset.title||'Step '+(i+1))+'" aria-current="'+(i===this._index?'step':'false')+'">'+(p.dataset.title||'Step '+(i+1))+'</button>').join('');
+  this._panels.forEach((p,i)=>{p.hidden=i!==this._index;p.setAttribute('aria-current',i===this._index?'step':'false');});
+  const blocked=this.disabled||!hasSteps;
+  this.$$('.steps button').forEach(b=>b.disabled=this.disabled||Number(b.dataset.index)>this._index);
+  this.$('.back').disabled=blocked||this._index===0;
+  this.$('.next').disabled=blocked||this.complete;
+  this.$('.next').textContent=this.complete?'Completed ✓':this._index===total-1?'Finish ✓':'Continue →';
+  if(!this.$('.status').textContent||this.$('.status').textContent==='All steps completed')this.$('.status').textContent=this.complete?'All steps completed':hasSteps?(total-this._index-1)+' step(s) left':'Add panels with the data-step attribute.';
+ }
 }
 define('vfx-wizard',VfxWizard);
 })();
