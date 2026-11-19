@@ -298,7 +298,9 @@ const api = window.VFXAnimeFX = {
       let min = this.min, max = this.max;
       if (!(max > min)) { min = 0; max = 100; }
       const previous = this._value;
-      const value = clamp(this.value, min, max);
+      const rawValue = this.getAttribute('value');
+      const requested = finite(rawValue) ? Number(rawValue) : 0;
+      const value = clamp(requested, min, max);
       this._value = value;
       const percent = (value - min) / (max - min);
       const circumference = Math.PI * 80;
