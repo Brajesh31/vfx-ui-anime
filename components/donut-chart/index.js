@@ -258,4 +258,118 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,360px)}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}h3{margin:0;font-size:13px}.body{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap}.chart{width:145px}.legend{display:grid;gap:7px;font-size:10px}.item{display:flex;gap:7px;align-items:center}.dot{width:9px;height:9px;border-radius:3px}';}render(){return '<section class="box"><h3>'+esc(this.getAttribute('title')||'Donut chart')+'</h3><div class="body"><svg class="chart" viewBox="0 0 120 120"></svg><div class="legend"></div></div></section>';}setup(){const v=(this.getAttribute('values')||'45,30,15,10').split(',').map(x=>Math.max(0,+x||0)),l=(this.getAttribute('labels')||'Direct,Search,Social,Other').split(','),t=v.reduce((a,b)=>a+b,0)||1,c=270,colors=['#ff6eae','#9189ef','#6fcdb2','#ffc36f'];let o=0;this.$('svg').innerHTML='<circle cx="60" cy="60" r="43" fill="none" stroke="#eee" stroke-width="15"/>'+v.map((n,i)=>{const z=n/t*c,s='<circle cx="60" cy="60" r="43" fill="none" stroke="'+colors[i%4]+'" stroke-width="15" stroke-dasharray="'+z+' '+(c-z)+'" stroke-dashoffset="'+(-o)+'" transform="rotate(-90 60 60)"/>';o+=z;return s;}).join('');this.$('.legend').innerHTML=v.map((n,i)=>'<div class="item"><i class="dot" style="background:'+colors[i%4]+'"></i>'+esc(l[i]||'Item')+' <b>'+Math.round(n/t*100)+'%</b></div>').join('');}}define('vfx-donut-chart',C);})();
+(() => {
+  const { Base, define, esc, at, burst } = window.VFXAnimeFX;
+  const NS = 'http://www.w3.org/2000/svg';
+  const colors = ['#ff6eae', '#9189ef', '#6fcdb2', '#ffc36f', '#79b8e8', '#db92d3', '#91c7a7', '#e9a17c'];
+  const svgNode = (tag, attrs = {}, text = '') => {
+    const el = document.createElementNS(NS, tag);
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, String(value));
+    if (text !== '') el.textContent = text;
+    return el;
+  };
+  const finite = (value) => Number.isFinite(Number(value)) && String(value).trim() !== '';
+  class C extends Base {
+    static get observedAttributes() { return ['title', 'values', 'labels']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,430px);min-width:0}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}h3{margin:0 0 10px;font-size:13px}.body{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap}.chart{width:min(100%,170px);height:auto;overflow:visible}.legend{display:grid;gap:6px;min-width:130px;max-width:190px}.item{display:flex;gap:8px;align-items:center;width:100%;padding:5px 7px;border:1px solid transparent;border-radius:7px;background:transparent;text-align:left;font:inherit;font-size:11px;cursor:pointer}.item:hover,.item:focus-visible,.item[aria-pressed=true]{border-color:#b8b3ff;background:#f8f6ff}.dot{width:10px;height:10px;flex:none;border-radius:3px}.name{flex:1;min-width:0;overflow-wrap:anywhere}.percent{font-weight:900}.empty{fill:#8982b6;font:11px system-ui}.total{fill:#1d1a4a;font:900 13px system-ui}';
+    }
+    render() {
+      return '<section class="box"><h3>' + esc(this.getAttribute('title') || 'Donut chart') + '</h3><div class="body"><svg class="chart" viewBox="0 0 140 140" role="group" aria-label="Interactive proportional chart"></svg><div class="legend" aria-label="Chart categories"></div></div></section>';
+    }
+    setup() {
+      this._selectedIndex = -1;
+      this.$('.body').addEventListener('click', (event) => {
+        const item = event.target.closest('[data-index]');
+        if (item) this.select(Number(item.getAttribute('data-index')));
+      });
+      this.$('svg').addEventListener('keydown', (event) => {
+        const item = event.target.closest('[data-index]');
+        if (!item || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        this.select(Number(item.getAttribute('data-index')));
+      });
+      this._render();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._render();
+    }
+    get values() {
+      return (this.getAttribute('values') || '45,30,15,10').split(',').map((v) => finite(v) ? Math.max(0, Number(v)) : null);
+    }
+    set values(value) {
+      const list = Array.isArray(value) ? value : String(value ?? '').split(',');
+      this.setAttribute('values', list.join(','));
+    }
+    get labels() {
+      return (this.getAttribute('labels') || 'Direct,Search,Social,Other').split(',').map((v) => v.trim());
+    }
+    set labels(value) {
+      const list = Array.isArray(value) ? value : String(value ?? '').split(',');
+      this.setAttribute('labels', list.join(','));
+    }
+    get selectedIndex() { return this._selectedIndex; }
+    select(index) {
+      if (!Number.isInteger(index) || !this._data?.[index] || this._data[index].value <= 0) return false;
+      this._selectedIndex = index;
+      this.$$('.item').forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.index) === index)));
+      this.$$('circle[data-index]').forEach((circle) => circle.setAttribute('aria-pressed', String(Number(circle.dataset.index) === index)));
+      const item = this._data[index];
+      const circle = this.$('circle[data-index="' + index + '"]');
+      if (circle) {
+        const point = at(circle);
+        burst(point.x, point.y, { r: 14, spikes: 6 });
+      }
+      this.emit('select', { index, label: item.label, value: item.value, percent: item.percent });
+      return true;
+    }
+    _render() {
+      if (!this.ready) return;
+      const svg = this.$('svg'), legend = this.$('.legend');
+      const labels = this.labels;
+      const values = this.values;
+      const data = values.map((value, index) => ({ index, value, label: labels[index] || 'Item ' + (index + 1) })).filter((item) => Number.isFinite(item.value));
+      const total = data.reduce((sum, item) => sum + item.value, 0);
+      data.forEach((item) => { item.percent = total > 0 ? item.value / total * 100 : 0; });
+      this._data = data;
+      svg.replaceChildren();
+      legend.replaceChildren();
+      svg.append(svgNode('title', {}, (this.getAttribute('title') || 'Donut chart') + ', total ' + total));
+      svg.append(svgNode('desc', {}, data.map((d) => d.label + ': ' + d.value + ' (' + d.percent.toFixed(1) + '%)').join('; ')));
+      if (!(total > 0)) {
+        svg.append(svgNode('text', { x: 70, y: 73, 'text-anchor': 'middle', class: 'empty' }, 'No data'));
+        svg.setAttribute('aria-label', 'Donut chart, no positive values');
+        legend.textContent = 'No categories to display';
+        return;
+      }
+      const radius = 46, circumference = 2 * Math.PI * radius;
+      let offset = 0;
+      for (const item of data) {
+        const length = circumference * item.value / total;
+        if (item.value > 0) {
+          const circle = svgNode('circle', {
+            cx: 70, cy: 70, r: radius, fill: 'none', stroke: colors[item.index % colors.length],
+            'stroke-width': 18, 'stroke-dasharray': length + ' ' + (circumference - length),
+            'stroke-dashoffset': -offset, transform: 'rotate(-90 70 70)',
+            'data-index': item.index, tabindex: 0, role: 'button',
+            'aria-label': item.label + ': ' + item.value + ', ' + item.percent.toFixed(1) + ' percent',
+            'aria-pressed': String(this._selectedIndex === item.index)
+          });
+          svg.append(circle);
+        }
+        offset += length;
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'item'; button.dataset.index = String(item.index);
+        button.setAttribute('aria-pressed', String(this._selectedIndex === item.index));
+        const dot = document.createElement('i'); dot.className = 'dot'; dot.style.backgroundColor = colors[item.index % colors.length];
+        const name = document.createElement('span'); name.className = 'name'; name.textContent = item.label;
+        const percent = document.createElement('b'); percent.className = 'percent'; percent.textContent = item.percent.toFixed(1) + '%';
+        button.append(dot, name, percent);
+        legend.append(button);
+      }
+      svg.append(svgNode('text', { x: 70, y: 74, 'text-anchor': 'middle', class: 'total' }, String(total)));
+      svg.setAttribute('aria-label', 'Donut chart showing ' + data.length + ' categories, total ' + total);
+    }
+  }
+  define('vfx-donut-chart', C);
+})();
