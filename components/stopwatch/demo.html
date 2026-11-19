@@ -1,2 +1,25 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime Stopwatch</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 9px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}</style><script src="index.js"></script></head><body><main><h1>VFX UI Anime Stopwatch</h1><p>Standalone preview. Try the control and read its README for the complete API.</p><div class="stage"><vfx-stopwatch></vfx-stopwatch></div><p><a href="../../gallery/">← Back to component gallery</a></p></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stopwatch Demo · VFX UI Anime</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;justify-items:center;padding:24px 8px}.status{width:min(100%,440px);min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}a{color:#6c62be}
+</style>
+<script src="index.js"></script>
+</head>
+<body><main>
+<h1>⏱️ Stopwatch</h1>
+<p>Start the clock, record multiple lap splits, stop to freeze the time, and reset. Remove and re-add the element while running to see that elapsed timing remains correct.</p>
+<div class="stage">
+<vfx-stopwatch id="watch"></vfx-stopwatch>
+<div class="status" id="status" role="status" aria-live="polite">Ready. Use the stopwatch controls.</div>
+</div>
+<p>The display uses animation frames. Elapsed time is calculated from the browser performance clock, not by counting frames.</p>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
+</main>
+<script>
+const watch=document.querySelector('#watch'),status=document.querySelector('#status');
+for(const name of ['start','stop','lap','reset'])watch.addEventListener(name,e=>{status.textContent=name==='lap'?'Lap '+e.detail.number+' split: '+e.detail.split.toFixed(0)+' ms.':'Stopwatch '+name+' event.';});
+</script>
+</body></html>
