@@ -1,6 +1,6 @@
 # Phase 6: workflow, data and creative controls
 
-**Status:** Implementation and regression coverage added on `main`; automated workflow verification is pending  
+**Status:** Implementation and automated verification complete on `main` (verified implementation commit `ba5d51e9cc61b1460b8728cd9ac988ba914dd238`, 19 November 2026)  
 **Scope:** Kanban, Data Grid, Tree View, Signature Pad and Before & After  
 **Baseline:** Phase 1 component audit, animation design system and acceptance matrix  
 **Compatibility:** Existing custom-element tags and established public methods/events are retained
@@ -32,7 +32,14 @@ The existing full-gallery interaction suite and the 390 px horizontal-overflow c
 
 ## 4. Verification and sign-off
 
-Automated workflow verification is pending. The phase will be marked automated-verification complete only after Node/build validation, the full Chromium suite, GitHub Pages deployment, CodeQL and OSSF Scorecard finish successfully on the final Phase 6 commit.
+All required GitHub Actions workflows passed on the Phase 6 implementation commit. The full Chromium browser suite passed, including all five Phase 6 regression groups and the existing whole-library interactions.
+
+| Check | Result | Run |
+|---|---|---|
+| Validate, Node/build checks and full Chromium browser suite | Passed | [Run 44537767270](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44537767270) |
+| GitHub Pages deployment | Passed | [Run 44537767245](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44537767245) |
+| CodeQL | Passed | [Run 44537767301](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44537767301) |
+| OSSF Scorecard | Passed | [Run 44537767265](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44537767265) |
 
 Manual visual review at desktop and mobile widths, keyboard-only review with a real browser, and screen-reader/assistive-technology review remain separate sign-off tasks.
 

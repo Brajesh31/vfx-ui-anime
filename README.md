@@ -277,4 +277,4 @@ Phase 5 improves Drag and Drop, Carousel, Timeline, Radial Menu and Image Croppe
 
 ## 🗃️ Phase 6: workflow, data and creative controls
 
-Phase 6 hardens Kanban, Data Grid, Tree View, Signature Pad and Before & After. The updates cover live data/attribute synchronization, selection and focus correctness, keyboard drawing, dynamic image loading and useful empty/error fallbacks. The implementation report tracks the added browser regressions and CI sign-off: [Phase 6 report](docs/quality/PHASE-6-WORKFLOW-DATA-CREATIVE.md). Automated workflow verification and manual visual/assistive-technology sign-off are tracked separately.
+Phase 6 hardens Kanban, Data Grid, Tree View, Signature Pad and Before & After. The updates cover live data/attribute synchronization, selection and focus correctness, keyboard drawing, dynamic image loading and useful empty/error fallbacks. The implementation report records the added browser regressions and passing Node/build, Chromium browser, GitHub Pages, CodeQL and OSSF checks: [Phase 6 report](docs/quality/PHASE-6-WORKFLOW-DATA-CREATIVE.md). Manual visual and assistive-technology review remains a separate sign-off step.
