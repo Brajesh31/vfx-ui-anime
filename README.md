@@ -300,10 +300,16 @@ Phase 9 upgrades Multi-step Wizard, Guided Tour, Stopwatch, Emoji Picker and Cop
 
 Phase 10 upgrades Bar Chart, Donut Chart, Sparkline, KPI Card, Gauge, Heatmap, and Treemap. The work adds signed and normalized numeric data handling, proportional SVG geometry, live attribute/property updates, keyboard-operable selection, accessible chart descriptions and meter semantics, and explicit empty-data fallbacks. Seven standalone interactive demos, expanded API references, registry/gallery updates, and dedicated Chromium regressions were added. Manual visual and assistive-technology review remains outstanding. See the [Phase 10 implementation report](docs/quality/PHASE-10-CHARTS-DASHBOARDS.md).
 
-**Component upgrade progress after Phase 11: 72 of 82 components (87.8%). 10 component upgrades remain across Phases 12–13, followed by Phase 14 whole-library integration and release hardening.**
+**Component upgrade progress after Phase 10: 69 of 82 components (84.1%). 13 component upgrades remain across Phases 11–13, followed by Phase 14 whole-library integration and release hardening.**
 
 ## 🖌️ Phase 11: creative tools and audio components
 
 Phase 11 upgrades Drawing Canvas, Color Palette, and Audio Player. Drawing now exposes consistent clear/change/undo/export events, accessible keyboard drawing, resize lifecycle cleanup, and preserved artwork when its display size changes. Color Palette supports CSS functional-color parsing, roving keyboard focus, live array/value synchronization, and a clipboard fallback that cleans up after failures. Audio Player separates metadata and duration events, exposes loop/preload properties, improves accessible seek announcements, and recovers its status after playback or metadata success. Three standalone demos, expanded API references, registry/gallery descriptions, and dedicated Chromium regressions were added. Automated workflow results and remaining manual sign-off are recorded in the [Phase 11 implementation report](docs/quality/PHASE-11-CREATIVE-TOOLS-AUDIO.md).
 
 **Component upgrade progress after Phase 11: 72 of 82 components (87.8%). 10 component upgrades remain across Phases 12–13, followed by Phase 14 whole-library integration and release hardening.**
+
+## 🎬 Phase 12: media, editors, and 3D cards
+
+Phase 12 upgrades Video Player, Markdown Editor, JSON Editor, 3D Tilt Card, and 3D Flip Card. Video now distinguishes metadata and duration changes, reflects loop/preload/mute state, announces seek position and tracks fullscreen changes across reconnects. Markdown adds explicit tab/panel relationships while retaining safe DOM-node rendering and protocol-checked links. JSON restores same-valued property assignments, exposes a labelled preview region, and keeps invalid data as text. Tilt Card synchronizes dynamic text and suppresses pointer motion for touch/reduced-motion users. Flip Card now exposes its pressed state, next-face action name and inactive-face visibility, with keyboard activation and reduced-motion support. Five updated demos, full API references, gallery/registry updates and dedicated Chromium browser regressions were added. See the [Phase 12 implementation report](docs/quality/PHASE-12-MEDIA-EDITORS-CARDS.md).
+
+**Component upgrade progress after Phase 12: 77 of 82 components (93.9%). 5 component upgrades remain in Phase 13, followed by Phase 14 whole-library integration and release hardening.**
