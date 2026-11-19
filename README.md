@@ -254,3 +254,10 @@ Each ships with a standalone source file, isolated demo, and dedicated API/acces
 ## 🎴 Phase 2: signature controls upgraded
 
 The original 11 controls have received a focused behavior, lifecycle, accessibility and reduced-motion pass. Their signature animation identities remain intact. The implementation adds form reset/disabled synchronization, validation support, stale-animation protection, safer overlay behavior and expanded browser regression tests. See the [Phase 2 upgrade report](docs/quality/PHASE-2-SIGNATURE-CONTROLS.md).
+
+
+## 🧩 Phase 3: core interface and feedback controls
+
+Phase 3 implementation work is underway across 18 existing controls: Select, Textarea, Number, Search, File Upload, Color Picker, Accordion, Segmented Control, OTP Input, Tag Input, Pagination, Alert, Skeleton, Badge, Avatar, Chip, Breadcrumb and Stepper.
+
+The current pass focuses on dynamic attribute/value synchronization, form validity and disabled states, file acceptance checks, OTP completion behavior, observer lifecycle cleanup and regression coverage. Automated validation and visual review are still pending. See the [Phase 3 implementation report](docs/quality/PHASE-3-CORE-CONTROLS.md).
