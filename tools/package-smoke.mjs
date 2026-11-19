@@ -121,6 +121,14 @@ try {
       const response = await fetch('http://127.0.0.1:' + debugPort + '/json/list');
       if (response.ok) target = (await response.json()).find(item => item.type === 'page') || null;
     } catch {}
+    if (!target) {
+      // Some Chromium builds do not publish the initial about:blank target
+      // until one is explicitly created. Mirror the main browser test harness.
+      try {
+        const response = await fetch('http://127.0.0.1:' + debugPort + '/json/new?about:blank', { method: 'PUT' });
+        if (response.ok) target = await response.json();
+      } catch {}
+    }
     if (!target) await sleep(200);
   }
   if (!target) throw new Error(launchError ? launchError.message : exitInfo ? JSON.stringify(exitInfo) : 'Chromium DevTools did not start within 45 seconds.');
