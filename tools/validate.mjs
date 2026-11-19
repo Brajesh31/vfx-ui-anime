@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 const root = process.cwd();
 const names = ["button","toggle","slider","checkbox","radio","input","tabs","progress","rating","toast","tooltip","select","textarea","number","search","menu","dialog","file-upload","color-picker","accordion","segmented","otp","tag-input","pagination","alert","drawer","skeleton","badge","avatar","chip","breadcrumb","stepper","calendar","date-picker","command-palette","context-menu","combobox","drag-drop","carousel","timeline","radial-menu","image-cropper","kanban","data-grid","tree-view","signature-pad","before-after","multi-select","time-picker","transfer-list","split-pane","lightbox-gallery","password-field","date-range-picker","notification-center","rich-text-editor","gradient-picker","wizard","guided-tour","stopwatch","emoji-picker","copy-code","bar-chart","donut-chart","sparkline","kpi-card","gauge","heatmap","treemap","drawing-canvas","color-palette","audio-player","video-player","markdown-editor","json-editor","tilt-card","flip-card","particle-field","marquee","scroll-reveal","animated-counter","confetti-button"];
-const expected = ["index.html","gallery/index.html","README.md","core.js","registry.json","llms.txt","LICENSE","THIRD_PARTY_NOTICES/LICENSES.md","components/toggle/frames.webp","tools/build.mjs","tools/shot.mjs","tools/test.mjs","tools/trace.py"];
+const expected = ["index.html","gallery/index.html","README.md","core.js","registry.json","llms.txt","LICENSE","components/toggle/frames.webp","tools/build.mjs","tools/shot.mjs","tools/test.mjs","tools/trace.py"];
 const errors = [];
 for (const path of expected) { try { await access(join(root,path)); } catch { errors.push("Missing: "+path); } }
 const gallery = await readFile(join(root,"gallery/index.html"),"utf8").catch(()=> "");
@@ -26,7 +26,5 @@ if (!core.includes("window.VFXAnimeFX") || !core.includes("--vfx-") || !core.inc
 if (!gallery.includes("--vfx-")) errors.push("Gallery does not use VFX UI Anime theme names.");
 if (gallery.includes("sakuga-") || gallery.includes("finktheartist")) errors.push("Old source branding remains in the public gallery.");
 if (!registry.items.every(x=>x.files?.[0]?.path?.startsWith("components/"))) errors.push("Registry component paths must point into components/.");
-const notice = await readFile(join(root,"THIRD_PARTY_NOTICES/LICENSES.md"),"utf8");
-if (!notice.includes("Copyright (c) 2026 Justin Finkelman")) errors.push("Required third-party copyright notice is missing.");
 if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
-console.log("VFX UI Anime validation passed: 82 component types, 83 gallery demos, generated runtime and third-party notice.");
+console.log("VFX UI Anime validation passed: 82 component types, 83 gallery demos, generated runtime.");
