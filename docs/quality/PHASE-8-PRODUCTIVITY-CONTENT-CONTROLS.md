@@ -17,7 +17,7 @@ Improve five existing utility and content components so they behave as reliable 
 | Date Range Picker | Synchronizes start/end/min/max/label/required/disabled attributes. Enforces chronological order and inclusive bounds, reports custom form validity, submits only complete valid ranges, and makes 7/30-day presets inclusive of the current local date. Disabled controls are guarded and form reset restores the configured initial range. |
 | Notification Center | Normalizes JSON, object-property and legacy pipe-delimited data; rejects duplicate/missing IDs; supports live attribute/property replacement; returns defensive copies; updates unread counts and filters; guards read, bulk-read and dismiss actions when disabled; and renders notification text as escaped content. Its state remains local and in-memory. |
 | Rich Text Editor | Adds a narrow HTML allowlist sanitizer, safe HTTP(S)/mailto link handling, sanitized rich-HTML paste with plain-text fallback, common formatting shortcuts, accessible editor/toolbar labels, form serialization, required validity, change/input events, disabled-fieldset handling, focus API and reset behavior. |
-| Gradient Picker | Preserves the existing `from`, `to`, `angle`, and `value` API while adding an editable two-to-five-stop model, stop color/position editing, add/remove controls, JSON stop input, supported CSS gradient parsing, angle clamping, form serialization, disabled guards and form reset. |
+| Gradient Picker | Preserves the existing `from`, `to`, `angle`, and `value` API while adding an editable two-to-eight-stop model, stop color/position editing, add/remove controls, JSON stop input, supported CSS gradient parsing, angle clamping, form serialization, disabled guards and form reset. |
 
 ## 3. Demonstrations and documentation
 
@@ -50,6 +50,6 @@ Automated CI results must be inspected before the phase is declared verified. Ma
 
 ## 6. Boundaries and limitations
 
-No application dependencies, shared-runtime architecture, component tags, publishing settings or hosting providers were changed. Existing standalone delivery and GitHub Pages remain the deployment model. Notification Center does not add backend persistence. Password strength remains a client-side heuristic. Rich Text Editor sanitization is a client-side safety layer, not a replacement for server-side validation. Gradient Picker currently supports linear gradients with six-digit hexadecimal colors and two to five stops.
+No application dependencies, shared-runtime architecture, component tags, publishing settings or hosting providers were changed. Existing standalone delivery and GitHub Pages remain the deployment model. Notification Center does not add backend persistence. Password strength remains a client-side heuristic. Rich Text Editor sanitization is a client-side safety layer, not a replacement for server-side validation. Gradient Picker currently supports linear gradients with six-digit hexadecimal colors and two to eight stops.
 
 **Phase 8 implementation is committed directly to `main`; automated CI and manual accessibility/visual sign-off are pending.**
