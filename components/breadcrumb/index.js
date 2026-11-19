@@ -265,6 +265,7 @@ const fx = window.VFXAnimeFX;
 const { Base, at, lines, ticks } = fx;
 class VfxBreadcrumb extends Base {
   static fromChildren = true;
+  static observedAttributes = ['label'];
   static css = `
     :host{display:block;max-width:100%;color:var(--vfx-ink)}
     nav{display:flex;align-items:center;flex-wrap:wrap;gap:7px;font:800 13px/1.5 system-ui}
@@ -278,6 +279,7 @@ class VfxBreadcrumb extends Base {
   render() { return '<nav aria-label="Breadcrumb"></nav>'; }
   setup() {
     const nodes = [...this.children];
+    this.$('nav').setAttribute('aria-label',this.getAttribute('label')||'Breadcrumb');
     nodes.forEach((node, index) => {
       node.slot = `crumb-${index}`;
       node.classList.add('crumb');
@@ -306,6 +308,7 @@ class VfxBreadcrumb extends Base {
       });
     });
   }
+  attributeChangedCallback(name,oldValue,newValue){if(name==='label'&&oldValue!==newValue&&this.ready)this.$('nav').setAttribute('aria-label',newValue||'Breadcrumb');}
 }
 fx.define('vfx-breadcrumb', VfxBreadcrumb);
 })();
