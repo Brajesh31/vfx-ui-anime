@@ -3,7 +3,7 @@
 **Last verified:** 20 November 2026  
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
-**Verified merged commit:** `e3e5a46a900dbb88930417acc854a6d96992bce7`
+**Verified merged commit:** `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9`
 
 ## Current decision
 
@@ -19,14 +19,14 @@ All four required GitHub Actions workflows passed on commit `e3e5a46a900dbb88930
 
 | Check | Result | Evidence |
 |---|---|---|
-| `npm test` | Passed | [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441) |
-| `npm run check` | Passed | [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441) |
-| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441) |
-| CodeQL | Passed | [CodeQL run 44622255484](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255484) |
-| GitHub Pages deployment | Passed | [Pages run 44622255212](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255212) |
-| OpenSSF Scorecard | Passed | [Scorecard run 44622255374](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255374) |
+| `npm test` | Passed | [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281) |
+| `npm run check` | Passed | [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281) |
+| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281) |
+| CodeQL | Passed | [CodeQL run 44627164324](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164324) |
+| GitHub Pages deployment | Passed | [Pages run 44627164278](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164278) |
+| OpenSSF Scorecard | Passed | [Scorecard run 44627164312](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164312) |
 
-The latest Validate log contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
+The final merged-main Validate log on `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9` contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
 
 The Chromium harness now allows up to 45 seconds for browser startup, selects a wider random debugging-port range, disables shared-memory pressure, and reports a specific launch/exit/timeout reason if DevTools does not become available. The assertions themselves were not weakened or skipped.
 
@@ -34,15 +34,16 @@ The Chromium harness now allows up to 45 seconds for browser startup, selects a 
 
 | Area | Root cause | Resolution |
 |---|---|---|
-| Color Palette | A single-element query was treated as a collection during roving-focus navigation. | Uses the collection query helper; Arrow, Home and End navigation pass. |
+| Color Palette | The collection query was mixed up with the single-element query; the initial roving-focus implementation also failed to advance `tabindex` and rebuilt the swatch DOM on every value change, losing focus. | Uses stable query collections, updates selection and `aria-pressed` in place, preserves the focused swatch through selection/list updates, maintains exactly one roving Tab stop, and explicitly handles Enter/Space without duplicate activation. Arrow, Home, End, Enter, Space, selection events and dynamic value/list replacement pass. |
 | Markdown Editor | Tab synchronization called `forEach` on the single-element query helper. | Uses a collection query; tab state, input/change events and keyboard navigation pass. |
 | Marquee | The internal slot element was assigned to the native `HTMLElement.slot` string property. | Stores the slot reference as `_slotElement`; slot listeners and reconnect behavior work. A MutationObserver synchronizes nested light-DOM changes into the inert duplicate track and is cleaned up on disconnect. |
 | Scroll Reveal | The internal slot element collided with the native `HTMLElement.slot` property. | Stores the reference as `_slotElement`; dynamic child observation, reveal/conceal behavior and observer reconnect pass. |
 | 3D Flip Card | Enter activation was not reliable in the touch-emulated browser test. | Explicit Enter/Space handling prevents native default activation and toggles exactly once. Both keyboard paths and state/event synchronization pass. |
 | Animated Counter | The test removed the element and then tried to query the disconnected node from the document, so it never reconnected it. | The test retains the element reference and now genuinely tests detach finalization, reconnect, reduced motion, same-value refresh, locale formatting and completion events. No component behavior patch was needed for this test defect. |
 | Confetti Button | Enter activation was not reliable in the touch-emulated browser test. | Explicit Enter/Space handling prevents duplicate activation; celebration events and reduced-motion behavior pass. |
+| Audio Player regression | The browser test assumed a fixed 500 ms was enough for local WAV metadata to load, which was not deterministic under runner load. | The test now waits up to three seconds for actual metadata and duration before seeking, and reports media ready state, network state, error code and event sequence on failure. This changes test timing and diagnostics, not playback behavior. |
 
-The browser test harness was hardened to throw on page-side `Runtime.evaluate` exceptions instead of silently converting exceptions to `undefined`. The Image Cropper test cleanup is idempotent, and the CDP keyboard helper sends the correct DOM code for Space. Chromium startup now has a longer bounded wait and actionable failure diagnostics.
+The browser test harness was hardened to throw on page-side `Runtime.evaluate` exceptions instead of silently converting exceptions to `undefined`. Color Palette regression coverage now verifies exact event counts, focus retention, roving `tabindex`, Enter/Space activation and dynamic list replacement. The Image Cropper test cleanup is idempotent, and the CDP keyboard helper sends the correct DOM code for Space. Chromium startup now has a longer bounded wait and actionable failure diagnostics.
 
 The GitHub Pages workflow now separates source validation/artifact upload into a `build` job and runs `deploy-pages` in a dependent `deploy` job. Retrying deployment no longer repeats the artifact upload, and an in-progress deployment is not cancelled by a new push. The latest Pages run passes with this layout.
 
