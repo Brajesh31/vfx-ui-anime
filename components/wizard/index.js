@@ -360,7 +360,7 @@ class VfxWizard extends Base {
   panel.setAttribute('tabindex','-1');
   requestAnimationFrame(()=>{if(this.isConnected&&panel.isConnected&&this._panels[this._index]===panel)panel.focus({preventScroll:true});});
  }
- _escape(value) { return String(value??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }
+ _escape(value) { return String(value??'').replace(/[&<>"']/g,ch=>ch==='&'?'&amp;':ch==='<'?'&lt;':ch==='>'?'&gt;':ch==='"'?'&quot;':'&#39;'); }
  _paint() {
   if(!this.ready)return;
   const total=this.totalSteps,hasSteps=total>0,panel=this._panels[this._index];
