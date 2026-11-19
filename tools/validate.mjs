@@ -62,12 +62,12 @@ for (const name of registryNames) {
 }
 
 const listStart = gallery.indexOf("const ITEMS = [");
-const listEnd = listStart >= 0 ? gallery.indexOf("\\n];", listStart) : -1;
+const listEnd = listStart >= 0 ? gallery.indexOf("\n];", listStart) : -1;
 const itemsSource = listStart >= 0 && listEnd > listStart ? gallery.slice(listStart, listEnd) : "";
-const galleryIds = [...itemsSource.matchAll(/\\bid:\\s*['"]([^'"]+)['"]/g)].map((match) => match[1]);
-const galleryTags = [...itemsSource.matchAll(/\\btag:\\s*['"]([^'"]+)['"]/g)].map((match) => match[1]);
+const galleryIds = [...itemsSource.matchAll(/\bid:\s*['"]([^'"]+)['"]/g)].map((match) => match[1]);
+const galleryTags = [...itemsSource.matchAll(/\btag:\s*['"]([^'"]+)['"]/g)].map((match) => match[1]);
 if (!itemsSource) errors.push("Gallery component manifest could not be located.");
-if (galleryIds.length !== 83 || (gallery.match(/tag:\\s*['"]vfx-/g) || []).length !== 83) {
+if (galleryIds.length !== 83 || (gallery.match(/tag:\s*['"]vfx-/g) || []).length !== 83) {
   errors.push("Gallery must contain exactly eighty-three live demonstrations.");
 }
 const duplicateIds = galleryIds.filter((id, index) => galleryIds.indexOf(id) !== index);
@@ -89,14 +89,14 @@ for (const name of names) {
     read(base + "index.js"), read(base + "demo.html"), read(base + "README.md")
   ]);
   if (!js.includes("vfx-" + name)) errors.push("Component tag missing: vfx-" + name);
-  const embedded = js.match(/\\/\\/ >>> vfx core[^\\n]*\\n([\\s\\S]*?)\\n\\/\\/ <<< vfx core/);
+  const embedded = js.match(/\/\/ >>> vfx core[^\n]*\n([\s\S]*?)\n\/\/ <<< vfx core/);
   if (!embedded) errors.push("Embedded core markers are missing or out of order in " + name + ".");
   else if (embedded[1].trim() !== core.trim()) errors.push("Embedded shared runtime is stale in " + name + ". Run node tools/build.mjs.");
 
-  if (!/<script\\b[^>]*\\bsrc=["'](?:\\.\\/)?index\\.js["'][^>]*>/i.test(demo)) {
+  if (!/<script\b[^>]*\bsrc=["'](?:\.\/)?index\.js["'][^>]*>/i.test(demo)) {
     errors.push("Standalone demo does not load its component script: " + base + "demo.html");
   }
-  if (!/^#\\s+\\S/m.test(docs) || docs.trim().length < 80) {
+  if (!/^#\s+\S/m.test(docs) || docs.trim().length < 80) {
     errors.push("Component README is missing a meaningful heading or usage content: " + base + "README.md");
   }
 }
@@ -115,7 +115,7 @@ if (!pkg.scripts?.["test:browser"]?.includes("tools/test.mjs")) {
 }
 
 if (errors.length) {
-  console.error(errors.join("\\n"));
+  console.error(errors.join("\n"));
   process.exit(1);
 }
 console.log("VFX UI Anime release structure passed: " + names.length + " component types, " + galleryIds.length + " unique gallery demos, exact registry/source coverage, standalone demos, and synchronized shared runtime.");
