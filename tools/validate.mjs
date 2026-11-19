@@ -76,7 +76,7 @@ for (const name of names) {
   if (!galleryTags.includes("vfx-" + name)) errors.push("Gallery manifest is missing the vfx-" + name + " component tag.");
   if (!gallery.includes("../components/" + name + "/index.js")) errors.push("Gallery does not load " + name);
 }
-if (new Set(galleryTags).size !== galleryTags.length) errors.push("Gallery manifest contains duplicate component tags.");
+if (new Set(galleryTags).size !== names.length) errors.push("Gallery tags must cover all eighty-two component types.");
 
 for (const name of names) {
   const base = "components/" + name + "/";
