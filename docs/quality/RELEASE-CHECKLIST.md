@@ -16,16 +16,16 @@ Use this as the final go/no-go checklist. A checked source audit item is not a s
 
 ## Automated verification on merged `main`
 
-Verified on commit `e3e5a46a900dbb88930417acc854a6d96992bce7`:
+Verified on commit `bb7bd2928bd4605e15528d9d3550b2a718bc6ab9`:
 
-- [x] `npm test` passes. [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441)
-- [x] `npm run check` passes. [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441)
-- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441)
-- [x] CodeQL passes. [CodeQL run 44622255484](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255484)
-- [x] GitHub Pages deployment succeeds. [Pages run 44622255212](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255212)
-- [x] OpenSSF Scorecard succeeds. [Scorecard run 44622255374](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255374)
+- [x] `npm test` passes. [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281)
+- [x] `npm run check` passes. [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281)
+- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44627164281](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164281)
+- [x] CodeQL passes. [CodeQL run 44627164324](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164324)
+- [x] GitHub Pages deployment succeeds. [Pages run 44627164278](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164278)
+- [x] OpenSSF Scorecard succeeds. [Scorecard run 44627164312](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627164312)
 
-The Validate browser log records 210 successful checks, zero failures and zero page-side exception lines.
+The Validate browser log for the final merge commit records 210 successful checks, zero failures and zero page-side exception lines, including Color Palette roving focus/Enter/Space and Audio Player metadata/seek coverage.
 
 ## Human QA
 
