@@ -130,8 +130,8 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 ## Data visualization and creative tools
 - Heatmap: components/heatmap/, <vfx-heatmap>. Seven-column activity intensity grid.
 - Treemap: components/treemap/, <vfx-treemap>. Proportional category tile map.
-- Drawing Canvas: components/drawing-canvas/, <vfx-drawing-canvas>. Pointer drawing canvas with clear and PNG export.
-- Color Palette: components/color-palette/, <vfx-color-palette>. Selectable color swatches and copy action.
+- Drawing Canvas: components/drawing-canvas/, <vfx-drawing-canvas>. Responsive pointer/touch and keyboard drawing with undo, accessible instructions, resize preservation, and PNG export.
+- Color Palette: components/color-palette/, <vfx-color-palette>. CSS functional color swatches with roving keyboard focus, selection events, and clipboard fallback.
 - Audio Player: components/audio-player/, <vfx-audio-player>. Custom native-media transport with live metadata, normalized seeking, loop, and distinct media lifecycle events.
 
 
