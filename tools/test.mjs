@@ -375,6 +375,77 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase7-lightbox').remove()");
 }
 
+
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-password-field');el.id='phase8-password';el.setAttribute('name','accountPassword');el.setAttribute('value','StrongPassword1!');el.setAttribute('minlength','10');el.setAttribute('required','');form.append(el);document.body.append(form);window.__phase8PasswordForm=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase8-password'),form=window.__phase8PasswordForm;return el.value==='StrongPassword1!'&&el.strength===4&&form.checkValidity()&&new FormData(form).get('accountPassword')==='StrongPassword1!';})()");
+  await ev("document.querySelector('#phase8-password').setAttribute('minlength','20')");
+  const minimum=await ev("(() => {const el=document.querySelector('#phase8-password'),form=window.__phase8PasswordForm;return el.shadowRoot.querySelector('[data-rule=length]').textContent.includes('20')&&!form.checkValidity()&&el.internals.validity.tooShort===true;})()");
+  await ev("document.querySelector('#phase8-password').value='StrongPassword1!Long'");
+  const recovered=await ev("window.__phase8PasswordForm.checkValidity()&&document.querySelector('#phase8-password').strength===4");
+  const reveal=await ev("(() => {const el=document.querySelector('#phase8-password');return el.toggleVisibility()===true&&el.shadowRoot.querySelector('input').type==='text'&&el.shadowRoot.querySelector('.reveal').getAttribute('aria-pressed')==='true'&&el.toggleVisibility()===false&&el.shadowRoot.querySelector('input').type==='password';})()");
+  await ev("document.querySelector('#phase8-password').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-password');return el.shadowRoot.querySelector('input').disabled&&el.shadowRoot.querySelector('.reveal').disabled;})()");
+  await ev("document.querySelector('#phase8-password').removeAttribute('disabled');window.__phase8PasswordForm.reset()");
+  const reset=await ev("document.querySelector('#phase8-password').value==='StrongPassword1!'");
+  check('phase 8: Password Field synchronizes strength rules, form validity, reveal state, disabled state and reset',initial&&minimum&&recovered&&reveal&&disabled&&reset,JSON.stringify({initial,minimum,recovered,reveal,disabled,reset}));
+  await ev("window.__phase8PasswordForm.remove();window.__phase8PasswordForm=null");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-date-range-picker');el.id='phase8-dates';el.setAttribute('name','booking');el.setAttribute('start','2026-11-20');el.setAttribute('end','2026-11-27');el.setAttribute('required','');form.append(el);document.body.append(form);window.__phase8DateForm=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase8-dates'),form=window.__phase8DateForm;return el.valid&&form.checkValidity()&&new FormData(form).get('booking')==='2026-11-20/2026-11-27';})()");
+  await ev("document.querySelector('#phase8-dates').value={start:'2026-11-29',end:'2026-11-21'}");
+  const ordering=await ev("(() => {const el=document.querySelector('#phase8-dates'),form=window.__phase8DateForm;return !el.valid&&!form.checkValidity()&&el.shadowRoot.querySelector('.summary').classList.contains('invalid');})()");
+  await ev("(() => {const el=document.querySelector('#phase8-dates');el.setAttribute('min','2026-11-01');el.setAttribute('max','2026-12-31');el.value={start:'2026-11-22',end:'2026-11-25'};})()");
+  const bounds=await ev("(() => {const el=document.querySelector('#phase8-dates');return el.valid&&el.shadowRoot.querySelector('#end').min==='2026-11-22'&&window.__phase8DateForm.checkValidity();})()");
+  await ev("document.querySelector('#phase8-dates').preset('7')");
+  const preset=await ev("(() => {const el=document.querySelector('#phase8-dates'),v=el.value;return el.valid&&(Date.parse(v.end)-Date.parse(v.start))===6*86400000;})()");
+  await ev("document.querySelector('#phase8-dates').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-dates');return el.shadowRoot.querySelector('#start').disabled&&el.shadowRoot.querySelector('.clear').disabled&&el.clear()===false;})()");
+  await ev("document.querySelector('#phase8-dates').removeAttribute('disabled');window.__phase8DateForm.reset()");
+  const reset=await ev("(() => {const el=document.querySelector('#phase8-dates');return el.value.start==='2026-11-20'&&el.value.end==='2026-11-27';})()");
+  check('phase 8: Date Range Picker enforces ordering and bounds, serializes forms, applies inclusive presets and resets',initial&&ordering&&bounds&&preset&&disabled&&reset,JSON.stringify({initial,ordering,bounds,preset,disabled,reset}));
+  await ev("window.__phase8DateForm.remove();window.__phase8DateForm=null");
+}
+{ await ev("(() => {const el=document.createElement('vfx-notification-center');el.id='phase8-notifications';document.body.append(el);window.__phase8Changes=0;el.addEventListener('change',()=>window.__phase8Changes++);el.setAttribute('items',JSON.stringify([{id:'a',title:'Build ready',message:'The build passed.',read:false},{id:'a',title:'Duplicate id',read:true},{id:'b',title:'Review',message:'Needs attention.',read:true}]));})()"); await sleep(80);
+  const normalised=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.items.length===2&&el.unreadCount===1&&el.shadowRoot.querySelectorAll('.item').length===2;})()");
+  const read=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.markRead('a')&&el.unreadCount===0&&!el.markRead('a');})()");
+  await ev("document.querySelector('#phase8-notifications').items=[{id:'c',title:'<img src=x onerror=alert(1)>',message:'New item',read:false},{id:'d',title:'Another',read:false}]");
+  const property=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.items.length===2&&el.unreadCount===2&&el.shadowRoot.querySelectorAll('.item img').length===0&&el.shadowRoot.querySelector('.item-title').textContent.includes('<img');})()");
+  const bulk=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.markAllRead()&&el.unreadCount===0&&el.shadowRoot.querySelector('.empty')===null;})()");
+  const dismissed=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.dismiss('c')&&el.items.length===1&&!el.dismiss('missing');})()");
+  await ev("document.querySelector('#phase8-notifications').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-notifications');return !el.markRead('d')&&!el.dismiss('d')&&el.shadowRoot.querySelector('.mark-all').disabled;})()");
+  check('phase 8: Notification Center normalizes data, synchronizes properties, handles read/dismiss state and blocks unsafe/disabled actions',normalised&&read&&property&&bulk&&dismissed&&disabled&&window.__phase8Changes>=4,JSON.stringify({normalised,read,property,bulk,dismissed,disabled,changes:window.__phase8Changes}));
+  await ev("document.querySelector('#phase8-notifications').remove()");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-rich-text-editor');el.id='phase8-editor';el.setAttribute('name','description');el.setAttribute('required','');form.append(el);document.body.append(form);window.__phase8EditorForm=form;})()"); await sleep(80);
+  const required=await ev("!window.__phase8EditorForm.checkValidity()");
+  await ev("document.querySelector('#phase8-editor').value='<p>Hello <strong>world</strong></p><img src=x onerror=alert(1)><script>alert(1)</script><a href=\"javascript:alert(1)\" onclick=\"x()\">Unsafe link</a><a href=\"https://example.com\" onclick=\"x()\">Safe link</a>'");
+  const sanitised=await ev("(() => {const el=document.querySelector('#phase8-editor'),v=el.value;return v.includes('<strong>world</strong>')&&!v.includes('<script')&&!v.includes('<img')&&!v.includes('javascript:')&&!v.includes('onclick')&&v.includes('rel=\"noopener noreferrer\"')&&new FormData(window.__phase8EditorForm).get('description')===v;})()");
+  const text=await ev("document.querySelector('#phase8-editor').text.includes('Hello world')");
+  await ev("document.querySelector('#phase8-editor').setAttribute('readonly','')");
+  const readonly=await ev("(() => {const el=document.querySelector('#phase8-editor');return el.shadowRoot.querySelector('.editor').contentEditable==='false'&&[...el.shadowRoot.querySelectorAll('.tool')].every(b=>b.disabled)&&el.clear()===false;})()");
+  await ev("document.querySelector('#phase8-editor').removeAttribute('readonly');document.querySelector('#phase8-editor').clear()");
+  const invalid=await ev("!window.__phase8EditorForm.checkValidity()&&document.querySelector('#phase8-editor').shadowRoot.querySelector('.editor').getAttribute('aria-invalid')==='true'");
+  await ev("document.querySelector('#phase8-editor').setAttribute('disabled','')");
+  const disabled=await ev("document.querySelector('#phase8-editor').shadowRoot.querySelector('.editor').contentEditable==='false'");
+  check('phase 8: Rich Text Editor sanitizes HTML, preserves safe formatting, reports text/word values and enforces required/readonly/disabled states',required&&sanitised&&text&&readonly&&invalid&&disabled,JSON.stringify({required,sanitised,text,readonly,invalid,disabled}));
+  await ev("window.__phase8EditorForm.remove();window.__phase8EditorForm=null");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-gradient-picker');el.id='phase8-gradient';el.setAttribute('name','background');el.setAttribute('from','#ff5fa8');el.setAttribute('to','#8f8df7');el.setAttribute('angle','135');form.append(el);document.body.append(form);window.__phase8GradientForm=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase8-gradient'),v=new FormData(window.__phase8GradientForm).get('background');return el.stops.length===2&&el.value.includes('135deg')&&v===el.value;})()");
+  const added=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.addStop()&&el.stops.length===3&&el.stops[1].position===50&&el.value.includes('50%');})()");
+  const removed=await ev("(() => {const el=document.querySelector('#phase8-gradient'),id=el.stops[1].id;return el.removeStop(id)&&el.stops.length===2&&!el.removeStop(el.stops[0].id);})()");
+  await ev("document.querySelector('#phase8-gradient').setAttribute('stops',JSON.stringify([{id:'a',color:'#000000',position:0},{id:'b',color:'#00ff00',position:42},{id:'c',color:'#ffffff',position:100}]));");
+  const dynamic=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.stops.length===3&&el.shadowRoot.querySelectorAll('.stop-chip').length===3;})()");
+  await ev("document.querySelector('#phase8-gradient').value='linear-gradient(90deg, #000000 0%, #ff0000 50%, #ffffff 100%)'");
+  const parsed=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.angle===90&&el.stops.length===3&&el.stops[1].color==='#ff0000'&&el.value.includes('90deg');})()");
+  await ev("document.querySelector('#phase8-gradient').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-gradient');return !el.addStop()&&el.shadowRoot.querySelector('#stop-color').disabled&&el.shadowRoot.querySelector('.add').disabled;})()");
+  check('phase 8: Gradient Picker supports multi-stop editing, CSS parsing, dynamic stops, form serialization and disabled guards',initial&&added&&removed&&dynamic&&parsed&&disabled,JSON.stringify({initial,added,removed,dynamic,parsed,disabled}));
+  await ev("window.__phase8GradientForm.remove();window.__phase8GradientForm=null");
+}
+
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
