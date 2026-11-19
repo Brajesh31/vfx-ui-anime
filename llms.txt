@@ -104,11 +104,11 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 
 ## Productivity and creative controls
-- Password Field: `components/password-field/` `<vfx-password-field>`, reveal/hide, heuristic strength meter, and form association.
-- Date Range Picker: `components/date-range-picker/` `<vfx-date-range-picker>`, validated start/end dates and quick ranges.
-- Notification Center: `components/notification-center/` `<vfx-notification-center>`, unread inbox, read/dismiss actions, and filtering.
-- Rich Text Editor: `components/rich-text-editor/` `<vfx-rich-text-editor>`, inline formatting, lists, undo/redo, and sanitized HTML.
-- Gradient Picker: `components/gradient-picker/` `<vfx-gradient-picker>`, two-color CSS gradient editor and presets.
+- Password Field: `components/password-field/` `<vfx-password-field>`, accessible reveal state, configurable strength rules, native form validity and reset.
+- Date Range Picker: `components/date-range-picker/` `<vfx-date-range-picker>`, required and chronological validation, endpoint bounds and inclusive quick ranges.
+- Notification Center: `components/notification-center/` `<vfx-notification-center>`, live inbox data, unread filtering, mark-read, bulk read, dismiss and state events.
+- Rich Text Editor: `components/rich-text-editor/` `<vfx-rich-text-editor>`, formatting, lists, undo/redo, keyboard shortcuts, required forms and allowlist-sanitized HTML.
+- Gradient Picker: `components/gradient-picker/` `<vfx-gradient-picker>`, two-to-eight editable CSS gradient stops, stop positions, angle, presets and form value.
 
 
 ## Workflow and utility components
