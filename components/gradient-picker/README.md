@@ -1,6 +1,6 @@
 # 🌈 VFX UI Anime Gradient Picker
 
-A responsive linear-gradient editor with two-to-five editable color stops, position controls, angle adjustment, presets, CSS output, and form association. The original `from`, `to`, and `angle` API remains supported.
+A responsive linear-gradient editor with two-to-eight editable color stops, position controls, angle adjustment, presets, CSS output, and form association. The original `from`, `to`, and `angle` API remains supported.
 
 ## Quick start
 
@@ -25,8 +25,8 @@ A responsive linear-gradient editor with two-to-five editable color stops, posit
 | `value` | string | Read or set a supported `linear-gradient(...)` CSS value. |
 | `from`, `to` | hex color | Backward-compatible access to the first and last stop colors. |
 | `angle` | number | Read or set the gradient direction, clamped to 0–360 degrees. |
-| `stops` | array | Read a defensive copy or replace stops with `{ color, position }` objects. |
-| `addStop()` | method | Adds a stop between existing stops. Maximum five. |
+| `stops` | array | Read a defensive copy or replace stops with `{ id, color, position }` objects. |
+| `addStop()` | method | Adds a stop between existing stops. Maximum eight. |
 | `removeStop(index)` | method | Removes a stop when more than two remain. |
 | `formResetCallback()` | platform callback | Restores the initial stop list and angle when its form resets. |
 
@@ -37,7 +37,7 @@ A responsive linear-gradient editor with two-to-five editable color stops, posit
 | `name` | empty | Form field name. |
 | `from`, `to` | VFX brand colors | First and last stop colors as six-digit hex. |
 | `angle` | 135 | Direction in degrees. |
-| `stops` | none | JSON array of color and position objects. |
+| `stops` | none | JSON JSON array of objects with a unique `id`, `color`, and `position`. |
 | `value` | none | Initial supported two-to-five-stop linear gradient. |
 | `disabled` | false | Disables stop editing and controls. |
 
@@ -57,7 +57,7 @@ Every color and position input has a descriptive accessible name. Stop controls 
 
 ## Limits
 
-The editor currently supports linear gradients with six-digit hexadecimal colors and two to five stops. It does not parse CSS variables, named colors, alpha colors, radial/conic gradients, or browser-specific color syntax.
+The editor currently supports linear gradients with six-digit hexadecimal colors and two to eight stops. It does not parse CSS variables, named colors, alpha colors, radial/conic gradients, or browser-specific color syntax.
 
 ## Standalone behavior
 
