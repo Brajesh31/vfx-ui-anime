@@ -414,7 +414,8 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const dismissed=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.dismiss('c')&&el.items.length===1&&!el.dismiss('missing');})()");
   await ev("document.querySelector('#phase8-notifications').setAttribute('disabled','')");
   const disabled=await ev("(() => {const el=document.querySelector('#phase8-notifications');return !el.markRead('d')&&!el.dismiss('d')&&el.shadowRoot.querySelector('.mark-all').disabled;})()");
-  check('phase 8: Notification Center normalizes data, synchronizes properties, handles read/dismiss state and blocks unsafe/disabled actions',normalised&&read&&property&&bulk&&dismissed&&disabled&&window.__phase8Changes>=4,JSON.stringify({normalised,read,property,bulk,dismissed,disabled,changes:window.__phase8Changes}));
+  const changes=await ev('window.__phase8Changes');
+  check('phase 8: Notification Center normalizes data, synchronizes properties, handles read/dismiss state and blocks unsafe/disabled actions',normalised&&read&&property&&bulk&&dismissed&&disabled&&changes>=4,JSON.stringify({normalised,read,property,bulk,dismissed,disabled,changes}));
   await ev("document.querySelector('#phase8-notifications').remove()");
 }
 { await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-rich-text-editor');el.id='phase8-editor';el.setAttribute('name','description');el.setAttribute('required','');form.append(el);document.body.append(form);window.__phase8EditorForm=form;})()"); await sleep(80);
