@@ -270,13 +270,27 @@ const api = window.VFXAnimeFX = {
     }
     setup() {
       this.audio = this.$('audio');
-      this.audio.preload = this.getAttribute('preload') || 'metadata';
-      this.audio.loop = this.hasAttribute('loop');
-      this._onPlay = () => { this._paint(); this.$('.status').textContent = ''; this.emit('play', { currentTime: this.currentTime }); };
+      this.audio.preload = this.preload;
+      this.audio.loop = this.loop;
+      this._onPlay = () => {
+        this._paint();
+        this.$('.status').classList.remove('error');
+        this.$('.status').textContent = '';
+        this.emit('play', { currentTime: this.currentTime });
+      };
       this._onPause = () => { this._paint(); this.emit('pause', { currentTime: this.currentTime }); };
       this._onEnded = () => { this._paint(); this.emit('ended', { currentTime: this.currentTime }); };
       this._onTime = () => { this._paint(); this.emit('timeupdate', { currentTime: this.currentTime, duration: this.duration }); };
-      this._onMetadata = () => { this._paint(); this.$('.status').textContent = ''; this.emit('loadedmetadata', { duration: this.duration }); };
+      this._onMetadata = () => {
+        this._paint();
+        this.$('.status').classList.remove('error');
+        this.$('.status').textContent = '';
+        this.emit('loadedmetadata', { duration: this.duration });
+      };
+      this._onDuration = () => {
+        this._paint();
+        this.emit('durationchange', { duration: this.duration });
+      };
       this._onError = () => {
         this._paint();
         this.$('.status').textContent = 'Unable to load this audio source.';
@@ -288,7 +302,7 @@ const api = window.VFXAnimeFX = {
       this.audio.addEventListener('ended', this._onEnded);
       this.audio.addEventListener('timeupdate', this._onTime);
       this.audio.addEventListener('loadedmetadata', this._onMetadata);
-      this.audio.addEventListener('durationchange', this._onMetadata);
+      this.audio.addEventListener('durationchange', this._onDuration);
       this.audio.addEventListener('error', this._onError);
       this.$('.play').addEventListener('click', () => this.toggle());
       this.$('input').addEventListener('input', (event) => this.seek(Number(event.target.value) / 1000));
@@ -306,8 +320,8 @@ const api = window.VFXAnimeFX = {
       if (name === 'src') this._loadSource(newValue);
       if (name === 'title') this.$('.title').textContent = newValue || 'Audio track';
       if (name === 'artist') this.$('.artist').textContent = newValue || 'Artist';
-      if (name === 'loop') this.audio.loop = this.hasAttribute('loop');
-      if (name === 'preload') this.audio.preload = newValue || 'metadata';
+      if (name === 'loop') this.audio.loop = this.loop;
+      if (name === 'preload') this.audio.preload = this.preload;
       if (name === 'disabled') this._syncDisabled();
     }
     get src() { return this.getAttribute('src') || ''; }
@@ -316,6 +330,16 @@ const api = window.VFXAnimeFX = {
     set title(value) { this.setAttribute('title', String(value ?? '')); }
     get artist() { return this.getAttribute('artist') || 'Artist'; }
     set artist(value) { this.setAttribute('artist', String(value ?? '')); }
+    get preload() {
+      const value = this.getAttribute('preload');
+      return ['none', 'metadata', 'auto'].includes(value) ? value : 'metadata';
+    }
+    set preload(value) {
+      const normalized = String(value ?? 'metadata').toLowerCase();
+      this.setAttribute('preload', ['none', 'metadata', 'auto'].includes(normalized) ? normalized : 'metadata');
+    }
+    get loop() { return this.hasAttribute('loop'); }
+    set loop(value) { this.toggleAttribute('loop', Boolean(value)); }
     get disabled() { return this.hasAttribute('disabled'); }
     set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
     get playing() { return Boolean(this.audio && !this.audio.paused && !this.audio.ended); }
@@ -330,6 +354,7 @@ const api = window.VFXAnimeFX = {
     _loadSource(source) {
       if (!this.audio) return;
       this.audio.pause();
+      this.$('.status').classList.remove('error');
       if (source) {
         this.audio.src = source;
         this.audio.load();
@@ -365,7 +390,8 @@ const api = window.VFXAnimeFX = {
       range.disabled = this.disabled || !duration;
       const playing = this.playing;
       this.$('.play').textContent = playing ? 'Ⅱ' : '▶';
-      this.$('.play').setAttribute('aria-label', playing ? 'Pause audio' : 'Play audio');
+      this.$('.play').setAttribute('aria-label', playing ? 'Pause ' + this.title : 'Play ' + this.title);
+      range.setAttribute('aria-valuetext', this.fmt(current) + ' of ' + this.fmt(duration));
     }
     async play() {
       if (this.disabled) return false;
