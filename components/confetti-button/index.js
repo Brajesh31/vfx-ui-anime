@@ -258,4 +258,46 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,at,burst,shards}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:inline-block}.btn{padding:12px 18px;border:2px solid var(--vfx-ink);border-radius:11px;background:linear-gradient(135deg,#ffc4df,#c9c1ff);box-shadow:4px 5px 0 var(--vfx-ink);font-size:12px;font-weight:950;cursor:pointer}.btn:active{transform:translate(3px,4px);box-shadow:1px 1px 0 var(--vfx-ink)}';}render(){return '<button class="btn" type="button">'+(this.getAttribute('label')||'Celebrate!')+'</button>';}setup(){this.$('button').addEventListener('click',()=>{const p=at(this.$('button'));burst(p.x,p.y,{r:65,spikes:18});shards(p.x,p.y,{r:45,n:14});this.emit('celebrate',{label:this.getAttribute('label')||'Celebrate'});});}}define('vfx-confetti-button',C);})();
+(() => {
+  const { Base, define, at, burst, shards } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['label', 'disabled']; }
+    static get css() {
+      return ':host{display:inline-block}.btn{padding:12px 18px;border:2px solid var(--vfx-ink);border-radius:11px;background:linear-gradient(135deg,#ffc4df,#c9c1ff);box-shadow:4px 5px 0 var(--vfx-ink);font-size:12px;font-weight:950;cursor:pointer}.btn:active:not(:disabled){transform:translate(3px,4px);box-shadow:1px 1px 0 var(--vfx-ink)}.btn:focus-visible{outline:3px solid #6558d9;outline-offset:4px}.btn:disabled{opacity:.5;cursor:not-allowed}';
+    }
+    render() {
+      return '<button class="btn" type="button"></button>';
+    }
+    setup() {
+      this.button = this.$('.btn');
+      this.button.addEventListener('click', () => this.celebrate());
+      this._sync();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._sync();
+    }
+    get label() { return this.getAttribute('label') || 'Celebrate!'; }
+    set label(value) { this.setAttribute('label', String(value ?? '')); }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get reducedMotion() {
+      return Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
+    }
+    _sync() {
+      if (!this.button) return;
+      this.button.textContent = this.label;
+      this.button.disabled = this.disabled;
+    }
+    celebrate() {
+      if (this.disabled) return false;
+      if (!this.reducedMotion) {
+        const point = at(this.button);
+        burst(point.x, point.y, { r: 65, spikes: 18 });
+        shards(point.x, point.y, { r: 45, n: 14 });
+      }
+      this.emit('celebrate', { label: this.label, reducedMotion: this.reducedMotion });
+      return true;
+    }
+  }
+  define('vfx-confetti-button', C);
+})();
