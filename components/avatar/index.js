@@ -292,7 +292,7 @@ class VfxAvatar extends Base {
   watchImage(img) {
     if (!img) return;
     img.addEventListener('error', () => {
-      if (!img.isConnected) return;
+      if (!img.isConnected || this.img !== img) return;
       const failed = img.getAttribute('src');
       img.remove();
       this.img = null;
