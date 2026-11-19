@@ -132,7 +132,7 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Treemap: components/treemap/, <vfx-treemap>. Proportional category tile map.
 - Drawing Canvas: components/drawing-canvas/, <vfx-drawing-canvas>. Pointer drawing canvas with clear and PNG export.
 - Color Palette: components/color-palette/, <vfx-color-palette>. Selectable color swatches and copy action.
-- Audio Player: components/audio-player/, <vfx-audio-player>. Custom audio transport with seek and playback state.
+- Audio Player: components/audio-player/, <vfx-audio-player>. Custom native-media transport with live metadata, normalized seeking, loop, and distinct media lifecycle events.
 
 
 ## Media and editor components
@@ -179,3 +179,7 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 ## Phase 7 advanced selection and layout controls
 - `docs/quality/PHASE-7-ADVANCED-SELECTION-LAYOUT.md`: Multi Select, Time Picker, Transfer List, Split Pane and Lightbox Gallery upgrades, API contracts, browser regression coverage, CI results and remaining manual sign-off.
+
+
+## Phase 11 creative tools and media controls
+- docs/quality/PHASE-11-CREATIVE-TOOLS-AUDIO.md: Drawing Canvas, Color Palette, and Audio Player reliability, accessibility, data parsing, media lifecycle, and browser regression coverage.
