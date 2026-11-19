@@ -7,7 +7,7 @@
 
 ## Current decision
 
-<badge color="success">Automated component gate passed</badge>
+**Automated component gate: passed**
 
 The 14-stage implementation roadmap remains complete in scope. The integrated source/registry checks, full Chromium interaction suite and CodeQL analysis now pass on the candidate commit linked below.
 
