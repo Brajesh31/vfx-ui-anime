@@ -258,4 +258,158 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:inline-block}.value{font:900 clamp(24px,5vw,42px)/1.1 system-ui;font-variant-numeric:tabular-nums}.label{display:block;margin-top:4px;color:var(--vfx-dim);font-size:10px;font-weight:850}';}render(){return '<span class="value">0</span><span class="label">'+(this.getAttribute('label')||'Total')+'</span>';}setup(){this._current=0;this.setValue(+(this.getAttribute('value')||0),false);}get value(){return this._target||0;}set value(v){this.setValue(v,true);}setValue(v,animate=true){this._target=+v||0;cancelAnimationFrame(this.frameId);const from=this._current,to=this._target,d=animate?(+(this.getAttribute('duration')||900)):0,start=performance.now();const tick=now=>{const p=d?Math.min(1,(now-start)/d):1;this._current=from+(to-from)*(1-(1-p)**3);this.$('.value').textContent=new Intl.NumberFormat().format(Math.round(this._current));if(p<1)this.frameId=requestAnimationFrame(tick);else this.emit('complete',{value:to});};this.frameId=requestAnimationFrame(tick);}disconnectedCallback(){cancelAnimationFrame(this.frameId);super.disconnectedCallback?.();}}define('vfx-animated-counter',C);})();
+(() => {
+  const { Base, define, clamp } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['value', 'label', 'duration', 'locale', 'decimals']; }
+    static get css() {
+      return ':host{display:inline-block;min-width:0}.value{display:block;font:900 clamp(24px,5vw,42px)/1.1 system-ui;font-variant-numeric:tabular-nums}.label{display:block;margin-top:4px;color:var(--vfx-dim);font-size:10px;font-weight:850}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}';
+    }
+    render() {
+      return '<span class="value" aria-live="off">0</span><span class="label"></span><span class="sr" role="status" aria-live="polite"></span>';
+    }
+    setup() {
+      this._current = this._readInitialValue();
+      this._target = this._current;
+      this._raf = null;
+      this._animation = null;
+      this._media = window.matchMedia?.('(prefers-reduced-motion: reduce)') || null;
+      this._onMotionChange = () => {
+        if (this._media?.matches && this._raf !== null) {
+          cancelAnimationFrame(this._raf);
+          this._raf = null;
+          this._animation = null;
+          this._current = this._target;
+          this._renderCurrent();
+          this._announceComplete();
+        }
+      };
+      this._syncLabel();
+      this._renderCurrent();
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      if (this._media && !this._motionListening) {
+        this._media.addEventListener?.('change', this._onMotionChange);
+        if (!this._media.addEventListener) this._media.addListener?.(this._onMotionChange);
+        this._motionListening = true;
+      }
+    }
+    disconnectedCallback() {
+      if (this._raf !== null) {
+        cancelAnimationFrame(this._raf);
+        this._raf = null;
+        this._animation = null;
+        this._current = this._target;
+        this._renderCurrent();
+      }
+      if (this._motionListening) {
+        this._media?.removeEventListener?.('change', this._onMotionChange);
+        if (!this._media?.removeEventListener) this._media?.removeListener?.(this._onMotionChange);
+        this._motionListening = false;
+      }
+      super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'value') this.setValue(newValue === null || newValue.trim() === '' ? 0 : newValue, true);
+      if (name === 'label') this._syncLabel();
+      if (name === 'locale' || name === 'decimals') this._renderCurrent();
+    }
+    get value() { return Number.isFinite(this._target) ? this._target : 0; }
+    set value(value) {
+      const next = String(value ?? '');
+      if (this.getAttribute('value') === next && this.ready) this.setValue(value, true);
+      else this.setAttribute('value', next);
+    }
+    get label() { return this.getAttribute('label') || 'Total'; }
+    set label(value) { this.setAttribute('label', String(value ?? '')); }
+    get duration() {
+      const value = Number(this.getAttribute('duration'));
+      return Number.isFinite(value) ? clamp(value, 0, 10000) : 900;
+    }
+    set duration(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('duration', String(clamp(number, 0, 10000)));
+    }
+    get locale() { return this.getAttribute('locale') || ''; }
+    set locale(value) {
+      const next = String(value ?? '').trim();
+      if (next) this.setAttribute('locale', next);
+      else this.removeAttribute('locale');
+    }
+    get decimals() {
+      const value = Number(this.getAttribute('decimals'));
+      return Number.isFinite(value) ? Math.round(clamp(value, 0, 6)) : 0;
+    }
+    set decimals(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('decimals', String(Math.round(clamp(number, 0, 6))));
+    }
+    _readInitialValue() {
+      const value = Number(this.getAttribute('value') || 0);
+      return Number.isFinite(value) ? value : 0;
+    }
+    _syncLabel() {
+      if (this.ready) this.$('.label').textContent = this.label;
+    }
+    _format(value) {
+      const options = { minimumFractionDigits: this.decimals, maximumFractionDigits: this.decimals };
+      try { return new Intl.NumberFormat(this.locale || undefined, options).format(value); }
+      catch { return new Intl.NumberFormat(undefined, options).format(value); }
+    }
+    _renderCurrent() {
+      if (!this.ready) return;
+      this.$('.value').textContent = this._format(this._current);
+      this._syncLabel();
+    }
+    _announceComplete() {
+      if (!this.ready) return;
+      const value = this._target;
+      this.$('.sr').textContent = this.label + ': ' + this._format(value);
+      this.emit('complete', { value });
+    }
+    setValue(value, animate = true, announce = true) {
+      const next = Number(value);
+      if (!Number.isFinite(next)) return false;
+      if (!this.ready) {
+        this._current = next;
+        this._target = next;
+        return true;
+      }
+      if (this._raf !== null) cancelAnimationFrame(this._raf);
+      this._raf = null;
+      this._animation = null;
+      const from = this._current;
+      this._target = next;
+      const reduced = Boolean(this._media?.matches || window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
+      const duration = animate && this.isConnected && !reduced ? this.duration : 0;
+      if (!duration || from === next) {
+        this._current = next;
+        this._renderCurrent();
+        if (announce) this._announceComplete();
+        return true;
+      }
+      this._animation = { from, to: next, start: performance.now(), duration };
+      const tick = (now) => {
+        const animation = this._animation;
+        if (!animation) return;
+        const progress = clamp((now - animation.start) / animation.duration, 0, 1);
+        const eased = 1 - (1 - progress) ** 3;
+        this._current = animation.from + (animation.to - animation.from) * eased;
+        this._renderCurrent();
+        if (progress < 1) this._raf = requestAnimationFrame(tick);
+        else {
+          this._raf = null;
+          this._animation = null;
+          this._current = animation.to;
+          this._renderCurrent();
+          if (announce) this._announceComplete();
+        }
+      };
+      this._raf = requestAnimationFrame(tick);
+      return true;
+    }
+  }
+  define('vfx-animated-counter', C);
+})();
