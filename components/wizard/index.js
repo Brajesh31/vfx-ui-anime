@@ -322,10 +322,12 @@ class VfxWizard extends Base {
   const fields=[...panel.querySelectorAll('input,select,textarea,[data-validate]')];
   const invalid=fields.find(field=>typeof field.checkValidity==='function'&&!field.checkValidity());
   if(!invalid)return true;
-  invalid.reportValidity?.();invalid.focus?.();
+  const previous=this._index;
+  if(index!==this._index){this._index=index;this.removeAttribute('complete');this._paint();this.emit('change',{index,previousIndex:previous,step:panel.dataset.title||'Step '+(index+1),reason:'validation'});}
   const field=invalid.name||invalid.id||invalid.getAttribute('aria-label')||invalid.tagName.toLowerCase();
   const message=invalid.validationMessage||'Complete the required field before continuing.';
   this.$('.status').textContent=message;
+  requestAnimationFrame(()=>{if(panel.isConnected&&this._panels[this._index]===panel){invalid.focus?.();invalid.reportValidity?.();}});
   this.emit('invalid',{index,field,message});
   return false;
  }
