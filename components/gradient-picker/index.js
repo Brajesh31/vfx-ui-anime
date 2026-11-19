@@ -389,7 +389,7 @@ class VfxGradientPicker extends Base {
   const selected=this._selected();if(selected){this.$('#stop-color').value=selected.color;this.$('#stop-position').value=selected.position;this.$('.position-output').textContent=Math.round(selected.position)+'%';}
   this.$('.add').disabled=this._stops.length>=8||this.hasAttribute('disabled')||this._formDisabled;
   this.$('.remove').disabled=this._stops.length<=2||this.hasAttribute('disabled')||this._formDisabled;
-  this.internals?.setFormValue(value);
+  this.internals?.setFormValue(this.hasAttribute('disabled')||this._formDisabled?null:value);
   if(emit)this.emit(kind==='input'?'input':'change',{value,from:this.from,to:this.to,angle:this.angle,stops:this.stops});
  }
  formDisabledCallback(disabled) { this._formDisabled=!!disabled;this._syncDisabled(); }
