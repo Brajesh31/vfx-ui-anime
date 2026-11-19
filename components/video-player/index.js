@@ -441,7 +441,7 @@ const api = window.VFXAnimeFX = {
     }
     toggleMuted() {
       if (this.disabled) return false;
-      this.video.muted = !this.video.muted;
+      this.muted = !this.muted;
       this._paint();
       this.emit('volumechange', { muted: this.muted });
       return true;
