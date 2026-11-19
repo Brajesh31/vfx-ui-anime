@@ -280,6 +280,7 @@ const api = window.VFXAnimeFX = {
       if (oldValue !== newValue && this.ready) this._render(name === 'value' || name === 'min' || name === 'max');
     }
     get value() {
+      if (this._value !== undefined) return this._value;
       const raw = this.getAttribute('value');
       return finite(raw) ? Number(raw) : 0;
     }
