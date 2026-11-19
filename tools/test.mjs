@@ -595,7 +595,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase9-emoji').remove()");
 }
 { await ev("(() => {const el=document.createElement('vfx-copy-code');el.id='phase9-copy';el.textContent='const x = 1;\\nconsole.log(x);\\n';document.body.append(el);window.__phase9Copied='';el.addEventListener('copy',e=>window.__phase9Copied=e.detail.value);})()"); await sleep(80);
-  const initialState=await ev("(() => {const el=document.querySelector('#phase9-copy');return JSON.stringify({lineCount:el.lineCount,value:JSON.stringify(el.value),code:JSON.stringify(el.shadowRoot.querySelector('code').textContent),light:JSON.stringify(el.textContent)});})()"); const initialData=JSON.parse(initialState);const initial=initialData.lineCount===3&&JSON.parse(initialData.value).endsWith('\n')&&initialData.code===JSON.parse(initialData.value);
+  const initialState=await ev("(() => {const el=document.querySelector('#phase9-copy');return JSON.stringify({lineCount:el.lineCount,value:JSON.stringify(el.value),code:JSON.stringify(el.shadowRoot.querySelector('code').textContent),light:JSON.stringify(el.textContent)});})()"); const initialData=JSON.parse(initialState),source=JSON.parse(initialData.value);const initial=initialData.lineCount===3&&source.endsWith('\n')&&JSON.parse(initialData.code)===source;
   await ev("document.querySelector('#phase9-copy').setAttribute('language','javascript')");
   const language=await ev("document.querySelector('#phase9-copy').shadowRoot.querySelector('.lang').textContent==='javascript'");
   await ev("document.querySelector('#phase9-copy').setAttribute('code','<script>window.__unsafeExecuted=true</script>')");
