@@ -1,7 +1,7 @@
 # Phase 2: original signature controls upgraded
 
 **Status:** Implementation and automated CI verified on 19 November 2026; manual visual, cross-browser and assistive-technology review remain outstanding  
-**Scope:** The original 11 signature component types  
+**Scope:** The 11 signature component types  
 **Base commit:** `98f00bea8aa26922863b34020ba9bdb32740fbb2`  
 **Phase 2 implementation commits:** `baf3ecb6347cb0691b972faea236925e8381ea12`, `c72dcdff293ce78373d61a5c81e0517a4da1ae7f`, `d93462f2d6f91f78d911dc3fbb62c6ab93d3b72b`, `2c3a38589e4bd243906419efdda9097ac3dbf8be`, `4db1e3ce2e2cfb98f8b90c245caabdc4fcf067b6`, `dd869b1620fa5f1de181fb7a5a451603edf3101d`, and `60484148f285fc52f259f68d5cd4813f0beb422e`.
 
