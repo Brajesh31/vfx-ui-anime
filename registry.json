@@ -1157,7 +1157,7 @@
       "name": "wizard",
       "type": "registry:file",
       "title": "VFX UI Anime Multi-step Wizard",
-      "description": "A multi-step workflow wizard with slotted panels, native validity checks, progress, navigation, and completion events. One file, no dependencies, defines <vfx-wizard>.",
+      "description": "A multi-step workflow wizard with live panel discovery, sequential validation, focus management, reset support, progress navigation, and completion events. One file, no dependencies, defines <vfx-wizard>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "wizard",
@@ -1171,13 +1171,13 @@
           "target": "~/public/vfx-ui-anime/wizard.js"
         }
       ],
-      "docs": "Load /components/wizard/index.js with a plain script tag. See components/wizard/README.md for attributes, methods, events, keyboard behavior, and limits."
+      "docs": "Load /components/wizard/index.js with a plain script tag. See components/wizard/README.md for panel markup, sequential validation, navigation, events, reset behavior, accessibility, and limitations."
     },
     {
       "name": "guided-tour",
       "type": "registry:file",
       "title": "VFX UI Anime Guided Tour",
-      "description": "A selector-based guided tour overlay with highlighted page targets, keyboard navigation, next/back, and skip. One file, no dependencies, defines <vfx-guided-tour>.",
+      "description": "A selector-based onboarding overlay with spotlight positioning, missing-target handling, keyboard navigation, focus trapping/restoration, and reduced-motion-aware scrolling. One file, no dependencies, defines <vfx-guided-tour>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "guided-tour",
@@ -1191,13 +1191,13 @@
           "target": "~/public/vfx-ui-anime/guided-tour.js"
         }
       ],
-      "docs": "Load /components/guided-tour/index.js with a plain script tag. See components/guided-tour/README.md for attributes, methods, events, keyboard behavior, and limits."
+      "docs": "Load /components/guided-tour/index.js with a plain script tag. See components/guided-tour/README.md for selector and JSON step formats, focus handling, keyboard controls, target errors, events, and limitations."
     },
     {
       "name": "stopwatch",
       "type": "registry:file",
       "title": "VFX UI Anime Stopwatch",
-      "description": "A browser performance-clock stopwatch with start/stop, lap splits, reset, and elapsed-time events. One file, no dependencies, defines <vfx-stopwatch>.",
+      "description": "A performance-clock stopwatch with monotonic elapsed-time calculation, lap splits, reset, disabled-state handling, and reconnect-safe rendering. One file, no dependencies, defines <vfx-stopwatch>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "stopwatch",
@@ -1211,13 +1211,13 @@
           "target": "~/public/vfx-ui-anime/stopwatch.js"
         }
       ],
-      "docs": "Load /components/stopwatch/index.js with a plain script tag. See components/stopwatch/README.md for attributes, methods, events, keyboard behavior, and limits."
+      "docs": "Load /components/stopwatch/index.js with a plain script tag. See components/stopwatch/README.md for elapsed-time properties, lap records, methods, events, lifecycle behavior, and limitations."
     },
     {
       "name": "emoji-picker",
       "type": "registry:file",
       "title": "VFX UI Anime Emoji Picker",
-      "description": "A searchable curated emoji selector with category controls and selection events. One file, no dependencies, defines <vfx-emoji-picker>.",
+      "description": "A curated emoji selector with keyword search, descriptive names, category filters, arrow-key navigation, selected-value synchronization, and selection events. One file, no dependencies, defines <vfx-emoji-picker>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "emoji-picker",
@@ -1231,13 +1231,13 @@
           "target": "~/public/vfx-ui-anime/emoji-picker.js"
         }
       ],
-      "docs": "Load /components/emoji-picker/index.js with a plain script tag. See components/emoji-picker/README.md for attributes, methods, events, keyboard behavior, and limits."
+      "docs": "Load /components/emoji-picker/index.js with a plain script tag. See components/emoji-picker/README.md for keyword search, categories, value selection, keyboard navigation, events, and limits."
     },
     {
       "name": "copy-code",
       "type": "registry:file",
       "title": "VFX UI Anime Copy Code Block",
-      "description": "A line-numbered code display component with language label, copy action, and clipboard fallback. One file, no dependencies, defines <vfx-copy-code>.",
+      "description": "A safe code display with whitespace-preserving source sync, line numbers, live language labels, optional wrapping, clipboard fallback, and copy status events. One file, no dependencies, defines <vfx-copy-code>.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "copy-code",
@@ -1251,7 +1251,7 @@
           "target": "~/public/vfx-ui-anime/copy-code.js"
         }
       ],
-      "docs": "Load /components/copy-code/index.js with a plain script tag. See components/copy-code/README.md for attributes, methods, events, keyboard behavior, and limits."
+      "docs": "Load /components/copy-code/index.js with a plain script tag. See components/copy-code/README.md for source formats, whitespace handling, clipboard API and fallback behavior, events, and limits."
     },
     {
       "name": "bar-chart",
