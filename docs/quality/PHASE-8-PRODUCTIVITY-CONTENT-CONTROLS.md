@@ -1,6 +1,6 @@
 # Phase 8: productivity and content controls
 
-**Status:** Implementation committed directly to `main`; automated CI verification pending  
+**Status:** Implementation and automated CI verification complete on `main` (19 November 2026); manual visual and assistive-technology sign-off remains pending  
 **Scope:** Password Field, Date Range Picker, Notification Center, Rich Text Editor, and Gradient Picker  
 **Baseline:** Phase 1 component audit, animation design system, acceptance matrix, and Phase 7 implementation standard  
 **Compatibility:** Existing custom-element tags and primary public properties/events are retained. No dependencies or component types were added.
@@ -40,16 +40,23 @@ The original full-gallery interaction suite and the 390 px horizontal-overflow a
 
 ## 5. Verification and sign-off
 
-The push to `main` triggers the repository's Validate, GitHub Pages, CodeQL and OSSF Scorecard workflows. The Validate workflow is configured to run:
+All four required GitHub Actions workflows passed on implementation commit `32c12328c56d95ec3ddeb15ca50c5257641eb1f3`:
 
-1. `npm test` for the 82-component inventory and registry.
-2. `npm run check` for generated standalone-runtime consistency and repository validation.
-3. `npm run test:browser` for Chromium interaction and component regression tests.
+| Check | Result | Run |
+|---|---|---|
+| Validate: 82-component inventory, generated runtime and full Chromium browser suite | Passed | [Run 44562538944](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44562538944) |
+| GitHub Pages deployment | Passed | [Run 44562538655](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44562538655) |
+| CodeQL | Passed | [Run 44562538674](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44562538674) |
+| OSSF Scorecard | Passed | [Run 44562538731](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44562538731) |
 
-Automated CI results must be inspected before the phase is declared verified. Manual visual inspection at desktop, tablet and mobile widths, keyboard-only review in a real browser, and screen-reader/assistive-technology review remain separate sign-off items. Automated assertions do not replace them.
+The Chromium log confirms all Phase 8 regression groups passed, the original gallery interaction suite passed, and the 390 px horizontal-overflow check passed.
+
+After Phase 8, the working component upgrade count is **57 of 82 (69.5%)**, leaving **25 components** across Phases 9–13. Phase 14 remains whole-library release hardening.
+
+Manual visual inspection at desktop, tablet and mobile widths, keyboard-only review in a real browser, and screen-reader/assistive-technology review remain separate sign-off items. Automated assertions do not replace them.
 
 ## 6. Boundaries and limitations
 
 No application dependencies, shared-runtime architecture, component tags, publishing settings or hosting providers were changed. Existing standalone delivery and GitHub Pages remain the deployment model. Notification Center does not add backend persistence. Password strength remains a client-side heuristic. Rich Text Editor sanitization is a client-side safety layer, not a replacement for server-side validation. Gradient Picker currently supports linear gradients with six-digit hexadecimal colors and two to eight stops.
 
-**Phase 8 implementation is committed directly to `main`; automated CI and manual accessibility/visual sign-off are pending.**
+**Phase 8 implementation and automated CI verification are complete on `main`. Manual visual, keyboard-only and screen-reader sign-off remain outstanding.**
