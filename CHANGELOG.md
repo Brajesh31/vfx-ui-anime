@@ -2,6 +2,13 @@
 
 This project has not received a versioned release yet. Changes are recorded under **Unreleased** until the public API, distribution model and release gates are approved.
 
+## 0.1.0-rc.1 (source-only GitHub pre-release)
+
+- First versioned source pre-release for the 82 Web Component types, 82 standalone demos and 83 gallery examples.
+- The release workflow runs source validation, generated-runtime parity checks and the full Chromium touch/keyboard/form/lifecycle suite before creating the GitHub pre-release.
+- This candidate does not publish an npm package. The package remains private while its package contents and browser-script distribution contract are finalized.
+- Manual visual, keyboard-only, screen-reader, touch-device and cross-browser review remains required before a stable release.
+
 ## Unreleased
 
 - Completed the 14-stage implementation roadmap across all 82 Web Component types.
