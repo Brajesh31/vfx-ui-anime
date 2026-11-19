@@ -283,3 +283,14 @@ Phase 6 hardens Kanban, Data Grid, Tree View, Signature Pad and Before & After. 
 ## 🧭 Phase 7: advanced selection and layout controls
 
 Phase 7 upgrades Multi Select, Time Picker, Transfer List, Split Pane and Lightbox Gallery. The work covers live option and collection updates, selected-value normalization, native form validity and reset behavior, bounded time adjustment, accessible group labels, keyboard resizing and separator announcements, modal focus restoration, asynchronous image load/error handling, and useful empty states. Dedicated browser regressions cover each control, while the existing whole-gallery interaction suite and 390 px overflow check remain enabled. Automated validation, GitHub Pages deployment, CodeQL and OSSF Scorecard passed on the Phase 7 implementation commit. Manual visual and assistive-technology review remains a separate sign-off step. See the [Phase 7 implementation report](docs/quality/PHASE-7-ADVANCED-SELECTION-LAYOUT.md).
+
+
+## 🔐 Phase 8: productivity and content controls
+
+Phase 8 upgrades Password Field, Date Range Picker, Notification Center, Rich Text Editor and Gradient Picker. The controls now cover live attribute synchronization, stronger form validation, notification data normalization and empty states, rich-text sanitization and safe links, editable gradient stops, and accessible disabled/reset behavior. Five standalone demos and component-specific Chromium regressions were added. Automated validation, GitHub Pages, CodeQL and OSSF checks passed on the Phase 8 implementation commit. Manual visual and assistive-technology review remains outstanding. See the [Phase 8 implementation report](docs/quality/PHASE-8-PRODUCTIVITY-CONTENT-CONTROLS.md).
+
+## 🧭 Phase 9: workflow and utility controls
+
+Phase 9 upgrades Multi-step Wizard, Guided Tour, Stopwatch, Emoji Picker and Copy Code Block. The work adds sequential validation and focus handling, missing-target-safe tours with focus trapping/restoration, monotonic stopwatch timing and reconnect-safe rendering, searchable categorized emoji selection with keyboard navigation, and whitespace-preserving safe code display with clipboard feedback. Five interactive standalone demos, API documentation and dedicated browser regressions were added. The Chromium suite, 82-component validation, generated-runtime checks, GitHub Pages deployment and OSSF Scorecard passed on the Phase 9 implementation commit. CodeQL verification is pending final confirmation. Manual visual and assistive-technology review remains outstanding. See the [Phase 9 implementation report](docs/quality/PHASE-9-WORKFLOW-UTILITY-CONTROLS.md).
+
+**Component upgrade progress after Phase 9: 62 of 82 components (75.6%). 20 component upgrades remain across Phases 10–13, followed by Phase 14 whole-library integration and release hardening.**
