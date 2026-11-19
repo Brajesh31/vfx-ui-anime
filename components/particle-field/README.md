@@ -19,7 +19,6 @@ The component registers as `<vfx-particle-field>`. Its single source file includ
 | `speed` | `speed` | `1` | Drift multiplier, clamped to 0–3. A value of 0 freezes particle positions. |
 | `color` | `color` | `rgba(224,215,255,.7)` | Any color supported by the browser's CSS color parser. Invalid values use the default. |
 | `paused` | `paused` | `false` | Freezes the animation at its current particle positions. |
-| `label` | `label` | `Decorative particle field` | Descriptive property for application code. The canvas itself is hidden from assistive technology because it is visual decoration. |
 
 Attribute and property updates are applied live. Invalid non-finite numeric property values are ignored. Numeric values are clamped to their documented ranges.
 
