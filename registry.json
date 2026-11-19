@@ -1457,7 +1457,7 @@
       "name": "video-player",
       "type": "registry:file",
       "title": "VFX UI Anime Video Player",
-      "description": "Custom video wrapper with play/pause control. One file, no dependencies.",
+      "description": "Accessible native video transport with seek, mute, loop, fullscreen, and distinct media lifecycle events. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "video-player",
@@ -1477,7 +1477,7 @@
       "name": "markdown-editor",
       "type": "registry:file",
       "title": "VFX UI Anime Markdown Editor",
-      "description": "Split Markdown editor with safe formatted preview. One file, no dependencies.",
+      "description": "Split, Write, and Preview Markdown editor with a safe DOM-based renderer and protocol-checked links. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "markdown-editor",
@@ -1497,7 +1497,7 @@
       "name": "json-editor",
       "type": "registry:file",
       "title": "VFX UI Anime JSON Editor",
-      "description": "JSON editing with validation and formatting. One file, no dependencies.",
+      "description": "Live JSON validation with a text-only preview, formatting, minification, and required-state feedback. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "json-editor",
@@ -1517,7 +1517,7 @@
       "name": "tilt-card",
       "type": "registry:file",
       "title": "VFX UI Anime 3D Tilt Card",
-      "description": "Pointer-reactive 3D perspective card. One file, no dependencies.",
+      "description": "Mouse/pen perspective card with dynamic content, touch guard, neutral reset, and reduced-motion support. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "tilt-card",
@@ -1537,7 +1537,7 @@
       "name": "flip-card",
       "type": "registry:file",
       "title": "VFX UI Anime 3D Flip Card",
-      "description": "Front/back 3D flip interaction. One file, no dependencies.",
+      "description": "Accessible reversible button with reflected state, dynamic faces, and reduced-motion transition behavior. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "flip-card",
