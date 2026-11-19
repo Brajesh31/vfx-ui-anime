@@ -264,6 +264,7 @@ const fx = window.VFXAnimeFX;
 const { Base, Spring, at, puff, burst, ticks, sfx } = fx;
 class VfxSelect extends Base {
   static formAssociated = true;
+  static observedAttributes = ['disabled', 'value'];
   static fromChildren = true;
   static css = ':host{display:inline-block;width:230px;max-width:100%}.trigger{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:48px;padding:0 14px;border:var(--vfx-bw) solid var(--vfx-ink);border-radius:var(--vfx-r);background:var(--vfx-card);box-shadow:var(--vfx-sh);font-weight:700;text-align:left;cursor:pointer}.trigger[aria-expanded=true]{background:var(--vfx-pri)}.arrow{font-size:21px;line-height:1;transition:transform .16s}.trigger[aria-expanded=true] .arrow{transform:rotate(180deg)}.panel{position:absolute;z-index:5;top:calc(100% + 10px);left:0;right:0;padding:6px;border:2px solid var(--vfx-ink);border-radius:13px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);transform-origin:top center}.panel[hidden]{display:none}.option{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 11px;border:0;border-radius:8px;background:transparent;text-align:left;cursor:pointer}.option[aria-selected=true]{background:#efedff;font-weight:800}.option[aria-disabled=true]{opacity:.42;cursor:not-allowed}.option:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:-2px}.mark{color:var(--vfx-acc);font-weight:900}';
   constructor(){super();this.items=[];this._value='';this.opened=false;this.active=0;this.scale=new Spring(.9,560,24);this._outside=e=>{if(!e.composedPath().includes(this))this.closeList(false);};}
@@ -306,7 +307,7 @@ class VfxSelect extends Base {
   choose(i){const item=this.items[i];if(!item||item.disabled)return;this.chooseValue(item.value,true);this.closeList(true);}
   chooseValue(v,fire){const item=this.items.find(x=>x.value===v);if(!item)return;const changed=this._value!==item.value;this._value=item.value;this.sync();if(changed&&fire){const p=at(this.trigger);burst(p.x,p.y,{r:24,spikes:9,life:.25});sfx('kachi',p.x+25,p.y-28,{size:38,life:.42});this.emit('input',{value:this._value});this.emit('change',{value:this._value,label:item.label});}}
   onKey(e){if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!this.opened)this.openList();else this.setActive(this.active+(e.key==='ArrowDown'?1:-1));}else if(e.key==='Enter'||e.key===' '){e.preventDefault();if(!this.opened)this.openList();else this.choose(this.active);}else if(e.key==='Escape'){e.preventDefault();this.closeList(true);}else if(e.key==='Home'&&this.opened){e.preventDefault();this.setActive(0);}else if(e.key==='End'&&this.opened){e.preventDefault();this.setActive(this.items.length-1);}}
-  attributeChangedCallback(name){if(this.ready&&name==='disabled')this.sync();}
+  attributeChangedCallback(name,oldValue,newValue){if(!this.ready||oldValue===newValue)return;if(name==='disabled')this.sync();if(name==='value'&&newValue!==this._value)this.chooseValue(newValue,false);}
   formResetCallback(){const selected=this.items.find(x=>x.selected)||this.items[0];if(selected){this._value=selected.value;this.sync();}}
   formDisabledCallback(disabled){this.disabled=disabled;}
   frame(dt){this.buttonSpring.step(dt);const s=this.scale.step(dt);if(this.panel&&!this.panel.hidden)this.panel.style.transform='scale('+s.toFixed(3)+')';}
