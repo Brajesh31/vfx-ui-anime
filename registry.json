@@ -1397,7 +1397,7 @@
       "name": "drawing-canvas",
       "type": "registry:file",
       "title": "VFX UI Anime Drawing Canvas",
-      "description": "Pointer drawing canvas with clear and PNG export. One file, no dependencies.",
+      "description": "Responsive pointer and keyboard drawing with undo, clear, change events and PNG export. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "drawing-canvas",
@@ -1417,7 +1417,7 @@
       "name": "color-palette",
       "type": "registry:file",
       "title": "VFX UI Anime Color Palette",
-      "description": "Selectable color swatches and copy action. One file, no dependencies.",
+      "description": "Keyboard-navigable CSS color swatches with functional color parsing, selection events and clipboard fallback. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "color-palette",
@@ -1437,7 +1437,7 @@
       "name": "audio-player",
       "type": "registry:file",
       "title": "VFX UI Anime Audio Player",
-      "description": "Custom audio transport with seek and playback state. One file, no dependencies.",
+      "description": "Accessible native audio transport with dynamic source, seek, loop, metadata and playback lifecycle events. One file, no dependencies.",
       "author": "Brajesh Kumar <https://github.com/Brajesh31>",
       "categories": [
         "audio-player",
