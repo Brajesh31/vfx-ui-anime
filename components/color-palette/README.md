@@ -53,10 +53,11 @@ Events bubble and cross the component's shadow boundary.
 
 ## Keyboard and accessibility
 
-- Swatches are native buttons with an accessible name and aria-pressed state.
-- Only the selected swatch is in the normal Tab sequence.
-- Arrow keys move focus through the palette. Home and End move focus to the first and last swatches.
+- Swatches are native buttons with an accessible name and an `aria-pressed` selection state.
+- Exactly one swatch is in the normal Tab sequence. When focus enters from outside the palette, the selected swatch is the entry point.
+- Arrow keys move focus through the palette. Home and End move focus to the first and last swatches. Each move updates the roving `tabindex`, so tabbing away and back returns to the current keyboard position.
 - Enter and Space activate the focused native button.
+- Selection and color-list updates preserve focus when the focused swatch remains available. If the active swatch is removed from the palette, focus moves to the current Tab entry point.
 - The palette uses a labelled group, visible focus styling, and native disabled states.
 
 ## Clipboard behavior
