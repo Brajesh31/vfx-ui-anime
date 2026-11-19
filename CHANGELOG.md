@@ -21,6 +21,6 @@ This project has not received a versioned release yet. Changes are recorded unde
 ## Release gates still open
 
 - Manual visual, keyboard-only, screen-reader, reduced-motion, touch and cross-browser QA.
-- Resolve or explicitly retire the two linked Vercel build-status failures caused by the Hobby build-rate limit. GitHub Pages is the active site deployment.
+- Decide whether to retain the optional Vercel integration. The two Vercel build-rate-limit failures were reported on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`; the latest documentation commit has no failing combined status contexts. GitHub Pages is the active site deployment.
 - Inspect the npm tarball, define the package contents and entry-point contract, and test installation in a clean consumer project.
 - Select and publish a version only after the release gates are signed off.
