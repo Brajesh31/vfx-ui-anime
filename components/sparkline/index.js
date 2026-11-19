@@ -281,7 +281,7 @@ const api = window.VFXAnimeFX = {
       if (oldValue !== newValue && this.ready) this._render();
     }
     get values() {
-      return (this.getAttribute('values') || '4,7,5,9,8,13,11,16').split(',').map((v) => finite(v) ? Number(v) : null).filter((v) => Number.isFinite(v));
+      return (this.hasAttribute('values') ? this.getAttribute('values') : '4,7,5,9,8,13,11,16').split(',').map((v) => finite(v) ? Number(v) : null).filter((v) => Number.isFinite(v));
     }
     set values(value) {
       const list = Array.isArray(value) ? value : String(value ?? '').split(',');
