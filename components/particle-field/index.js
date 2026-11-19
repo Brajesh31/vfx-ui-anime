@@ -258,4 +258,141 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,rnd}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:100%;height:180px;overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:radial-gradient(ellipse at 50% 40%,#302b60,#17152c);box-shadow:5px 6px 0 var(--vfx-soft)}canvas{width:100%;height:100%;display:block}';}render(){return '<canvas aria-label="Animated particle field"></canvas>';}setup(){this.canvas=this.$('canvas');this.ctx=this.canvas.getContext('2d');this.size();this.particles=Array.from({length:48},()=>({x:rnd(1),y:rnd(1),r:rnd(1,3),speed:rnd(.08,.3),phase:rnd(6.28)}));}size(){this.w=this.clientWidth||400;this.h=this.clientHeight||180;this.canvas.width=this.w*devicePixelRatio;this.canvas.height=this.h*devicePixelRatio;this.ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}frame(dt){if(!this.ctx)return;if(this.canvas.width!==(this.clientWidth||400)*devicePixelRatio)this.size();this.ctx.clearRect(0,0,this.w,this.h);const t=performance.now()/1000;for(const p of this.particles){p.y-=p.speed*dt;if(p.y<0)p.y=1;this.ctx.beginPath();this.ctx.fillStyle='rgba(224,215,255,.7)';this.ctx.arc(p.x*this.w+Math.sin(t+p.phase)*8,p.y*this.h,p.r,0,Math.PI*2);this.ctx.fill();}}}define('vfx-particle-field',C);})();
+(() => {
+  const { Base, define, rnd, clamp } = window.VFXAnimeFX;
+  const DEFAULT_COLOR = 'rgba(224,215,255,.7)';
+  const validColor = (value) => {
+    try { return typeof CSS !== 'undefined' && CSS.supports('color', String(value)); }
+    catch { return false; }
+  };
+  class C extends Base {
+    static get observedAttributes() { return ['count', 'speed', 'color', 'paused', 'label']; }
+    static get css() {
+      return ':host{display:block;position:relative;width:100%;height:180px;min-width:0;overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:radial-gradient(ellipse at 50% 40%,#302b60,#17152c);box-shadow:5px 6px 0 var(--vfx-soft)}canvas{width:100%;height:100%;display:block}';
+    }
+    render() { return '<canvas aria-hidden="true"></canvas>'; }
+    setup() {
+      this.canvas = this.$('canvas');
+      this.ctx = this.canvas.getContext('2d');
+      this._time = 0;
+      this._particles = [];
+      this._media = window.matchMedia?.('(prefers-reduced-motion: reduce)') || null;
+      this._onMotionChange = () => this._draw();
+      this._syncParticles();
+      this.resize();
+      this._draw();
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      if (!this.ready) return;
+      if (this._media && !this._motionListening) {
+        this._media.addEventListener?.('change', this._onMotionChange);
+        this._media.addListener?.(this._onMotionChange);
+        this._motionListening = true;
+      }
+      if (typeof ResizeObserver !== 'undefined') {
+        if (!this._resizeObserver) {
+          this._resizeObserver = new ResizeObserver(() => this.resize());
+          this._resizeObserver.observe(this);
+        }
+      } else {
+        this._onWindowResize ||= () => this.resize();
+        window.addEventListener('resize', this._onWindowResize);
+      }
+    }
+    disconnectedCallback() {
+      this._resizeObserver?.disconnect();
+      this._resizeObserver = null;
+      if (this._onWindowResize) window.removeEventListener('resize', this._onWindowResize);
+      if (this._motionListening) {
+        this._media?.removeEventListener?.('change', this._onMotionChange);
+        this._media?.removeListener?.(this._onMotionChange);
+        this._motionListening = false;
+      }
+      super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'count') this._syncParticles();
+      if (name === 'color') this._syncColor();
+      this._draw();
+    }
+    get count() { return this._readCount(this.getAttribute('count')); }
+    set count(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('count', String(Math.round(clamp(number, 8, 160))));
+    }
+    get speed() {
+      const number = Number(this.getAttribute('speed'));
+      return Number.isFinite(number) ? clamp(number, 0, 3) : 1;
+    }
+    set speed(value) {
+      const number = Number(value);
+      if (Number.isFinite(number)) this.setAttribute('speed', String(clamp(number, 0, 3)));
+    }
+    get color() { return this._color || DEFAULT_COLOR; }
+    set color(value) { if (validColor(value)) this.setAttribute('color', String(value)); }
+    get paused() { return this.hasAttribute('paused'); }
+    set paused(value) { this.toggleAttribute('paused', Boolean(value)); }
+    get label() { return this.getAttribute('label') || 'Decorative particle field'; }
+    set label(value) { this.setAttribute('label', String(value ?? '')); }
+    get reducedMotion() { return Boolean(this._media?.matches); }
+    _readCount(value) {
+      const number = Number(value);
+      return Number.isFinite(number) ? Math.round(clamp(number, 8, 160)) : 48;
+    }
+    _syncColor() {
+      const requested = this.getAttribute('color');
+      this._color = validColor(requested) ? requested : DEFAULT_COLOR;
+    }
+    _syncParticles() {
+      const count = this.count;
+      while (this._particles.length > count) this._particles.pop();
+      while (this._particles.length < count) this._particles.push({
+        x: rnd(1), y: rnd(1), r: rnd(1, 3), speed: rnd(.08, .3), phase: rnd(6.28)
+      });
+      this._syncColor();
+    }
+    resize() {
+      if (!this.canvas || !this.ctx) return;
+      const rect = this.getBoundingClientRect();
+      this.w = Math.max(1, Math.round(rect.width || this.clientWidth || 400));
+      this.h = Math.max(1, Math.round(rect.height || this.clientHeight || 180));
+      this.dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      const width = Math.round(this.w * this.dpr), height = Math.round(this.h * this.dpr);
+      if (this.canvas.width !== width || this.canvas.height !== height) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.ctx = this.canvas.getContext('2d');
+        this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      }
+      this._draw();
+    }
+    _draw() {
+      if (!this.ctx) return;
+      this.ctx.clearRect(0, 0, this.w || 1, this.h || 1);
+      const motion = this.reducedMotion || this.paused || this.speed === 0;
+      const time = motion ? 0 : this._time;
+      for (const particle of this._particles) {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.color;
+        this.ctx.arc(
+          particle.x * (this.w || 1) + Math.sin(time + particle.phase) * (motion ? 0 : 8),
+          particle.y * (this.h || 1),
+          particle.r, 0, Math.PI * 2
+        );
+        this.ctx.fill();
+      }
+    }
+    frame(dt) {
+      if (!this.ctx || this.paused || this.reducedMotion || this.speed === 0) return;
+      this._time += Math.max(0, Number(dt) || 0) * this.speed;
+      for (const particle of this._particles) {
+        particle.y -= particle.speed * Math.max(0, Number(dt) || 0) * this.speed;
+        if (particle.y < 0) particle.y = 1;
+      }
+      this._draw();
+    }
+  }
+  define('vfx-particle-field', C);
+})();
