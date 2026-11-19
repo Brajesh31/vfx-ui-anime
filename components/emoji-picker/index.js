@@ -314,11 +314,12 @@ class VfxEmojiPicker extends Base {
   this.$$('.category').forEach(b=>b.disabled=this.disabled);
   this.$$('.emoji').forEach(b=>b.disabled=this.disabled);
  }
+ _escape(value) { return String(value??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }
  _paint() {
   if(!this.$('.grid'))return;
   const q=this.$('.search').value.trim().toLocaleLowerCase();
   const list=this._all.filter(item=>(this._category==='All'||item.category===this._category)&&(!q||item.emoji.includes(q)||item.name.toLocaleLowerCase().includes(q)||item.keywords.some(k=>k.includes(q))));
-  this.$('.grid').innerHTML=list.length?list.map(item=>'<button class="emoji" type="button" data-emoji="'+esc(item.emoji)+'" aria-label="'+esc(item.name)+' '+esc(item.emoji)+'" aria-pressed="'+String(item.emoji===this.value)+'" title="'+esc(item.name)+'">'+item.emoji+'</button>').join(''):'<div class="empty" role="status">No matching emoji.</div>';
+  this.$('.grid').innerHTML=list.length?list.map(item=>'<button class="emoji" type="button" data-emoji="'+this._escape(item.emoji)+'" aria-label="'+this._escape(item.name)+' '+this._escape(item.emoji)+'" aria-pressed="'+String(item.emoji===this.value)+'" title="'+this._escape(item.name)+'">'+item.emoji+'</button>').join(''):'<div class="empty" role="status">No matching emoji.</div>';
   this._syncDisabled();
  }
  _onGridKey(e) {
