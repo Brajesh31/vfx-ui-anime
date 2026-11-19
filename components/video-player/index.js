@@ -353,7 +353,7 @@ const api = window.VFXAnimeFX = {
     get currentTime() { return Number.isFinite(this.video?.currentTime) ? this.video.currentTime : 0; }
     set currentTime(value) { this.seekTime(value); }
     get duration() { return Number.isFinite(this.video?.duration) && this.video.duration > 0 ? this.video.duration : 0; }
-    get muted() { return Boolean(this.video?.muted); }
+    get muted() { return this.video ? Boolean(this.video.muted) : this.hasAttribute('muted'); }
     set muted(value) { this.toggleAttribute('muted', Boolean(value)); }
     _syncAttributes() {
       this.video.setAttribute('aria-label', this.label);
@@ -450,8 +450,10 @@ const api = window.VFXAnimeFX = {
       if (this._onFullscreenChange) return;
       this._onFullscreenChange = () => {
         const fullscreen = document.fullscreenElement === this.$('.box');
+        const changed = fullscreen !== Boolean(this._isFullscreen);
+        this._isFullscreen = fullscreen;
         this._paint();
-        this.emit('fullscreenchange', { fullscreen });
+        if (changed) this.emit('fullscreenchange', { fullscreen });
       };
       document.addEventListener('fullscreenchange', this._onFullscreenChange);
     }
