@@ -295,7 +295,8 @@ const api = window.VFXAnimeFX = {
       if (name === 'label') this._syncLabel();
     }
     get duration() {
-      const number = Number(this.getAttribute('duration'));
+      const raw = this.getAttribute('duration');
+      const number = raw === null || raw.trim() === '' ? 22 : Number(raw);
       return Number.isFinite(number) ? clamp(number, 4, 120) : 22;
     }
     set duration(value) {
