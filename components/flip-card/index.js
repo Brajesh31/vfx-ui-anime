@@ -270,7 +270,25 @@ const api = window.VFXAnimeFX = {
       return '<button class="inner" type="button" aria-label="Reveal answer" aria-pressed="false"><span class="side front"><b></b><small>Activate to reveal</small></span><span class="side back" aria-hidden="true"><b></b><small>Activate to return</small></span></button>';
     }
     setup() {
-      this.$('.inner').addEventListener('click', () => this.toggle());
+      const button = this.$('.inner');
+      button.addEventListener('click', () => this.toggle());
+      button.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          if (!event.repeat) this.toggle();
+        } else if (event.key === ' ' || event.key === 'Spacebar') {
+          event.preventDefault();
+          this._spaceActivationPending = true;
+        }
+      });
+      button.addEventListener('keyup', (event) => {
+        if ((event.key === ' ' || event.key === 'Spacebar') && this._spaceActivationPending) {
+          event.preventDefault();
+          this._spaceActivationPending = false;
+          this.toggle();
+        }
+      });
+      button.addEventListener('blur', () => { this._spaceActivationPending = false; });
       this._sync();
     }
     attributeChangedCallback(name, oldValue, newValue) {

@@ -271,6 +271,23 @@ const api = window.VFXAnimeFX = {
     setup() {
       this.button = this.$('.btn');
       this.button.addEventListener('click', () => this.celebrate());
+      this.button.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          if (!event.repeat) this.celebrate();
+        } else if (event.key === ' ' || event.key === 'Spacebar') {
+          event.preventDefault();
+          this._spaceActivationPending = true;
+        }
+      });
+      this.button.addEventListener('keyup', (event) => {
+        if ((event.key === ' ' || event.key === 'Spacebar') && this._spaceActivationPending) {
+          event.preventDefault();
+          this._spaceActivationPending = false;
+          this.celebrate();
+        }
+      });
+      this.button.addEventListener('blur', () => { this._spaceActivationPending = false; });
       this._sync();
     }
     attributeChangedCallback(name, oldValue, newValue) {
