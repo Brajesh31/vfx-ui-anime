@@ -266,7 +266,7 @@ const api = window.VFXAnimeFX = {
     catch { return false; }
   };
   class C extends Base {
-    static get observedAttributes() { return ['count', 'speed', 'color', 'paused', 'label']; }
+    static get observedAttributes() { return ['count', 'speed', 'color', 'paused']; }
     static get css() {
       return ':host{display:block;position:relative;width:100%;height:180px;min-width:0;overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:radial-gradient(ellipse at 50% 40%,#302b60,#17152c);box-shadow:5px 6px 0 var(--vfx-soft)}canvas{width:100%;height:100%;display:block}';
     }
@@ -286,8 +286,8 @@ const api = window.VFXAnimeFX = {
       super.connectedCallback();
       if (!this.ready) return;
       if (this._media && !this._motionListening) {
-        this._media.addEventListener?.('change', this._onMotionChange);
-        this._media.addListener?.(this._onMotionChange);
+        if (this._media.addEventListener) this._media.addEventListener('change', this._onMotionChange);
+        else this._media.addListener?.(this._onMotionChange);
         this._motionListening = true;
       }
       if (typeof ResizeObserver !== 'undefined') {
@@ -305,8 +305,8 @@ const api = window.VFXAnimeFX = {
       this._resizeObserver = null;
       if (this._onWindowResize) window.removeEventListener('resize', this._onWindowResize);
       if (this._motionListening) {
-        this._media?.removeEventListener?.('change', this._onMotionChange);
-        this._media?.removeListener?.(this._onMotionChange);
+        if (this._media?.removeEventListener) this._media.removeEventListener('change', this._onMotionChange);
+        else this._media?.removeListener?.(this._onMotionChange);
         this._motionListening = false;
       }
       super.disconnectedCallback();
@@ -335,8 +335,6 @@ const api = window.VFXAnimeFX = {
     set color(value) { if (validColor(value)) this.setAttribute('color', String(value)); }
     get paused() { return this.hasAttribute('paused'); }
     set paused(value) { this.toggleAttribute('paused', Boolean(value)); }
-    get label() { return this.getAttribute('label') || 'Decorative particle field'; }
-    set label(value) { this.setAttribute('label', String(value ?? '')); }
     get reducedMotion() { return Boolean(this._media?.matches); }
     _readCount(value) {
       const number = value === null || String(value).trim() === '' ? 48 : Number(value);
