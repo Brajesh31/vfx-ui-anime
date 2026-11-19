@@ -374,7 +374,7 @@ const api = window.VFXAnimeFX = {
       return ':host{display:block;width:min(100%,720px);min-width:0}.box{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.tabs{display:flex;gap:5px;flex-wrap:wrap;padding:8px;border-bottom:1px solid #eee}.tabs button{padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:white;font-size:10px;cursor:pointer}.tabs button[aria-selected=true]{border-color:#6558d9;background:#f0edff;font-weight:900}.tabs button:disabled{opacity:.5;cursor:not-allowed}.body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:220px}.editor{display:block;width:100%;min-width:0;min-height:220px;padding:12px;border:0;border-right:1px solid #eee;font:12px/1.6 ui-monospace,monospace;resize:vertical;tab-size:2}.preview{min-width:0;padding:12px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.preview[hidden],.editor[hidden]{display:none}.preview h1,.preview h2,.preview h3{line-height:1.25}.preview pre{overflow:auto;padding:10px;border-radius:7px;background:#211d3b;color:white;white-space:pre-wrap;overflow-wrap:anywhere}.preview code:not(pre code){padding:1px 4px;border-radius:4px;background:#f0edff}.preview blockquote{margin:8px 0;padding:5px 10px;border-left:3px solid #a49cf5;background:#f8f6ff}.preview ul,.preview ol{padding-left:22px}.preview a{color:#5548b7}.status{padding:6px 10px;border-top:1px solid #eee;color:#756f92;font-size:10px}@media(max-width:520px){.body{grid-template-columns:minmax(0,1fr)}}';
     }
     render() {
-      return '<section class="box"><nav class="tabs" role="tablist" aria-label="Markdown editor view"><button type="button" role="tab" data-mode="split" aria-selected="true">Split</button><button type="button" role="tab" data-mode="write" aria-selected="false" tabindex="-1">Write</button><button type="button" role="tab" data-mode="preview" aria-selected="false" tabindex="-1">Preview</button></nav><div class="body"><textarea class="editor" aria-label="Markdown source" spellcheck="false"></textarea><div class="preview" aria-label="Markdown preview"></div></div><div class="status" role="status" aria-live="polite">Markdown preview ready.</div></section>';
+      return '<section class="box"><nav class="tabs" role="tablist" aria-label="Markdown editor view"><button id="markdown-tab-split" type="button" role="tab" data-mode="split" aria-controls="markdown-panel" aria-selected="true">Split</button><button id="markdown-tab-write" type="button" role="tab" data-mode="write" aria-controls="markdown-panel" aria-selected="false" tabindex="-1">Write</button><button id="markdown-tab-preview" type="button" role="tab" data-mode="preview" aria-controls="markdown-panel" aria-selected="false" tabindex="-1">Preview</button></nav><div class="body" id="markdown-panel" role="tabpanel" aria-labelledby="markdown-tab-split"><textarea class="editor" aria-label="Markdown source" spellcheck="false"></textarea><div class="preview" role="region" aria-label="Markdown preview"></div></div><div class="status" role="status" aria-live="polite">Markdown preview ready.</div></section>';
     }
     setup() {
       this.editor = this.$('textarea');
@@ -432,11 +432,13 @@ const api = window.VFXAnimeFX = {
       editor.hidden = mode === 'preview';
       preview.hidden = mode === 'write';
       this.$('.body').style.gridTemplateColumns = mode === 'split' ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)';
-      this.$$('.tabs button').forEach((button) => {
+      this.$('.tabs button').forEach((button) => {
         const selected = button.dataset.mode === mode;
         button.setAttribute('aria-selected', String(selected));
         button.tabIndex = selected ? 0 : -1;
       });
+      this.$('.body').setAttribute('aria-labelledby', 'markdown-tab-' + mode);
+      this.$('.preview').setAttribute('aria-hidden', String(mode === 'write'));
       return true;
     }
     _paint() {
