@@ -71,7 +71,7 @@ This matrix converts the Phase 1 design system into repeatable checks for Phase 
 ## 5. Phase 1 completion record
 
 - [x] Repository inventory verified: 82 component folders, 82 standalone demos and 83 gallery examples.
-- [x] Original 11 reference controls identified.
+- [x] 11 signature controls identified.
 - [x] Shared runtime, palette and animation primitives inspected.
 - [x] Component-specific focus documented for all 82 components.
 - [x] Common visual and motion standards written.
