@@ -37,6 +37,7 @@ The live gallery is published at https://brajesh31.github.io/vfx-ui-anime/.
 | `.github/workflows/codeql.yml` | CodeQL static analysis workflow |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard workflow |
 | `.github/workflows/publish.yml` | Stable npm publishing from version tags using GitHub OIDC and npm provenance |
+| `.github/workflows/bootstrap-publish.yml` | One-time manual first publication using a protected `NPM_TOKEN` before Trusted Publisher can be configured |
 | `.github/workflows/release.yml` | Source-only pre-release workflow; gates version creation on source, structure and full Chromium checks |
 | `docs/COMPONENTS.md` | Component directory and category index |
 | `docs/PACKAGE.md` | npm install, aggregate/subpath usage, browser restrictions and package verification |

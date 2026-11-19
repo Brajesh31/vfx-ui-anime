@@ -59,6 +59,18 @@ Each `components/<name>/index.js` file is standalone and already contains its sh
 - No React/Vue wrappers, CommonJS entry point, or named component classes are provided.
 - CI verifies the package in Chromium. Screen-reader, real-device touch, Firefox, and Safari manual certification remain separate QA tasks.
 
+## First public publication and trusted publishing
+
+The npm package must exist before npm can attach a Trusted Publisher. The initial publication is therefore bootstrapped once using a protected GitHub Actions secret:
+
+1. Create an npm granular access token with publish permission for `vfx-ui-anime` and the required 2FA bypass for CI.
+2. In GitHub, open **Settings → Secrets and variables → Actions** and create the repository secret `NPM_TOKEN`. Never commit it or send it in a chat.
+3. Open **Actions → Bootstrap first npm publication**, choose `main`, select version `0.1.0`, and run the workflow. It reruns source, browser, tarball and clean-consumer tests before the first public publish. It creates the stable `v0.1.0` GitHub release only after npm accepts the package.
+4. Once `https://www.npmjs.com/package/vfx-ui-anime` exists, open its **Settings → Trusted Publisher** page. Add GitHub Actions with user/organization `Brajesh31`, repository `vfx-ui-anime`, workflow filename `publish.yml`, and allow direct `npm publish`.
+5. Verify the trusted publisher is saved, then delete the `NPM_TOKEN` Actions secret and remove the one-time bootstrap workflow in the next maintenance change.
+
+Later stable version tags use `.github/workflows/publish.yml`, npm OIDC trusted publishing, and provenance. The bootstrap workflow is only for the first package publication.
+
 ## Verification
 
 ```bash

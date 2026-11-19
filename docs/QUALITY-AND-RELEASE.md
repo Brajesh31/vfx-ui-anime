@@ -93,8 +93,8 @@ The package now has an aggregate browser entry point (`index.js`), a direct impo
 - [ ] Prepare release notes, changelog and version only after package contents and API are frozen.
 - [x] Remove `"private": true` and set package version `0.1.0` on the package branch.
 - [x] Add a version-tagged npm publishing workflow using GitHub OIDC and provenance.
-- [ ] Bootstrap the first npm publication with an authorized npm granular token stored as the repository Actions secret `NPM_TOKEN` (do not commit or paste the token into chat).
-- [ ] After the first package exists, configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`, then remove the bootstrap token.
+- [ ] Bootstrap the first npm publication with the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow and a protected npm granular token stored as the repository Actions secret `NPM_TOKEN` (do not commit or paste the token into chat).
+- [ ] After the first package exists, configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`, then remove the bootstrap token and one-time bootstrap workflow.
 - [ ] Create stable tag `v0.1.0` only after package smoke tests and the npm publisher configuration are verified.
 
 The GitHub Pages gallery is deployed. The source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). The package tarball and clean-consumer installation are exercised by the new package smoke test. Public npm publication is not yet completed because the first publish needs npm authorization; npm Trusted Publisher can be configured after the initial package exists.

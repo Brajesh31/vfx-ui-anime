@@ -33,9 +33,10 @@ jobs:
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
 
-      - name: Verify tag and toolchain
+      - name: Verify tag, main ancestry and toolchain
         env:
           RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
@@ -48,6 +49,8 @@ jobs:
             echo "Pre-release tags cannot publish to the stable npm channel."
             exit 1
           fi
+          git fetch origin main
+          git merge-base --is-ancestor "$RELEASE_SHA" origin/main
           node --version
           npm --version
           node -e "const [major,minor]=process.versions.node.split('.').map(Number); if(major<22 || (major===22 && minor<14)) process.exit(1)"
@@ -76,5 +79,24 @@ jobs:
       - name: Test packed package in a clean consumer
         run: npm run test:package
 
+      - name: Reuse an already published version
+        id: registry
+        env:
+          PACKAGE_NAME: vfx-ui-anime
+          PACKAGE_VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          VERSION="${PACKAGE_VERSION#v}"
+          for attempt in $(seq 1 18); do
+            if npm view "$PACKAGE_NAME@$VERSION" version >/dev/null 2>&1; then
+              echo "already-published=true" >> "$GITHUB_OUTPUT"
+              echo "$PACKAGE_NAME@$VERSION is already in the registry. No duplicate publish will be attempted."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "already-published=false" >> "$GITHUB_OUTPUT"
+
       - name: Publish with npm trusted publishing and provenance
+        if: steps.registry.outputs.already-published != 'true'
         run: npm publish --provenance

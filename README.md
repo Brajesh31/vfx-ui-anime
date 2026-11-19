@@ -184,7 +184,7 @@ See [the package guide](docs/PACKAGE.md) for browser/CDN usage, subpath imports,
 
 ### Release status
 
-The npm distribution contract is verified by `npm run test:package`. Public npm publication uses GitHub Actions OIDC trusted publishing and npm provenance. The first stable package release requires a configured npm Trusted Publisher and a successful tagged publish workflow. The source-only GitHub pre-release `v0.1.0-rc.1` remains available [here](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
+The npm distribution contract is verified by `npm run test:package`. The first publication requires a protected `NPM_TOKEN` Actions secret and the **Bootstrap first npm publication** workflow; after the package exists, configure npm Trusted Publisher for `publish.yml`, remove the token, and use OIDC/provenance for later releases. See [the package guide](docs/PACKAGE.md). The source-only GitHub pre-release `v0.1.0-rc.1` remains available [here](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
 
 ## 📄 License
 
