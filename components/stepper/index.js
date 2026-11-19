@@ -266,6 +266,7 @@ const { Base, Spring, at, shards, ticks, puff } = fx;
 class VfxStepper extends Base {
   static observedAttributes = ['value', 'min', 'max', 'step', 'disabled', 'label'];
   static formAssociated = true;
+  constructor() { super(); this._fieldsetDisabled = false; this._settingValue = false; this._defaultValue = null; }
   static css = `
     :host{display:inline-block;width:min(270px,100%);color:var(--vfx-ink)}
     .wrap{display:grid;gap:7px}.label{font-size:12px;font-weight:850;color:var(--vfx-dim)}
@@ -285,7 +286,11 @@ class VfxStepper extends Base {
     const raw = Number(this.getAttribute('value') ?? this.min);
     return Math.min(this.max, Math.max(this.min, Number.isFinite(raw) ? raw : this.min));
   }
-  set value(v) { this.setAttribute('value', String(v)); }
+  set value(v) {
+    this._settingValue = true;
+    try { this.setAttribute('value', String(v)); }
+    finally { this._settingValue = false; }
+  }
   setup() {
     this.out = this.$('.value');
     this.down = this.$('.down');
@@ -299,10 +304,11 @@ class VfxStepper extends Base {
       if (event.key === 'Home') { event.preventDefault(); this.value = this.min; this.sync(); }
       if (event.key === 'End') { event.preventDefault(); this.value = this.max; this.sync(); }
     });
+    this._defaultValue = this.getAttribute('value') ?? String(this.min);
     this.sync();
   }
   change(direction) {
-    if (this.hasAttribute('disabled')) return;
+    if (this.hasAttribute('disabled') || this._fieldsetDisabled) return;
     const next = Math.min(this.max, Math.max(this.min, this.value + direction * this.step));
     if (next === this.value) return;
     this.value = Number(next.toFixed(8));
@@ -321,19 +327,21 @@ class VfxStepper extends Base {
   sync() {
     if (!this.out) return;
     this.out.textContent = String(this.value);
-    this.down.disabled = this.hasAttribute('disabled') || this.value <= this.min;
-    this.up.disabled = this.hasAttribute('disabled') || this.value >= this.max;
+    const disabled = this.hasAttribute('disabled') || this._fieldsetDisabled;
+    this.down.disabled = disabled || this.value <= this.min;
+    this.up.disabled = disabled || this.value >= this.max;
     this.$('.hint').textContent = `${this.min} to ${this.max}`;
     this.$('.control').setAttribute('aria-label', this.getAttribute('label') || 'Quantity');
-    this.internals?.setFormValue(this.hasAttribute('disabled') ? null : String(this.value));
+    this.internals?.setFormValue(disabled ? null : String(this.value));
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue || !this.ready) return;
     if (name === 'label') this.$('.label').textContent = newValue || 'Quantity';
+    if (name === 'value' && !this._settingValue) this._defaultValue = newValue ?? String(this.min);
     if (['value', 'min', 'max', 'step', 'disabled', 'label'].includes(name)) this.sync();
   }
-  formResetCallback() { this.value = this.getAttribute('value') ?? String(this.min); this.sync(); }
-  formDisabledCallback(disabled) { this.toggleAttribute('disabled', disabled); this.sync(); }
+  formResetCallback() { this.value = this._defaultValue ?? String(this.min); this.sync(); }
+  formDisabledCallback(disabled) { this._fieldsetDisabled = !!disabled; this.sync(); }
   frame(dt) {
     const s = this.spring.step(dt);
     this.out.style.transform = Math.abs(s - 1) < .002 ? '' : `scale(${1 + (1 - s) * .2},${s})`;
