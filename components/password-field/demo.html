@@ -1,23 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VFX UI Anime Password Field</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Password Field Demo · VFX UI Anime</title>
 <style>
-:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,720px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;justify-items:center;padding:28px 8px}.hint{max-width:460px;margin:12px auto 0;font-size:12px;text-align:center}a{color:inherit}
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;justify-items:center;padding:24px 8px}.status{min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}button{padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#ff5fa8;color:#1d1a4a;font-weight:850;cursor:pointer}.actions{display:flex;gap:10px;flex-wrap:wrap}a{color:#6c62be}
 </style>
 <script src="index.js"></script>
 </head>
-<body>
-<main>
+<body><main>
 <h1>🔐 Password Field</h1>
-<p>Try the reveal control, type a password and watch the rule checks respond. The minimum length updates with the component attribute.</p>
-<div class="stage">
-<vfx-password-field label="Account password" placeholder="Create a password" minlength="12" required autocomplete="new-password"></vfx-password-field>
-<p class="hint">Strength guidance is a client-side heuristic. Real authentication and password security must be enforced on your server.</p>
-</div>
-<p><a href="../../gallery/">← Back to component gallery</a></p>
+<p>Explore live strength guidance, the accessible reveal control, minimum-length validation, and native form submission behavior.</p>
+<form id="demo-form" class="stage">
+<vfx-password-field name="password" label="Account password" placeholder="Create a secure password" minlength="12" required autocomplete="new-password"></vfx-password-field>
+<div class="actions"><button type="submit">Validate password</button><button type="reset" style="background:#fff">Reset</button></div>
+<div class="status" id="status" role="status" aria-live="polite">Try a longer password with mixed character types. Your value is never printed here.</div>
+</form>
+<p><strong>Security note:</strong> Strength feedback is a heuristic, not a breach check or server-side security validation.</p>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
 </main>
-</body>
-</html>
+<script>
+const form=document.querySelector('#demo-form'),field=document.querySelector('vfx-password-field'),status=document.querySelector('#status');
+field.addEventListener('input',e=>{status.textContent='Strength: '+['Not set','Weak','Fair','Good','Strong'][e.detail.strength]+'. Minimum length: '+e.detail.minimumLength+' characters.';});
+form.addEventListener('submit',e=>{e.preventDefault();status.textContent=form.checkValidity()?'Password satisfies the client-side field constraints.':'Please review the password requirements.';});
+form.addEventListener('reset',()=>{status.textContent='Password field reset.';});
+</script>
+</body></html>
