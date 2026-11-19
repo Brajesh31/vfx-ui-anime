@@ -258,4 +258,44 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,240px);height:175px;perspective:900px}.inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s}.side{position:absolute;inset:0;display:grid;place-content:center;gap:8px;padding:15px;border:2px solid var(--vfx-ink);border-radius:15px;backface-visibility:hidden;box-shadow:5px 6px 0 var(--vfx-soft);text-align:center}.front{background:linear-gradient(135deg,#ffe1ef,#d9d2ff)}.back{transform:rotateY(180deg);background:linear-gradient(135deg,#c8f1e4,#d9e8ff)}:host([flipped]) .inner{transform:rotateY(180deg)}button{font:inherit;cursor:pointer}';}render(){return '<button class="inner" type="button" aria-label="Flip card"><span class="side front"><b>'+esc(this.getAttribute('front')||'Front side')+'</b><small>Tap to reveal</small></span><span class="side back"><b>'+esc(this.getAttribute('back')||'Back side')+'</b><small>Tap to return</small></span></button>';}setup(){this.$('button').addEventListener('click',()=>this.toggle());}get flipped(){return this.hasAttribute('flipped');}toggle(){this.toggleAttribute('flipped');this.emit('change',{flipped:this.flipped});}}define('vfx-flip-card',C);})();
+
+(() => {
+  const { Base, define } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['front', 'back', 'flipped']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,260px);height:180px;perspective:900px;min-width:0}.inner{position:relative;display:block;width:100%;height:100%;padding:0;border:0;border-radius:15px;background:transparent;color:inherit;font:inherit;text-align:center;cursor:pointer;transform-style:preserve-3d;transition:transform .6s}.side{position:absolute;inset:0;display:grid;place-content:center;gap:8px;padding:15px;border:2px solid var(--vfx-ink);border-radius:15px;backface-visibility:hidden;box-shadow:5px 6px 0 var(--vfx-soft)}.front{background:linear-gradient(135deg,#ffe1ef,#d9d2ff)}.back{transform:rotateY(180deg);background:linear-gradient(135deg,#c8f1e4,#d9e8ff)}:host([flipped]) .inner{transform:rotateY(180deg)}.inner:focus-visible{outline:3px solid #6558d9;outline-offset:5px}@media(prefers-reduced-motion:reduce){.inner{transition:none}}';
+    }
+    render() {
+      return '<button class="inner" type="button" aria-label="Reveal answer" aria-pressed="false"><span class="side front"><b></b><small>Activate to reveal</small></span><span class="side back" aria-hidden="true"><b></b><small>Activate to return</small></span></button>';
+    }
+    setup() { this._sync(); }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._sync();
+    }
+    get front() { return this.getAttribute('front') || 'Front side'; }
+    set front(value) { this.setAttribute('front', String(value ?? '')); }
+    get back() { return this.getAttribute('back') || 'Back side'; }
+    set back(value) { this.setAttribute('back', String(value ?? '')); }
+    get flipped() { return this.hasAttribute('flipped'); }
+    set flipped(value) { this.toggleAttribute('flipped', Boolean(value)); }
+    _sync() {
+      if (!this.ready) return;
+      this.$('.front b').textContent = this.front;
+      this.$('.back b').textContent = this.back;
+      this.$('.front').setAttribute('aria-hidden', String(this.flipped));
+      this.$('.back').setAttribute('aria-hidden', String(!this.flipped));
+      this.$('.inner').setAttribute('aria-pressed', String(this.flipped));
+      this.$('.inner').setAttribute('aria-label', this.flipped ? 'Show ' + this.front : 'Reveal ' + this.back);
+    }
+    toggle(value) {
+      const next = typeof value === 'boolean' ? value : !this.flipped;
+      if (next === this.flipped) return this.flipped;
+      this.flipped = next;
+      this._sync();
+      this.emit('change', { flipped: this.flipped, front: this.front, back: this.back });
+      return this.flipped;
+    }
+  }
+  define('vfx-flip-card', C);
+})();
