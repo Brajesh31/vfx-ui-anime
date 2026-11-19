@@ -325,13 +325,15 @@ class VfxStepper extends Base {
     this.up.disabled = this.hasAttribute('disabled') || this.value >= this.max;
     this.$('.hint').textContent = `${this.min} to ${this.max}`;
     this.$('.control').setAttribute('aria-label', this.getAttribute('label') || 'Quantity');
-    this.internals?.setFormValue(String(this.value));
+    this.internals?.setFormValue(this.hasAttribute('disabled') ? null : String(this.value));
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue || !this.ready) return;
     if (name === 'label') this.$('.label').textContent = newValue || 'Quantity';
     if (['value', 'min', 'max', 'step', 'disabled', 'label'].includes(name)) this.sync();
   }
+  formResetCallback() { this.value = this.getAttribute('value') ?? String(this.min); this.sync(); }
+  formDisabledCallback(disabled) { this.toggleAttribute('disabled', disabled); this.sync(); }
   frame(dt) {
     const s = this.spring.step(dt);
     this.out.style.transform = Math.abs(s - 1) < .002 ? '' : `scale(${1 + (1 - s) * .2},${s})`;
