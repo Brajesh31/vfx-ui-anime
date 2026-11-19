@@ -295,14 +295,14 @@ const api = window.VFXAnimeFX = {
       if (oldValue !== newValue && this.ready) this._render();
     }
     get values() {
-      return (this.getAttribute('values') || '18,32,24,48,38,64').split(',').map((v) => finite(v) ? Number(v) : null);
+      return (this.hasAttribute('values') ? this.getAttribute('values') : '18,32,24,48,38,64').split(',').map((v) => finite(v) ? Number(v) : null);
     }
     set values(value) {
       const list = Array.isArray(value) ? value : String(value ?? '').split(',');
       this.setAttribute('values', list.join(','));
     }
     get labels() {
-      return (this.getAttribute('labels') || 'Jan,Feb,Mar,Apr,May,Jun').split(',').map((v) => v.trim());
+      return (this.hasAttribute('labels') ? this.getAttribute('labels') : 'Jan,Feb,Mar,Apr,May,Jun').split(',').map((v) => v.trim());
     }
     set labels(value) {
       const list = Array.isArray(value) ? value : String(value ?? '').split(',');
