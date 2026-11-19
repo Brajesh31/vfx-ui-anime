@@ -1,46 +1,62 @@
-# ✍️ VFX Rich Text Editor
+# ✍️ VFX UI Anime Rich Text Editor
 
-A lightweight contenteditable editor with inline formatting, lists, undo/redo, word count, keyboard shortcuts, form association and a narrow HTML allowlist sanitizer.
+A lightweight rich-text field with inline formatting, lists, quotes, undo/redo, keyboard shortcuts, word count, sanitized HTML output, and form association.
 
 ## Quick start
 
 ```html
 <script src="/components/rich-text-editor/index.js"></script>
+
 <form>
   <vfx-rich-text-editor
     name="description"
-    label="Project description"
-    placeholder="Write something useful…"
+    placeholder="Write a project description…"
     required
   ></vfx-rich-text-editor>
   <button type="submit">Save</button>
 </form>
 ```
 
-## Public API
+## API
 
-| API | Description |
-|---|---|
-| `value` | Read or set sanitized HTML |
-| `text` | Plain text content |
-| `focus()` | Focus the editable surface |
-| `clear()` | Clear content and emit an input event |
-| `required` | Requires non-empty text |
-| `readonly` | Prevents editing and disables formatting controls |
-| `disabled` | Disables editing and excludes the value from form submission |
-| `label`, `placeholder` | Accessible name and empty-state hint |
+| Member | Type | Description |
+|---|---|---|
+| `value` | string | Read or set sanitized HTML. |
+| `text` | string | Read plain text from the editing surface. |
+| `focus()` | method | Focuses the editable surface. |
+| `VfxRichTextEditor.sanitize(html)` | static method | Returns content filtered through the editor's tag and link allowlist. |
 
-Bold, italic, underline, bulleted/numbered lists, undo, redo and clear formatting are available. Ctrl/Cmd+B, Ctrl/Cmd+I and Ctrl/Cmd+U are supported. Pasted and dropped content is inserted as plain text to avoid importing arbitrary markup. The browser's native editing commands may vary slightly by browser.
+### Attributes
 
-## Events and form behavior
+| Attribute | Default | Description |
+|---|---|---|
+| `name` | empty | Form field name. |
+| `value` | empty | Initial content and form-reset value. |
+| `placeholder` | `Start writing…` | Empty-editor hint. |
+| `required` | false | Requires non-whitespace text. |
+| `disabled` | false | Makes the editing surface read-only and disables toolbar actions. |
 
-- `input`: detail includes sanitized `value`, plain `text` and `words`.
-- `change`: emitted when editing is committed on blur.
-- A form-associated editor submits sanitized HTML under its `name`.
-- With `required`, empty text is invalid. Form reset restores the `value` attribute.
+### Formatting
 
-## Sanitization
+Bold, italic, underline, bulleted lists, numbered lists, block quotes, undo, redo, and clear formatting are available. Ctrl/Cmd+B, Ctrl/Cmd+I, Ctrl/Cmd+U, Ctrl/Cmd+Z, and Ctrl/Cmd+Shift+Z shortcuts are supported by the editing surface. Pasted rich content is sanitized before insertion; plain text paste is supported as a fallback.
 
-Only paragraphs, line breaks, basic emphasis, lists, blockquotes, headings, code and safe links are retained. Unsupported formatting is unwrapped or removed. Link targets are kept only for HTTP(S) and mailto schemes, with `rel="noopener noreferrer"`. Paste/drop is plain text.
+### Events
 
-Treat the resulting HTML as untrusted input. Validate and sanitize again on the server before storage or rendering in other contexts. This component is not a complete document editor and does not provide collaborative editing, uploads, tables or a plugin ecosystem.
+- `input`: reports `value` (sanitized HTML), `text` (plain text), and `words`.
+- `change`: emitted when the editing surface loses focus, with the same detail fields.
+
+Events bubble and cross the shadow boundary.
+
+## Sanitization and security
+
+Only a narrow formatting allowlist is retained: paragraphs, line breaks, emphasis, lists, list items, block quotes, selected headings, code, and links. Unsupported tags and attributes are removed. Links are retained only when they resolve to HTTP, HTTPS, or mailto URLs. Pasted HTML is sanitized before it enters the editor.
+
+This is a client-side safety layer, not a complete server-side trust boundary. Validate and sanitize again on the server before storing or rendering editor output in another context. Never execute editor content.
+
+## Forms and accessibility
+
+The editor participates in form submission and reports required-field validity. Its editing surface exposes textbox and multiline semantics, and every formatting action has an accessible name. Keyboard editing and toolbar buttons are supported. Disabled state is synchronized with disabled ancestor fieldsets.
+
+## Limits
+
+The editor is intentionally lightweight. It does not provide collaborative editing, document history persistence, tables, embedded images, arbitrary font styling, or a full document model. Browser editing behavior may differ slightly across engines.
