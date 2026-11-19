@@ -447,6 +447,84 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
 }
 
 
+// Phase 8: productivity and content controls
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-password-field');el.id='phase8-password';el.setAttribute('name','password');el.setAttribute('label','Account password');el.setAttribute('placeholder','Enter a secure password');el.setAttribute('minlength','10');el.setAttribute('required','');el.setAttribute('value','Abcdef123!');form.append(el);document.body.append(form);window.__phase8Password=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase8-password');return el.value==='Abcdef123!'&&el.strength===4&&new FormData(window.__phase8Password).get('password')==='Abcdef123!'&&window.__phase8Password.checkValidity();})()");
+  await ev("document.querySelector('#phase8-password').setAttribute('minlength','12')");
+  const minimum=await ev("(() => {const el=document.querySelector('#phase8-password');return el.shadowRoot.querySelector('[data-rule=length]').textContent.includes('12')&&!window.__phase8Password.checkValidity();})()");
+  await ev("document.querySelector('#phase8-password').setAttribute('label','New account password');document.querySelector('#phase8-password').setAttribute('placeholder','New placeholder')");
+  const labels=await ev("(() => {const el=document.querySelector('#phase8-password');return el.shadowRoot.querySelector('.label').textContent==='New account password'&&el.shadowRoot.querySelector('input').placeholder==='New placeholder';})()");
+  const reveal=await ev("(() => {const el=document.querySelector('#phase8-password'),b=el.shadowRoot.querySelector('.reveal');b.click();const shown=el.shadowRoot.querySelector('input').type==='text'&&b.getAttribute('aria-pressed')==='true';b.click();return shown&&el.shadowRoot.querySelector('input').type==='password';})()");
+  await ev("document.querySelector('#phase8-password').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-password');return el.shadowRoot.querySelector('input').disabled&&el.toggleVisibility()===false;})()");
+  await ev("document.querySelector('#phase8-password').removeAttribute('disabled');window.__phase8Password.reset()");
+  const reset=await ev("document.querySelector('#phase8-password').value==='Abcdef123!'");
+  check('phase 8: Password Field syncs attributes, scores strength, toggles visibility, validates forms, disables and resets',initial&&minimum&&labels&&reveal&&disabled&&reset,JSON.stringify({initial,minimum,labels,reveal,disabled,reset}));
+  await ev("window.__phase8Password.remove();window.__phase8Password=null");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-date-range-picker');el.id='phase8-range';el.setAttribute('name','period');el.setAttribute('start','2026-11-20');el.setAttribute('end','2026-11-25');el.setAttribute('min','2026-11-20');el.setAttribute('max','2026-12-15');el.setAttribute('required','');form.append(el);document.body.append(form);window.__phase8Range=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase8-range');return el.valid&&new FormData(window.__phase8Range).get('period')==='2026-11-20/2026-11-25'&&window.__phase8Range.checkValidity();})()");
+  await ev("document.querySelector('#phase8-range').setAttribute('start','2026-11-28')");
+  const ordering=await ev("(() => {const el=document.querySelector('#phase8-range');return !el.valid&&!window.__phase8Range.checkValidity()&&el.shadowRoot.querySelector('.summary').classList.contains('invalid');})()");
+  await ev("document.querySelector('#phase8-range').setAttribute('end','2026-12-05');document.querySelector('#phase8-range').setAttribute('max','2026-12-01')");
+  const maximum=await ev("!document.querySelector('#phase8-range').valid&&window.__phase8Range.checkValidity()===false");
+  await ev("document.querySelector('#phase8-range').setAttribute('max','2026-12-15');document.querySelector('#phase8-range').preset('7')");
+  const preset=await ev("(() => {const el=document.querySelector('#phase8-range');return el.valid&&el.value.end>el.value.start&&new FormData(window.__phase8Range).get('period')===el.value.start+'/'+el.value.end;})()");
+  await ev("document.querySelector('#phase8-range').clear()");
+  const required=await ev("!window.__phase8Range.checkValidity()&&new FormData(window.__phase8Range).get('period')==null");
+  await ev("document.querySelector('#phase8-range').setAttribute('disabled','')");
+  const disabled=await ev("document.querySelector('#phase8-range').shadowRoot.querySelector('#start').disabled&&!document.querySelector('#phase8-range').clear()");
+  await ev("document.querySelector('#phase8-range').removeAttribute('disabled');window.__phase8Range.reset()");
+  const reset=await ev("(() => {const el=document.querySelector('#phase8-range');return el.value.start==='2026-11-20'&&el.value.end==='2026-11-25';})()");
+  check('phase 8: Date Range Picker validates order and bounds, supports presets, required form values, disabled state and reset',initial&&ordering&&maximum&&preset&&required&&disabled&&reset,JSON.stringify({initial,ordering,maximum,preset,required,disabled,reset}));
+  await ev("window.__phase8Range.remove();window.__phase8Range=null");
+}
+{ await ev("(() => {const el=document.createElement('vfx-notification-center');el.id='phase8-notifications';el.setAttribute('items',JSON.stringify([{id:'a',title:'Alpha',message:'First',read:false},{id:'b',title:'Beta',message:'Second',read:true},{id:'a',title:'Duplicate',message:'Ignored',read:false},{title:'Missing id',message:'Ignored'}]));document.body.append(el);window.__phase8Changes=0;el.addEventListener('change',()=>window.__phase8Changes++);})()"); await sleep(80);
+  const normalised=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.items.length===2&&el.unreadCount===1&&el.shadowRoot.querySelectorAll('.item').length===2;})()");
+  const read=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.markRead('a')&&el.unreadCount===0&&!el.markRead('a')&&window.__phase8Changes===1;})()");
+  await ev("document.querySelector('#phase8-notifications').items=[{id:'c',title:'Gamma',message:'Third',read:false},{id:'d',title:'Delta',message:'Fourth',read:false}]");
+  const property=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.items.length===2&&el.unreadCount===2&&el.shadowRoot.querySelectorAll('.item').length===2;})()");
+  await ev("document.querySelector('#phase8-notifications').setAttribute('items','[]')");
+  const empty=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.items.length===0&&el.unreadCount===0&&el.shadowRoot.querySelector('.empty')!==null;})()");
+  await ev("document.querySelector('#phase8-notifications').items=[{id:'x',title:'X',read:false},{id:'y',title:'Y',read:false}]");
+  const bulk=await ev("(() => {const el=document.querySelector('#phase8-notifications');return el.markAllRead()&&el.unreadCount===0;})()");
+  const dismiss=await ev("document.querySelector('#phase8-notifications').dismiss('x')&&document.querySelector('#phase8-notifications').items.length===1");
+  await ev("document.querySelector('#phase8-notifications').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-notifications');return !el.markRead('y')&&!el.dismiss('y')&&el.shadowRoot.querySelector('.mark-all').disabled;})()");
+  check('phase 8: Notification Center normalizes IDs, syncs data, filters empty states and emits guarded read/bulk/dismiss changes',normalised&&read&&property&&empty&&bulk&&dismiss&&disabled,JSON.stringify({normalised,read,property,empty,bulk,dismiss,disabled}));
+  await ev("document.querySelector('#phase8-notifications').remove()");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-rich-text-editor');el.id='phase8-editor';el.setAttribute('name','content');el.setAttribute('required','');el.setAttribute('value','<p>Initial <strong>content</strong></p>');form.append(el);document.body.append(form);window.__phase8Editor=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase8-editor'),value=el.value;return value.includes('<strong>content</strong>')&&new FormData(window.__phase8Editor).get('content')===value&&window.__phase8Editor.checkValidity();})()");
+  await ev("document.querySelector('#phase8-editor').value='<p onclick=\"alert(1)\"><strong>Safe</strong><a href=\"javascript:alert(1)\">bad</a><a href=\"https://example.com\">link</a><script>alert(2)</script></p>'");
+  const sanitize=await ev("(() => {const value=document.querySelector('#phase8-editor').value;return !/<script|onclick|javascript:/i.test(value)&&value.includes('Safe')&&value.includes('https://example.com');})()");
+  await ev("document.querySelector('#phase8-editor').value=''");
+  const required=await ev("!window.__phase8Editor.checkValidity()&&new FormData(window.__phase8Editor).get('content')===''");
+  await ev("document.querySelector('#phase8-editor').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-editor');return el.shadowRoot.querySelector('.editor').contentEditable==='false'&&[...el.shadowRoot.querySelectorAll('.tool')].every(b=>b.disabled);})()");
+  await ev("document.querySelector('#phase8-editor').removeAttribute('disabled');window.__phase8Editor.reset()");
+  const reset=await ev("document.querySelector('#phase8-editor').value.includes('Initial')");
+  const focus=await ev("(() => {const el=document.querySelector('#phase8-editor');el.focus();return el.shadowRoot.activeElement===el.shadowRoot.querySelector('.editor');})()");
+  check('phase 8: Rich Text Editor sanitizes unsafe markup, serializes forms, validates required content, disables, focuses and resets',initial&&sanitize&&required&&disabled&&reset&&focus,JSON.stringify({initial,sanitize,required,disabled,reset,focus}));
+  await ev("window.__phase8Editor.remove();window.__phase8Editor=null");
+}
+{ await ev("(() => {const form=document.createElement('form'),el=document.createElement('vfx-gradient-picker');el.id='phase8-gradient';el.setAttribute('name','background');el.setAttribute('from','#ff5fa8');el.setAttribute('to','#8f8df7');el.setAttribute('angle','135');form.append(el);document.body.append(form);window.__phase8Gradient=form;})()"); await sleep(80);
+  const initial=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.stops.length===2&&el.value.includes('135deg')&&new FormData(window.__phase8Gradient).get('background')===el.value;})()");
+  const add=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.addStop()&&el.stops.length===3&&el.value.includes('%');})()");
+  const edit=await ev("(() => {const el=document.querySelector('#phase8-gradient'),stops=el.stops;stops[1].color='#22aa88';stops[1].position=42;el.stops=stops;return el.stops[1].color==='#22aa88'&&el.stops[1].position===42&&el.value.includes('#22aa88 42%');})()");
+  const remove=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.removeStop(1)&&el.stops.length===2&&!el.removeStop(0);})()");
+  await ev("document.querySelector('#phase8-gradient').value='linear-gradient(45deg, #112233 0%, #445566 50%, #778899 100%)'");
+  const parse=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.angle===45&&el.stops.length===3&&el.to==='#778899';})()");
+  await ev("document.querySelector('#phase8-gradient').angle=999");
+  const angle=await ev("document.querySelector('#phase8-gradient').angle===360");
+  await ev("document.querySelector('#phase8-gradient').setAttribute('disabled','')");
+  const disabled=await ev("(() => {const el=document.querySelector('#phase8-gradient'),count=el.stops.length;return !el.addStop()&&!el.removeStop(0)&&el.shadowRoot.querySelector('.add').disabled&&el.stops.length===count;})()");
+  await ev("document.querySelector('#phase8-gradient').removeAttribute('disabled');window.__phase8Gradient.reset()");
+  const reset=await ev("(() => {const el=document.querySelector('#phase8-gradient');return el.stops.length===2&&el.angle===135;})()");
+  check('phase 8: Gradient Picker edits 2–5 stops, parses CSS, clamps angle, supports form serialization and disabled/reset states',initial&&add&&edit&&remove&&parse&&angle&&disabled&&reset,JSON.stringify({initial,add,edit,remove,parse,angle,disabled,reset}));
+  await ev("window.__phase8Gradient.remove();window.__phase8Gradient=null");
+}
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
