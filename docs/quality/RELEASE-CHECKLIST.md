@@ -14,9 +14,9 @@ Use this as the final go/no-go checklist. A checked source audit item is not a s
 - [x] GitHub Pages uses separate build/upload and dependent deploy jobs, allowing deploy retries without re-uploading the artifact.
 - [x] All 15 phase-specific reports have been consolidated into the project reference and removed.
 
-## Automated verification on merged `main`
+## Automated verification on the latest implementation commit
 
-Verified on current `main` head `${head}`:
+Verified on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`:
 
 - [x] `npm test` passes. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
 - [x] `npm run check` passes. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
@@ -25,7 +25,7 @@ Verified on current `main` head `${head}`:
 - [x] GitHub Pages deployment succeeds. [Pages run 44627994707](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994707)
 - [x] OpenSSF Scorecard succeeds. [Scorecard run 44627994720](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994720)
 
-The Validate browser log for current `main` records 210 successful checks, zero failures and zero page-side exception lines, including Color Palette roving focus/Enter/Space and Audio Player metadata/seek coverage.
+The Validate browser log for the verified implementation commit records 210 successful checks, zero failures and zero page-side exception lines, including Color Palette roving focus/Enter/Space and Audio Player metadata/seek coverage.
 
 ## Human QA
 

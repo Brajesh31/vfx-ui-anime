@@ -3,7 +3,7 @@
 **Last verified:** 20 November 2026  
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
-**Verified main head:** `${head}`
+**Verified implementation commit:** `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`
 
 ## Current decision
 
@@ -15,7 +15,7 @@ The remaining release work is human QA and package-consumer validation. Passing 
 
 ## 1. Post-merge verification on `main`
 
-All four required GitHub Actions workflows passed on current `main` head `${head}`.
+All four required GitHub Actions workflows passed on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`.
 
 | Check | Result | Evidence |
 |---|---|---|
@@ -26,7 +26,7 @@ All four required GitHub Actions workflows passed on current `main` head `${head
 | GitHub Pages deployment | Passed | [Pages run 44627994707](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994707) |
 | OpenSSF Scorecard | Passed | [Scorecard run 44627994720](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994720) |
 
-The Validate run on current `main` head `${head}` contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
+The Validate run on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18` contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
 
 
 ### Separate Vercel integration status
@@ -105,4 +105,4 @@ The GitHub Pages gallery is deployed. No npm tarball, npm publication, version t
 
 **Automated GitHub Actions gate: passed on current `main`. A formal versioned release remains blocked on manual QA and package-consumer validation.**
 
-The component regressions are fixed and the complete integrated Chromium suite passes on the merged repository. Do not describe the npm package as published or final-release-approved until the remaining checks above are completed.
+The component regressions are fixed and the complete integrated Chromium suite passed on the verified implementation commit. Do not describe the npm package as published or final-release-approved until the remaining checks above are completed.
