@@ -258,4 +258,64 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc,clamp}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:210px}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft);text-align:center}.dial{width:150px;height:80px;position:relative;margin:12px auto 0;overflow:hidden}.ring,.arc{position:absolute;inset:0;border:13px solid #eeeaf8;border-bottom:0;border-radius:100px 100px 0 0}.arc{border-color:#9188ef;transform-origin:50% 100%;clip-path:inset(0)}.num{position:relative;padding-top:37px;font-size:22px;font-weight:950}.label{font-size:11px;font-weight:900}';}render(){return '<section class="box"><div class="label">'+esc(this.getAttribute('label')||'Completion')+'</div><div class="dial"><div class="ring"></div><div class="arc"></div><div class="num">0%</div></div></section>';}setup(){this.min=+(this.getAttribute('min')||0);this.max=+(this.getAttribute('max')||100);this.value=+(this.getAttribute('value')||0);}get value(){return this._value||0;}set value(v){this._value=clamp(+v||0,this.min??0,this.max??100);if(!this.ready)return;const p=(this._value-(this.min??0))/Math.max(1,(this.max??100)-(this.min??0));this.$('.arc').style.transform='rotate('+(p*180-180)+'deg)';this.$('.num').textContent=Math.round(this._value)+'%';this.emit('change',{value:this._value,percent:p*100});}}define('vfx-gauge',C);})();
+(() => {
+  const { Base, define, esc, clamp } = window.VFXAnimeFX;
+  const NS = 'http://www.w3.org/2000/svg';
+  const path = (attrs) => {
+    const el = document.createElementNS(NS, 'path');
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, String(value));
+    return el;
+  };
+  const finite = (value) => Number.isFinite(Number(value)) && String(value).trim() !== '';
+  class C extends Base {
+    static get observedAttributes() { return ['label', 'value', 'min', 'max', 'unit']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,250px)}.box{padding:14px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft);text-align:center}.label{font-size:11px;font-weight:900;overflow-wrap:anywhere}.dial{display:block;width:min(100%,190px);height:auto;margin:8px auto 0;overflow:visible}.track,.arc{fill:none;stroke-width:13;stroke-linecap:round}.track{stroke:#eeeaf8}.arc{stroke:#9188ef;stroke-dasharray:251.33;transition:stroke-dashoffset .22s ease}.num{fill:#1d1a4a;font:950 22px system-ui}.range{fill:#8580b0;font:9px system-ui}@media(prefers-reduced-motion:reduce){.arc{transition:none}}';
+    }
+    render() {
+      return '<section class="box"><div class="label">' + esc(this.getAttribute('label') || 'Completion') + '</div><svg class="dial" viewBox="0 0 200 125" aria-hidden="true"><path class="track" d="M20 105 A80 80 0 0 1 180 105"></path><path class="arc" d="M20 105 A80 80 0 0 1 180 105"></path><text class="num" x="100" y="94" text-anchor="middle">0%</text><text class="range min" x="18" y="122">0</text><text class="range max" x="182" y="122" text-anchor="end">100</text></svg></section>';
+    }
+    setup() { this._render(false); }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._render(name === 'value' || name === 'min' || name === 'max');
+    }
+    get value() {
+      const raw = this.getAttribute('value');
+      return finite(raw) ? Number(raw) : 0;
+    }
+    set value(value) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return;
+      this.setAttribute('value', String(number));
+    }
+    get min() { return finite(this.getAttribute('min')) ? Number(this.getAttribute('min')) : 0; }
+    set min(value) { if (Number.isFinite(Number(value))) this.setAttribute('min', String(Number(value))); }
+    get max() { return finite(this.getAttribute('max')) ? Number(this.getAttribute('max')) : 100; }
+    set max(value) { if (Number.isFinite(Number(value))) this.setAttribute('max', String(Number(value))); }
+    _render(announce = false) {
+      if (!this.ready) return;
+      let min = this.min, max = this.max;
+      if (!(max > min)) { min = 0; max = 100; }
+      const previous = this._value;
+      const value = clamp(this.value, min, max);
+      this._value = value;
+      const percent = (value - min) / (max - min);
+      const circumference = Math.PI * 80;
+      this.$('.arc').style.strokeDasharray = circumference.toFixed(2);
+      this.$('.arc').style.strokeDashoffset = (circumference * (1 - percent)).toFixed(2);
+      const unit = this.getAttribute('unit') ?? '%';
+      this.$('.num').textContent = value + unit;
+      this.$('.min').textContent = String(min);
+      this.$('.max').textContent = String(max);
+      this.$('.label').textContent = this.getAttribute('label') || 'Completion';
+      this.setAttribute('role', 'meter');
+      this.setAttribute('aria-label', this.getAttribute('label') || 'Completion');
+      this.setAttribute('aria-valuemin', String(min));
+      this.setAttribute('aria-valuemax', String(max));
+      this.setAttribute('aria-valuenow', String(value));
+      this.setAttribute('aria-valuetext', value + unit);
+      if (announce && previous !== undefined && previous !== value) this.emit('change', { value, min, max, percent: percent * 100 });
+    }
+  }
+  define('vfx-gauge', C);
+})();
