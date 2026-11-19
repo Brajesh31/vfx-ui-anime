@@ -266,7 +266,7 @@ const api = window.VFXAnimeFX = {
       return ':host{display:block;width:min(100%,560px);min-width:0}.box{border:2px solid var(--vfx-ink);border-radius:14px;overflow:hidden;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:9px}.tools label{display:flex;gap:6px;align-items:center;font-size:11px;font-weight:800}.tools input[type=color]{width:32px;height:27px;padding:1px;border:1px solid #bbb;border-radius:5px}.tools input[type=range]{width:100px;accent-color:#6558d9}.tools button{padding:6px 9px;border:1px solid #aaa;border-radius:6px;background:white;font:inherit;font-size:11px;cursor:pointer}.tools button:disabled{opacity:.45;cursor:not-allowed}.canvas{display:block;width:100%;height:220px;touch-action:none;outline-offset:-3px;background-color:#fff;background-image:linear-gradient(#f0edf8 1px,transparent 1px),linear-gradient(90deg,#f0edf8 1px,transparent 1px);background-size:22px 22px}.status{margin:0;padding:0 10px 8px;color:#6e688e;font-size:10px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}:host([disabled]) .canvas{cursor:not-allowed;opacity:.65}';
     }
     render() {
-      return '<section class="box"><div class="tools"><label>Ink <input class="color" type="color" value="#6558d9"></label><label>Brush <input class="size" type="range" min="1" max="24" value="4"><output class="size-value">4 px</output></label><button class="undo" type="button" disabled>Undo</button><button class="clear" type="button">Clear</button><button class="save" type="button">Export PNG</button></div><canvas class="canvas" tabindex="0" role="img" aria-label="Drawing surface. Draw with a pointer or use the arrow keys while focused." aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight"></canvas><p class="status" role="status" aria-live="polite">Use a pointer, touch, or arrow keys to draw.</p></section>';
+      return '<section class="box"><div class="tools"><label>Ink <input class="color" type="color" value="#6558d9"></label><label>Brush <input class="size" type="range" min="1" max="24" value="4"><output class="size-value">4 px</output></label><button class="undo" type="button" disabled>Undo</button><button class="clear" type="button">Clear</button><button class="save" type="button">Export PNG</button></div><canvas class="canvas" tabindex="0" role="img" aria-label="Drawing surface. Draw with a pointer or use the arrow keys while focused." aria-describedby="canvas-status" aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight"></canvas><p class="status" id="canvas-status" role="status" aria-live="polite">Use a pointer, touch, or arrow keys to draw. Hold Shift with an arrow key for finer movement.</p></section>';
     }
     setup() {
       this.canvas = this.$('canvas');
@@ -302,21 +302,28 @@ const api = window.VFXAnimeFX = {
     }
     connectedCallback() {
       super.connectedCallback();
-      if (this.ready && typeof ResizeObserver !== 'undefined' && !this._resizeObserver) {
-        this._resizeObserver = new ResizeObserver(() => this.resize());
-        this._resizeObserver.observe(this.canvas);
+      if (!this.ready) return;
+      if (typeof ResizeObserver !== 'undefined') {
+        if (!this._resizeObserver) {
+          this._resizeObserver = new ResizeObserver(() => this.resize());
+          this._resizeObserver.observe(this.canvas);
+        }
+      } else {
+        this._onWindowResize ||= () => this.resize();
+        window.addEventListener('resize', this._onWindowResize);
       }
     }
     disconnectedCallback() {
       this._resizeObserver?.disconnect();
       this._resizeObserver = null;
+      if (this._onWindowResize) window.removeEventListener('resize', this._onWindowResize);
       this._pointerId = null;
       this._keyboardDrawing = false;
       super.disconnectedCallback();
     }
     attributeChangedCallback(name, oldValue, newValue) {
       if (oldValue === newValue || !this.ready) return;
-      if (name === 'label') this.canvas.setAttribute('aria-label', newValue || 'Drawing surface. Draw with a pointer or use the arrow keys while focused.');
+      if (name === 'label') this.canvas.setAttribute('aria-label', this.label);
       if (name === 'color') {
         this._color = this._validColor(newValue) ? newValue : '#6558d9';
         this.$('.color').value = this._color;
@@ -327,6 +334,12 @@ const api = window.VFXAnimeFX = {
         this.$('.size-value').textContent = this._size + ' px';
       }
       if (name === 'disabled') this._syncDisabled();
+    }
+    get label() { return this.getAttribute('label') || 'Drawing surface. Draw with a pointer or use the arrow keys while focused.'; }
+    set label(value) {
+      const text = String(value ?? '').trim();
+      if (text) this.setAttribute('label', text);
+      else this.removeAttribute('label');
     }
     get disabled() { return this.hasAttribute('disabled'); }
     set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
@@ -421,8 +434,8 @@ const api = window.VFXAnimeFX = {
       this.ctx.stroke();
       if (!event.repeat) this._changed('keyboard');
     }
-    _changed(input) {
-      this.$('.status').textContent = 'Drawing updated.';
+    _changed(input, message = 'Drawing updated.') {
+      this.$('.status').textContent = message;
       this.emit('change', { input, dataUrl: this.toDataURL() });
     }
     resize() {
@@ -449,8 +462,8 @@ const api = window.VFXAnimeFX = {
       this.ctx.setTransform(1, 0, 0, 1, 0, 0);
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.ctx.restore();
-      this.$('.status').textContent = 'Canvas cleared.';
       this.emit('clear', {});
+      this._changed('clear', 'Canvas cleared.');
       this._syncDisabled();
       return true;
     }
