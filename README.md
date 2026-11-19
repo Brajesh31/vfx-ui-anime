@@ -269,4 +269,4 @@ The live project is deployed with **GitHub Pages**, not Vercel. The [Deploy to G
 
 ## 🧭 Phase 4: navigation and overlays
 
-Phase 4 focuses on Menu, Dialog, Drawer, Calendar, Date Picker, Command Palette, Context Menu and Combobox. The current pass adds keyboard focus handling, dynamic attribute synchronization and regression coverage for overlays, navigation and date constraints. See the [Phase 4 implementation report](docs/quality/PHASE-4-NAVIGATION-OVERLAYS.md).
+Phase 4 upgrades Menu, Dialog, Drawer, Calendar, Date Picker, Command Palette, Context Menu and Combobox. Automated Node/build checks, the full Chromium browser suite, GitHub Pages deployment, CodeQL and OSSF Scorecard are passing on `main`. Manual visual and assistive-technology review remains outstanding. See the [Phase 4 implementation report](docs/quality/PHASE-4-NAVIGATION-OVERLAYS.md).

@@ -40,16 +40,16 @@ Additional coverage is being added for Phase 3 code-review follow-ups discovered
 ## 4. Verification status
 
 - [x] Node validation and component build checks on the current mainline.
-- [ ] Full Chromium browser suite, including the corrected Menu and Drawer assertions.
-- [ ] GitHub Pages deployment after the Phase 4 changes.
-- [ ] CodeQL and OSSF Scorecard after the Phase 4 changes.
+- [x] Full Chromium browser suite, including Menu Escape, Drawer focus restoration and the new Phase 3/4 regression assertions.
+- [x] GitHub Pages deployment after the Phase 4 changes.
+- [x] CodeQL and OSSF Scorecard after the Phase 4 changes.
 - [ ] Manual visual review at mobile and desktop widths.
 - [ ] Keyboard and assistive-technology review.
 
-The earlier browser run passed the Phase 3 assertions and exposed failures in the Menu Escape and Drawer fixture checks. The Drawer failures were caused by the test helper selecting the first gallery drawer rather than the newly created fixture, and by asserting focus on the host instead of the internal launch button. The test now targets the fixture directly. Menu opening now moves focus to its first item so Escape reaches the menu keyboard handler.
+**Latest automated verification:** commit `ac65a6bffaf5cbb4420efadcca800bbe160e8935` on `main`. The Validate, GitHub Pages, CodeQL and OSSF Scorecard workflows all completed successfully. The full Chromium browser test step passed, including the corrected Menu Escape assertion and Drawer fixture/focus tests.
 
 ## 5. Boundaries
 
 No new component types, dependencies, build tools or hosting providers are introduced. GitHub Pages remains the production hosting target. Visual and interaction changes stay within the existing component implementations and regression suite.
 
-**Phase 4 remains in progress until the full browser suite and post-change workflows pass, followed by manual accessibility and visual review.**
+**Phase 4 automated implementation and CI gates are passing. Final sign-off remains pending manual visual review and keyboard/assistive-technology review.**
