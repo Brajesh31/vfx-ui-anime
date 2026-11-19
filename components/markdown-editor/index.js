@@ -411,7 +411,15 @@ const api = window.VFXAnimeFX = {
       this._paint();
     }
     get value() { return this.editor ? this.editor.value : (this.getAttribute('value') || ''); }
-    set value(value) { this.setAttribute('value', String(value ?? '')); }
+    set value(value) {
+      const next = String(value ?? '');
+      if (this.getAttribute('value') === next && this.editor && this.editor.value !== next) {
+        this.editor.value = next;
+        this._paint();
+        return;
+      }
+      this.setAttribute('value', next);
+    }
     get mode() { return this._mode || 'split'; }
     set mode(value) { this.setMode(value); }
     get disabled() { return this.hasAttribute('disabled'); }
