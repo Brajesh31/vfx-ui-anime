@@ -1,2 +1,43 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime Multi-step Wizard</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 9px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}</style><script src="index.js"></script></head><body><main><h1>VFX UI Anime Multi-step Wizard</h1><p>Standalone preview. Try the control and read its README for the complete API.</p><div class="stage"><vfx-wizard><section data-step data-title="Profile"><h3>Your profile</h3><p>Start with the basics.</p><input required placeholder="Your name"></section><section data-step data-title="Preferences"><h3>Set preferences</h3><p>Choose defaults for your workspace.</p></section><section data-step data-title="Finish"><h3>You are all set</h3><p>Complete the setup flow.</p></section></vfx-wizard></div><p><a href="../../gallery/">← Back to component gallery</a></p></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Multi-step Wizard Demo · VFX UI Anime</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,820px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;padding:24px 8px}.stage label{display:block;margin:10px 0 5px;font-size:12px;font-weight:850}.stage input,.stage select{width:100%;padding:10px;border:1.5px solid #ded9f3;border-radius:8px;font:13px system-ui}.result{min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}button{padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#ff5fa8;color:#1d1a4a;font-weight:850;cursor:pointer}a{color:#6c62be}
+</style>
+<script src="index.js"></script>
+</head>
+<body><main>
+<h1>🧭 Multi-step Wizard</h1>
+<p>Try advancing with missing information, jumping to a later step, using Back, and resetting the form. Forward navigation validates every step in between.</p>
+<form id="demo-form" class="stage">
+<vfx-wizard id="wizard">
+<section data-step data-title="Profile">
+<h3>Your profile</h3><p>Start with the information needed for this workspace.</p>
+<label for="full-name">Full name</label><input id="full-name" name="fullName" autocomplete="name" required placeholder="Your name">
+<label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+</section>
+<section data-step data-title="Preferences">
+<h3>Workspace preferences</h3><p>Select a starting workspace type.</p>
+<label for="workspace">Workspace type</label><select id="workspace" name="workspace" required><option value="">Choose one</option><option>Personal</option><option>Team</option><option>Education</option></select>
+</section>
+<section data-step data-title="Finish">
+<h3>You are all set</h3><p>Review your choices, then save the form.</p>
+<button type="submit">Save setup</button>
+</section>
+</vfx-wizard>
+<div class="result" id="status" role="status" aria-live="polite">Complete each step to finish the setup.</div>
+<div><button type="reset" style="background:#fff">Reset wizard</button></div>
+</form>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
+</main>
+<script>
+const form=document.querySelector('#demo-form'),wizard=document.querySelector('#wizard'),status=document.querySelector('#status');
+wizard.addEventListener('invalid',e=>{status.textContent='Step '+(e.detail.index+1)+': '+e.detail.message;});
+wizard.addEventListener('change',e=>{status.textContent='Now viewing '+e.detail.step+'.';});
+wizard.addEventListener('complete',()=>{status.textContent='All steps passed validation. You can save the setup.';});
+form.addEventListener('submit',e=>{e.preventDefault();status.textContent=wizard.complete&&form.checkValidity()?'Setup saved locally for this demo.':'Complete the wizard before saving.';});
+form.addEventListener('reset',()=>{status.textContent='Wizard reset to the first step.';});
+</script>
+</body></html>
