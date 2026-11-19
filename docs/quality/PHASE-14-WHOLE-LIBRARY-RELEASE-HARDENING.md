@@ -94,7 +94,7 @@ The acceptance matrix explicitly requires these forms of evidence; automated ARI
 
 ## 📌 Phase 14 outcome
 
-<badge color="success">Source-level integration audit completed</badge> <badge color="warning">Release approval pending</badge>
+**Status:** Source-level integration audit completed. Release approval remains pending.
 
 The 82-component implementation roadmap is complete, and structural release validation is materially stronger. **The library is not being declared production/release-ready yet** because the actual CI results and human visual/accessibility sign-offs are not verified. No GitHub Release, version tag, npm publication, or deployment promotion was created.
 
