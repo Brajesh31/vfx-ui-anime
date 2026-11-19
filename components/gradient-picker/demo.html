@@ -1,26 +1,29 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VFX UI Anime Gradient Picker</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gradient Picker Demo · VFX UI Anime</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,820px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:24px 8px}.hint{font-size:12px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,760px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;justify-items:center;padding:24px 8px}.status{width:min(100%,440px);min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}.output{width:min(100%,440px);white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;border:1px solid #e5e0f5;border-radius:9px;background:#faf9ff;color:#514a87;font:11px/1.5 ui-monospace,monospace}a{color:#6c62be}
 </style>
 <script src="index.js"></script>
 </head>
-<body>
-<main>
+<body><main>
 <h1>🌈 Gradient Picker</h1>
-<p>Select a color stop, change its position, add intermediate stops and adjust the gradient direction. The CSS output updates as you edit.</p>
+<p>Edit the color of each stop, reposition stops, add or remove stops, and adjust the gradient angle. The CSS output updates as you work.</p>
 <div class="stage">
-<vfx-gradient-picker id="gradient" name="background" stops='[{"id":"rose","color":"#ff5fa8","position":0},{"id":"violet","color":"#8f8df7","position":55},{"id":"mint","color":"#67d8c0","position":100}]' angle="135"></vfx-gradient-picker>
+<vfx-gradient-picker id="gradient" name="background" angle="135" stops='[{"color":"#ff5fa8","position":0},{"color":"#8f8df7","position":50},{"color":"#67d8c0","position":100}]'></vfx-gradient-picker>
+<pre class="output" id="output" aria-live="polite">linear-gradient(135deg, #ff5fa8 0%, #8f8df7 50%, #67d8c0 100%)</pre>
+<div class="status" id="status" role="status" aria-live="polite">Choose a preset or change any stop to update the CSS.</div>
 </div>
-<p class="hint" id="result" aria-live="polite">The component supports two to eight hexadecimal color stops.</p>
-<p><a href="../../gallery/">← Back to component gallery</a></p>
+<p>Copy CSS emits a copy-request event. This demo attempts the Clipboard API only after your click and reports permission failures.</p>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
 </main>
 <script>
-document.querySelector('#gradient').addEventListener('change',event=>{document.querySelector('#result').textContent=event.detail.value;});
+const gradient=document.querySelector('#gradient'),output=document.querySelector('#output'),status=document.querySelector('#status');
+const render=()=>{output.textContent=gradient.value;};
+gradient.addEventListener('input',render);gradient.addEventListener('change',render);
+gradient.addEventListener('copy-request',async e=>{try{await navigator.clipboard.writeText(e.detail.value);status.textContent='CSS copied to clipboard.';}catch{status.textContent='Clipboard permission is unavailable. Select and copy the CSS below.';}});
+render();
 </script>
-</body>
-</html>
+</body></html>
