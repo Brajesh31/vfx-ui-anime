@@ -267,7 +267,7 @@ class VfxCopyCode extends Base {
  setup() {
   this._source=this._readSource();this._explicitValue=false;this._copyTimer=0;this._observer=null;
   this.$('.copy').addEventListener('click',()=>this.copy());
-  this._sync();
+  this._paint();
   this._observeSource();
  }
  connectedCallback() { super.connectedCallback();this._observeSource(); }
