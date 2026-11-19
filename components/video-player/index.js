@@ -274,7 +274,17 @@ const api = window.VFXAnimeFX = {
       this._onPause = () => { this._paint(); this.emit('pause', { currentTime: this.currentTime }); };
       this._onEnded = () => { this._paint(); this.emit('ended', { currentTime: this.currentTime }); };
       this._onTime = () => { this._paint(); this.emit('timeupdate', { currentTime: this.currentTime, duration: this.duration }); };
-      this._onMetadata = () => { this._paint(); this.$('.status').textContent = ''; this.emit('loadedmetadata', { duration: this.duration }); };
+      this._onMetadata = () => {
+        this._paint();
+        this.$('.status').classList.remove('error');
+        this.$('.status').textContent = '';
+        this.emit('loadedmetadata', { duration: this.duration });
+      };
+      this._onDuration = () => {
+        this._paint();
+        this.emit('durationchange', { duration: this.duration });
+      };
+      this._onVolume = () => this._paint();
       this._onError = () => {
         this._paint();
         this.$('.status').textContent = 'Unable to load this video source.';
@@ -286,9 +296,9 @@ const api = window.VFXAnimeFX = {
       this.video.addEventListener('ended', this._onEnded);
       this.video.addEventListener('timeupdate', this._onTime);
       this.video.addEventListener('loadedmetadata', this._onMetadata);
-      this.video.addEventListener('durationchange', this._onMetadata);
+      this.video.addEventListener('durationchange', this._onDuration);
       this.video.addEventListener('error', this._onError);
-      this.video.addEventListener('volumechange', () => this._paint());
+      this.video.addEventListener('volumechange', this._onVolume);
       this.$('.play').addEventListener('click', () => this.toggle());
       this.$('.seek').addEventListener('input', (event) => this.seek(Number(event.target.value) / 1000));
       this.$('.mute').addEventListener('click', () => this.toggleMuted());
@@ -298,7 +308,12 @@ const api = window.VFXAnimeFX = {
       this._syncDisabled();
       this._paint();
     }
+    connectedCallback() {
+      super.connectedCallback();
+      if (this.ready) this._listenFullscreen();
+    }
     disconnectedCallback() {
+      this._unlistenFullscreen();
       if (this.video && !this.video.paused) this.video.pause();
       super.disconnectedCallback();
     }
@@ -306,16 +321,32 @@ const api = window.VFXAnimeFX = {
       if (oldValue === newValue || !this.ready) return;
       if (name === 'src') this._loadSource(newValue);
       if (name === 'poster') this.video.poster = newValue || '';
-      if (name === 'label') this.video.setAttribute('aria-label', newValue || 'Video player');
+      if (name === 'label') this.video.setAttribute('aria-label', this.label);
       if (name === 'muted') { this.video.muted = this.hasAttribute('muted'); this._paint(); }
-      if (name === 'loop') this.video.loop = this.hasAttribute('loop');
-      if (name === 'preload') this.video.preload = newValue || 'metadata';
+      if (name === 'loop') this.video.loop = this.loop;
+      if (name === 'preload') this.video.preload = this.preload;
       if (name === 'disabled') this._syncDisabled();
     }
     get src() { return this.getAttribute('src') || ''; }
     set src(value) { if (value) this.setAttribute('src', String(value)); else this.removeAttribute('src'); }
     get poster() { return this.getAttribute('poster') || ''; }
     set poster(value) { if (value) this.setAttribute('poster', String(value)); else this.removeAttribute('poster'); }
+    get label() { return this.getAttribute('label') || 'Video player'; }
+    set label(value) {
+      const text = String(value ?? '').trim();
+      if (text) this.setAttribute('label', text);
+      else this.removeAttribute('label');
+    }
+    get loop() { return this.hasAttribute('loop'); }
+    set loop(value) { this.toggleAttribute('loop', Boolean(value)); }
+    get preload() {
+      const value = this.getAttribute('preload');
+      return ['none', 'metadata', 'auto'].includes(value) ? value : 'metadata';
+    }
+    set preload(value) {
+      const normalized = String(value ?? 'metadata').toLowerCase();
+      this.setAttribute('preload', ['none', 'metadata', 'auto'].includes(normalized) ? normalized : 'metadata');
+    }
     get disabled() { return this.hasAttribute('disabled'); }
     set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
     get playing() { return Boolean(this.video && !this.video.paused && !this.video.ended); }
@@ -325,16 +356,17 @@ const api = window.VFXAnimeFX = {
     get muted() { return Boolean(this.video?.muted); }
     set muted(value) { this.toggleAttribute('muted', Boolean(value)); }
     _syncAttributes() {
-      this.video.setAttribute('aria-label', this.getAttribute('label') || 'Video player');
-      this.video.preload = this.getAttribute('preload') || 'metadata';
+      this.video.setAttribute('aria-label', this.label);
+      this.video.preload = this.preload;
       this.video.muted = this.hasAttribute('muted');
-      this.video.loop = this.hasAttribute('loop');
+      this.video.loop = this.loop;
       if (this.getAttribute('poster')) this.video.poster = this.getAttribute('poster');
       if (this.src) this._loadSource(this.src);
     }
     _loadSource(source) {
       if (!this.video) return;
       this.video.pause();
+      this.$('.status').classList.remove('error');
       if (source) {
         this.video.src = source;
         this.video.load();
@@ -369,6 +401,10 @@ const api = window.VFXAnimeFX = {
       this.$('.play').setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
       this.$('.mute').textContent = this.muted ? 'Unmute' : 'Mute';
       this.$('.mute').setAttribute('aria-label', this.muted ? 'Unmute video' : 'Mute video');
+      this.$('.seek').setAttribute('aria-valuetext', this.fmt(current) + ' of ' + this.fmt(duration));
+      const fullscreen = document.fullscreenElement === this.$('.box');
+      this.$('.fullscreen').setAttribute('aria-pressed', String(fullscreen));
+      this.$('.fullscreen').setAttribute('aria-label', fullscreen ? 'Exit fullscreen' : 'Enter fullscreen');
     }
     async play() {
       if (this.disabled) return false;
@@ -410,13 +446,30 @@ const api = window.VFXAnimeFX = {
       this.emit('volumechange', { muted: this.muted });
       return true;
     }
+    _listenFullscreen() {
+      if (this._onFullscreenChange) return;
+      this._onFullscreenChange = () => {
+        const fullscreen = document.fullscreenElement === this.$('.box');
+        this._paint();
+        this.emit('fullscreenchange', { fullscreen });
+      };
+      document.addEventListener('fullscreenchange', this._onFullscreenChange);
+    }
+    _unlistenFullscreen() {
+      if (!this._onFullscreenChange) return;
+      document.removeEventListener('fullscreenchange', this._onFullscreenChange);
+      this._onFullscreenChange = null;
+    }
     async toggleFullscreen() {
       if (this.disabled) return false;
       try {
-        if (document.fullscreenElement === this.$('.box')) await document.exitFullscreen();
-        else if (this.$('.box').requestFullscreen) await this.$('.box').requestFullscreen();
-        else return false;
-        this.emit('fullscreenchange', { fullscreen: document.fullscreenElement === this.$('.box') });
+        if (document.fullscreenElement === this.$('.box')) {
+          if (!document.exitFullscreen) return false;
+          await document.exitFullscreen();
+        } else {
+          if (!document.fullscreenEnabled || !this.$('.box').requestFullscreen) return false;
+          await this.$('.box').requestFullscreen();
+        }
         return true;
       } catch (error) {
         this.emit('error', { reason: error?.message || 'fullscreen unavailable' });
