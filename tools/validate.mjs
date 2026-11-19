@@ -17,9 +17,11 @@ for (const path of expected) {
   catch { errors.push("Missing required repository file: " + path); }
 }
 
-const [gallery, home, core, registryText, packageText, buildSource] = await Promise.all([
+const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow] = await Promise.all([
   read("gallery/index.html"), read("index.html"), read("core.js"),
-  read("registry.json"), read("package.json"), read("tools/build.mjs")
+  read("registry.json"), read("package.json"), read("tools/build.mjs"),
+  read(".github/workflows/validate.yml"), read(".github/workflows/deploy-pages.yml"),
+  read(".github/workflows/codeql.yml"), read(".github/workflows/scorecard.yml")
 ]);
 let registry;
 let pkg;
@@ -129,6 +131,19 @@ if (!pkg.scripts?.check?.includes("tools/build.mjs --check") || !pkg.scripts?.ch
 if (!pkg.scripts?.["test:browser"]?.includes("tools/test.mjs")) {
   errors.push("The test:browser script must run the Chromium interaction suite.");
 }
+
+if (!validateWorkflow.includes("npm test") || !validateWorkflow.includes("npm run check") || !validateWorkflow.includes("npm run test:browser")) {
+  errors.push("The Validate workflow must run structural, generated-build, and Chromium browser checks.");
+}
+if (!pagesWorkflow.includes("npm test") || !pagesWorkflow.includes("npm run check")) {
+  errors.push("The Pages workflow must validate the repository before deployment.");
+}
+for (const [name, workflow] of [["Validate", validateWorkflow], ["Pages", pagesWorkflow], ["CodeQL", codeqlWorkflow], ["Scorecard", scorecardWorkflow]]) {
+  if (!/push:\s*\n\s*branches:\s*\[main\]/.test(workflow)) errors.push(name + " workflow must run on pushes to main.");
+}
+if (!codeqlWorkflow.includes("security-events: write")) errors.push("CodeQL workflow is missing security-events write permission.");
+if (!scorecardWorkflow.includes("persist-credentials: false")) errors.push("Scorecard checkout must disable persisted credentials.");
+
 
 if (errors.length) {
   console.error(errors.join("\n"));
