@@ -270,6 +270,7 @@ const api = window.VFXAnimeFX = {
     }
     setup() {
       this.canvas = this.$('canvas');
+      this.canvas.setAttribute('aria-label', this.label);
       this.ctx = this.canvas.getContext('2d');
       this._history = [];
       this._pointerId = null;
