@@ -298,7 +298,7 @@ class VfxWizard extends Base {
  _observePanels() {
   if(!this.isConnected||!window.MutationObserver)return;
   this._hostObserver?.disconnect();
-  this._hostObserver=new MutationObserver(()=>this._collectPanels());
+  this._hostObserver=new MutationObserver(()=>this._collectPanels(true));
   this._hostObserver.observe(this,{childList:true,subtree:true,attributes:true,attributeFilter:['data-step','data-title']});
  }
  _collectPanels(initial=false) {
@@ -360,6 +360,7 @@ class VfxWizard extends Base {
   panel.setAttribute('tabindex','-1');
   requestAnimationFrame(()=>{if(this.isConnected&&panel.isConnected&&this._panels[this._index]===panel)panel.focus({preventScroll:true});});
  }
+ _escape(value) { return String(value??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }
  _paint() {
   if(!this.ready)return;
   const total=this.totalSteps,hasSteps=total>0,panel=this._panels[this._index];
@@ -370,7 +371,7 @@ class VfxWizard extends Base {
   const progress=hasSteps?Math.round((this._index+1)/total*100):0;
   this.$('.fill').style.width=progress+'%';
   const bar=this.$('.track');bar.setAttribute('aria-valuemax',String(total));bar.setAttribute('aria-valuenow',String(hasSteps?this._index+1:0));bar.setAttribute('aria-valuetext',hasSteps?'Step '+(this._index+1)+' of '+total:'No steps');
-  this.$('.steps').innerHTML=this._panels.map((p,i)=>'<button class="step" type="button" data-index="'+i+'" data-state="'+(i===this._index?'current':i<this._index?'done':'todo')+'" aria-label="Go to step '+(i+1)+': '+esc(p.dataset.title||'Step '+(i+1))+'" aria-current="'+(i===this._index?'step':'false')+'">'+(p.dataset.title||'Step '+(i+1))+'</button>').join('');
+  this.$('.steps').innerHTML=this._panels.map((p,i)=>'<button class="step" type="button" data-index="'+i+'" data-state="'+(i===this._index?'current':i<this._index?'done':'todo')+'" aria-label="Go to step '+(i+1)+': '+this._escape(p.dataset.title||'Step '+(i+1))+'" aria-current="'+(i===this._index?'step':'false')+'">'+this._escape(p.dataset.title||'Step '+(i+1))+'</button>').join('');
   this._panels.forEach((p,i)=>{p.hidden=i!==this._index;p.setAttribute('aria-current',i===this._index?'step':'false');});
   const blocked=this.disabled||!hasSteps;
   this.$$('.steps button').forEach(b=>b.disabled=this.disabled||Number(b.dataset.index)>this._index);
