@@ -844,6 +844,101 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   check('phase 12: 3D Flip Card activates by click and keyboard, exposes aria-pressed and next-face name, hides the inactive face, updates front/back properties, avoids duplicate state events and removes transitions for reduced motion',initial&&click&&keyboard&&props&&attribute&&reduced,JSON.stringify({initial,click,keyboard,props,attribute,reduced}));
 }
 
+// Phase 13: advanced motion and celebration components
+{
+  await ev("(() => {const el=document.createElement('vfx-particle-field');el.id='phase13-particles';document.body.append(el);})()");
+  const defaults=await ev("(() => {const el=document.querySelector('#phase13-particles');return el.count===48&&el.speed===1&&el._particles.length===48&&el.color==='rgba(224,215,255,.7)'&&el.shadowRoot.querySelector('canvas').getAttribute('aria-hidden')==='true';})()");
+  await ev("(() => {const el=document.querySelector('#phase13-particles');el.count=12;el.speed=0.5;el.color='#ff0000';})()");
+  const properties=await ev("(() => {const el=document.querySelector('#phase13-particles');return el.count===12&&el._particles.length===12&&el.speed===0.5&&el.color==='#ff0000'&&el.ctx.fillStyle==='rgba(255, 0, 0, 1)';})()");
+  await ev("(() => {const el=document.querySelector('#phase13-particles');el.speed=0;const y=el._particles[0].y;el.frame(0.5);window.__phase13StaticParticle=el._particles[0].y===y;el.speed=1;el.paused=true;const paused=el._particles[0].y;el.frame(0.5);window.__phase13PausedParticle=el._particles[0].y===paused;el.paused=false;})()");
+  const staticState=await ev("window.__phase13StaticParticle&&window.__phase13PausedParticle");
+  await ev("document.querySelector('#phase13-particles').count=500");
+  const bounds=await ev("document.querySelector('#phase13-particles').count===160");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  await ev("(() => {const el=document.querySelector('#phase13-particles');const y=el._particles[0].y;el.frame(0.5);window.__phase13ReducedParticle=el.reducedMotion&&el._particles[0].y===y;})()");
+  const reduced=await ev("window.__phase13ReducedParticle===true");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
+  await ev("(() => {const el=document.querySelector('#phase13-particles');el.style.width='240px';el.resize();window.__phase13ParticleWidth=el.canvas.width;el.remove();window.__phase13ObserverClean=!el._resizeObserver;document.body.append(el);})()");
+  const lifecycle=await ev("(() => {const el=document.querySelector('#phase13-particles');return window.__phase13ParticleWidth>0&&window.__phase13ObserverClean&&el.isConnected&&(!('ResizeObserver'in window)||!!el._resizeObserver);})()");
+  check('phase 13: Particle Field defaults, clamps, CSS color updates, static/paused/reduced-motion behavior, resize, and observer reconnect',defaults&&properties&&staticState&&bounds&&reduced&&lifecycle,JSON.stringify({defaults,properties,staticState,bounds,reduced,lifecycle}));
+  await ev("document.querySelector('#phase13-particles').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-marquee');el.id='phase13-marquee';const item=document.createElement('span');item.id='marquee-source';item.innerHTML='SHIP <a id=\"marquee-link\" href=\"#demo\">details</a>';el.append(item);document.body.append(el);})()");
+  await sleep(60);
+  const defaults=await ev("(() => {const el=document.querySelector('#phase13-marquee'),copy=el.shadowRoot.querySelector('.copy[aria-hidden=true]');return el.duration===22&&el.paused===false&&copy.hasAttribute('inert')&&copy.textContent.includes('SHIP')&&!!copy.querySelector('a')&&!copy.querySelector('[id]')&&copy.querySelector('a').getAttribute('tabindex')==='-1'&&copy.querySelector('a').getAttribute('aria-hidden')==='true';})()");
+  await ev("(() => {const el=document.querySelector('#phase13-marquee');el.duration=200;el.paused=true;el.label='News ticker';})()");
+  const attributes=await ev("(() => {const el=document.querySelector('#phase13-marquee');return el.duration===120&&el.style.getPropertyValue('--duration')==='120s'&&el.paused&&el.shadowRoot.querySelector('.viewport').getAttribute('aria-label')==='News ticker';})()");
+  await ev("(() => {const el=document.querySelector('#phase13-marquee'),extra=document.createElement('button');extra.textContent='Open';extra.id='extra-action';el.firstElementChild.append(extra);})()");
+  await sleep(80);
+  const dynamic=await ev("(() => {const el=document.querySelector('#phase13-marquee'),copy=el.shadowRoot.querySelector('.copy[aria-hidden=true]');return copy.textContent.includes('Open')&&copy.querySelector('button')?.getAttribute('tabindex')==='-1'&&!copy.querySelector('#extra-action');})()");
+  await ev("(() => {const el=document.querySelector('#phase13-marquee');el.paused=false;el.querySelector('a').focus();})()");
+  const focus=await ev("getComputedStyle(document.querySelector('#phase13-marquee').shadowRoot.querySelector('.track')).animationPlayState==='paused'");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  const reduced=await ev("getComputedStyle(document.querySelector('#phase13-marquee').shadowRoot.querySelector('.track')).animationName==='none'");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
+  await ev("(() => {const el=document.querySelector('#phase13-marquee');el.remove();document.body.append(el);})()");
+  const reconnect=await ev("(() => {const el=document.querySelector('#phase13-marquee');return el.shadowRoot.querySelector('.copy[aria-hidden=true]').textContent.includes('Open');})()");
+  check('phase 13: Marquee clamps live duration, pauses when focused, suppresses reduced motion, clones live slot content without duplicate IDs, and makes cloned controls inert',defaults&&attributes&&dynamic&&focus&&reduced&&reconnect,JSON.stringify({defaults,attributes,dynamic,focus,reduced,reconnect}));
+  await ev("document.querySelector('#phase13-marquee').remove()");
+}
+{
+  await ev("(() => {window.__phase13Observers=[];class FakeIntersectionObserver{constructor(callback,options){this.callback=callback;this.options=options;this.targets=new Set();this.disconnected=false;window.__phase13Observers.push(this);}observe(target){this.targets.add(target);}unobserve(target){this.targets.delete(target);}disconnect(){this.disconnected=true;this.targets.clear();}trigger(target,isIntersecting){this.callback([{target,isIntersecting}],this);}}window.__phase13FakeIO=FakeIntersectionObserver;window.IntersectionObserver=FakeIntersectionObserver;const el=document.createElement('vfx-scroll-reveal');el.id='phase13-reveal';el.threshold=.4;el.distance=32;el.duration=450;el.once=false;const a=document.createElement('article');a.textContent='First reveal';el.append(a);window.__phase13RevealEvents=[];['reveal','conceal'].forEach(type=>el.addEventListener(type,event=>window.__phase13RevealEvents.push({type,index:event.detail.index})));document.body.append(el);window.__phase13RevealFirst=a;})()");
+  const defaults=await ev("(() => {const el=document.querySelector('#phase13-reveal'),io=window.__phase13Observers.at(-1);return el.threshold===.4&&el.distance===32&&el.duration===450&&!el.once&&io.options.threshold===.4&&io.targets.has(window.__phase13RevealFirst)&&!window.__phase13RevealFirst.classList.contains('revealed');})()");
+  await ev("(() => {const el=document.querySelector('#phase13-reveal'),io=window.__phase13Observers.at(-1);io.trigger(window.__phase13RevealFirst,true);})()");
+  const reveal=await ev("window.__phase13RevealFirst.classList.contains('revealed')&&window.__phase13RevealEvents.some(x=>x.type==='reveal'&&x.index===0)");
+  await ev("window.__phase13Observers.at(-1).trigger(window.__phase13RevealFirst,false)");
+  const conceal=await ev("!window.__phase13RevealFirst.classList.contains('revealed')&&window.__phase13RevealEvents.some(x=>x.type==='conceal')");
+  await ev("(() => {const el=document.querySelector('#phase13-reveal'),extra=document.createElement('article');extra.textContent='Dynamic reveal';el.append(extra);window.__phase13RevealSecond=extra;})()");
+  await sleep(40);
+  const dynamic=await ev("window.__phase13Observers.at(-1).targets.has(window.__phase13RevealSecond)");
+  await ev("document.querySelector('#phase13-reveal').disabled=true");
+  const disabled=await ev("window.__phase13RevealFirst.classList.contains('revealed')&&window.__phase13RevealSecond.classList.contains('revealed')&&!window.__phase13Observers.at(-1).targets.size");
+  await ev("(() => {const el=document.querySelector('#phase13-reveal');el.disabled=false;el.remove();window.__phase13Disconnected=window.__phase13Observers.at(-1).disconnected;document.body.append(el);})()");
+  const reconnect=await ev("(() => {const el=document.querySelector('#phase13-reveal');return window.__phase13Disconnected&&window.__phase13Observers.at(-1).targets.has(window.__phase13RevealFirst)&&el.isConnected;})()");
+  await ev("(() => {document.querySelector('#phase13-reveal').remove();window.IntersectionObserver=undefined;})()");
+  check('phase 13: Scroll Reveal observes initial and dynamically assigned children, supports once=false reveal/conceal events, bounded options, disabled visibility and observer cleanup/reconnect',defaults&&reveal&&conceal&&dynamic&&disabled&&reconnect,JSON.stringify({defaults,reveal,conceal,dynamic,disabled,reconnect}));
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-animated-counter');el.id='phase13-counter';el.setAttribute('value','12.5');el.setAttribute('label','Active users');el.setAttribute('duration','90');el.setAttribute('decimals','1');el.setAttribute('locale','en-US');window.__phase13CounterEvents=[];el.addEventListener('complete',event=>window.__phase13CounterEvents.push(event.detail.value));document.body.append(el);})()");
+  const initial=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.value===12.5&&el.shadowRoot.querySelector('.value').textContent==='12.5'&&el.shadowRoot.querySelector('.label').textContent==='Active users'&&window.__phase13CounterEvents.length===0;})()");
+  const immediate=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.setValue(100,false)&&el.value===100&&el.shadowRoot.querySelector('.value').textContent==='100.0'&&window.__phase13CounterEvents.at(-1)===100;})()");
+  const invalid=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.setValue(Number.NaN)===false&&el.value===100;})()");
+  await ev("(() => {const el=document.querySelector('#phase13-counter');el.setValue(200,true);})()");
+  await sleep(25);
+  await ev("document.querySelector('#phase13-counter').remove()");
+  const detach=await ev("(() => {const el=document.querySelector('#phase13-counter');return el._raf===null&&el._current===200&&el.shadowRoot.querySelector('.value').textContent==='200.0';})()");
+  await ev("document.body.append(document.querySelector('#phase13-counter'))");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  await ev("(() => {const el=document.querySelector('#phase13-counter');el.value=25;})()");
+  const reduced=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.value===25&&el._raf===null&&el.shadowRoot.querySelector('.value').textContent==='25.0';})()");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
+  await ev("(() => {const el=document.querySelector('#phase13-counter');el.setAttribute('value','25');el.shadowRoot.querySelector('.value').textContent='stale';el.value=25;})()");
+  const reset=await ev("document.querySelector('#phase13-counter').shadowRoot.querySelector('.value').textContent==='25.0'");
+  await ev("(() => {const el=document.querySelector('#phase13-counter');el.locale='de-DE';el.decimals=2;el.setValue(1234.5,false);el.label='Revenue';el.duration=-500;})()");
+  const format=await ev("(() => {const el=document.querySelector('#phase13-counter');return el.shadowRoot.querySelector('.value').textContent==='1.234,50'&&el.shadowRoot.querySelector('.label').textContent==='Revenue'&&el.duration===0;})()");
+  check('phase 13: Animated Counter formats locales/decimals, rejects non-finite targets, emits completion once, finalizes cleanly on detach, restores same-valued properties and honors reduced motion',initial&&immediate&&invalid&&detach&&reduced&&reset&&format,JSON.stringify({initial,immediate,invalid,detach,reduced,reset,format}));
+  await ev("document.querySelector('#phase13-counter').remove()");
+}
+{
+  await ev("(() => {const el=document.createElement('vfx-confetti-button');el.id='phase13-confetti';el.label='<img src=x onerror=alert(1)> Celebrate';window.__phase13Celebrate=[];el.addEventListener('celebrate',event=>window.__phase13Celebrate.push(event.detail));document.body.append(el);})()");
+  const safe=await ev("(() => {const el=document.querySelector('#phase13-confetti');return el.shadowRoot.querySelector('.btn').textContent===el.label&&!el.shadowRoot.querySelector('img')&&el.disabled===false;})()");
+  await ev("document.querySelector('#phase13-confetti').shadowRoot.querySelector('.btn').click()");
+  const event=await ev("window.__phase13Celebrate.length===1&&window.__phase13Celebrate[0].label.includes('<img')&&window.__phase13Celebrate[0].reducedMotion===false");
+  await ev("(() => {const el=document.querySelector('#phase13-confetti');el.label='Updated celebration';el.disabled=true;window.__phase13Blocked=!el.celebrate()&&el.shadowRoot.querySelector('.btn').disabled;})()");
+  const disabled=await ev("window.__phase13Blocked&&window.__phase13Celebrate.length===1&&document.querySelector('#phase13-confetti').shadowRoot.querySelector('.btn').textContent==='Updated celebration'");
+  await ev("document.querySelector('#phase13-confetti').disabled=false");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  await ev("document.querySelector('#phase13-confetti').shadowRoot.querySelector('.btn').click()");
+  const reduced=await ev("window.__phase13Celebrate.length===2&&window.__phase13Celebrate.at(-1).reducedMotion===true");
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
+  await ev("document.querySelector('#phase13-confetti').shadowRoot.querySelector('.btn').focus()");
+  await key('Enter',13);
+  const keyboard=await ev("window.__phase13Celebrate.length===3");
+  check('phase 13: Confetti Button safely renders dynamic labels as text, emits celebration events, blocks disabled triggers, suppresses effects for reduced motion, and supports keyboard activation',safe&&event&&disabled&&reduced&&keyboard,JSON.stringify({safe,event,disabled,reduced,keyboard}));
+  await ev("document.querySelector('#phase13-confetti').remove()");
+}
+
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);
