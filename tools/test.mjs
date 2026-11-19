@@ -256,7 +256,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const exported=!!result&&result.type==='image/png'&&result.width===result.height&&result.width>50;
   await ev(`(() => {const el=document.querySelector('#phase5-cropper');const observer=!!el.resizeObserver;el.remove();const disconnected=el.resizeObserver===null;document.body.append(el);window.__phase5CropReconnect=observer&&disconnected&&!!el.resizeObserver;el.remove();})()`);
   check('phase 5: cropper handles local image loading, keyboard crop geometry, source-resolution export and reconnect',loaded&&controls&&keyboard&&exported&&await ev(`window.__phase5CropReconnect`),JSON.stringify(result));
-  await ev(`document.querySelector('#phase5-cropper').remove()`);
+  await ev(`document.querySelector('#phase5-cropper')?.remove()`);
 }
 
 
