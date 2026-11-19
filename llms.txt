@@ -189,3 +189,7 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 ## Phase 13 advanced motion and celebration components
 - docs/quality/PHASE-13-ADVANCED-MOTION.md: Particle Field, Marquee, Scroll Reveal, Animated Counter, and Confetti Button configuration, lifecycle, accessibility, and browser regression coverage.
+
+## Phase 14 whole-library integration and release hardening
+- docs/quality/PHASE-14-WHOLE-LIBRARY-RELEASE-HARDENING.md: 82-component source/runtime, registry, gallery, demo, and CI configuration audit, plus release limitations.
+- docs/quality/RELEASE-CHECKLIST.md: verified structural checks and pending automated/manual release approval gates.
