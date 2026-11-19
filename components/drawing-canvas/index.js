@@ -258,4 +258,231 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,500px)}.box{border:2px solid var(--vfx-ink);border-radius:14px;overflow:hidden;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}.tools{display:flex;gap:10px;align-items:center;padding:8px}.tools button{padding:6px 9px;border:1px solid #aaa;border-radius:6px;background:white}.canvas{display:block;width:100%;height:200px;touch-action:none;background:repeating-linear-gradient(0deg,#fff,#fff 19px,#f3f0fb 20px)}';}render(){return '<section class="box"><div class="tools">Ink <input class="color" type="color" value="#6558d9"><input class="size" type="range" min="1" max="18" value="4"><button class="clear" type="button">Clear</button><button class="save" type="button">PNG</button></div><canvas class="canvas"></canvas></section>';}setup(){this.canvas=this.$('canvas');this.ctx=this.canvas.getContext('2d');this.resize();let down=false;const pt=e=>{const r=this.canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};};this.canvas.addEventListener('pointerdown',e=>{down=true;this.canvas.setPointerCapture(e.pointerId);const p=pt(e);this.ctx.beginPath();this.ctx.moveTo(p.x,p.y);});this.canvas.addEventListener('pointermove',e=>{if(!down)return;const p=pt(e);this.ctx.strokeStyle=this.$('.color').value;this.ctx.lineWidth=+this.$('.size').value;this.ctx.lineCap='round';this.ctx.lineTo(p.x,p.y);this.ctx.stroke();});this.canvas.addEventListener('pointerup',()=>{down=false;this.emit('change',{dataUrl:this.toDataURL()});});this.$('.clear').addEventListener('click',()=>this.clear());this.$('.save').addEventListener('click',()=>{const a=document.createElement('a');a.href=this.toDataURL();a.download='drawing.png';a.click();this.emit('export',{});});}resize(){const w=this.canvas.clientWidth||450,h=this.canvas.clientHeight||200;this.canvas.width=w*devicePixelRatio;this.canvas.height=h*devicePixelRatio;this.ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}clear(){this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);this.emit('clear',{});}toDataURL(){return this.canvas.toDataURL('image/png');}}define('vfx-drawing-canvas',C);})();
+(() => {
+  const { Base, define } = window.VFXAnimeFX;
+  class C extends Base {
+    static get observedAttributes() { return ['label', 'color', 'size', 'disabled']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,560px);min-width:0}.box{border:2px solid var(--vfx-ink);border-radius:14px;overflow:hidden;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:9px}.tools label{display:flex;gap:6px;align-items:center;font-size:11px;font-weight:800}.tools input[type=color]{width:32px;height:27px;padding:1px;border:1px solid #bbb;border-radius:5px}.tools input[type=range]{width:100px;accent-color:#6558d9}.tools button{padding:6px 9px;border:1px solid #aaa;border-radius:6px;background:white;font:inherit;font-size:11px;cursor:pointer}.tools button:disabled{opacity:.45;cursor:not-allowed}.canvas{display:block;width:100%;height:220px;touch-action:none;outline-offset:-3px;background-color:#fff;background-image:linear-gradient(#f0edf8 1px,transparent 1px),linear-gradient(90deg,#f0edf8 1px,transparent 1px);background-size:22px 22px}.status{margin:0;padding:0 10px 8px;color:#6e688e;font-size:10px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}:host([disabled]) .canvas{cursor:not-allowed;opacity:.65}';
+    }
+    render() {
+      return '<section class="box"><div class="tools"><label>Ink <input class="color" type="color" value="#6558d9"></label><label>Brush <input class="size" type="range" min="1" max="24" value="4"><output class="size-value">4 px</output></label><button class="undo" type="button" disabled>Undo</button><button class="clear" type="button">Clear</button><button class="save" type="button">Export PNG</button></div><canvas class="canvas" tabindex="0" role="img" aria-label="Drawing surface. Draw with a pointer or use the arrow keys while focused." aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight"></canvas><p class="status" role="status" aria-live="polite">Use a pointer, touch, or arrow keys to draw.</p></section>';
+    }
+    setup() {
+      this.canvas = this.$('canvas');
+      this.ctx = this.canvas.getContext('2d');
+      this._history = [];
+      this._pointerId = null;
+      this._keyboardDrawing = false;
+      this._keyboardPoint = { x: 0, y: 0 };
+      this._color = this.getAttribute('color') || '#6558d9';
+      this._size = this._readSize(this.getAttribute('size'));
+      this.$('.color').value = this._color;
+      this.$('.size').value = String(this._size);
+      this.$('.size-value').textContent = this._size + ' px';
+      this.$('.color').addEventListener('input', () => { this.color = this.$('.color').value; });
+      this.$('.size').addEventListener('input', () => { this.size = Number(this.$('.size').value); });
+      this.$('.undo').addEventListener('click', () => this.undo());
+      this.$('.clear').addEventListener('click', () => this.clear());
+      this.$('.save').addEventListener('click', () => this.download());
+      this.canvas.addEventListener('pointerdown', (event) => this._pointerDown(event));
+      this.canvas.addEventListener('pointermove', (event) => this._pointerMove(event));
+      this.canvas.addEventListener('pointerup', (event) => this._finishPointer(event));
+      this.canvas.addEventListener('pointercancel', (event) => this._finishPointer(event));
+      this.canvas.addEventListener('lostpointercapture', (event) => this._finishPointer(event));
+      this.canvas.addEventListener('keydown', (event) => this._keyboardMove(event));
+      this.canvas.addEventListener('keyup', (event) => {
+        if (this._keyboardDrawing && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+          this._keyboardDrawing = false;
+          this._changed('keyboard');
+        }
+      });
+      this.resize();
+      this._syncDisabled();
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      if (this.ready && typeof ResizeObserver !== 'undefined' && !this._resizeObserver) {
+        this._resizeObserver = new ResizeObserver(() => this.resize());
+        this._resizeObserver.observe(this.canvas);
+      }
+    }
+    disconnectedCallback() {
+      this._resizeObserver?.disconnect();
+      this._resizeObserver = null;
+      this._pointerId = null;
+      this._keyboardDrawing = false;
+      super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue || !this.ready) return;
+      if (name === 'label') this.canvas.setAttribute('aria-label', newValue || 'Drawing surface. Draw with a pointer or use the arrow keys while focused.');
+      if (name === 'color') {
+        this._color = this._validColor(newValue) ? newValue : '#6558d9';
+        this.$('.color').value = this._color;
+      }
+      if (name === 'size') {
+        this._size = this._readSize(newValue);
+        this.$('.size').value = String(this._size);
+        this.$('.size-value').textContent = this._size + ' px';
+      }
+      if (name === 'disabled') this._syncDisabled();
+    }
+    get disabled() { return this.hasAttribute('disabled'); }
+    set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
+    get color() { return this._color || '#6558d9'; }
+    set color(value) {
+      if (!this._validColor(value)) return;
+      this.setAttribute('color', value);
+    }
+    get size() { return this._size || 4; }
+    set size(value) {
+      const n = Number(value);
+      if (Number.isFinite(n)) this.setAttribute('size', String(Math.max(1, Math.min(24, Math.round(n)))));
+    }
+    _validColor(value) { return /^#[0-9a-f]{6}$/i.test(String(value || '')); }
+    _readSize(value) {
+      const n = Number(value);
+      return Number.isFinite(n) && n > 0 ? Math.max(1, Math.min(24, Math.round(n))) : 4;
+    }
+    _syncDisabled() {
+      if (!this.ready) return;
+      for (const button of this.$$('.tools button')) button.disabled = this.disabled || (button.classList.contains('undo') && !this._history.length);
+      this.$$('.tools input').forEach((input) => { input.disabled = this.disabled; });
+      this.canvas.setAttribute('aria-disabled', String(this.disabled));
+    }
+    _point(event) {
+      const rect = this.canvas.getBoundingClientRect();
+      return { x: Math.max(0, Math.min(rect.width, event.clientX - rect.left)), y: Math.max(0, Math.min(rect.height, event.clientY - rect.top)) };
+    }
+    _snapshot() {
+      const copy = document.createElement('canvas');
+      copy.width = this.canvas.width;
+      copy.height = this.canvas.height;
+      copy.getContext('2d').drawImage(this.canvas, 0, 0);
+      this._history.push(copy);
+      if (this._history.length > 20) this._history.shift();
+      this._syncDisabled();
+    }
+    _pointerDown(event) {
+      if (this.disabled || event.button !== 0 || this._pointerId !== null) return;
+      event.preventDefault();
+      this._snapshot();
+      this._pointerId = event.pointerId;
+      this.canvas.setPointerCapture(event.pointerId);
+      const p = this._point(event);
+      this.ctx.beginPath();
+      this.ctx.moveTo(p.x, p.y);
+      this.ctx.lineCap = 'round';
+      this.ctx.lineJoin = 'round';
+      this.ctx.strokeStyle = this.color;
+      this.ctx.lineWidth = this.size;
+      this.ctx.lineTo(p.x + 0.01, p.y + 0.01);
+      this.ctx.stroke();
+    }
+    _pointerMove(event) {
+      if (this.disabled || this._pointerId !== event.pointerId) return;
+      event.preventDefault();
+      const p = this._point(event);
+      this.ctx.strokeStyle = this.color;
+      this.ctx.lineWidth = this.size;
+      this.ctx.lineTo(p.x, p.y);
+      this.ctx.stroke();
+    }
+    _finishPointer(event) {
+      if (this._pointerId === null || (event.pointerId !== undefined && this._pointerId !== event.pointerId)) return;
+      this._pointerId = null;
+      this._changed('pointer');
+      if (event.type === 'pointerup' && this.canvas.hasPointerCapture?.(event.pointerId)) {
+        try { this.canvas.releasePointerCapture(event.pointerId); } catch {}
+      }
+    }
+    _keyboardMove(event) {
+      if (this.disabled || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      if (!this._keyboardDrawing) {
+        this._snapshot();
+        const r = this.canvas.getBoundingClientRect();
+        this._keyboardPoint = { x: Math.round(r.width / 2), y: Math.round(r.height / 2) };
+        this._keyboardDrawing = true;
+      }
+      const step = event.shiftKey ? 1 : 8;
+      const { x, y } = this._keyboardPoint;
+      this._keyboardPoint = {
+        x: Math.max(0, Math.min(this.canvas.clientWidth, x + (event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0))),
+        y: Math.max(0, Math.min(this.canvas.clientHeight, y + (event.key === 'ArrowDown' ? step : event.key === 'ArrowUp' ? -step : 0)))
+      };
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+      this.ctx.lineTo(this._keyboardPoint.x, this._keyboardPoint.y);
+      this.ctx.strokeStyle = this.color;
+      this.ctx.lineWidth = this.size;
+      this.ctx.lineCap = 'round';
+      this.ctx.stroke();
+      if (!event.repeat) this._changed('keyboard');
+    }
+    _changed(input) {
+      this.$('.status').textContent = 'Drawing updated.';
+      this.emit('change', { input, dataUrl: this.toDataURL() });
+    }
+    resize() {
+      if (!this.canvas || !this.ctx) return;
+      const width = Math.max(1, Math.round(this.canvas.clientWidth || this.clientWidth || 450));
+      const height = Math.max(1, Math.round(this.canvas.clientHeight || 220));
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      const nextWidth = Math.round(width * dpr), nextHeight = Math.round(height * dpr);
+      if (this.canvas.width === nextWidth && this.canvas.height === nextHeight) return;
+      const copy = document.createElement('canvas');
+      copy.width = this.canvas.width || nextWidth;
+      copy.height = this.canvas.height || nextHeight;
+      if (this.canvas.width && this.canvas.height) copy.getContext('2d').drawImage(this.canvas, 0, 0);
+      this.canvas.width = nextWidth;
+      this.canvas.height = nextHeight;
+      this.ctx = this.canvas.getContext('2d');
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (copy.width && copy.height) this.ctx.drawImage(copy, 0, 0, copy.width, copy.height, 0, 0, width, height);
+    }
+    clear() {
+      if (this.disabled || !this.ctx) return false;
+      this._snapshot();
+      this.ctx.save();
+      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+      this.$('.status').textContent = 'Canvas cleared.';
+      this.emit('clear', {});
+      this._syncDisabled();
+      return true;
+    }
+    undo() {
+      if (this.disabled || !this._history.length) return false;
+      const previous = this._history.pop();
+      this.ctx.save();
+      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.drawImage(previous, 0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+      this.$('.status').textContent = 'Last drawing action undone.';
+      this.emit('undo', {});
+      this.emit('change', { input: 'undo', dataUrl: this.toDataURL() });
+      this._syncDisabled();
+      return true;
+    }
+    toDataURL() {
+      try { return this.canvas.toDataURL('image/png'); } catch { return ''; }
+    }
+    download() {
+      if (this.disabled) return false;
+      const data = this.toDataURL();
+      if (!data) { this.emit('export-error', { reason: 'canvas export unavailable' }); return false; }
+      const a = document.createElement('a');
+      a.href = data;
+      a.download = 'drawing.png';
+      a.click();
+      this.$('.status').textContent = 'PNG export requested.';
+      this.emit('export', { dataUrl: data, mimeType: 'image/png' });
+      return true;
+    }
+  }
+  define('vfx-drawing-canvas', C);
+})();
