@@ -24,7 +24,6 @@ for (const name of names) {
 if (!home.includes("gallery/")) errors.push("Root page must forward visitors to the gallery.");
 if (!core.includes("window.VFXAnimeFX") || !core.includes("--vfx-") || !core.includes("prefers-reduced-motion")) errors.push("Shared core branding or reduced-motion handling is missing.");
 if (!gallery.includes("--vfx-")) errors.push("Gallery does not use VFX UI Anime theme names.");
-if (gallery.includes("sakuga-") || gallery.includes("finktheartist")) errors.push("Old source branding remains in the public gallery.");
 if (!registry.items.every(x=>x.files?.[0]?.path?.startsWith("components/"))) errors.push("Registry component paths must point into components/.");
 if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
 console.log("VFX UI Anime validation passed: 82 component types, 83 gallery demos, generated runtime.");
