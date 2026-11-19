@@ -267,23 +267,23 @@ const api = window.VFXAnimeFX = {
     }
     render() { return '<div class="wrap"><slot></slot></div>'; }
     setup() {
-      this.slot = this.$('slot');
+      this._slotElement = this.$('slot');
       this._observedNodes = new Set();
       this._onSlotChange = () => this._syncChildren();
-      this.slot.addEventListener('slotchange', this._onSlotChange);
+      this._slotElement.addEventListener('slotchange', this._onSlotChange);
       this._syncStyles();
       this._syncChildren();
     }
     connectedCallback() {
       super.connectedCallback();
       if (!this.ready) return;
-      this.slot.removeEventListener('slotchange', this._onSlotChange);
-      this.slot.addEventListener('slotchange', this._onSlotChange);
+      this._slotElement.removeEventListener('slotchange', this._onSlotChange);
+      this._slotElement.addEventListener('slotchange', this._onSlotChange);
       this._syncChildren();
       this._observe();
     }
     disconnectedCallback() {
-      this.slot?.removeEventListener('slotchange', this._onSlotChange);
+      this._slotElement?.removeEventListener('slotchange', this._onSlotChange);
       this.observer?.disconnect();
       this.observer = null;
       super.disconnectedCallback();
@@ -334,8 +334,8 @@ const api = window.VFXAnimeFX = {
       this.style.setProperty('--reveal-duration', this.duration + 'ms');
     }
     _syncChildren() {
-      if (!this.slot) return;
-      const nodes = new Set(this.slot.assignedElements({ flatten: true }));
+      if (!this._slotElement) return;
+      const nodes = new Set(this._slotElement.assignedElements({ flatten: true }));
       for (const old of this._observedNodes) {
         if (!nodes.has(old)) this.observer?.unobserve(old);
       }
@@ -355,7 +355,7 @@ const api = window.VFXAnimeFX = {
       if (changed) this.emit('conceal', { target: node, index: [...this._observedNodes].indexOf(node) });
     }
     _observe() {
-      if (!this.slot || !this.isConnected) return;
+      if (!this._slotElement || !this.isConnected) return;
       this.observer?.disconnect();
       this.observer = null;
       if (this.disabled) {

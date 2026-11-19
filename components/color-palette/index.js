@@ -308,7 +308,7 @@ const api = window.VFXAnimeFX = {
         const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
         const current = event.target.closest?.('button[data-color]');
         if (!current || !keys.includes(event.key)) return;
-        const buttons = this.$('.swatch');
+        const buttons = this.$$('.swatch');
         const index = buttons.indexOf(current);
         const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
           : (index + (event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
