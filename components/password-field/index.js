@@ -316,8 +316,8 @@ class VfxPasswordField extends Base {
   Object.entries(s.rules).forEach(([k,v])=>this.$('[data-rule="'+k+'"]').classList.toggle('ok',v));
   this.$('[data-rule="length"]').textContent='At least '+this._minLength()+' characters';
   this.internals?.setFormValue(this.value);
-  const flags={};let message='';if(this.hasAttribute('required')&&!this.value){flags.valueMissing=true;message='Enter a password.';}else if(this.value.length<this._minLength()){flags.tooShort=true;message='Use at least '+this._minLength()+' characters.';}
-  this.internals?.setValidity(flags,message,this.input);
+  const flags={}; if(this.input.validity.valueMissing)flags.valueMissing=true; if(this.input.validity.tooShort)flags.tooShort=true;
+  this.internals?.setValidity(flags,this.input.validationMessage||'',this.input);
   if(emit)this.emit('input',{value:this.value,strength:s.level,minimumLength:this._minLength(),rules:{...s.rules}});
  }
  formDisabledCallback(disabled) { this._formDisabled=!!disabled; this._sync(); }
