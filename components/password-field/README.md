@@ -1,11 +1,12 @@
-# 🔐 VFX Password Field
+# 🔐 VFX UI Anime Password Field
 
-A standalone password control with a visibility toggle, live strength guidance, configurable minimum length, and native form-associated validation.
+A dependency-free password control with a show/hide toggle, configurable minimum length, live heuristic strength feedback, native required/min-length validation, and form association.
 
 ## Quick start
 
 ```html
 <script src="/components/password-field/index.js"></script>
+
 <form>
   <vfx-password-field
     name="password"
@@ -15,36 +16,50 @@ A standalone password control with a visibility toggle, live strength guidance, 
     required
     autocomplete="new-password"
   ></vfx-password-field>
-  <button type="submit">Continue</button>
+  <button type="submit">Create account</button>
 </form>
 ```
 
-## Public API
+## API
 
-| API | Description |
-|---|---|
-| `value` | Read or set the password string |
-| `strength` | Heuristic score from 0 to 4 |
-| `toggleVisibility()` | Toggle password visibility, returns the new visibility state |
-| `name` | Standard form-associated name attribute |
-| `label` | Accessible visible field label |
-| `placeholder` | Input placeholder |
-| `minlength` | Minimum accepted character count, defaults to 8 |
-| `required` | Requires a non-empty password |
-| `autocomplete` | Passed through to the native password input |
-| `disabled` | Disables input and reveal action |
+| Member | Type | Description |
+|---|---|---|
+| `value` | string | Read or set the password. |
+| `strength` | number | Heuristic score from 0 to 4. |
+| `toggleVisibility()` | method | Toggles between masked and visible text. Returns the new visibility state. |
 
-The label, placeholder, minimum length, autocomplete, required, value and disabled attributes synchronize after the element is connected. Form reset restores the value attribute.
+### Attributes
 
-## Events
+| Attribute | Default | Description |
+|---|---|---|
+| `name` | empty | Form field name. |
+| `label` | `Password` | Visible and accessible field label. |
+| `placeholder` | `Create a password` | Input placeholder. |
+| `minlength` | `8` | Minimum length used by native validation and the rule indicator. |
+| `required` | false | Makes the password mandatory. |
+| `autocomplete` | `new-password` | Native autocomplete hint. |
+| `value` | empty | Initial and form-reset value. |
+| `disabled` | false | Disables the input and visibility control. |
 
-- `input`: dispatched while the value changes. Detail includes `value`, `strength`, `minimumLength` and a copy of the rule results.
-- `change`: dispatched when the native input commits a value change.
+### Events
 
-## Strength guidance
+- `input`: emitted as the value changes. Detail includes `value`, `strength`, `minimumLength`, and the individual rule results.
+- `change`: emitted when the input is committed. Detail includes `value` and `strength`.
 
-The meter checks the configured minimum length, an uppercase letter, a number and a symbol. It is an educational heuristic, not a password-strength audit and not a substitute for server-side password policy, breached-password checks, rate limiting or secure hashing.
+Both events bubble and cross the shadow boundary.
 
-## Accessibility and security
+## Validation and accessibility
 
-The reveal button exposes its state through `aria-pressed` and changes its accessible label between Show and Hide. The meter has a text alternative. Do not log password values or send them to analytics. Always validate on the server and store passwords using a suitable password-hashing algorithm.
+- The control uses native input semantics and native `required` / `minlength` constraints.
+- The reveal button has a changing accessible name and `aria-pressed` state.
+- Password strength is announced as descriptive text, not color alone.
+- Disabled fieldsets are respected through form-associated custom-element callbacks.
+- The input remains keyboard-operable. The reveal button is a normal button.
+
+## Security limits
+
+The strength meter is a simple client-side heuristic, not a breach check or security audit. Do not log, persist, expose, or send password values to analytics. Always validate server-side and store passwords using a dedicated, secure password-hashing algorithm. Never treat the meter as a substitute for authentication security.
+
+## Standalone behavior
+
+The component file embeds the shared VFX runtime and does not require a framework or package dependency. See the project gallery for the integrated preview.
