@@ -230,7 +230,7 @@ This is the most visibly uneven group and the highest-priority redesign target a
 | Priority | Work | Why it comes first |
 |---|---|---|
 | P0 | Shared motion, theme, accessibility and lifecycle contracts | Prevents 82 separate implementations from drifting further |
-| P1 | Preserve and formalize the original 11 motion references | Establishes what VFX quality actually means |
+| P1 | Preserve and formalize the 11 signature motion patterns | Establishes what VFX quality actually means |
 | P1 | Upgrade the 20 newest visual/creative/media components | Addresses the most obvious gap between function and premium finish |
 | P2 | Upgrade forms, menus, overlays and complex interaction components | These have the greatest keyboard, focus and form-state complexity |
 | P2 | Resolve shared-runtime and Toggle payload strategy | Improves delivery cost without sacrificing standalone use or signature motion |
@@ -243,7 +243,7 @@ The implementation order should be dependency-aware. The visual tokens, motion p
 - [x] Inventory all 82 component folders and standalone demos.
 - [x] Confirm the 83 gallery examples and explain the additional Button variant.
 - [x] Inspect the shared runtime and capture existing design tokens.
-- [x] Identify the original 11 motion-reference components.
+- [x] Identify the 11 signature motion components.
 - [x] Document the current architecture and key payload/lifecycle risks.
 - [x] Record a component-specific redesign focus for all 82 components.
 - [x] Define the shared animation, visual, accessibility and performance standards.
