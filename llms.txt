@@ -163,4 +163,10 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 
 ## Phase 3 core interface and feedback controls
-- `docs/quality/PHASE-3-CORE-CONTROLS.md`: current implementation scope, refinements and verification status for 18 core controls. Phase 3 is in progress; automated validation and visual review are pending.
+- `docs/quality/PHASE-3-CORE-CONTROLS.md`: 18 core-control refinements, merge information and verified automated checks. Manual visual and assistive-technology review remains outstanding.
+- `docs/quality/PHASE-4-NAVIGATION-OVERLAYS.md`: implementation scope and regression coverage for navigation, overlays and date-selection controls.
+
+## Deployment
+- Live hosting: GitHub Pages.
+- Workflow: `.github/workflows/deploy-pages.yml`, triggered by pushes to `main` and manual workflow dispatch.
+- The workflow validates the source, uploads the repository root and deploys through GitHub Pages.

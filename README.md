@@ -258,6 +258,15 @@ The original 11 controls have received a focused behavior, lifecycle, accessibil
 
 ## 🧩 Phase 3: core interface and feedback controls
 
-Phase 3 implementation work is underway across 18 existing controls: Select, Textarea, Number, Search, File Upload, Color Picker, Accordion, Segmented Control, OTP Input, Tag Input, Pagination, Alert, Skeleton, Badge, Avatar, Chip, Breadcrumb and Stepper.
+Phase 3 is merged into `main` across 18 existing controls: Select, Textarea, Number, Search, File Upload, Color Picker, Accordion, Segmented Control, OTP Input, Tag Input, Pagination, Alert, Skeleton, Badge, Avatar, Chip, Breadcrumb and Stepper.
 
-The current pass focuses on dynamic attribute/value synchronization, form validity and disabled states, file acceptance checks, OTP completion behavior, observer lifecycle cleanup and regression coverage. Automated validation and visual review are still pending. See the [Phase 3 implementation report](docs/quality/PHASE-3-CORE-CONTROLS.md).
+The upgrades cover dynamic attribute/value synchronization, native form validity, disabled-state handling, file acceptance feedback, OTP completion behavior, observer lifecycle cleanup and regression tests. Phase 3 browser assertions and Node/build checks have passed. Manual visual and assistive-technology review remains outstanding. See the [Phase 3 implementation report](docs/quality/PHASE-3-CORE-CONTROLS.md).
+
+
+## 🚀 Deployment
+
+The live project is deployed with **GitHub Pages**, not Vercel. The [Deploy to GitHub Pages workflow](.github/workflows/deploy-pages.yml) runs on pushes to `main`, validates the component registry and generated files, uploads the repository root as the Pages artifact, and publishes it with GitHub's Pages deployment action. The workflow can also be started manually from the GitHub Actions tab.
+
+## 🧭 Phase 4: navigation and overlays
+
+Phase 4 focuses on Menu, Dialog, Drawer, Calendar, Date Picker, Command Palette, Context Menu and Combobox. The current pass adds keyboard focus handling, dynamic attribute synchronization and regression coverage for overlays, navigation and date constraints. See the [Phase 4 implementation report](docs/quality/PHASE-4-NAVIGATION-OVERLAYS.md).

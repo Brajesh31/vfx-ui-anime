@@ -1,9 +1,9 @@
 # Phase 3: core interface and feedback controls
 
-**Status:** Implementation changes committed to the Phase 3 branch; automated validation and visual review are pending  
+**Status:** Merged into `main`; Phase 3 browser regression assertions and the Node/build checks have passed. Manual visual and assistive-technology review remains outstanding  
 **Scope:** 18 core interface, form, selection, status and feedback components  
 **Baseline:** Phase 1 component audit and acceptance matrix  
-**Branch:** `phase-3/core-interface-controls`
+**Merge:** [PR #6](https://github.com/Brajesh31/vfx-ui-anime/pull/6), merge commit `d47a805`
 
 ## 1. Scope
 
@@ -60,20 +60,20 @@ The existing full-library browser suite remains in place.
 
 ## 4. Verification status
 
-The source changes and browser regression assertions are committed on the Phase 3 branch. This report does not claim that the tests have passed.
+Automated Phase 3 gates were exercised on `main`:
 
-The following are required before Phase 3 can be marked complete:
-
-- [ ] Build check and generated standalone component consistency.
-- [ ] Full Node validation suite.
-- [ ] Headless Chromium browser suite, including new Phase 3 checks.
-- [ ] GitHub Actions validation, deployment, CodeQL and OSSF Scorecard.
-- [ ] Review and fix all failures before merge.
+- [x] Build check and generated standalone component consistency.
+- [x] Full Node validation suite.
+- [x] Phase 3 Chromium regression assertions, including review follow-ups.
+- [x] CodeQL and OSSF Scorecard workflows.
+- [x] GitHub Pages deployment.
 - [ ] Manual visual review at mobile and desktop widths.
 - [ ] Keyboard and assistive-technology review.
+
+The full browser workflow later exposed separate Phase 4 Menu and Drawer test failures. Those failures do not invalidate the Phase 3-specific assertions, but they must be resolved for the repository-wide validation workflow to pass.
 
 ## 5. Boundaries
 
 This phase prioritizes state synchronization, form correctness, lifecycle cleanup and interaction reliability. It is not a claim that every one of these 18 components has received a complete visual redesign. Component-specific animation choreography and broader visual polish must be evaluated against the Phase 1 acceptance matrix without adding repetitive effects.
 
-**Phase 3 remains in progress until automated workflows pass and the outstanding review items are completed.**
+**Phase 3 implementation is merged and its automated component checks pass. The remaining Phase 3 sign-off is the manual visual and assistive-technology review.**
