@@ -298,7 +298,8 @@ const api = window.VFXAnimeFX = {
       }
     }
     get threshold() {
-      const value = Number(this.getAttribute('threshold'));
+      const raw = this.getAttribute('threshold');
+      const value = raw === null || raw.trim() === '' ? .12 : Number(raw);
       return Number.isFinite(value) ? clamp(value, .01, .95) : .12;
     }
     set threshold(value) {
@@ -310,7 +311,8 @@ const api = window.VFXAnimeFX = {
     get disabled() { return this.hasAttribute('disabled'); }
     set disabled(value) { this.toggleAttribute('disabled', Boolean(value)); }
     get distance() {
-      const value = Number(this.getAttribute('distance'));
+      const raw = this.getAttribute('distance');
+      const value = raw === null || raw.trim() === '' ? 20 : Number(raw);
       return Number.isFinite(value) ? clamp(value, 0, 200) : 20;
     }
     set distance(value) {
@@ -318,7 +320,8 @@ const api = window.VFXAnimeFX = {
       if (Number.isFinite(number)) this.setAttribute('distance', String(clamp(number, 0, 200)));
     }
     get duration() {
-      const value = Number(this.getAttribute('duration'));
+      const raw = this.getAttribute('duration');
+      const value = raw === null || raw.trim() === '' ? 600 : Number(raw);
       return Number.isFinite(value) ? clamp(value, 0, 5000) : 600;
     }
     set duration(value) {
