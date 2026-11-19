@@ -24,6 +24,7 @@ A lightweight rich-text field with inline formatting, lists, quotes, undo/redo, 
 | `value` | string | Read or set sanitized HTML. |
 | `text` | string | Read plain text from the editing surface. |
 | `focus()` | method | Focuses the editable surface. |
+| `clear()` | method | Clears content when enabled and not read-only. Returns false when editing is blocked. |
 | `VfxRichTextEditor.sanitize(html)` | static method | Returns content filtered through the editor's tag and link allowlist. |
 
 ### Attributes
