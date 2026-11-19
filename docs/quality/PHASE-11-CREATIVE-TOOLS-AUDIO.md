@@ -72,16 +72,18 @@ The Phase 11 browser block checks:
 
 The existing whole-gallery suite, registry/build validation, and 390 px horizontal-overflow guard remain part of the repository validation workflow.
 
-## ✅ Verification status
+## ⚠️ Verification status
 
-GitHub Actions workflow results are recorded here after the final Phase 11 documentation commit completes its checks.
+The repository's GitHub Actions workflows are configured to run on pushes to `main`, including repository validation/Chromium tests, GitHub Pages deployment, CodeQL, and OpenSSF Scorecard. However, the connected GitHub read interface available during this implementation did not expose push-triggered workflow run records or their job results. I therefore cannot verify those four workflow outcomes from this session.
 
-| Check | Result |
-|---|---|
-| Repository validation and Chromium interaction suite | Pending final workflow run |
-| GitHub Pages deployment | Pending final workflow run |
-| CodeQL analysis | Pending final workflow run |
-| OpenSSF Scorecard | Pending final workflow run |
+The combined commit-status endpoint for the latest Phase 11 source commit returned two Vercel check failures, both linking to Vercel's `build-rate-limit` page:
+
+- [Vercel check: vfx-ui-anime](https://vercel.com/brajeshs-projects-659a7e75?upgradeToPro=build-rate-limit)
+- [Vercel check: vfx-ui-anime-9q9s](https://vercel.com/brajeshs-projects-659a7e75?upgradeToPro=build-rate-limit)
+
+These are Vercel integration statuses, not the repository's GitHub Actions workflows. They are not evidence that the GitHub Pages, validation, CodeQL, or Scorecard workflows failed. Conversely, they do not establish that those workflows passed.
+
+**CI sign-off is unverified.** Check the latest push on the [GitHub Actions page](https://github.com/Brajesh31/vfx-ui-anime/actions) before treating this phase as release-verified. Do not interpret the implementation or committed browser tests as proof of a passing CI run.
 
 ## ⚠️ Manual sign-off still required
 
