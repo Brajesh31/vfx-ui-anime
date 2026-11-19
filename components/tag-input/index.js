@@ -271,6 +271,6 @@ class VfxTagInput extends Base{
  remove(i){const el=this.$$('.tag')[i];if(el){const p=at(el);slash(p.x,p.y,{len:36,thick:7,life:.22});shards(p.x,p.y,{n:4,speed:80,size:3,life:.35,arc:Math.PI});}this.tags.splice(i,1);this.draw();this.emit('change',{value:this.value,tags:[...this.tags]});}
  get value(){return this.tags.join(', ')}set value(v){this.tags=String(v??'').split(',').map(s=>s.trim()).filter(Boolean);this.draw();}
  attributeChangedCallback(name,oldValue,newValue){if(!this.ready||oldValue===newValue)return;if(name==='value')this.value=newValue||'';if(name==='disabled')this.input.disabled=this.hasAttribute('disabled');if(name==='placeholder')this.input.placeholder=newValue||'';if(name==='label')this.$('.label').textContent=newValue||'Tags';if(name==='hint')this.$('.hint').textContent=newValue||'Press Enter or comma to add a tag';}
- frame(dt){this.$('.tag').forEach((t,i)=>{const s=this.springs[i]?.step(dt)??1;t.style.transform='scale('+s.toFixed(3)+')';});}
+ frame(dt){this.$$('.tag').forEach((t,i)=>{const s=this.springs[i]?.step(dt)??1;t.style.transform='scale('+s.toFixed(3)+')';});}
 }
 fx.define('vfx-tag-input',VfxTagInput);})();
