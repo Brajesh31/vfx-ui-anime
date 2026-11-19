@@ -261,15 +261,74 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define,esc}=window.VFXAnimeFX;
 class VfxNotificationCenter extends Base {
- static get css(){return ':host{display:block;width:min(100%,380px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:16px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px;border-bottom:1px solid #e9e5fa}.title{font-size:14px;font-weight:950}.unread{display:inline-grid;place-items:center;min-width:21px;height:21px;margin-left:6px;padding:0 6px;border-radius:99px;background:var(--vfx-acc);font-size:10px}.mark-all{padding:6px 8px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:#fff;font-size:10px;font-weight:850;cursor:pointer}.filters{display:flex;gap:6px;padding:9px 12px;border-bottom:1px solid #eeeafa}.filter{padding:6px 9px;border:1px solid #e2ddf6;border-radius:999px;background:#fff;color:#8982bd;font-size:10px;font-weight:850;cursor:pointer}.filter[aria-pressed=true]{border-color:var(--vfx-ink);background:#f0edff;color:var(--vfx-ink)}.list{display:grid;max-height:310px;overflow:auto}.item{display:grid;grid-template-columns:9px minmax(0,1fr) auto;gap:9px;align-items:start;padding:12px;border-bottom:1px solid #f0edfb}.dot{width:8px;height:8px;margin-top:5px;border-radius:50%;background:var(--vfx-acc)}.item[data-read=true] .dot{background:#d8d4f4}.body{min-width:0}.item-title{display:block;font-size:12px;font-weight:900}.message{display:block;margin-top:3px;color:var(--vfx-dim);font-size:11px;line-height:1.4}.time{display:block;margin-top:5px;color:#a09acb;font-size:9px;font-weight:800}.actions{display:grid;gap:4px}.actions button{padding:5px 7px;border:1px solid #e1dcf4;border-radius:7px;background:#fff;font-size:9px;font-weight:850;cursor:pointer}.empty{padding:26px;text-align:center;color:var(--vfx-dim);font-size:11px}.foot{padding:9px 12px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- _read(){return (this.getAttribute('items')||'welcome::Welcome aboard::Your workspace is ready.::unread|review::Review complete::Your latest build passed review.::read|mention::You were mentioned::A teammate mentioned you in a discussion.::unread').split('|').map((s,i)=>{const p=s.split('::');return {id:p[0]||String(i),title:p[1]||p[0],message:p[2]||'',read:p[3]==='read',time:p[4]||''};});}
- render(){this._items=this._read();return '<section class="shell"><header class="head"><span class="title">Notifications <span class="unread">0</span></span><button class="mark-all" type="button">Mark all read</button></header><nav class="filters" aria-label="Notification filter"><button class="filter" type="button" data-filter="all" aria-pressed="true">All</button><button class="filter" type="button" data-filter="unread" aria-pressed="false">Unread</button></nav><div class="list" role="list"></div><footer class="foot" aria-live="polite"></footer></section>';}
- setup(){this._items=this._read();this._filter='all';this.$('.filters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;this._filter=b.dataset.filter;this._paint();});this.$('.mark-all').addEventListener('click',()=>this.markAllRead());this.$('.list').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const {action,id}=b.dataset;if(action==='read')this.markRead(id);else this.dismiss(id);});this._paint();}
- get items(){return this._items.map(x=>({...x}));}get unreadCount(){return this._items.filter(x=>!x.read).length;}
- _paint(){const a=this._items.filter(x=>this._filter==='all'||!x.read);this.$('.unread').textContent=this.unreadCount;this.$('.list').innerHTML=a.length?a.map(x=>'<article class="item" data-read="'+x.read+'" role="listitem"><span class="dot" aria-hidden="true"></span><div class="body"><strong class="item-title">'+esc(x.title)+'</strong><span class="message">'+esc(x.message)+'</span>'+(x.time?'<span class="time">'+esc(x.time)+'</span>':'')+'</div><div class="actions">'+(!x.read?'<button type="button" data-action="read" data-id="'+esc(x.id)+'">Read</button>':'')+'<button type="button" data-action="dismiss" data-id="'+esc(x.id)+'" aria-label="Dismiss '+esc(x.title)+'">×</button></div></article>').join(''):'<div class="empty">You are all caught up.</div>';this.$$('.filter').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===this._filter)));this.$('.mark-all').disabled=!this.unreadCount;this.$('.foot').textContent=this._items.length+' total · '+this.unreadCount+' unread';}
- markRead(id){const n=this._items.find(x=>x.id===id);if(!n||n.read)return false;n.read=true;this._paint();this.emit('read',{id,notification:{...n}});this.emit('change',{items:this.items,unreadCount:this.unreadCount});return true;}
- markAllRead(){const count=this.unreadCount;if(!count)return;this._items.forEach(x=>x.read=true);this._paint();this.emit('read-all',{count});this.emit('change',{items:this.items,unreadCount:0});}
- dismiss(id){const i=this._items.findIndex(x=>x.id===id);if(i<0)return false;const [n]=this._items.splice(i,1);this._paint();this.emit('dismiss',{id,notification:{...n}});this.emit('change',{items:this.items,unreadCount:this.unreadCount});return true;}
+ static get observedAttributes() { return ['items','disabled']; }
+ static get css() { return ':host{display:block;width:min(100%,400px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:16px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px;border-bottom:1px solid #e9e5fa}.title{font-size:14px;font-weight:950}.unread{display:inline-grid;place-items:center;min-width:21px;height:21px;margin-left:6px;padding:0 6px;border-radius:99px;background:var(--vfx-acc);font-size:10px}.mark-all{padding:7px 9px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:#fff;font-size:10px;font-weight:850;cursor:pointer}.filters{display:flex;gap:6px;padding:9px 12px;border-bottom:1px solid #eeeafa}.filter{padding:6px 9px;border:1px solid #e2ddf6;border-radius:999px;background:#fff;color:#8982bd;font-size:10px;font-weight:850;cursor:pointer}.filter[aria-pressed=true]{border-color:var(--vfx-ink);background:#f0edff;color:var(--vfx-ink)}.list{display:grid;max-height:340px;overflow:auto}.item{display:grid;grid-template-columns:9px minmax(0,1fr) auto;gap:9px;align-items:start;padding:12px;border-bottom:1px solid #f0edfb}.dot{width:8px;height:8px;margin-top:5px;border-radius:50%;background:var(--vfx-acc)}.item[data-read=true] .dot{background:#d8d4f4}.body{min-width:0}.item-title{display:block;font-size:12px;font-weight:900;overflow-wrap:anywhere}.message{display:block;margin-top:3px;color:var(--vfx-dim);font-size:11px;line-height:1.4;overflow-wrap:anywhere}.time{display:block;margin-top:5px;color:#a09acb;font-size:9px;font-weight:800}.actions{display:grid;gap:4px}.actions button{padding:6px 8px;border:1px solid #e1dcf4;border-radius:7px;background:#fff;font-size:9px;font-weight:850;cursor:pointer}.actions button:disabled,.mark-all:disabled,.filter:disabled{opacity:.45;cursor:not-allowed}.empty{padding:26px;text-align:center;color:var(--vfx-dim);font-size:11px}.foot{padding:9px 12px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}'; }
+ _defaults() { return [{id:'welcome',title:'Welcome aboard',message:'Your workspace is ready.',read:false},{id:'review',title:'Review complete',message:'Your latest build passed review.',read:true},{id:'mention',title:'You were mentioned',message:'A teammate mentioned you in a discussion.',read:false}]; }
+ _normalise(items) {
+  const seen=new Set(),out=[];
+  for(const [index,item] of (Array.isArray(items)?items:[]).entries()) {
+   if(!item||typeof item!=='object')continue;
+   const id=String(item.id??'').trim(); if(!id||seen.has(id))continue; seen.add(id);
+   out.push({id,title:String(item.title??id),message:String(item.message??''),read:item.read===true||item.read==='read',time:String(item.time??'')});
+  }
+  return out;
+ }
+ _read() {
+  if(!this.hasAttribute('items'))return this._defaults();
+  const raw=this.getAttribute('items')||''; if(!raw.trim())return [];
+  try { const parsed=JSON.parse(raw); if(Array.isArray(parsed))return this._normalise(parsed); } catch {}
+  return this._normalise(raw.split('|').map((part,i)=>{const p=part.split('::');return {id:p[0]||String(i),title:p[1]||p[0],message:p[2]||'',read:p[3]==='read',time:p[4]||''};}));
+ }
+ render() {
+  this._items=this._read();
+  return '<section class="shell"><header class="head"><span class="title">Notifications <span class="unread" aria-label="Unread count">0</span></span><button class="mark-all" type="button">Mark all read</button></header><nav class="filters" aria-label="Notification filter"><button class="filter" type="button" data-filter="all" aria-pressed="true">All</button><button class="filter" type="button" data-filter="unread" aria-pressed="false">Unread</button></nav><div class="list" role="list" aria-label="Notifications"></div><footer class="foot" aria-live="polite"></footer></section>';
+ }
+ setup() {
+  this._items=this._read();this._filter='all';this._formDisabled=false;
+  this.$('.filters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b||b.disabled)return;this._filter=b.dataset.filter;this._paint();});
+  this.$('.mark-all').addEventListener('click',()=>this.markAllRead());
+  this.$('.list').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;const {action,id}=b.dataset;if(action==='read')this.markRead(id);else if(action==='dismiss')this.dismiss(id);});
+  this._paint();
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='items') { this._items=this._read();this._paint();this.emit('change',{items:this.items,unreadCount:this.unreadCount,source:'attribute'}); }
+  else this._paint();
+ }
+ get items() { return this._items.map(x=>({...x})); }
+ set items(v) {
+  let items=v;
+  if(typeof v==='string') { try{items=JSON.parse(v);}catch{items=v.split('|').map((part,i)=>{const p=part.split('::');return{id:p[0]||String(i),title:p[1]||p[0],message:p[2]||'',read:p[3]==='read',time:p[4]||''};});} }
+  this._items=this._normalise(items);
+  if(this.ready){this._paint();this.emit('change',{items:this.items,unreadCount:this.unreadCount,source:'property'});}
+ }
+ get unreadCount() { return this._items.filter(x=>!x.read).length; }
+ _paint() {
+  if(!this.ready)return;
+  const visible=this._items.filter(x=>this._filter==='all'||!x.read);
+  this.$('.unread').textContent=String(this.unreadCount);
+  this.$('.list').innerHTML=visible.length?visible.map(x=>'<article class="item" data-read="'+x.read+'" role="listitem"><span class="dot" aria-hidden="true"></span><div class="body"><strong class="item-title">'+esc(x.title)+'</strong><span class="message">'+esc(x.message)+'</span>'+(x.time?'<span class="time">'+esc(x.time)+'</span>':'')+'</div><div class="actions">'+(!x.read?'<button type="button" data-action="read" data-id="'+esc(x.id)+'" aria-label="Mark '+esc(x.title)+' as read">Read</button>':'')+'<button type="button" data-action="dismiss" data-id="'+esc(x.id)+'" aria-label="Dismiss '+esc(x.title)+'">×</button></div></article>').join(''):'<div class="empty" role="status">'+(this._filter==='unread'?'No unread notifications.':'You are all caught up.')+'</div>';
+  this.$$('.filter').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.filter===this._filter));b.disabled=this.hasAttribute('disabled')||!!this._formDisabled;});
+  this.$('.mark-all').disabled=this.hasAttribute('disabled')||!!this._formDisabled||!this.unreadCount;
+  this.$$('.actions button').forEach(b=>b.disabled=this.hasAttribute('disabled')||!!this._formDisabled);
+  this.$('.foot').textContent=this._items.length+' total · '+this.unreadCount+' unread';
+ }
+ markRead(id) {
+  if(this.hasAttribute('disabled')||this._formDisabled)return false;
+  const n=this._items.find(x=>x.id===String(id));if(!n||n.read)return false;
+  n.read=true;this._paint();this.emit('read',{id:n.id,notification:{...n}});this.emit('change',{items:this.items,unreadCount:this.unreadCount});return true;
+ }
+ markAllRead() {
+  if(this.hasAttribute('disabled')||this._formDisabled)return false;
+  const count=this.unreadCount;if(!count)return false;
+  this._items.forEach(x=>x.read=true);this._paint();this.emit('read-all',{count});this.emit('change',{items:this.items,unreadCount:0});return true;
+ }
+ dismiss(id) {
+  if(this.hasAttribute('disabled')||this._formDisabled)return false;
+  const i=this._items.findIndex(x=>x.id===String(id));if(i<0)return false;
+  const [n]=this._items.splice(i,1);this._paint();this.emit('dismiss',{id:n.id,notification:{...n}});this.emit('change',{items:this.items,unreadCount:this.unreadCount});return true;
+ }
+ formDisabledCallback(disabled) { this._formDisabled=!!disabled;this._paint(); }
 }
 define('vfx-notification-center',VfxNotificationCenter);
 })();
