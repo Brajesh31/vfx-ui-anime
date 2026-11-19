@@ -1,30 +1,27 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VFX UI Anime Rich Text Editor</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rich Text Editor Demo · VFX UI Anime</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,860px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 0}.hint{font-size:12px}a{color:inherit}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,820px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.stage{display:grid;gap:14px;padding:24px 8px}.status{min-height:24px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}button{justify-self:start;padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#ff5fa8;color:#1d1a4a;font-weight:850;cursor:pointer}.output{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;border:1px solid #e5e0f5;border-radius:9px;background:#faf9ff;color:#514a87;font:11px/1.5 ui-monospace,monospace}a{color:#6c62be}
 </style>
 <script src="index.js"></script>
 </head>
-<body>
-<main>
+<body><main>
 <h1>✍️ Rich Text Editor</h1>
-<p>Format content, create lists, use Ctrl/Cmd+B, Ctrl/Cmd+I or Ctrl/Cmd+U, and inspect the live word count.</p>
-<div class="stage">
-<vfx-rich-text-editor id="editor" label="Project description" placeholder="Describe your project…" required></vfx-rich-text-editor>
-</div>
-<p class="hint" id="summary" aria-live="polite">Editor output is sanitized using a narrow allowlist. Paste and drop content is inserted as plain text.</p>
-<p><button id="inspect" type="button">Inspect sanitized value</button></p>
-<pre id="output" style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f8f6ff;border-radius:8px;padding:12px"></pre>
-<p><a href="../../gallery/">← Back to component gallery</a></p>
+<p>Format text with the toolbar or keyboard shortcuts. Pasted markup is sanitized before insertion, and the form value is sanitized HTML.</p>
+<form id="demo-form" class="stage">
+<vfx-rich-text-editor name="description" required value="<p><strong>Project overview</strong></p><p>Write a short description. Try <em>emphasis</em>, lists, and quotes.</p>"></vfx-rich-text-editor>
+<button type="submit">Validate editor content</button>
+<div class="status" id="status" role="status" aria-live="polite">Ready. Try Ctrl/Cmd+B, Ctrl/Cmd+I, and Ctrl/Cmd+Z.</div>
+<pre class="output" id="output">Sanitized HTML will appear here after editing.</pre>
+</form>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
 </main>
 <script>
-const editor=document.querySelector('#editor');
-document.querySelector('#inspect').addEventListener('click',()=>{document.querySelector('#output').textContent=editor.value;});
-editor.addEventListener('input',event=>{document.querySelector('#summary').textContent=event.detail.words+' words · '+event.detail.text.length+' characters';});
+const form=document.querySelector('#demo-form'),editor=document.querySelector('vfx-rich-text-editor'),status=document.querySelector('#status'),output=document.querySelector('#output');
+editor.addEventListener('input',e=>{status.textContent=e.detail.words+' words. Content updated.';output.textContent=e.detail.value;});
+form.addEventListener('submit',e=>{e.preventDefault();status.textContent=form.checkValidity()?'Editor content is valid.':'Add some text before continuing.';});
 </script>
-</body>
-</html>
+</body></html>
