@@ -258,4 +258,90 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,420px)}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}h3{margin:0 0 10px;font-size:12px}.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cell{aspect-ratio:1;border:0;border-radius:4px;background:#eee}.cell[data-level="1"]{background:#d7d0fb}.cell[data-level="2"]{background:#afa4f6}.cell[data-level="3"]{background:#8175e6}.cell[data-level="4"]{background:#5548b7}';}render(){return '<section class="box"><h3>'+esc(this.getAttribute('title')||'Activity heatmap')+'</h3><div class="grid"></div></section>';}setup(){const v=(this.getAttribute('values')||Array.from({length:35},(_,i)=>(i*7+3)%5).join(',')).split(',').map(x=>Math.max(0,Math.min(4,+x||0)));this.$('.grid').innerHTML=v.map((n,i)=>'<button class="cell" type="button" data-i="'+i+'" data-level="'+n+'" aria-label="Cell '+(i+1)+', level '+n+'"></button>').join('');this.$('.grid').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)this.emit('select',{index:+b.dataset.i,level:+b.dataset.level});});}}define('vfx-heatmap',C);})();
+(() => {
+  const { Base, define, esc, at, burst } = window.VFXAnimeFX;
+  const clampLevel = (value) => Number.isFinite(Number(value)) ? Math.max(0, Math.min(4, Math.round(Number(value)))) : 0;
+  class C extends Base {
+    static get observedAttributes() { return ['title', 'values', 'labels', 'columns']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,460px);min-width:0}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}h3{margin:0 0 10px;font-size:12px}.grid{display:grid;grid-template-columns:repeat(var(--columns,7),minmax(0,1fr));gap:4px}.cell{position:relative;min-width:0;aspect-ratio:1;border:1px solid #e5e1f2;border-radius:4px;background:#f2f0f7;cursor:pointer}.cell[data-level="1"]{background:#d7d0fb}.cell[data-level="2"]{background:#afa4f6}.cell[data-level="3"]{background:#8175e6}.cell[data-level="4"]{background:#5548b7;border-color:#5548b7}.cell:hover,.cell:focus-visible,.cell[aria-pressed=true]{outline:2px solid #ff70b0;outline-offset:1px}.empty{color:#8982b6;font-size:12px}.key{display:flex;gap:5px;align-items:center;margin-top:9px;font-size:10px;color:#8982b6}.swatch{width:10px;height:10px;border-radius:2px;display:inline-block}';
+    }
+    render() {
+      return '<section class="box"><h3>' + esc(this.getAttribute('title') || 'Activity heatmap') + '</h3><div class="grid" role="group" aria-label="Activity intensity cells"></div><div class="key" aria-label="Intensity scale"><span>Less</span><i class="swatch" style="background:#f2f0f7"></i><i class="swatch" style="background:#d7d0fb"></i><i class="swatch" style="background:#afa4f6"></i><i class="swatch" style="background:#8175e6"></i><i class="swatch" style="background:#5548b7"></i><span>More</span></div></section>';
+    }
+    setup() {
+      this._selectedIndex = -1;
+      this.$('.grid').addEventListener('click', (event) => {
+        const cell = event.target.closest('[data-index]');
+        if (cell) this.select(Number(cell.dataset.index));
+      });
+      this.$('.grid').addEventListener('keydown', (event) => {
+        const cell = event.target.closest('[data-index]');
+        if (!cell || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        this.select(Number(cell.dataset.index));
+      });
+      this._render();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) this._render();
+    }
+    get values() {
+      const raw = this.hasAttribute('values') ? this.getAttribute('values') : Array.from({ length: 35 }, (_, i) => (i * 7 + 3) % 5).join(',');
+      if (!raw.trim()) return [];
+      return raw.split(',').map(clampLevel);
+    }
+    set values(value) {
+      this.setAttribute('values', (Array.isArray(value) ? value : String(value ?? '').split(',')).join(','));
+    }
+    get labels() {
+      return (this.getAttribute('labels') || '').split(',').map((v) => v.trim());
+    }
+    set labels(value) {
+      this.setAttribute('labels', (Array.isArray(value) ? value : String(value ?? '').split(',')).join(','));
+    }
+    get columns() {
+      const value = Number(this.getAttribute('columns'));
+      return Number.isFinite(value) && value > 0 ? Math.max(1, Math.min(14, Math.round(value))) : 7;
+    }
+    set columns(value) { this.setAttribute('columns', String(value)); }
+    get selectedIndex() { return this._selectedIndex; }
+    select(index) {
+      const values = this._values || [];
+      if (!Number.isInteger(index) || index < 0 || index >= values.length) return false;
+      this._selectedIndex = index;
+      this.$$('.cell').forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.index) === index)));
+      const value = values[index], label = this._labels[index] || 'Cell ' + (index + 1);
+      const cell = this.$('.cell[data-index="' + index + '"]');
+      if (cell) { const point = at(cell); burst(point.x, point.y, { r: 12, spikes: 5 }); }
+      this.emit('select', { index, label, value, level: value });
+      return true;
+    }
+    _render() {
+      if (!this.ready) return;
+      const values = this.values, labels = this.labels, grid = this.$('.grid');
+      this._values = values;
+      this._labels = labels;
+      this.$('h3').textContent = this.getAttribute('title') || 'Activity heatmap';
+      grid.style.setProperty('--columns', this.columns);
+      grid.replaceChildren();
+      if (!values.length) {
+        const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = 'No activity data';
+        grid.append(empty);
+        grid.setAttribute('aria-label', 'Activity heatmap, no data');
+        return;
+      }
+      values.forEach((value, index) => {
+        const label = labels[index] || 'Cell ' + (index + 1);
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'cell'; button.dataset.index = String(index);
+        button.dataset.level = String(value); button.title = label + ': intensity ' + value + ' of 4';
+        button.setAttribute('aria-label', label + ', intensity ' + value + ' of 4');
+        button.setAttribute('aria-pressed', String(this._selectedIndex === index));
+        grid.append(button);
+      });
+      grid.setAttribute('aria-label', this.getAttribute('title') || 'Activity intensity heatmap');
+    }
+  }
+  define('vfx-heatmap', C);
+})();
