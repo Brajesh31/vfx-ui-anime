@@ -272,3 +272,7 @@ The live project is deployed with **GitHub Pages**, not Vercel. The [Deploy to G
 ## 🧭 Phase 4: navigation and overlays
 
 Phase 4 upgrades Menu, Dialog, Drawer, Calendar, Date Picker, Command Palette, Context Menu and Combobox. Automated Node/build checks, the full Chromium browser suite, GitHub Pages deployment, CodeQL and OSSF Scorecard are passing on `main`. Manual visual and assistive-technology review remains outstanding. See the [Phase 4 implementation report](docs/quality/PHASE-4-NAVIGATION-OVERLAYS.md).
+
+## 🧰 Phase 5: creative-workflow controls
+
+Phase 5 improves Drag and Drop, Carousel, Timeline, Radial Menu and Image Cropper. The work focuses on dynamic data updates, keyboard operation and focus management, empty states, image export geometry, asynchronous image loading and component reconnect behavior. Automated verification is tracked in the [Phase 5 implementation report](docs/quality/PHASE-5-CREATIVE-WORKFLOW.md). Manual visual and assistive-technology review remains a separate sign-off step.

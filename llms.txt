@@ -165,6 +165,9 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - `docs/quality/PHASE-3-CORE-CONTROLS.md`: 18 core-control refinements, merge information and verified automated checks. Manual visual and assistive-technology review remains outstanding.
 - `docs/quality/PHASE-4-NAVIGATION-OVERLAYS.md`: implementation scope and regression coverage for navigation, overlays and date-selection controls.
 
+## Phase 5 creative-workflow controls
+- `docs/quality/PHASE-5-CREATIVE-WORKFLOW.md`: Drag and Drop, Carousel, Timeline, Radial Menu and Image Cropper reliability work, dynamic data synchronization, keyboard/focus behavior, crop export and regression coverage.
+
 ## Deployment
 - Live hosting: GitHub Pages.
 - Workflow: `.github/workflows/deploy-pages.yml`, triggered by pushes to `main` and manual workflow dispatch.
