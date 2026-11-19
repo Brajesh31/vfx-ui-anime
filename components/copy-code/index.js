@@ -261,13 +261,78 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define}=window.VFXAnimeFX;
 class VfxCopyCode extends Base {
- static get css(){return ':host{display:block;width:min(100%,600px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#211d3b;box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid #ffffff20;color:#d8d3ff}.lang{font-size:9px;font-weight:950;letter-spacing:.13em;text-transform:uppercase}.copy{padding:6px 9px;border:1px solid #ffffff50;border-radius:7px;background:#373154;color:#fff;font-size:10px;font-weight:850;cursor:pointer}.copy[data-done=true]{background:#315d53}.body{display:grid;grid-template-columns:auto minmax(0,1fr);max-height:300px;overflow:auto;padding:12px 0;font:11px/1.7 ui-monospace,SFMono-Regular,monospace}.lines{padding:0 10px;color:#777196;text-align:right;user-select:none}.code{min-width:0;margin:0;padding:0 14px 0 0;color:#f1edff;white-space:pre;tab-size:2}.code code{font:inherit}.foot{padding:7px 12px;border-top:1px solid #ffffff20;color:#8e87b7;font-size:9px}:focus-visible{outline:2px solid #ff8dc1;outline-offset:2px}';}
- render(){return '<section class="shell"><header class="head"><span class="lang">CODE</span><button class="copy" type="button">Copy code</button></header><div class="body"><pre class="lines"></pre><pre class="code"><code></code></pre></div><footer class="foot"></footer><slot hidden></slot></section>';}
- setup(){this._source=(this.getAttribute('code')||this.textContent||'').trim();this.$('.lang').textContent=this.getAttribute('language')||'CODE';this._paint();this.$('.copy').addEventListener('click',()=>this.copy());}
- get value(){return this._source;}set value(v){this._source=String(v??'');this._paint();}
- get lineCount(){return this._source.split('\n').length;}
- _paint(){if(!this.$('.code'))return;this.$('.code code').textContent=this._source;this.$('.lines').textContent=Array.from({length:this.lineCount},(_,i)=>i+1).join('\n');this.$('.foot').textContent=this.lineCount+' lines';}
- async copy(){let ok=false;try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(this._source);ok=true;}}catch{}if(!ok){const area=document.createElement('textarea');area.value=this._source;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();try{ok=document.execCommand('copy');}catch{}area.remove();}this.$('.copy').dataset.done=String(ok);this.$('.copy').textContent=ok?'Copied ✓':'Copy failed';this.emit(ok?'copy':'copy-error',{value:this._source});return ok;}
+ static get observedAttributes() { return ['code','language','disabled','label','wrap']; }
+ static get css() { return ':host{display:block;width:min(100%,680px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:14px;background:#211d3b;box-shadow:5px 6px 0 var(--vfx-soft)}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid #ffffff20;color:#d8d3ff}.lang{min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:9px;font-weight:950;letter-spacing:.13em;text-transform:uppercase}.copy{flex:none;padding:7px 10px;border:1px solid #ffffff50;border-radius:7px;background:#373154;color:#fff;font-size:10px;font-weight:850;cursor:pointer}.copy[data-done=true]{background:#315d53}.copy:disabled{opacity:.4;cursor:not-allowed}.body{display:grid;grid-template-columns:auto minmax(0,1fr);max-height:340px;overflow:auto;padding:12px 0;font:11px/1.7 ui-monospace,SFMono-Regular,monospace}.lines{min-width:2em;margin:0;padding:0 10px;color:#777196;text-align:right;user-select:none;white-space:pre}.code{min-width:0;margin:0;padding:0 14px 0 0;color:#f1edff;white-space:pre;tab-size:2;overflow:visible}.code code{font:inherit}.foot{display:flex;justify-content:space-between;gap:12px;padding:7px 12px;border-top:1px solid #ffffff20;color:#8e87b7;font-size:9px}.status{color:#d8d3ff}:focus-visible{outline:2px solid #ff8dc1;outline-offset:2px}:host([wrap]) .code{white-space:pre-wrap;overflow-wrap:anywhere}'; }
+ render() { return '<section class="shell"><header class="head"><span class="lang">CODE</span><button class="copy" type="button" aria-label="Copy source code">Copy code</button></header><div class="body"><pre class="lines" aria-hidden="true"></pre><pre class="code" aria-label="Source code"><code></code></pre></div><footer class="foot"><span class="count">0 lines</span><span class="status" role="status" aria-live="polite"></span></footer><slot hidden></slot></section>'; }
+ setup() {
+  this._source=this._readSource();this._explicitValue=false;this._copyTimer=0;this._observer=null;
+  this.$('.copy').addEventListener('click',()=>this.copy());
+  this._sync();
+  this._observeSource();
+ }
+ connectedCallback() { super.connectedCallback();this._observeSource(); }
+ disconnectedCallback() {
+  this._observer?.disconnect();this._observer=null;
+  if(this._copyTimer)clearTimeout(this._copyTimer);this._copyTimer=0;
+  super.disconnectedCallback?.();
+ }
+ _observeSource() {
+  if(!this.isConnected||!window.MutationObserver)return;
+  this._observer?.disconnect();
+  this._observer=new MutationObserver(()=>{if(!this.hasAttribute('code')&&!this._explicitValue){this._source=this._readSource();this._paint();}});
+  this._observer.observe(this,{childList:true,characterData:true,subtree:true});
+ }
+ _readSource() { return this.hasAttribute('code')?this.getAttribute('code')||'':this.textContent||''; }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='code'){this._explicitValue=false;this._source=this._readSource();}
+  if(name==='language')this.$('.lang').textContent=newValue||'CODE';
+  if(name==='disabled'||name==='wrap'||name==='label')this._sync();
+  this._paint();
+ }
+ get value() { return this._source; }
+ set value(v) { this._explicitValue=true;this._source=String(v??'');this._paint(); }
+ get language() { return this.getAttribute('language')||'CODE'; }
+ set language(v) { this.setAttribute('language',String(v||'CODE')); }
+ get disabled() { return this.hasAttribute('disabled'); }
+ get lineCount() { return this._source.length?this._source.split('\n').length:0; }
+ _sync() {
+  if(!this.$('.copy'))return;
+  this.$('.lang').textContent=this.language;
+  this.$('.copy').disabled=this.disabled||!this._source.length;
+  this.$('.code').setAttribute('aria-label',this.getAttribute('label')||'Source code');
+  this.$('.code').classList.toggle('wrap',this.hasAttribute('wrap'));
+ }
+ _paint() {
+  if(!this.$('.code'))return;
+  this.$('.code code').textContent=this._source;
+  this.$('.lines').textContent=Array.from({length:this.lineCount},(_,i)=>i+1).join('\n');
+  this.$('.count').textContent=this.lineCount+' line'+(this.lineCount===1?'':'s');
+  this.$('.status').textContent='';
+  this.$('.copy').dataset.done='false';this.$('.copy').textContent='Copy code';
+  this._sync();
+ }
+ async copy() {
+  if(this.disabled||!this._source.length)return false;
+  if(this._copyTimer)clearTimeout(this._copyTimer);this._copyTimer=0;
+  let ok=false,method='clipboard';
+  try { if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(this._source);ok=true;} } catch {}
+  if(!ok) {
+   method='fallback';
+   const area=document.createElement('textarea'),previous=document.activeElement;
+   area.value=this._source;area.setAttribute('aria-hidden','true');area.tabIndex=-1;
+   area.style.position='fixed';area.style.opacity='0';area.style.pointerEvents='none';area.style.left='-9999px';
+   document.body.append(area);area.focus();area.select();
+   try { ok=document.execCommand('copy'); } catch { ok=false; }
+   area.remove();if(previous?.isConnected&&typeof previous.focus==='function')previous.focus({preventScroll:true});
+  }
+  this.$('.copy').dataset.done=String(ok);this.$('.copy').textContent=ok?'Copied ✓':'Copy failed';
+  this.$('.status').textContent=ok?'Code copied to clipboard.':'Clipboard access failed. Select the code to copy it manually.';
+  if(ok)this.emit('copy',{value:this._source,language:this.language,method});
+  else this.emit('copy-error',{value:this._source,language:this.language});
+  if(ok)this._copyTimer=setTimeout(()=>{this._copyTimer=0;if(this.isConnected){this.$('.copy').dataset.done='false';this.$('.copy').textContent='Copy code';}},1800);
+  return ok;
+ }
 }
 define('vfx-copy-code',VfxCopyCode);
 })();
