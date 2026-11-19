@@ -288,7 +288,7 @@ class VfxCalendar extends Base{
  this.grid.addEventListener('keydown',e=>this.onKey(e));this.paint();}
  locale(){return this.getAttribute('locale')||document.documentElement.lang||navigator.language||'en';}
  move(n){const p=at(this.$('.calendar'));slash(p.x+p.w/2,p.y+42,{len:62,ang:n>0?-.25:Math.PI+.25,thick:9,life:.34});ticks(p.x+(n>0?p.w-28:28),p.y+42,{dir:n>0?0:Math.PI,n:3,len:13,life:.25});this.view=new Date(this.view.getFullYear(),this.view.getMonth()+n,1);this.paint();}
- choose(value){this.value=value;const p=at(this.$('.calendar'));if(value){puff(p.x+p.w/2,p.y+56,{size:11,n:5,life:.38});shards(p.x+p.w/2,p.y+60,{n:5,speed:60,size:3,life:.4,arc:Math.PI*2});}this.emit('change',{value,date:parse(value)});this.paint();}
+ choose(value){if(value&&!this.allowed(value))return;this.value=value;const p=at(this.$('.calendar'));if(value){puff(p.x+p.w/2,p.y+56,{size:11,n:5,life:.38});shards(p.x+p.w/2,p.y+60,{n:5,speed:60,size:3,life:.4,arc:Math.PI*2});}this.emit('change',{value,date:parse(value)});this.paint();}
  onKey(e){const b=e.target.closest('button[data-date]');if(!b||['Tab','Enter',' '].includes(e.key))return;const d=parse(b.dataset.date);if(!d)return;let n=new Date(d);
  if(e.key==='ArrowRight')n.setDate(n.getDate()+1);else if(e.key==='ArrowLeft')n.setDate(n.getDate()-1);else if(e.key==='ArrowDown')n.setDate(n.getDate()+7);else if(e.key==='ArrowUp')n.setDate(n.getDate()-7);else if(e.key==='Home')n.setDate(n.getDate()-n.getDay());else if(e.key==='End')n.setDate(n.getDate()+6-n.getDay());else if(e.key==='PageDown')n=new Date(n.getFullYear(),n.getMonth()+1,Math.min(n.getDate(),28));else if(e.key==='PageUp')n=new Date(n.getFullYear(),n.getMonth()-1,Math.min(n.getDate(),28));else return;
  e.preventDefault();this.view=new Date(n.getFullYear(),n.getMonth(),1);this.paint();this.grid.querySelector(`[data-date="${key(n)}"]`)?.focus();}
@@ -297,6 +297,9 @@ class VfxCalendar extends Base{
  this.grid.innerHTML=Array.from({length:42},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);const k=key(d),blocked=(this.getAttribute('min')&&k<this.getAttribute('min'))||(this.getAttribute('max')&&k>this.getAttribute('max'))||this.hasAttribute('disabled');
  return `<button class="day${d.getMonth()!==m?' outside':''}${k===today?' today':''}${k===selected?' selected':''}" type="button" role="gridcell" data-date="${k}" aria-label="${fx.esc(new Intl.DateTimeFormat(this.locale(),{dateStyle:'full'}).format(d))}" aria-selected="${k===selected}" ${k===selected?'aria-current="date"':''} ${blocked?'disabled':''} tabindex="${k===selected||(!selected&&k===today)?0:-1}">${d.getDate()}</button>`;}).join('');
  this.$('.hint').textContent=selectedDate?new Intl.DateTimeFormat(this.locale(),{dateStyle:'medium'}).format(selectedDate):'Choose a date';this.internals?.setFormValue(selected);}
+ allowed(value){const d=parse(value);return !!d&&(!this.getAttribute('min')||value>=this.getAttribute('min'))&&(!this.getAttribute('max')||value<=this.getAttribute('max'))&&!this.hasAttribute('disabled');}
+ formResetCallback(){this.value=this.getAttribute('value')||'';this.paint();}
+ formDisabledCallback(disabled){this.toggleAttribute('disabled',disabled);}
  attributeChangedCallback(name,oldV,newV){if(oldV===newV||!this.ready)return;if(name==='value'&&parse(newV)){const d=parse(newV);this.view=new Date(d.getFullYear(),d.getMonth(),1);}this.paint();}
 }
 fx.define('vfx-calendar',VfxCalendar);
