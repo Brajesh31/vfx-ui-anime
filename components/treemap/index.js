@@ -258,4 +258,131 @@ const api = window.VFXAnimeFX = {
 };
 })();
 // <<< vfx core
-(() => {const {Base,define,esc}=window.VFXAnimeFX;class C extends Base{static get css(){return ':host{display:block;width:min(100%,500px)}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:white;box-shadow:5px 6px 0 var(--vfx-soft)}h3{margin:0 0 8px;font-size:12px}.map{display:flex;flex-wrap:wrap;gap:4px;min-height:160px}.tile{display:flex;flex:var(--w) 1 0;min-width:60px;min-height:70px;flex-direction:column;justify-content:end;align-items:start;padding:9px;border:0;border-radius:8px;background:var(--c);text-align:left;cursor:pointer}.tile b{font-size:11px}.tile small{font-size:9px}';}render(){return '<section class="box"><h3>'+esc(this.getAttribute('title')||'Resource distribution')+'</h3><div class="map"></div></section>';}setup(){const a=(this.getAttribute('items')||'app::App::42|web::Web::26|ops::Ops::20|data::Data::12').split('|').map((s,i)=>{const p=s.split('::');return{id:p[0]||i,label:p[1]||p[0],value:Math.max(1,+p[2]||1)};}),cs=['#f6b8d5','#d5ccff','#b9e8d8','#ffe0a9'];this.$('.map').innerHTML=a.map((x,i)=>'<button class="tile" type="button" data-id="'+esc(x.id)+'" style="--w:'+x.value+';--c:'+cs[i%4]+'"><b>'+esc(x.label)+'</b><small>'+x.value+'</small></button>').join('');this.$('.map').addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)this.emit('select',a.find(x=>x.id===b.dataset.id));});}}define('vfx-treemap',C);})();
+(() => {
+  const { Base, define, esc, at, burst } = window.VFXAnimeFX;
+  const NS = 'http://www.w3.org/2000/svg';
+  const colors = ['#f6b8d5', '#d5ccff', '#b9e8d8', '#ffe0a9', '#b8dff2', '#e8c3ee', '#c6dfb2', '#f2c5ad'];
+  const svgNode = (tag, attrs = {}, text = '') => {
+    const el = document.createElementNS(NS, tag);
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, String(value));
+    if (text !== '') el.textContent = text;
+    return el;
+  };
+  const parseItems = (raw) => String(raw || '').split('|').filter(Boolean).map((entry, index) => {
+    const parts = entry.split('::');
+    const number = Number(parts[2]);
+    return { id: parts[0] || String(index), label: parts[1] || parts[0] || 'Item ' + (index + 1), value: Number.isFinite(number) ? Math.max(0, number) : 0 };
+  }).filter((item) => item.value > 0);
+  const layout = (items, x, y, width, height, output) => {
+    if (!items.length) return;
+    if (items.length === 1) { output.push({ item: items[0], x, y, width, height }); return; }
+    const total = items.reduce((sum, item) => sum + item.value, 0);
+    let split = 1, accumulated = items[0].value, best = Math.abs(total / 2 - accumulated);
+    for (let i = 1; i < items.length - 1; i++) {
+      accumulated += items[i].value;
+      const distance = Math.abs(total / 2 - accumulated);
+      if (distance < best) { best = distance; split = i + 1; }
+    }
+    const left = items.slice(0, split), right = items.slice(split);
+    const firstTotal = left.reduce((sum, item) => sum + item.value, 0);
+    if (width >= height) {
+      const firstWidth = width * firstTotal / total;
+      layout(left, x, y, firstWidth, height, output);
+      layout(right, x + firstWidth, y, width - firstWidth, height, output);
+    } else {
+      const firstHeight = height * firstTotal / total;
+      layout(left, x, y, width, firstHeight, output);
+      layout(right, x, y + firstHeight, width, height - firstHeight, output);
+    }
+  };
+  class C extends Base {
+    static get observedAttributes() { return ['title', 'items']; }
+    static get css() {
+      return ':host{display:block;width:min(100%,540px);min-width:0}.box{padding:13px;border:2px solid var(--vfx-ink);border-radius:14px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}h3{margin:0 0 8px;font-size:12px}.map{display:block;width:100%;height:auto;overflow:visible}.tile{cursor:pointer;outline:none}.tile rect{stroke:#fff;stroke-width:3;transition:filter .12s}.tile:hover rect,.tile:focus-visible rect,.tile[aria-pressed=true] rect{filter:brightness(1.04);stroke:#ff5fa8;stroke-width:5}.tile text{fill:#1d1a4a;font-family:system-ui,sans-serif;pointer-events:none}.tile .name{font-size:12px;font-weight:850}.tile .amount{font-size:10px}.empty{fill:#8982b6;font:12px system-ui}';
+    }
+    render() {
+      return '<section class="box"><h3>' + esc(this.getAttribute('title') || 'Resource distribution') + '</h3><svg class="map" viewBox="0 0 500 260" role="group" aria-label="Interactive proportional treemap"></svg></section>';
+    }
+    setup() {
+      this._selectedId = null;
+      this.$('svg').addEventListener('click', (event) => {
+        const tile = event.target.closest('[data-id]');
+        if (tile) this.select(tile.dataset.id);
+      });
+      this.$('svg').addEventListener('keydown', (event) => {
+        const tile = event.target.closest('[data-id]');
+        if (!tile || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        this.select(tile.dataset.id);
+      });
+      this._render();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue && this.ready) { if (name === 'items') this._items = null; this._render(); }
+    }
+    get items() {
+      if (this._items) return this._items.map((item) => ({ ...item }));
+      const raw = this.hasAttribute('items') ? this.getAttribute('items') : 'app::App::42|web::Web::26|ops::Ops::20|data::Data::12';
+      return parseItems(raw).map((item) => ({ ...item }));
+    }
+    set items(value) {
+      if (!Array.isArray(value)) { this.setAttribute('items', String(value ?? '')); this._items = null; }
+      else {
+        this._items = value.map((item, index) => ({
+          id: String(item.id ?? index), label: String(item.label ?? item.name ?? 'Item ' + (index + 1)),
+          value: Number.isFinite(Number(item.value)) ? Math.max(0, Number(item.value)) : 0
+        })).filter((item) => item.value > 0);
+        if (this.ready) this._render();
+      }
+    }
+    get selectedId() { return this._selectedId; }
+    select(id) {
+      const item = this._data?.find((entry) => entry.id === String(id));
+      if (!item) return false;
+      this._selectedId = item.id;
+      this.$$('.tile').forEach((tile) => tile.setAttribute('aria-pressed', String(tile.dataset.id === item.id)));
+      const tile = this.$('.tile[data-id="' + CSS.escape(item.id) + '"]');
+      if (tile) { const point = at(tile); burst(point.x, point.y, { r: 14, spikes: 6 }); }
+      this.emit('select', { ...item, percent: item.value / this._total * 100 });
+      return true;
+    }
+    _render() {
+      if (!this.ready) return;
+      const svg = this.$('svg');
+      const items = this.items;
+      const ids = new Set();
+      const data = items.filter((item) => item.value > 0 && !ids.has(item.id) && ids.add(item.id));
+      const total = data.reduce((sum, item) => sum + item.value, 0);
+      this._data = data;
+      this._total = total;
+      this.$('h3').textContent = this.getAttribute('title') || 'Resource distribution';
+      svg.replaceChildren();
+      svg.append(svgNode('title', {}, this.getAttribute('title') || 'Resource distribution'));
+      svg.append(svgNode('desc', {}, data.map((item) => item.label + ': ' + item.value + ' (' + (total ? (item.value / total * 100).toFixed(1) : '0') + '%)').join('; ')));
+      if (!data.length || !(total > 0)) {
+        svg.append(svgNode('text', { x: 250, y: 132, 'text-anchor': 'middle', class: 'empty' }, 'No items to display'));
+        svg.setAttribute('aria-label', 'Treemap, no positive values');
+        return;
+      }
+      const rectangles = [];
+      layout(data, 0, 0, 500, 260, rectangles);
+      rectangles.forEach(({ item, x, y, width, height }, index) => {
+        const inset = 2, w = Math.max(0, width - inset * 2), h = Math.max(0, height - inset * 2);
+        const group = svgNode('g', {
+          class: 'tile', 'data-id': item.id, tabindex: 0, role: 'button',
+          'aria-label': item.label + ': ' + item.value + ', ' + (item.value / total * 100).toFixed(1) + ' percent',
+          'aria-pressed': String(this._selectedId === item.id)
+        });
+        group.append(svgNode('title', {}, item.label + ': ' + item.value));
+        group.append(svgNode('rect', { x: x + inset, y: y + inset, width: w, height: h, rx: 7, fill: colors[index % colors.length] }));
+        if (w > 65 && h > 32) {
+          group.append(svgNode('text', { x: x + 10, y: y + Math.min(h, 26), class: 'name' }, item.label));
+          if (w > 90 && h > 55) group.append(svgNode('text', { x: x + 10, y: y + Math.min(h - 8, 45), class: 'amount' }, String(item.value)));
+        }
+        svg.append(group);
+      });
+      svg.setAttribute('aria-label', 'Treemap with ' + data.length + ' categories, total ' + total);
+    }
+  }
+  define('vfx-treemap', C);
+})();
