@@ -1,58 +1,51 @@
-# 🚦 VFX UI Anime Release Checklist
+# 🚦 Release checklist
 
-Use this checklist before approving a public release or declaring the repository production-ready. A checked structural item means the current repository contents were audited; it does not replace a successful command run or human QA session.
+Use this as the final go/no-go checklist for a release candidate. A checked source audit item is not a substitute for an executed test or human sign-off.
 
-## ✅ Source and repository integrity
+## Source and repository structure
 
-- [x] Repository inventory contains exactly 82 component folders.
-- [x] `tools/build.mjs` and `tools/validate.mjs` list the same 82 component names in the same order.
-- [x] All 82 component JavaScript files pass a static syntax parse.
-- [x] All 82 component files embed the exact current `core.js` content between the build markers.
-- [x] The toggle's embedded WebP data URI matches `components/toggle/frames.webp`.
-- [x] Each component has an `index.js`, `demo.html`, and `README.md`.
-- [x] All 82 standalone demos load their own component script.
-- [x] All inline JavaScript blocks in the 82 demos pass a static syntax parse.
-- [x] All 82 component READMEs have a heading and non-empty usage/documentation content.
-- [x] Registry contains 82 unique names, each mapped to its exact component source and README reference.
-- [x] Gallery contains 83 unique demo IDs and covers all 82 component tags. Multiple gallery examples for the same component are allowed.
-- [x] Corrected the duplicate gallery ID on the Secondary button example to `button-secondary`.
-- [x] Required GitHub Actions workflow files exist and their configuration contains the expected push-to-main triggers.
+- [x] Inventory contains 82 component folders.
+- [x] Build and validator lists cover the same 82 component names.
+- [x] Each component folder includes source, standalone demo and API README.
+- [x] Registry contains 82 component entries.
+- [x] Gallery contains 83 unique demo IDs and coverage for all 82 component tags.
+- [x] Generated shared-runtime copies are checked against `core.js`.
+- [x] Structural checks passed on the latest audited commit before this documentation pass.
 
-## 🧪 Required automated execution evidence
+## Automated checks
 
-These checks are configured in the repository workflows, but they must be observed passing on the release candidate commit before release approval.
+- [x] `npm test` passed on commit `0169832aa1efbe657ab951b7e00f8edc44ef5bdc`.
+- [x] `npm run check` passed on commit `0169832aa1efbe657ab951b7e00f8edc44ef5bdc`.
+- [x] GitHub Pages deployment passed on commit `4dee151d4e26ed15047c1951071c3fbd8c86acee`.
+- [x] OpenSSF Scorecard passed on commit `4dee151d4e26ed15047c1951071c3fbd8c86acee`.
+- [ ] Chromium browser suite passes on the final release-candidate SHA.
+- [ ] CodeQL passes on the final release-candidate SHA.
+- [ ] GitHub Pages deployment passes on the final release-candidate SHA.
+- [ ] OpenSSF Scorecard passes on the final release-candidate SHA.
 
-- [ ] `npm test` passes on the release candidate commit.
-- [ ] `npm run check` passes, including generated-runtime parity and repository structure.
-- [ ] `npm run test:browser` passes in Chromium at the configured 390 px viewport.
-- [ ] GitHub Pages deployment workflow succeeds on the release candidate commit.
-- [ ] CodeQL analysis succeeds on the release candidate commit.
-- [ ] OpenSSF Scorecard workflow succeeds on the release candidate commit.
-- [ ] Any Vercel checks required by the deployment setup succeed, or their build-rate-limit issue is resolved and the final state is confirmed.
-- [ ] The latest run links and commit SHA are recorded in the Phase 14 report or release notes.
+The latest corrected browser workflow failed. See [QUALITY-AND-RELEASE.md](../QUALITY-AND-RELEASE.md) for run links, logs, and component-level findings.
 
-## 👀 Manual browser and accessibility sign-off
+## Human QA
 
-- [ ] Visual review at 390 px, 768 px, and desktop widths.
-- [ ] Light and dark theme review, including focus, disabled, error, selected, and empty states.
-- [ ] Keyboard-only review of representative form controls, menus, dialogs, data views, editors, media controls, and motion components.
-- [ ] Screen-reader review of names, roles, values, state changes, status announcements, dialog focus, tab/panel relationships, and dynamic content.
-- [ ] Reduced-motion review with the preference enabled before load and changed while the page is open.
-- [ ] Touch/coarse-pointer review for swipe, drag, scroll conflicts, and target sizing.
-- [ ] Performance review of the full gallery with all 83 demos mounted, including frame scheduling, canvas backing sizes, and observer/listener cleanup.
-- [ ] Browser console review for uncaught exceptions, failed asset requests, and unexpected media errors.
+- [ ] Visual review at 390 px, 768 px and desktop widths.
+- [ ] Keyboard-only review of controls, menus, dialogs, editors, cards and overlays.
+- [ ] Screen-reader review of names, roles, values, status announcements, focus management and dynamic content.
+- [ ] Reduced-motion review at initial load and when the preference changes during runtime.
+- [ ] Touch/coarse-pointer review.
+- [ ] Cross-browser review in Chromium, Firefox and Safari.
+- [ ] Browser console review for uncaught exceptions and failed asset requests.
 
-## 🔐 Repository and release governance
+## Package and release
 
-- [ ] Confirm branch protection/rulesets for `main`, including required checks and restricted force-push/deletion behavior.
-- [ ] Confirm secret-scanning and push-protection settings, where available for the repository.
-- [ ] Confirm Dependabot alerts and security updates are enabled and actionable.
-- [ ] Review workflow permissions and third-party action versions before the release candidate is frozen.
-- [ ] Confirm the intended version/changelog/release notes, if a versioned release is being prepared.
-- [ ] Obtain final release approval only after all mandatory automated and manual gates above are complete.
+- [ ] Final public API and package consumption model documented.
+- [ ] Public package entry points and published file allowlist established.
+- [ ] `npm pack --dry-run` inspected.
+- [ ] Clean consumer project install and usage tested.
+- [ ] Changelog and release notes prepared.
+- [ ] Version and tag selected after API freeze.
+- [ ] `private: true` removed only after explicit release approval.
+- [ ] GitHub Release and npm publication performed only after all gates pass.
 
-## Current release decision
+## Current decision
 
-**Not approved for release yet.** The source/inventory/registry/gallery checks above have been audited and the validator has been strengthened to enforce them. The actual GitHub Actions execution results and manual browser/accessibility sign-off remain outstanding. Do not treat static parsing or workflow configuration as proof that the end-to-end release gates passed.
-
-No release tag, GitHub Release, npm publication, or deployment promotion is performed by this checklist.
+**Not approved for release.** Structural validation passed, but the latest full Chromium browser suite failed in several Phase 11–13 component scenarios. Manual visual and accessibility sign-off is also outstanding.
