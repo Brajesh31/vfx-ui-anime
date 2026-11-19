@@ -1,1 +1,105 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Video Player</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;font:15px system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:white;box-shadow:9px 10px 0 #b8b3ff}.stage{display:grid;place-items:center;padding:24px}</style><script src="index.js"></script></head><body><main><h1>Video Player</h1><div class="stage"><vfx-video-player></vfx-video-player></div><a href="../../gallery/">Back to gallery</a></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Video Player | VFX UI Anime</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui,sans-serif}
+    main{width:min(100%,800px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}
+    h1{margin:0;font-size:clamp(24px,4vw,34px)}p{color:#686381}vfx-video-player{margin:20px auto}
+    button{padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#ffcae4;color:#1d1a4a;font:inherit;font-weight:800;cursor:pointer}
+    button:focus-visible,a:focus-visible{outline:3px solid #6558d9;outline-offset:3px}a{color:#5146bd;font-weight:700}.note{font-size:13px}
+  </style>
+  <script src="index.js"></script>
+</head>
+<body>
+  <main>
+    <h1>🎬 Video Player</h1>
+    <p>Generate a short animated video locally in this browser, then test play, seek, mute, loop and fullscreen controls.</p>
+    <button id="load" type="button">Generate local video sample</button>
+    <vfx-video-player id="player" label="Locally generated demo video" preload="metadata"></vfx-video-player>
+    <p class="note">The clip is recorded from a canvas using MediaRecorder. It is not downloaded from a remote host. Browser support for WebM recording is required.</p>
+    <a href="../../gallery/">← Back to the component gallery</a>
+  </main>
+  <script>
+    const player = document.querySelector('#player');
+    const loadButton = document.querySelector('#load');
+    let objectUrl = '';
+    let stopped = false;
+
+    function generateClip() {
+      return new Promise((resolve, reject) => {
+        if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+          reject(new Error('This browser does not support in-browser video recording.'));
+          return;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = 480;
+        canvas.height = 270;
+        const context = canvas.getContext('2d');
+        const stream = canvas.captureStream(15);
+        const mime = ['video/webm;codecs=vp8', 'video/webm'].find(type => MediaRecorder.isTypeSupported(type));
+        if (!mime) {
+          stream.getTracks().forEach(track => track.stop());
+          reject(new Error('No supported WebM recording format was found.'));
+          return;
+        }
+        const recorder = new MediaRecorder(stream, { mimeType: mime });
+        const chunks = [];
+        let started = 0;
+        recorder.addEventListener('dataavailable', event => {
+          if (event.data.size) chunks.push(event.data);
+        });
+        recorder.addEventListener('error', event => {
+          stream.getTracks().forEach(track => track.stop());
+          reject(event.error || new Error('Video recording failed.'));
+        });
+        recorder.addEventListener('stop', () => {
+          stream.getTracks().forEach(track => track.stop());
+          resolve(new Blob(chunks, { type: mime }));
+        }, { once: true });
+        function draw(timestamp) {
+          if (!started) started = timestamp;
+          const t = (timestamp - started) / 1000;
+          context.fillStyle = '#211d3b';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.fillStyle = '#ff70b0';
+          context.beginPath();
+          context.arc(90 + (t * 160) % 300, 135 + Math.sin(t * 4) * 55, 35, 0, Math.PI * 2);
+          context.fill();
+          context.fillStyle = '#ffffff';
+          context.font = 'bold 26px system-ui';
+          context.fillText('VFX UI ANIME', 20, 40);
+          context.font = '16px system-ui';
+          context.fillText('Local canvas recording', 20, 68);
+          if (t < 2) requestAnimationFrame(draw);
+          else recorder.stop();
+        }
+        recorder.start();
+        requestAnimationFrame(draw);
+      });
+    }
+
+    loadButton.addEventListener('click', async () => {
+      loadButton.disabled = true;
+      loadButton.textContent = 'Recording sample…';
+      try {
+        const blob = await generateClip();
+        if (objectUrl) URL.revokeObjectURL(objectUrl);
+        objectUrl = URL.createObjectURL(blob);
+        player.src = objectUrl;
+        player.loop = true;
+        loadButton.textContent = 'Local sample loaded';
+      } catch (error) {
+        loadButton.textContent = error.message;
+        loadButton.disabled = false;
+      }
+    });
+
+    window.addEventListener('pagehide', () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    }, { once: true });
+  </script>
+</body>
+</html>
