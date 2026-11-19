@@ -163,7 +163,7 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
 { check('heatmap: renders selectable cells',await ev(`document.querySelector('vfx-heatmap').shadowRoot.querySelectorAll('.cell').length===35`)); }
 { await tap('vfx-treemap >>> [data-id="app"]'); check('treemap: renders selectable tiles',await ev(`document.querySelector('vfx-treemap').shadowRoot.querySelectorAll('.tile').length===4`)); }
 { await tap('vfx-drawing-canvas >>> .clear'); check('drawing canvas: clear action is available',await ev(`!!document.querySelector('vfx-drawing-canvas').shadowRoot.querySelector('.save')`)); }
-{ await tap('vfx-color-palette >>> [data-c="#ff6fae"]'); check('color palette: selects a color',await ev(`document.querySelector('vfx-color-palette').value==='#ff6fae'`)); }
+{ await tap('vfx-color-palette >>> [data-color="#ff6fae"]'); check('color palette: selects a color',await ev(`document.querySelector('vfx-color-palette').value==='#ff6fae'`)); }
 { check('audio player: initializes safely without a source',await ev(`document.querySelector('vfx-audio-player').playing===false`)); }
 { check('video player: initializes without source',await ev(`document.querySelector('vfx-video-player').playing===false`)); }
 { await ev(`(() => { document.querySelector('vfx-json-editor').value='{"ok":true}'; })()`); check('JSON editor: accepts valid JSON',await ev(`document.querySelector('vfx-json-editor').valid===true`)); await ev(`(() => { document.querySelector('vfx-json-editor').value='{bad'; })()`); check('JSON editor: rejects invalid JSON',await ev(`document.querySelector('vfx-json-editor').valid===false`)); }
