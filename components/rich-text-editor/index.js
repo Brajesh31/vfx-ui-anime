@@ -262,8 +262,8 @@ const api = window.VFXAnimeFX = {
 const {Base,define,at,burst,esc}=window.VFXAnimeFX;
 class VfxRichTextEditor extends Base {
  static formAssociated = true;
- static get observedAttributes() { return ['placeholder','disabled','required','value','name']; }
- static get css() { return ':host{display:block;width:min(100%,620px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.toolbar{display:flex;flex-wrap:wrap;gap:5px;padding:9px;border-bottom:1px solid #e9e5fa;background:#faf9ff}.tool{min-width:32px;height:30px;padding:0 8px;border:1px solid #dcd6f3;border-radius:7px;background:#fff;color:var(--vfx-ink);font-size:11px;font-weight:900;cursor:pointer}.tool[aria-pressed=true]{background:#eeeaff;border-color:var(--vfx-pri)}.tool:disabled{opacity:.42;cursor:not-allowed}.divider{width:1px;margin:3px 2px;background:#dfdaf2}.editor{min-height:170px;max-height:360px;overflow:auto;padding:14px;outline:0;font:13px/1.7 system-ui;overflow-wrap:anywhere}.editor:empty:before{content:attr(data-placeholder);color:#aaa4ce;pointer-events:none}.editor p{margin:0 0 8px}.editor ul,.editor ol{padding-left:23px}.editor a{color:#7169c8;text-decoration:underline}.editor[contenteditable=false]{background:#faf9ff;color:#8179a9;cursor:not-allowed}.status{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:360px){.status{flex-wrap:wrap}}'; }
+ static get observedAttributes() { return ['placeholder','disabled','readonly','required','value','name']; }
+ static get css() { return ':host{display:block;width:min(100%,620px);color:var(--vfx-ink)}.shell{overflow:hidden;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.toolbar{display:flex;flex-wrap:wrap;gap:5px;padding:9px;border-bottom:1px solid #e9e5fa;background:#faf9ff}.tool{min-width:32px;height:30px;padding:0 8px;border:1px solid #dcd6f3;border-radius:7px;background:#fff;color:var(--vfx-ink);font-size:11px;font-weight:900;cursor:pointer}.tool:disabled{opacity:.42;cursor:not-allowed}.divider{width:1px;margin:3px 2px;background:#dfdaf2}.editor{min-height:170px;max-height:360px;overflow:auto;padding:14px;outline:0;font:13px/1.7 system-ui;overflow-wrap:anywhere}.editor:empty:before{content:attr(data-placeholder);color:#aaa4ce;pointer-events:none}.editor p{margin:0 0 8px}.editor ul,.editor ol{padding-left:23px}.editor a{color:#7169c8;text-decoration:underline}.editor[contenteditable=false]{background:#faf9ff;color:#8179a9;cursor:not-allowed}.editor[aria-invalid=true]{box-shadow:inset 0 0 0 2px #d85c7b}.status{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-top:1px solid #eeeafa;color:var(--vfx-dim);font-size:10px}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:360px){.status{flex-wrap:wrap}}'; }
  render() {
   return '<div class="shell"><div class="toolbar" role="toolbar" aria-label="Text formatting">'+
    '<button class="tool" type="button" data-command="bold" aria-label="Bold" title="Bold (Ctrl+B)"><b>B</b></button>'+
@@ -284,24 +284,29 @@ class VfxRichTextEditor extends Base {
   this.editor.addEventListener('input',()=>this._update(true,'input'));
   this.editor.addEventListener('blur',()=>this._update(true,'change'));
   this.editor.addEventListener('paste',e=>{
-   e.preventDefault();
-   const html=e.clipboardData?.getData('text/html')||'';
-   const text=e.clipboardData?.getData('text/plain')||'';
+   e.preventDefault(); if(this._blocked())return;
+   const html=e.clipboardData?.getData('text/html')||'',text=e.clipboardData?.getData('text/plain')||'';
    const safe=html?VfxRichTextEditor.sanitize(html):esc(text).replace(/\r?\n/g,'<br>');
-   document.execCommand('insertHTML',false,safe);
+   document.execCommand('insertHTML',false,safe);this._update(true,'input');
+  });
+  this.editor.addEventListener('drop',e=>{
+   e.preventDefault(); if(this._blocked())return;
+   const text=e.dataTransfer?.getData('text/plain')||'';
+   if(text)document.execCommand('insertText',false,text);
    this._update(true,'input');
   });
   this.editor.addEventListener('keydown',e=>{
+   if(this._blocked())return;
    if(!(e.ctrlKey||e.metaKey)||e.altKey)return;
-   const key=e.key.toLowerCase(), command=key==='b'?'bold':key==='i'?'italic':key==='u'?'underline':key==='z'?(e.shiftKey?'redo':'undo'):null;
+   const key=e.key.toLowerCase(),command=key==='b'?'bold':key==='i'?'italic':key==='u'?'underline':key==='z'?(e.shiftKey?'redo':'undo'):null;
    if(command){e.preventDefault();this._command(command);}
   });
   this.$('.toolbar').addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault();});
   this.$('.toolbar').addEventListener('click',e=>{
-   const b=e.target.closest('[data-command]'); if(!b||b.disabled)return;
+   const b=e.target.closest('[data-command]');if(!b||b.disabled)return;
    this.editor.focus();this._command(b.dataset.command,b.dataset.value||null);
   });
-  this.value=this._defaultValue; this._syncDisabled(); this._update(false);
+  this.value=this._defaultValue;this._syncDisabled();this._update(false);
  }
  attributeChangedCallback(name,oldValue,newValue) {
   if(!this.ready||oldValue===newValue)return;
@@ -309,20 +314,21 @@ class VfxRichTextEditor extends Base {
   else if(name==='placeholder'){this.editor.dataset.placeholder=newValue||'Start writing…';}
   else this._syncDisabled();
  }
+ _blocked() { return this.hasAttribute('disabled')||this._formDisabled||this.hasAttribute('readonly'); }
  _syncDisabled() {
   if(!this.editor)return;
-  const disabled=this.hasAttribute('disabled')||this._formDisabled;
-  this.editor.contentEditable=disabled?'false':'true';
+  const blocked=this._blocked(),disabled=this.hasAttribute('disabled')||this._formDisabled,readonly=this.hasAttribute('readonly');
+  this.editor.contentEditable=blocked?'false':'true';
   this.editor.setAttribute('aria-disabled',String(disabled));
-  this.$$('.tool').forEach(b=>b.disabled=disabled);
+  this.editor.setAttribute('aria-readonly',String(readonly));
+  this.$$('.tool').forEach(b=>b.disabled=blocked);
   this.editor.setAttribute('aria-required',String(this.hasAttribute('required')));
   this._update(false);
  }
  _command(command,value=null) {
-  if(this.editor.contentEditable==='false')return false;
-  const ok=document.execCommand(command,false,value);
-  this._update(true,'input');
-  const p=at(this.editor); if(!this.calm)burst(p.x,p.y,{r:11,spikes:6});
+  if(this._blocked())return false;
+  const ok=document.execCommand(command,false,value);this._update(true,'input');
+  const p=at(this.editor);if(!this.calm)burst(p.x,p.y,{r:11,spikes:6});
   return ok;
  }
  static sanitize(html) {
@@ -337,8 +343,7 @@ class VfxRichTextEditor extends Base {
     const href=child.tagName==='A'?child.getAttribute('href'):null;
     for(const attr of [...child.attributes])child.removeAttribute(attr.name);
     if(child.tagName==='A'){
-     let safe='';
-     try{const u=new URL(href||'',document.baseURI);if(['http:','https:','mailto:'].includes(u.protocol))safe=u.href;}catch{}
+     let safe='';try{const u=new URL(href||'',document.baseURI);if(['http:','https:','mailto:'].includes(u.protocol))safe=u.href;}catch{}
      if(safe){child.setAttribute('href',safe);child.setAttribute('rel','noopener noreferrer');}
      else child.replaceWith(...child.childNodes);
     }
@@ -350,14 +355,16 @@ class VfxRichTextEditor extends Base {
  set value(v) { if(this.editor){this.editor.innerHTML=VfxRichTextEditor.sanitize(v||'');this._update(false);} }
  get text() { return this.editor?.innerText||''; }
  focus() { this.editor?.focus(); }
+ clear() { if(!this.editor||this._blocked())return false;this.editor.innerHTML='';this._update(true,'input');return true; }
  _update(emit,kind='input') {
   if(!this.editor)return;
-  const html=this.value,text=this.text.trim(),words=text?text.split(/\s+/).length:0;
+  const html=this.value,text=this.text.trim(),words=text?text.split(/\s+/).length:0,invalid=this.hasAttribute('required')&&!text;
   this.$('.count').textContent=words+' word'+(words===1?'':'s');
   this.$('.saved').textContent=emit?'Edited locally':'Ready';
+  this.editor.setAttribute('aria-invalid',String(invalid));
   this.internals?.setFormValue(html);
   const flags={};let message='';
-  if(this.hasAttribute('required')&&!text){flags.valueMissing=true;message='Enter some text.';}
+  if(invalid){flags.valueMissing=true;message='Enter some text.';}
   this.internals?.setValidity(flags,message,this.editor);
   if(emit)this.emit(kind,{value:html,text,words});
  }
