@@ -1,2 +1,32 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VFX UI Anime Guided Tour</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:#f7f5ff;color:#1d1a4a;font:15px/1.5 system-ui}main{width:min(100%,760px);padding:24px;border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 9px;font-size:clamp(23px,5vw,34px)}p{color:#7771a8}.stage{display:grid;place-items:center;padding:26px 8px}</style><script src="index.js"></script></head><body><main><h1>VFX UI Anime Guided Tour</h1><p>Standalone preview. Try the control and read its README for the complete API.</p><div class="stage"><button data-tour-target type="button">Tour target</button><vfx-guided-tour steps="[data-tour-target]::Welcome::This is the highlighted area.|body::Explore::Use Next or arrow keys."></vfx-guided-tour></div><p><a href="../../gallery/">← Back to component gallery</a></p></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guided Tour Demo · VFX UI Anime</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;display:grid;place-items:center;background:#f7f5ff;color:#1d1a4a;font:15px/1.55 system-ui}main{width:min(100%,820px);padding:clamp(18px,4vw,30px);border:3px solid #1d1a4a;border-radius:20px;background:#fff;box-shadow:9px 10px 0 #b8b3ff}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}p{color:#7771a8}.targets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}.target{min-height:116px;padding:14px;border:2px solid #1d1a4a;border-radius:12px;background:#faf9ff}.target h2{margin:0 0 7px;font-size:14px}.target p{margin:0;font-size:11px}.actions{display:flex;flex-wrap:wrap;gap:9px}button{padding:9px 13px;border:2px solid #1d1a4a;border-radius:9px;background:#ff5fa8;color:#1d1a4a;font-weight:850;cursor:pointer}.status{margin-top:14px;padding:10px 12px;border-radius:9px;background:#f5f2ff;color:#555080;font-size:12px}a{color:#6c62be}@media(max-width:560px){.targets{grid-template-columns:1fr}}
+</style>
+<script src="index.js"></script>
+</head>
+<body><main>
+<h1>🗺️ Guided Tour</h1>
+<p>Start the tour to spotlight three parts of this page. Try Arrow keys, Tab, Shift+Tab, Escape, and Skip. Focus returns to the Start button when the tour ends.</p>
+<div class="targets">
+<section class="target" id="tour-navigation"><h2>Navigation</h2><p>Move between the main areas of a product.</p></section>
+<section class="target" id="tour-projects"><h2>Projects</h2><p>Find the work you are collaborating on.</p></section>
+<section class="target" id="tour-activity"><h2>Activity</h2><p>Review recent updates and notifications.</p></section>
+</div>
+<div class="actions"><button id="start-tour" type="button">Start tour</button><button id="disable-tour" type="button" style="background:#fff">Toggle disabled</button></div>
+<vfx-guided-tour id="tour" steps='[{"selector":"#tour-navigation","title":"Navigation","description":"Use these sections to move around the product."},{"selector":"#tour-projects","title":"Projects","description":"Your projects and active work appear here."},{"selector":"#tour-activity","title":"Activity","description":"Keep track of important changes."}]'></vfx-guided-tour>
+<div class="status" id="status" role="status" aria-live="polite">The tour is ready to start.</div>
+<p><a href="../../gallery/">← Back to component gallery</a> · <a href="README.md">Component API</a></p>
+</main>
+<script>
+const tour=document.querySelector('#tour'),status=document.querySelector('#status'),disable=document.querySelector('#disable-tour');
+document.querySelector('#start-tour').addEventListener('click',()=>{status.textContent=tour.start()?'Tour started.':'Tour could not start. Check the targets or disabled state.';});
+disable.addEventListener('click',()=>{tour.toggleAttribute('disabled');disable.textContent=tour.disabled?'Enable tour':'Toggle disabled';status.textContent=tour.disabled?'Tour disabled.':'Tour enabled.';});
+tour.addEventListener('change',e=>{status.textContent='Step '+(e.detail.index+1)+': '+e.detail.step;});
+tour.addEventListener('target-missing',e=>{status.textContent='Skipped missing target: '+e.detail.selector;});
+tour.addEventListener('finish',e=>{status.textContent='Tour finished: '+e.detail.reason+'.';});
+</script>
+</body></html>
