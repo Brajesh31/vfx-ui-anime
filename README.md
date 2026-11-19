@@ -151,7 +151,7 @@ The public project name is **VFX UI Anime**. Component tags use the `vfx-*` pref
 
 ## ⚖️ Licensing and attribution
 
-The eleven adapted original component implementations and associated artwork retain the upstream MIT copyright and permission terms in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md). The twenty-six additional controls were independently authored for VFX UI Anime. The root [LICENSE](LICENSE) applies to the repository's own contributions and does not replace third-party terms.
+VFX UI Anime retains eleven adapted component implementations and associated artwork from the MIT-licensed Sakuga VFX project. Their original copyright and permission terms are preserved in [THIRD_PARTY_NOTICES/LICENSES.md](THIRD_PARTY_NOTICES/LICENSES.md). The root [LICENSE](LICENSE) covers Brajesh Kumar's original repository contributions and does not replace the upstream terms for adapted material.
 
 
 ## Components added in the previous batch
