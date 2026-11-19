@@ -160,3 +160,7 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 
 ## Phase 2 signature control upgrades
 - `docs/quality/PHASE-2-SIGNATURE-CONTROLS.md`: behavior and quality refinements to the original eleven signature controls, including form lifecycle, validation, overlay interactions, reduced motion and browser regression coverage.
+
+
+## Phase 3 core interface and feedback controls
+- `docs/quality/PHASE-3-CORE-CONTROLS.md`: current implementation scope, refinements and verification status for 18 core controls. Phase 3 is in progress; automated validation and visual review are pending.
