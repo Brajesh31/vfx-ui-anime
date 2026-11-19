@@ -83,6 +83,8 @@ The combined commit-status endpoint for the latest Phase 11 source commit return
 
 These are Vercel integration statuses, not the repository's GitHub Actions workflows. They are not evidence that the GitHub Pages, validation, CodeQL, or Scorecard workflows failed. Conversely, they do not establish that those workflows passed.
 
+**Static syntax checks passed:** all three updated component source files parse as JavaScript, the Phase 11 async browser-regression block parses, and `registry.json` parses as JSON. These checks do not execute the browser interactions or replace the GitHub Actions run.
+
 **CI sign-off is unverified.** Check the latest push on the [GitHub Actions page](https://github.com/Brajesh31/vfx-ui-anime/actions) before treating this phase as release-verified. Do not interpret the implementation or committed browser tests as proof of a passing CI run.
 
 ## ⚠️ Manual sign-off still required
