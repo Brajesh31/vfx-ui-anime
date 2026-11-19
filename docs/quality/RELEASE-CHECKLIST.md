@@ -11,18 +11,19 @@ Use this as the final go/no-go checklist. A checked source audit item is not a s
 - [x] Gallery contains 83 unique demo IDs and coverage for all 82 component tags.
 - [x] Generated shared-runtime copies are checked against `core.js`.
 - [x] Required GitHub Actions workflow definitions are present.
+- [x] GitHub Pages uses separate build/upload and dependent deploy jobs, allowing deploy retries without re-uploading the artifact.
 - [x] All 15 phase-specific reports have been consolidated into the project reference and removed.
 
 ## Automated verification on merged `main`
 
-Verified on commit `acb9c6f392b180ce974d7f8ea60aaf2046472677`:
+Verified on commit `e3e5a46a900dbb88930417acc854a6d96992bce7`:
 
-- [x] `npm test` passes. [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665)
-- [x] `npm run check` passes. [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665)
-- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665)
-- [x] CodeQL passes. [CodeQL run 44620469592](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469592)
-- [x] GitHub Pages deployment succeeds. [Pages run 44620469669](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469669)
-- [x] OpenSSF Scorecard succeeds. [Scorecard run 44620469530](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469530)
+- [x] `npm test` passes. [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441)
+- [x] `npm run check` passes. [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441)
+- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441)
+- [x] CodeQL passes. [CodeQL run 44622255484](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255484)
+- [x] GitHub Pages deployment succeeds. [Pages run 44622255212](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255212)
+- [x] OpenSSF Scorecard succeeds. [Scorecard run 44622255374](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255374)
 
 The Validate browser log records 210 successful checks, zero failures and zero page-side exception lines.
 

@@ -156,7 +156,7 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 
 The source repository is MIT-licensed. The npm package is **not published**. The current `package.json` intentionally retains `"private": true`.
 
-The complete integrated validation suite, CodeQL, GitHub Pages deployment and OpenSSF Scorecard all passed on merged `main` commit `acb9c6f392b180ce974d7f8ea60aaf2046472677`. See [the exact run links and remaining release gates](docs/QUALITY-AND-RELEASE.md).
+The complete integrated validation suite, CodeQL, GitHub Pages deployment and OpenSSF Scorecard all passed on merged `main` commit `e3e5a46a900dbb88930417acc854a6d96992bce7`. See [the exact run links and remaining release gates](docs/QUALITY-AND-RELEASE.md).
 
 The package is not yet release-approved. Manual visual, keyboard-only, touch and screen-reader review remains outstanding, as do package tarball inspection and a clean consumer installation test. Do not use an npm install command as though a public version already exists.
 

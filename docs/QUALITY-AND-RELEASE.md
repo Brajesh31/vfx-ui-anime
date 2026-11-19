@@ -3,7 +3,7 @@
 **Last verified:** 20 November 2026  
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
-**Verified merged commit:** `acb9c6f392b180ce974d7f8ea60aaf2046472677`
+**Verified merged commit:** `e3e5a46a900dbb88930417acc854a6d96992bce7`
 
 ## Current decision
 
@@ -15,18 +15,20 @@ The remaining release work is human QA and package-consumer validation. Passing 
 
 ## 1. Post-merge verification on `main`
 
-All four required GitHub Actions workflows passed on commit `acb9c6f392b180ce974d7f8ea60aaf2046472677`.
+All four required GitHub Actions workflows passed on commit `e3e5a46a900dbb88930417acc854a6d96992bce7`.
 
 | Check | Result | Evidence |
 |---|---|---|
-| `npm test` | Passed | [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665) |
-| `npm run check` | Passed | [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665) |
-| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44620469665](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469665) |
-| CodeQL | Passed | [CodeQL run 44620469592](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469592) |
-| GitHub Pages deployment | Passed | [Pages run 44620469669](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469669) |
-| OpenSSF Scorecard | Passed | [Scorecard run 44620469530](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44620469530) |
+| `npm test` | Passed | [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441) |
+| `npm run check` | Passed | [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441) |
+| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44622255441](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255441) |
+| CodeQL | Passed | [CodeQL run 44622255484](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255484) |
+| GitHub Pages deployment | Passed | [Pages run 44622255212](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255212) |
+| OpenSSF Scorecard | Passed | [Scorecard run 44622255374](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44622255374) |
 
-The post-merge Validate log contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
+The latest Validate log contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
+
+The Chromium harness now allows up to 45 seconds for browser startup, selects a wider random debugging-port range, disables shared-memory pressure, and reports a specific launch/exit/timeout reason if DevTools does not become available. The assertions themselves were not weakened or skipped.
 
 ## 2. Component defects corrected
 
@@ -40,7 +42,9 @@ The post-merge Validate log contains **210 successful checks, zero failure lines
 | Animated Counter | The test removed the element and then tried to query the disconnected node from the document, so it never reconnected it. | The test retains the element reference and now genuinely tests detach finalization, reconnect, reduced motion, same-value refresh, locale formatting and completion events. No component behavior patch was needed for this test defect. |
 | Confetti Button | Enter activation was not reliable in the touch-emulated browser test. | Explicit Enter/Space handling prevents duplicate activation; celebration events and reduced-motion behavior pass. |
 
-The browser test harness was hardened to throw on page-side `Runtime.evaluate` exceptions instead of silently converting exceptions to `undefined`. The Image Cropper test cleanup is idempotent, and the CDP keyboard helper sends the correct DOM code for Space.
+The browser test harness was hardened to throw on page-side `Runtime.evaluate` exceptions instead of silently converting exceptions to `undefined`. The Image Cropper test cleanup is idempotent, and the CDP keyboard helper sends the correct DOM code for Space. Chromium startup now has a longer bounded wait and actionable failure diagnostics.
+
+The GitHub Pages workflow now separates source validation/artifact upload into a `build` job and runs `deploy-pages` in a dependent `deploy` job. Retrying deployment no longer repeats the artifact upload, and an in-progress deployment is not cancelled by a new push. The latest Pages run passes with this layout.
 
 ## 3. What the automated pass establishes
 

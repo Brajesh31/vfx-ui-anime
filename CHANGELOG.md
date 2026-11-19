@@ -11,6 +11,8 @@ Not yet published. This file records the project-level development history for f
 - Fixed Marquee and Scroll Reveal native slot-property collisions; Marquee now observes nested light-DOM mutations and cleans up across disconnect/reconnect.
 - Added single-activation Enter/Space handling to 3D Flip Card and Confetti Button.
 - Corrected Animated Counter regression-test detach/reconnect setup and made Runtime.evaluate failures fail the browser suite loudly.
-- Verified all 210 Chromium checks and zero page-side exceptions on merged main commit `acb9c6f392b180ce974d7f8ea60aaf2046472677`.
-- Verified Validate, CodeQL, GitHub Pages deployment and OpenSSF Scorecard on the same merged main commit.
+- Verified all 210 Chromium checks and zero page-side exceptions on merged main commit `e3e5a46a900dbb88930417acc854a6d96992bce7`.
+- Split GitHub Pages artifact build/upload and deployment into dependent jobs, so deployment retries do not upload a second same-named artifact.
+- Hardened Chromium startup for slower hosted runners without weakening browser assertions.
+- Verified Validate, CodeQL, GitHub Pages deployment and OpenSSF Scorecard on main commit `e3e5a46a900dbb88930417acc854a6d96992bce7`.
 - Manual accessibility/visual sign-off and package-consumer verification remain outstanding.

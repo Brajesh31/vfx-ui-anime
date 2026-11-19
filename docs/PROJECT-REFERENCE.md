@@ -31,7 +31,7 @@ The live gallery is published at https://brajesh31.github.io/vfx-ui-anime/.
 | `tools/validate.mjs` | Structural, syntax, registry, demo and generated-runtime checks |
 | `tools/test.mjs` | Chromium browser interaction suite |
 | `.github/workflows/validate.yml` | Validation workflow |
-| `.github/workflows/deploy-pages.yml` | GitHub Pages deployment workflow |
+| `.github/workflows/deploy-pages.yml` | Separate GitHub Pages build/artifact and dependent deployment jobs |
 | `.github/workflows/codeql.yml` | CodeQL static analysis workflow |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard workflow |
 | `docs/COMPONENTS.md` | Component directory and category index |
@@ -176,7 +176,9 @@ The repository contains four GitHub Actions workflows:
 | CodeQL | Static security analysis |
 | OSSF Scorecard | Repository security posture analysis |
 
-GitHub Pages is the configured live-site deployment target. Vercel integration status checks are separate from these repository workflows. A Vercel build-rate-limit status must not be interpreted as a GitHub Actions failure or success.
+GitHub Pages is the configured live-site deployment target. Its workflow validates the source and uploads the static-site artifact in a `build` job, then deploys that artifact in a dependent `deploy` job. This separation allows a deployment-only retry without creating a second `github-pages` artifact. The workflow does not cancel an in-progress deployment when a new main-branch push arrives.
+
+Vercel integration status checks are separate from these repository workflows. A Vercel build-rate-limit status must not be interpreted as a GitHub Actions failure or success.
 
 Always record results against the exact release-candidate commit SHA. A green workflow from a prior phase or a different commit does not establish that the current candidate passes.
 
