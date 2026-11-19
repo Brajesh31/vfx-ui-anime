@@ -261,17 +261,88 @@ const api = window.VFXAnimeFX = {
 (() => {
 const {Base,define,at,burst,esc}=window.VFXAnimeFX;
 class VfxDateRangePicker extends Base {
- static formAssociated=true;
- static get css(){return ':host{display:block;width:min(100%,390px);color:var(--vfx-ink)}.frame{padding:14px;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.label{margin:0 0 11px;font-size:12px;font-weight:950}.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.group label{display:block;margin-bottom:5px;color:#8179c8;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.group input{width:100%;min-width:0;padding:9px 7px;border:1.5px solid #d8d3f4;border-radius:8px;background:#faf9ff;color:var(--vfx-ink);font:750 12px system-ui}.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}.preset{padding:6px 9px;border:1.5px solid #ddd8f5;border-radius:999px;background:#fff;font-size:10px;font-weight:850;cursor:pointer}.preset:hover{background:#fff0f7;border-color:var(--vfx-ink)}.summary{margin:11px 0 0;padding:9px;border-radius:8px;background:#f5f2ff;color:#7771bd;font-size:11px;font-weight:800}.summary.invalid{background:#fff0f4;color:#bf536e}.clear{margin-top:9px;padding:7px 10px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:#fff;font-size:10px;font-weight:850;cursor:pointer}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}';}
- render(){return '<div class="frame"><p class="label">'+esc(this.getAttribute('label')||'Choose date range')+'</p><div class="fields"><div class="group"><label for="start">Start date</label><input id="start" type="date"></div><div class="group"><label for="end">End date</label><input id="end" type="date"></div></div><div class="presets"><button class="preset" type="button" data-preset="7">Next 7 days</button><button class="preset" type="button" data-preset="30">Next 30 days</button><button class="preset" type="button" data-preset="month">This month</button></div><p class="summary" aria-live="polite">Select a start and end date.</p><button class="clear" type="button">Clear range</button></div>';}
- setup(){this.start=this.$('#start');this.end=this.$('#end');for(const i of [this.start,this.end]){i.min=this.getAttribute('min')||'';i.max=this.getAttribute('max')||'';i.addEventListener('input',()=>this._update(false));i.addEventListener('change',()=>{this._update(true);const p=at(i);burst(p.x,p.y,{r:22,spikes:8});});}this.start.value=this.getAttribute('start')||'';this.end.value=this.getAttribute('end')||'';this.$('.presets').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(b)this.preset(b.dataset.preset);});this.$('.clear').addEventListener('click',()=>this.clear());this._update(false);}
- get value(){return {start:this.start.value,end:this.end.value};}
- set value(v){if(typeof v==='string'){const [start,end]=v.split('/');v={start,end};}this.start.value=v?.start||'';this.end.value=v?.end||'';this._update(false);}
- get valid(){return !this.start.value||!this.end.value||this.start.value<=this.end.value;}
- _update(emit){const a=this.start.value,b=this.end.value;this.end.min=a||this.getAttribute('min')||'';const valid=this.valid;this.$('.summary').classList.toggle('invalid',!valid);this.$('.summary').textContent=!a&&!b?'Select a start and end date.':!a?'Choose a start date.':!b?'Choose an end date.':!valid?'End date must be on or after the start date.':a+'  →  '+b;this.internals?.setFormValue(a&&b&&valid?a+'/'+b:'');if(emit)this.emit(valid?'change':'invalid',{start:a,end:b,valid});}
- preset(kind){const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()),end=new Date(start);if(kind==='month')end.setMonth(end.getMonth()+1,0);else end.setDate(end.getDate()+Number(kind||7));const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');this.start.value=fmt(start);this.end.value=fmt(end);this._update(true);}
- clear(){this.start.value='';this.end.value='';this._update(true);}
- formResetCallback(){this.value={start:this.getAttribute('start')||'',end:this.getAttribute('end')||''};}
+ static formAssociated = true;
+ static get observedAttributes() { return ['label','name','start','end','min','max','required','disabled']; }
+ static get css() { return ':host{display:block;width:min(100%,420px);color:var(--vfx-ink)}.frame{padding:15px;border:2px solid var(--vfx-ink);border-radius:15px;background:#fff;box-shadow:5px 6px 0 var(--vfx-soft)}.label{display:block;margin:0 0 12px;font-size:12px;font-weight:950}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.group label{display:block;margin-bottom:5px;color:#8179c8;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.group input{width:100%;min-width:0;box-sizing:border-box;padding:9px 7px;border:1.5px solid #d8d3f4;border-radius:8px;background:#faf9ff;color:var(--vfx-ink);font:750 12px system-ui}.group input:disabled{opacity:.55;cursor:not-allowed}.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}.preset{padding:7px 10px;border:1.5px solid #ddd8f5;border-radius:999px;background:#fff;font-size:10px;font-weight:850;cursor:pointer}.preset:hover{background:#fff0f7;border-color:var(--vfx-ink)}.preset:disabled,.clear:disabled{opacity:.45;cursor:not-allowed}.summary{margin:11px 0 0;padding:9px;border-radius:8px;background:#f5f2ff;color:#7771bd;font-size:11px;font-weight:800}.summary.invalid{background:#fff0f4;color:#bf536e}.clear{margin-top:9px;padding:7px 10px;border:1.5px solid var(--vfx-ink);border-radius:8px;background:#fff;font-size:10px;font-weight:850;cursor:pointer}:focus-visible{outline:2px solid var(--vfx-acc);outline-offset:2px}@media(max-width:340px){.fields{grid-template-columns:1fr}}'; }
+ render() { return '<div class="frame"><p class="label">'+esc(this.getAttribute('label')||'Choose date range')+'</p><div class="fields"><div class="group"><label for="start">Start date</label><input id="start" type="date" aria-describedby="range-summary"></div><div class="group"><label for="end">End date</label><input id="end" type="date" aria-describedby="range-summary"></div></div><div class="presets"><button class="preset" type="button" data-preset="7">Next 7 days</button><button class="preset" type="button" data-preset="30">Next 30 days</button><button class="preset" type="button" data-preset="month">This month</button></div><p class="summary" id="range-summary" aria-live="polite">Select a start and end date.</p><button class="clear" type="button">Clear range</button></div>'; }
+ setup() {
+  this.start=this.$('#start'); this.end=this.$('#end'); this._formDisabled=false;
+  this.start.addEventListener('input',()=>this._update(true,'input'));
+  this.end.addEventListener('input',()=>this._update(true,'input'));
+  this.start.addEventListener('change',()=>{this._update(true,'change');const p=at(this.start);burst(p.x,p.y,{r:18,spikes:7});});
+  this.end.addEventListener('change',()=>{this._update(true,'change');const p=at(this.end);burst(p.x,p.y,{r:18,spikes:7});});
+  this.$('.presets').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(b&&!b.disabled)this.preset(b.dataset.preset);});
+  this.$('.clear').addEventListener('click',()=>this.clear());
+  this.start.value=this.getAttribute('start')||''; this.end.value=this.getAttribute('end')||''; this._sync();
+ }
+ attributeChangedCallback(name,oldValue,newValue) {
+  if(!this.ready||oldValue===newValue)return;
+  if(name==='start')this.start.value=newValue||'';
+  if(name==='end')this.end.value=newValue||'';
+  this._sync();
+ }
+ _sync() {
+  if(!this.start||!this.end)return;
+  const min=this.getAttribute('min')||'', max=this.getAttribute('max')||'';
+  this.start.min=min; this.end.max=max;
+  this.end.min=this.start.value&&(!min||this.start.value>min)?this.start.value:min;
+  this.start.max=this.end.value&&(!max||this.end.value<max)?this.end.value:max;
+  const disabled=this.hasAttribute('disabled')||!!this._formDisabled;
+  this.start.disabled=disabled; this.end.disabled=disabled;
+  this.$$('.preset').forEach(b=>b.disabled=disabled); this.$('.clear').disabled=disabled;
+  this.start.required=this.hasAttribute('required'); this.end.required=this.hasAttribute('required');
+  this._update(false);
+ }
+ get value() { return {start:this.start?.value||'',end:this.end?.value||''}; }
+ set value(v) {
+  if(typeof v==='string'){const parts=v.split('/');v={start:parts[0]||'',end:parts[1]||''};}
+  this.start.value=String(v?.start||''); this.end.value=String(v?.end||''); this._sync();
+ }
+ get valid() {
+  const {start:a,end:b}=this.value, min=this.getAttribute('min')||'', max=this.getAttribute('max')||'';
+  if(this.hasAttribute('required')&&(!a||!b))return false;
+  if(a&&b&&b<a)return false;
+  if(min&&((a&&a<min)||(b&&b<min)))return false;
+  if(max&&((a&&a>max)||(b&&b>max)))return false;
+  return true;
+ }
+ _update(emit,kind='change') {
+  if(!this.start||!this.end)return;
+  const a=this.start.value,b=this.end.value,min=this.getAttribute('min')||'',max=this.getAttribute('max')||'';
+  this.end.min=a&&(!min||a>min)?a:min;
+  this.start.max=b&&(!max||b<max)?b:max;
+  const valid=this.valid, complete=!!(a&&b);
+  this.$('.summary').classList.toggle('invalid',!valid);
+  this.start.setAttribute('aria-invalid',String(!!(a&&((min&&a<min)||(max&&a>max)))));
+  this.end.setAttribute('aria-invalid',String(!!(b&&((a&&b<a)||(min&&b<min)||(max&&b>max)))));
+  this.$('.summary').textContent=!a&&!b?'Select a start and end date.':!a?'Choose a start date.':!b?'Choose an end date.':!valid?(b<a?'End date must be on or after the start date.':'Selected dates must be within the allowed range.'):a+'  →  '+b;
+  this.internals?.setFormValue(complete&&valid?a+'/'+b:'');
+  const flags={}; let message='';
+  if(this.hasAttribute('required')&&!complete){flags.valueMissing=true;message='Choose both a start and end date.';}
+  else if(a&&b&&b<a){flags.customError=true;message='End date must be on or after the start date.';}
+  else if(min&&((a&&a<min)||(b&&b<min))){flags.rangeUnderflow=true;message='Selected date is earlier than the minimum.';}
+  else if(max&&((a&&a>max)||(b&&b>max))){flags.rangeOverflow=true;message='Selected date is later than the maximum.';}
+  this.internals?.setValidity(flags,message,flags.valueMissing?this.start:this.end);
+  if(emit) {
+   const detail={start:a,end:b,valid,complete,value:this.value};
+   if(kind==='input')this.emit('input',detail);
+   else this.emit(valid?'change':'invalid',detail);
+  }
+ }
+ preset(kind) {
+  if(this.hasAttribute('disabled')||this._formDisabled)return false;
+  const today=new Date(),start=new Date(today.getFullYear(),today.getMonth(),today.getDate()),end=new Date(start);
+  if(kind==='month')end.setMonth(end.getMonth()+1,0);
+  else {const days=kind==='30'?30:7;end.setDate(end.getDate()+days-1);}
+  const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  this.start.value=fmt(start);this.end.value=fmt(end);this._update(true,'change');return this.valid;
+ }
+ clear() {
+  if(this.hasAttribute('disabled')||this._formDisabled)return false;
+  this.start.value='';this.end.value='';this._update(true,'change');return true;
+ }
+ formDisabledCallback(disabled) { this._formDisabled=!!disabled; this._sync(); }
+ formResetCallback() { this.value={start:this.getAttribute('start')||'',end:this.getAttribute('end')||''}; }
 }
 define('vfx-date-range-picker',VfxDateRangePicker);
 })();
