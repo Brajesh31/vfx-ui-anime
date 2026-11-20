@@ -4,7 +4,7 @@
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
 **Package implementation commit:** `72748136c9eddf1cf160d1d41f92841e59d1f557`  
-**Latest main commit verified by this report:** `cb1421b26f99a6188ddea31f62531e1fdac508aa`
+**Latest main commit verified by this report:** `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`
 
 ## Current decision
 
@@ -21,15 +21,15 @@ The first stable release candidate commit `72748136c9eddf1cf160d1d41f92841e59d1f
 - [Validate on the release branch](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44646096871)
 - [CodeQL on the release branch](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44646096770)
 
-The latest verified `main` commit is `cb1421b26f99a6188ddea31f62531e1fdac508aa`. All five main-branch workflows completed successfully on that exact commit:
+The latest fully verified `main` commit is `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`. All five main-branch checks completed successfully on that exact commit:
 
-- [Validate](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747787): passed source and generated-file checks, the full Chromium interaction suite, the npm tarball/consumer smoke test, and verified archive upload.
-- [CodeQL](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680748109): passed.
-- [OpenSSF Scorecard](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747961): passed.
-- [GitHub Pages deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747792): build and deployment passed.
-- [CodeQL alert inventory](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747893): exported an empty JSON list (`[]`), meaning zero open repository code-scanning alerts were returned.
+- [Validate](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44681251973): passed structural/source checks, the full Chromium interaction suite, package tarball/consumer smoke tests, and distribution archive upload.
+- [CodeQL](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44681252024): passed.
+- [OpenSSF Scorecard](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44681251984): passed.
+- [GitHub Pages deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44681252151): build and deployment passed.
+- [Post-CodeQL alert inventory](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44681282300): completed after the CodeQL workflow and uploaded an `open-alerts.json` artifact containing exactly `[]` (zero open code-scanning alerts).
 
-The first-publish workflow on the earlier release commit also passed and published `vfx-ui-anime@0.1.0`. The latest main Validate run retained a fresh `vfx-ui-anime-0.1.0.tgz` artifact.
+The CodeQL inventory workflow is triggered by a completed successful CodeQL run, not by a push, so the alert list is not sampled before the analysis completes.
 
 The validation suite covers source structure, generated runtime parity, registry/gallery consistency, all 82 component registrations, browser interaction/regression groups, keyboard/touch-emulated/form/lifecycle behavior and the 390 px overflow guard. The package test inspects the npm tarball, installs the archive offline in a clean consumer, resolves all 82 subpaths, and checks aggregate plus isolated component imports in Chromium.
 
