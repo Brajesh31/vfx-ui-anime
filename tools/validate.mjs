@@ -20,12 +20,12 @@ for (const path of expected) {
   catch { errors.push("Missing required repository file: " + path); }
 }
 
-const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow, publishWorkflow, packageIndex, packageDocs, packageSmoke] = await Promise.all([
+const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow, publishWorkflow, packageIndex, packageDocs, packageSmoke, readmeText, llmsText, releaseWorkflow] = await Promise.all([
   read("gallery/index.html"), read("index.html"), read("core.js"),
   read("registry.json"), read("package.json"), read("tools/build.mjs"),
   read(".github/workflows/validate.yml"), read(".github/workflows/deploy-pages.yml"),
   read(".github/workflows/codeql.yml"), read(".github/workflows/scorecard.yml"),
-  read(".github/workflows/publish.yml"), read("index.js"), read("docs/PACKAGE.md"), read("tools/package-smoke.mjs")
+  read(".github/workflows/publish.yml"), read("index.js"), read("docs/PACKAGE.md"), read("tools/package-smoke.mjs"), read("README.md"), read("llms.txt"), read(".github/workflows/release.yml")
 ]);
 let registry;
 let pkg;
@@ -167,6 +167,9 @@ if (!pagesWorkflow.includes("npm test") || !pagesWorkflow.includes("npm run chec
   errors.push("The Pages workflow must validate the repository before deployment.");
 }
 if (!publishWorkflow.includes("id-token: write") || !publishWorkflow.includes("npm stage publish") || !publishWorkflow.includes("npm install --global npm@latest") || !publishWorkflow.includes("tags:")) errors.push("npm publishing workflow must stage releases through OIDC, use current npm CLI, and run on version tags.");
+if (!readmeText.includes("Public npm package: `vfx-ui-anime@0.1.0`") || !readmeText.includes("npm install vfx-ui-anime")) errors.push("README must describe the published npm v0.1.0 package and its install command.");
+if (!llmsText.includes("public npm package `vfx-ui-anime@0.1.0`") || llmsText.includes("package is private and has not been published")) errors.push("llms.txt must describe the public npm package, not the pre-publication state.");
+if (releaseWorkflow.includes("not yet published") || releaseWorkflow.includes("protected-token bootstrap workflow")) errors.push("Source pre-release notes must not describe the already-published npm package as unpublished.");
 for (const [name, workflow] of [["Validate", validateWorkflow], ["Pages", pagesWorkflow], ["CodeQL", codeqlWorkflow], ["Scorecard", scorecardWorkflow]]) {
   if (!/push:\s*\n\s*branches:\s*\[main\]/.test(workflow)) errors.push(name + " workflow must run on pushes to main.");
 }
