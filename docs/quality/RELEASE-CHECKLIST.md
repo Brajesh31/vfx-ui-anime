@@ -22,7 +22,7 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] Aggregate and isolated component browser imports are covered.
 - [x] Main-branch Validate runs retain the verified `vfx-ui-anime-0.1.0.tgz` as a 30-day GitHub Actions artifact.
 - [x] CodeQL passed on the release candidate.
-- [ ] Confirm all newly triggered main-branch workflows are complete and green on the current `main` commit.
+- [x] Confirm the first-publication workflow completed successfully, including source checks, Chromium tests, clean-consumer package tests, npm publication and GitHub release creation.
 
 ## Manual QA
 
@@ -43,15 +43,15 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] Browser-only behavior and SSR limitations documented.
 - [x] Restricted npm tarball allowlist defined.
 - [x] Tarball, clean consumer and browser smoke test added to CI.
-- [x] First-publish bootstrap workflow requires manual dispatch and protected `NPM_TOKEN`.
-- [x] Later publish workflow uses npm Trusted Publisher OIDC and staged publication with provenance.
+- [x] First-publish bootstrap workflow ran successfully using the protected `NPM_TOKEN` secret.
+- [x] npm version `vfx-ui-anime@0.1.0` is publicly available.
+- [x] npm `latest` dist-tag resolves to `0.1.0`.
+- [x] Stable GitHub Release `v0.1.0` exists with `vfx-ui-anime-0.1.0.tgz` attached.
 - [ ] Complete manual QA.
-- [ ] Add a short-lived npm granular token as protected repository Actions secret `NPM_TOKEN`.
-- [ ] Dispatch the bootstrap workflow from `main` for version `0.1.0`.
-- [ ] Verify npm registry installation and package metadata.
-- [ ] Configure npm Trusted Publisher for workflow `publish.yml`.
-- [ ] Revoke/remove the bootstrap token and retire the bootstrap workflow after trusted publishing is verified.
-- [ ] Confirm stable GitHub Release `v0.1.0` and attached npm `.tgz` asset exist after successful publication.
+- [ ] Create and verify the npm Trusted Publisher connection for `brajesh31/vfx-ui-anime`, workflow filename `publish.yml`, no environment name.
+- [ ] After OIDC verification, remove the repository `NPM_TOKEN` secret and revoke the temporary granular token.
+- [ ] Retire the one-time bootstrap workflow after credential cleanup.
+- [ ] Use the next planned package version to verify OIDC staging, provenance and 2FA approval.
 
 ## Deployment
 
@@ -61,4 +61,4 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 
 ## Go/no-go
 
-**Current status: package implementation and automated smoke-test coverage are complete. Stable public release remains gated by manual QA and first-publish npm authorization. Do not mark this checklist fully complete until every required item above is verified.**
+**Current status: v0.1.0 is published on npm and GitHub, with automated package checks passing. Trusted Publisher setup/credential cleanup and manual QA remain open. Do not call the package production-certified until the human QA items are completed and recorded.**
