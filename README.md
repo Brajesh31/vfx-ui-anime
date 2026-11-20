@@ -137,6 +137,14 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 
 **Current verified status is recorded in [docs/QUALITY-AND-RELEASE.md](docs/QUALITY-AND-RELEASE.md).** Do not treat a passing source validator as proof that browser interactions pass.
 
+## 🤝 Community and growth
+
+- [Join GitHub Discussions](https://github.com/Brajesh31/vfx-ui-anime/discussions) to ask questions, share projects and suggest improvements.
+- [Contributing guide](CONTRIBUTING.md) explains how to run checks and prepare a pull request.
+- [30-day developer growth campaign](docs/community/30-DAY-GITHUB-GROWTH-CAMPAIGN.md) contains the launch plan, technical article topics, video scripts, daily schedule and measurement framework.
+
+If you build something with VFX UI Anime, share a screenshot, demo or repository link in Discussions. Specific feedback and reproducible bug reports are especially useful.
+
 ## 📚 Documentation map
 
 | Document | Purpose |
