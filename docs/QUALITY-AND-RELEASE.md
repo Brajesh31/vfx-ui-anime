@@ -86,16 +86,16 @@ The published npm `0.1.0` page is live, but the README snapshot embedded in the 
 
 ### Additional GitHub Packages distribution
 
-The public unscoped npmjs package remains `vfx-ui-anime@0.1.0`. A separate scoped GitHub Packages distribution is configured as `@brajesh31/vfx-ui-anime` without changing the npmjs package name.
+The scoped GitHub Packages package `@brajesh31/vfx-ui-anime@0.1.0` has now been published successfully.
 
 - [x] Add repository `.npmrc` scope mapping for `@brajesh31` and environment-based `NODE_AUTH_TOKEN` authentication.
 - [x] Add `publish-github-package.yml` with `packages: write` and repository-scoped `GITHUB_TOKEN`.
 - [x] Verify and document the scoped package build, repository association and install instructions.
-- [ ] Run the GitHub Packages workflow once from `main` to publish the first scoped version.
-- [ ] Review the package settings, change first-publish visibility to Public if desired, and confirm it appears under this repository's Packages panel.
-- [ ] Verify installation from GitHub Packages using a classic PAT with `read:packages` for local private-package access.
+- [x] Publish `@brajesh31/vfx-ui-anime@0.1.0` using [workflow run 44682012502](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44682012502). The complete validation, Chromium, package smoke-test and publication job succeeded.
+- [ ] Review package settings and set visibility to Public if public GitHub Packages access is intended.
+- [ ] Verify public/private installation behavior according to the selected visibility.
 
-The GitHub Packages workflow has not yet been run. Until its first successful publication, the repository Packages panel can still say "No packages published". The existing npmjs package remains available independently.
+The publishing job reported `@brajesh31/vfx-ui-anime@0.1.0` and `npm publish` completed successfully. GitHub's first-publish default visibility is Private, so publication is complete but public visibility still requires a package-settings decision. The existing unscoped npmjs package is unchanged.
 
 ## 5. Release decision
 
