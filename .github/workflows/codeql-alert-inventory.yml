@@ -1,19 +1,24 @@
-name: Temporary CodeQL alert inventory
+name: CodeQL Alert Inventory
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CodeQL"]
+    types: [completed]
     branches: [main]
+  workflow_dispatch:
 
 permissions:
+  contents: read
   security-events: read
 
 jobs:
   inventory:
-    name: Export every open code-scanning alert
+    name: Export current open code-scanning alerts
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Read all open repository code-scanning alerts
+      - name: Read all open repository code-scanning alerts after CodeQL completes
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -35,7 +40,7 @@ jobs:
           echo "Open code-scanning alert inventory:"
           cat "$RUNNER_TEMP/open-alerts.json"
           {
-            echo "## Open code-scanning alerts"
+            echo "## Open code-scanning alerts (after CodeQL)"
             echo ""
             jq -r 'if length == 0 then "No open alerts." else "| Alert | Severity | Rule | File | Lines |\n|---:|---|---|---|---:|" end' "$RUNNER_TEMP/open-alerts.json"
             jq -r '.[] | "| [#\(.number)](\(.html_url)) | \(.severity // .security_severity_level // "unknown") | \(.title // .rule_id) | \(.path // "unknown") | \(.start_line // "?")–\(.end_line // "?") |"' "$RUNNER_TEMP/open-alerts.json"
