@@ -1,13 +1,14 @@
 # Changelog
 
-This project is released as a source-only GitHub pre-release, `v0.1.0-rc.1`. The browser-only npm package contract for `0.1.0` is prepared on `main`; the first registry publication is pending npm account authorization and explicit manual QA.
+VFX UI Anime `v0.1.0` was published to the public npm registry and released on GitHub on 20 November 2026. Manual accessibility, real-device and cross-browser QA remains open; those checks are not implied by the automated release tests.
 
-## Unreleased
+## v0.1.0 - 2026-11-20
 
 - Restored the browser-only `vfx-ui-anime@0.1.0` package manifest, aggregate entry point, and component subpath exports.
 - Added npm tarball inspection, clean offline consumer installation, all 82 component export-resolution checks, and aggregate/single-component Chromium import smoke tests.
-- Added a one-time protected-token npm bootstrap workflow and OIDC/provenance workflow for later stable releases.
-- Kept the first stable GitHub Release and npm tarball asset gated on a successful, authorized npm publication.
+- Published `vfx-ui-anime@0.1.0` to npm. The registry reports 170 package files and the `latest` dist-tag resolves to `0.1.0`.
+- Published stable GitHub Release `v0.1.0` with `vfx-ui-anime-0.1.0.tgz` attached.
+- Added an OIDC/staged-publishing workflow for future releases; the npm Trusted Publisher connection still needs to be verified in account settings.
 - Removed obsolete Vercel deployment integration references; GitHub Pages is the static gallery deployment target.
 
 - Completed the 14-stage implementation roadmap across all 82 Web Component types.
@@ -24,13 +25,13 @@ This project is released as a source-only GitHub pre-release, `v0.1.0-rc.1`. The
 
 ## Verification
 
-The latest tested package branch commit passed Validate and CodeQL before being fast-forwarded to `main`. New main-branch workflows are running against the exact updated main head. See [GitHub Actions](https://github.com/Brajesh31/vfx-ui-anime/actions) for their live result.
+The first-publication workflow completed successfully on commit `eda39329832fe722cfbd4073a5472fd515df2629`. Source validation, repository checks, the complete Chromium interaction suite, the clean-consumer package smoke test, tarball creation, npm publication and GitHub release creation all completed successfully. See [GitHub Actions](https://github.com/Brajesh31/vfx-ui-anime/actions) for the run history.
 
 The gallery is hosted through [GitHub Pages](https://brajesh31.github.io/vfx-ui-anime/). The existing source-only pre-release remains [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
 
-## Release gates still open
+## Follow-up work
 
 - Complete and record manual visual, keyboard-only, screen-reader, reduced-motion, real-device touch, contrast/focus and Firefox/Safari QA.
-- Add a protected npm granular access token as the repository Actions secret `NPM_TOKEN`, then manually run the first-publication workflow from `main`.
-- Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime` and `publish.yml` after the package exists, then revoke the bootstrap token and retire the one-time bootstrap workflow.
-- Verify the registry installation and publish the stable GitHub Release with the generated `.tgz` asset after npm accepts the first publication.
+- Finish npm Trusted Publisher setup for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`; then remove the repository `NPM_TOKEN` secret, revoke the temporary granular token, and retire the one-time bootstrap workflow.
+- Verify an OIDC-backed staged publication on the next planned package version. Do not create a throwaway version solely to test publishing.
+- Correct the publication-status text embedded in the already-published npm README in the next legitimate package release. The GitHub README and release documentation have been corrected on `main`.
