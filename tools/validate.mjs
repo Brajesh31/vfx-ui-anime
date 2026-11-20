@@ -9,8 +9,8 @@ const expected = [
   "components/toggle/frames.webp","tools/build.mjs","tools/shot.mjs","tools/test.mjs","tools/trace.py",
   ".github/workflows/validate.yml",".github/workflows/deploy-pages.yml",
   ".github/workflows/codeql.yml",".github/workflows/scorecard.yml",".github/workflows/publish.yml",
-  ".github/workflows/release.yml",
-  "index.js","docs/PACKAGE.md","tools/package-smoke.mjs"
+  ".github/workflows/publish-github-package.yml",".github/workflows/release.yml",
+  ".npmrc","index.js","docs/PACKAGE.md","tools/package-smoke.mjs"
 ];
 const errors = [];
 const read = (path) => readFile(join(root, path), "utf8").catch(() => "");
@@ -173,12 +173,12 @@ for (const path of expected) {
   catch { errors.push("Missing required repository file: " + path); }
 }
 
-const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow, publishWorkflow, packageIndex, packageDocs, packageSmoke, readmeText, llmsText, releaseWorkflow] = await Promise.all([
+const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow, publishWorkflow, githubPackageWorkflow, npmrcText, packageIndex, packageDocs, packageSmoke, readmeText, llmsText, releaseWorkflow] = await Promise.all([
   read("gallery/index.html"), read("index.html"), read("core.js"),
   read("registry.json"), read("package.json"), read("tools/build.mjs"),
   read(".github/workflows/validate.yml"), read(".github/workflows/deploy-pages.yml"),
   read(".github/workflows/codeql.yml"), read(".github/workflows/scorecard.yml"),
-  read(".github/workflows/publish.yml"), read("index.js"), read("docs/PACKAGE.md"), read("tools/package-smoke.mjs"), read("README.md"), read("llms.txt"), read(".github/workflows/release.yml")
+  read(".github/workflows/publish.yml"), read(".github/workflows/publish-github-package.yml"), read(".npmrc"), read("index.js"), read("docs/PACKAGE.md"), read("tools/package-smoke.mjs"), read("README.md"), read("llms.txt"), read(".github/workflows/release.yml")
 ]);
 let registry;
 let pkg;
@@ -328,6 +328,10 @@ if (!pagesWorkflow.includes("npm test") || !pagesWorkflow.includes("npm run chec
   errors.push("The Pages workflow must validate the repository before deployment.");
 }
 if (!publishWorkflow.includes("id-token: write") || !publishWorkflow.includes("npm stage publish") || !publishWorkflow.includes("npm install --global npm@latest") || !publishWorkflow.includes("tags:")) errors.push("npm publishing workflow must stage releases through OIDC, use current npm CLI, and run on version tags.");
+if (!githubPackageWorkflow.includes("packages: write") || !githubPackageWorkflow.includes("GITHUB_TOKEN") || !githubPackageWorkflow.includes("@brajesh31/vfx-ui-anime") || !githubPackageWorkflow.includes("https://npm.pkg.github.com") || !githubPackageWorkflow.includes("workflow_dispatch")) errors.push("GitHub Packages workflow must publish the scoped package to npm.pkg.github.com with repository-scoped GITHUB_TOKEN permissions.");
+if (!npmrcText.includes("@brajesh31:registry=https://npm.pkg.github.com") || !npmrcText.includes("${NODE_AUTH_TOKEN}")) errors.push("Project .npmrc must map only the Brajesh31 scope to GitHub Packages and use NODE_AUTH_TOKEN without embedding credentials.");
+if (pkg.publishConfig?.registry !== "https://registry.npmjs.org/") errors.push("The canonical package must keep publishing to the existing unscoped npmjs registry.");
+if (!readmeText.includes("GitHub Packages registry") || !packageDocs.includes("@brajesh31/vfx-ui-anime")) errors.push("README and package guide must document the scoped GitHub Packages distribution.");
 if (!readmeText.includes("Public npm package: `vfx-ui-anime@0.1.0`") || !readmeText.includes("npm install vfx-ui-anime")) errors.push("README must describe the published npm v0.1.0 package and its install command.");
 if (!llmsText.includes("public npm package `vfx-ui-anime@0.1.0`") || llmsText.includes("package is private and has not been published")) errors.push("llms.txt must describe the public npm package, not the pre-publication state.");
 if (releaseWorkflow.includes("not yet published") || releaseWorkflow.includes("protected-token bootstrap workflow")) errors.push("Source pre-release notes must not describe the already-published npm package as unpublished.");
