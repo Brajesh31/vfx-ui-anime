@@ -68,15 +68,15 @@ The project keeps its existing unscoped npmjs release and is configured to publi
 - GitHub Packages registry: `https://npm.pkg.github.com`
 - GitHub Actions workflow: [`.github/workflows/publish-github-package.yml`](../.github/workflows/publish-github-package.yml)
 
-The first GitHub Packages publication is not complete until the workflow below runs successfully. The source `package.json` intentionally remains named `vfx-ui-anime` and continues publishing to npmjs. The GitHub Packages workflow creates a verified tarball, changes only the temporary copy's package name to `@brajesh31/vfx-ui-anime`, points that copy at GitHub Packages, and publishes it with the repository-scoped `GITHUB_TOKEN`. It does not rename, overwrite, or republish the npmjs package.
+The first GitHub Packages publication completed successfully on 20 November 2026 in [workflow run 44682012502](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44682012502), publishing `@brajesh31/vfx-ui-anime@0.1.0`. The source `package.json` intentionally remains named `vfx-ui-anime` and continues publishing to npmjs. The GitHub Packages workflow creates a verified tarball, changes only the temporary copy's package name to `@brajesh31/vfx-ui-anime`, points that copy at GitHub Packages, and publishes it with the repository-scoped `GITHUB_TOKEN`. It does not rename, overwrite, or republish the npmjs package.
 
-### First GitHub Packages publication
+### Verify GitHub Packages visibility and access
 
-1. Open [Publish GitHub Package](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/publish-github-package.yml).
-2. Select **Run workflow** on `main`.
-3. Wait for the validation, Chromium interaction suite, npm tarball/consumer smoke test and package publication to finish.
-4. Open the repository's **Packages** section or [GitHub Packages for Brajesh31](https://github.com/Brajesh31?tab=packages).
-5. GitHub makes a first-published package private by default. Review its package settings and change visibility to **Public** if public installation is intended. Confirm that the package is linked to this repository.
+1. Open the [published GitHub Package](https://github.com/Brajesh31/vfx-ui-anime/pkgs/npm/vfx-ui-anime) or [your GitHub Packages list](https://github.com/Brajesh31?tab=packages).
+2. Open **Package settings**.
+3. GitHub's first-publish default is **Private**. Change visibility to **Public** if public installation is intended. This visibility change is irreversible, so do it only if the package is meant to be public.
+4. Confirm the package is linked to `Brajesh31/vfx-ui-anime` and that its version `0.1.0` is present.
+5. For private local installation, create a classic GitHub PAT with `read:packages` and use the environment-based `NODE_AUTH_TOKEN` instructions below.
 
 The workflow requests `packages: write` and uses `GITHUB_TOKEN`; it does not require an additional publishing secret or a personal access token in GitHub Actions. Future stable `vX.Y.Z` tags trigger the same workflow. Pre-release tags are ignored.
 
