@@ -1,13 +1,14 @@
 # Changelog
 
-This project has a source-only GitHub pre-release (`v0.1.0-rc.1`). The npm package contract is prepared at `0.1.0`; the first public npm publication is pending account authorization.
+This project is released as a source-only GitHub pre-release, `v0.1.0-rc.1`. The browser-only npm package contract for `0.1.0` is prepared on `main`; the first registry publication is pending npm account authorization and explicit manual QA.
 
 ## Unreleased
 
 - Restored the browser-only `vfx-ui-anime@0.1.0` package manifest, aggregate entry point, and component subpath exports.
-- Restored package tarball, clean offline consumer, 82 component export-resolution, and Chromium package smoke tests in CI.
-- Restored the one-time protected-token npm bootstrap, OIDC/provenance workflow for subsequent releases, and source pre-release workflow.
-- Added the package `.tgz` as an asset to the first stable GitHub Release after npm accepts the initial publication.
+- Added npm tarball inspection, clean offline consumer installation, all 82 component export-resolution checks, and aggregate/single-component Chromium import smoke tests.
+- Added a one-time protected-token npm bootstrap workflow and OIDC/provenance workflow for later stable releases.
+- Kept the first stable GitHub Release and npm tarball asset gated on a successful, authorized npm publication.
+- Removed obsolete Vercel deployment integration references; GitHub Pages is the static gallery deployment target.
 
 - Completed the 14-stage implementation roadmap across all 82 Web Component types.
 - Consolidated the former phase reports into the project reference and removed the 15 phase-specific report files.
@@ -20,12 +21,16 @@ This project has a source-only GitHub pre-release (`v0.1.0-rc.1`). The npm packa
 - Split GitHub Pages artifact build/upload and deployment into dependent jobs.
 - Improved Color Palette roving tabindex, keyboard selection, focus preservation, dynamic swatch updates and single event delivery.
 - Replaced Audio Player's fixed metadata delay with a bounded event-based wait and media diagnostics.
-- Verified the current `main` head `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`: Validate, CodeQL, GitHub Pages and OpenSSF Scorecard workflows passed. The Chromium suite recorded 210 successful checks with zero failures and zero page-side exceptions.
-- Deployed the static gallery through GitHub Pages: https://brajesh31.github.io/vfx-ui-anime/.
+
+## Verification
+
+The latest tested package branch commit passed Validate and CodeQL before being fast-forwarded to `main`. New main-branch workflows are running against the exact updated main head. See [GitHub Actions](https://github.com/Brajesh31/vfx-ui-anime/actions) for their live result.
+
+The gallery is hosted through [GitHub Pages](https://brajesh31.github.io/vfx-ui-anime/). The existing source-only pre-release remains [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
 
 ## Release gates still open
 
-- Manual visual, keyboard-only, screen-reader, reduced-motion, touch and cross-browser QA.
-- Resolve or explicitly retire the two linked Vercel build-status failures caused by the Hobby build-rate limit. GitHub Pages is the active site deployment.
-- Inspect the npm tarball, define the package contents and entry-point contract, and test installation in a clean consumer project.
-- Select and publish a version only after the release gates are signed off.
+- Complete and record manual visual, keyboard-only, screen-reader, reduced-motion, real-device touch, contrast/focus and Firefox/Safari QA.
+- Add a protected npm granular access token as the repository Actions secret `NPM_TOKEN`, then manually run the first-publication workflow from `main`.
+- Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime` and `publish.yml` after the package exists, then revoke the bootstrap token and retire the one-time bootstrap workflow.
+- Verify the registry installation and publish the stable GitHub Release with the generated `.tgz` asset after npm accepts the first publication.
