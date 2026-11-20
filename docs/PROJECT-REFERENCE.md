@@ -37,8 +37,7 @@ The live gallery is published at https://brajesh31.github.io/vfx-ui-anime/.
 | `.github/workflows/codeql.yml` | CodeQL static analysis workflow |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard workflow |
 | `.github/workflows/release.yml` | Source-only pre-release workflow gated on exact candidate verification |
-| `.github/workflows/bootstrap-publish.yml` | One-time first npm publication with a protected token |
-| `.github/workflows/publish.yml` | Later npm releases using OIDC trusted publishing and provenance |
+| `.github/workflows/publish.yml` | Future npm releases using OIDC trusted publishing and staged approval |
 | `docs/PACKAGE.md` | npm installation, imports, CDN usage and publication instructions |
 | `docs/COMPONENTS.md` | Component directory and category index |
 | `docs/QUALITY-AND-RELEASE.md` | Current automated evidence and release decision |
@@ -232,7 +231,7 @@ The repository currently includes:
 - Citation metadata.
 - GitHub Actions workflows for validation, deployment, CodeQL and Scorecard.
 
-The MIT license file is retained as supplied and attributes copyright to Brajesh Kumar. The license permits use and redistribution subject to its terms; it does not imply that an npm package has been published.
+The MIT license file attributes copyright to Brajesh Kumar. The package is publicly released as `vfx-ui-anime@0.1.0`; the license terms apply independently of the npm distribution.
 
 ## 12. Maintenance guidance
 
