@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: github-package-\${{ github.ref }}
+  group: github-package-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -43,8 +43,8 @@ jobs:
       - name: Verify release version
         id: package
         env:
-          RELEASE_TAG: \${{ github.ref_name }}
-          EVENT_NAME: \${{ github.event_name }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
           VERSION="$(node -p "require('./package.json').version")"
@@ -81,8 +81,8 @@ jobs:
       - name: Check whether this GitHub Package version already exists
         id: registry
         env:
-          NODE_AUTH_TOKEN: \${{ github.token }}
-          VERSION: \${{ steps.package.outputs.version }}
+          NODE_AUTH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.package.outputs.version }}
         run: |
           set -euo pipefail
           if npm view "$PACKAGE_NAME@$VERSION" version --registry="$REGISTRY" >/dev/null 2>&1; then
@@ -96,7 +96,7 @@ jobs:
         if: steps.registry.outputs.already-published != 'true'
         id: pack
         env:
-          VERSION: \${{ steps.package.outputs.version }}
+          VERSION: ${{ steps.package.outputs.version }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/github-package" "$RUNNER_TEMP/scoped-package"
@@ -109,21 +109,21 @@ jobs:
           if (manifest.version !== process.env.VERSION) throw new Error('Packed package version mismatch.');
           manifest.name = name;
           manifest.publishConfig = { registry };
-          writeFileSync(file, JSON.stringify(manifest, null, 2) + '\\n');
+          writeFileSync(file, JSON.stringify(manifest, null, 2) + '\n');
           NODE
           node -e "const p=require(process.argv[1]);if(p.name!=='@brajesh31/vfx-ui-anime'||p.version!==process.env.VERSION)process.exit(1)" "$RUNNER_TEMP/scoped-package/package/package.json"
 
       - name: Publish scoped package with GITHUB_TOKEN
         if: steps.registry.outputs.already-published != 'true'
         env:
-          NODE_AUTH_TOKEN: \${{ github.token }}
+          NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           npm publish "$RUNNER_TEMP/scoped-package/package" --ignore-scripts --registry="$REGISTRY"
           {
             echo "## GitHub Package published"
             echo ""
-            echo "Published $PACKAGE_NAME@\${{ steps.package.outputs.version }} to $REGISTRY using the repository-scoped GITHUB_TOKEN."
+            echo "Published $PACKAGE_NAME@${{ steps.package.outputs.version }} to $REGISTRY using the repository-scoped GITHUB_TOKEN."
             echo ""
             echo "The existing unscoped npmjs package vfx-ui-anime was not renamed or modified."
             echo ""
@@ -138,5 +138,5 @@ jobs:
           {
             echo "## GitHub Package already exists"
             echo ""
-            echo "$PACKAGE_NAME@\${{ steps.package.outputs.version }} is already published. No duplicate publish was attempted."
+            echo "$PACKAGE_NAME@${{ steps.package.outputs.version }} is already published. No duplicate publish was attempted."
           } >> "$GITHUB_STEP_SUMMARY"
