@@ -172,16 +172,20 @@ The current exact outcomes and failures are documented in [QUALITY-AND-RELEASE.m
 
 ## 8. Continuous integration and deployment
 
-The repository contains six GitHub Actions workflows:
+The repository contains eight GitHub Actions workflows:
 
 | Workflow | Purpose |
 |---|---|
 | Validate | Run structural/source validation, generated-runtime checks, and browser interaction tests |
 | Deploy to GitHub Pages | Validate, upload the static site, and publish it to GitHub Pages |
 | CodeQL | Static security analysis |
+| CodeQL Alert Inventory | Export open code-scanning alerts after a successful CodeQL run |
 | OSSF Scorecard | Repository security posture analysis |
 | Source pre-release | Verified source-only prereleases |
 | Publish npm package | Future version tags staged through OIDC after Trusted Publisher setup, with maintainer approval |
+| Publish GitHub Package | Publish the scoped `@brajesh31/vfx-ui-anime` package with repository-scoped `GITHUB_TOKEN` permissions |
+
+The default branch is `main`. All nine non-main branches were deleted on 20 November 2026; a fresh GitHub branch-list check returned only `main`. The temporary cleanup workflow used for the operation has been removed.
 
 GitHub Pages is the configured live-site deployment target. Its workflow validates the source and uploads the static-site artifact in a `build` job, then deploys that artifact in a dependent `deploy` job. This separation allows a deployment-only retry without creating a second `github-pages` artifact. The workflow does not cancel an in-progress deployment when a new main-branch push arrives.
 
