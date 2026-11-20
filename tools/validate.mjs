@@ -328,8 +328,18 @@ if (!pagesWorkflow.includes("npm test") || !pagesWorkflow.includes("npm run chec
   errors.push("The Pages workflow must validate the repository before deployment.");
 }
 if (!publishWorkflow.includes("id-token: write") || !publishWorkflow.includes("npm stage publish") || !publishWorkflow.includes("npm install --global npm@latest") || !publishWorkflow.includes("tags:")) errors.push("npm publishing workflow must stage releases through OIDC, use current npm CLI, and run on version tags.");
-if (!githubPackageWorkflow.includes("packages: write") || !githubPackageWorkflow.includes("GITHUB_TOKEN") || !githubPackageWorkflow.includes("@brajesh31/vfx-ui-anime") || !githubPackageWorkflow.includes("https://npm.pkg.github.com") || !githubPackageWorkflow.includes("workflow_dispatch")) errors.push("GitHub Packages workflow must publish the scoped package to npm.pkg.github.com with repository-scoped GITHUB_TOKEN permissions.");
-if (!npmrcText.includes("@brajesh31:registry=https://npm.pkg.github.com") || !npmrcText.includes("${NODE_AUTH_TOKEN}")) errors.push("Project .npmrc must map only the Brajesh31 scope to GitHub Packages and use NODE_AUTH_TOKEN without embedding credentials.");
+const githubPackageRegistryLine = githubPackageWorkflow.match(/^\s*registry-url:\s*(\S+)\s*$/m)?.[1] || "";
+const githubPackageEnvRegistryLine = githubPackageWorkflow.match(/^\s*REGISTRY:\s*["']?([^"'"\s]+)["']?\s*$/m)?.[1] || "";
+const npmrcScopedRegistryLine = npmrcText.split(/\r?\n/).find((line) => line.startsWith("@brajesh31:registry=")) || "";
+let githubPackageRegistry = null;
+let githubPackageEnvRegistry = null;
+let npmrcScopedRegistry = null;
+try { githubPackageRegistry = new URL(githubPackageRegistryLine); } catch {}
+try { githubPackageEnvRegistry = new URL(githubPackageEnvRegistryLine); } catch {}
+try { npmrcScopedRegistry = new URL(npmrcScopedRegistryLine.slice("@brajesh31:registry=".length)); } catch {}
+const validGitHubPackageRegistry = (url) => url?.protocol === "https:" && url.hostname === "npm.pkg.github.com" && url.pathname === "/";
+if (!githubPackageWorkflow.includes("packages: write") || !githubPackageWorkflow.includes("GITHUB_TOKEN") || !githubPackageWorkflow.includes("@brajesh31/vfx-ui-anime") || !githubPackageWorkflow.includes("workflow_dispatch") || !validGitHubPackageRegistry(githubPackageRegistry) || !validGitHubPackageRegistry(githubPackageEnvRegistry)) errors.push("GitHub Packages workflow must publish the scoped package to the exact npm.pkg.github.com HTTPS registry with repository-scoped GITHUB_TOKEN permissions.");
+if (!validGitHubPackageRegistry(npmrcScopedRegistry) || !npmrcText.includes("${NODE_AUTH_TOKEN}")) errors.push("Project .npmrc must map only the Brajesh31 scope to the exact GitHub Packages registry and use NODE_AUTH_TOKEN without embedding credentials.");
 if (pkg.publishConfig?.registry !== "https://registry.npmjs.org/") errors.push("The canonical package must keep publishing to the existing unscoped npmjs registry.");
 if (!readmeText.includes("GitHub Packages registry") || !packageDocs.includes("@brajesh31/vfx-ui-anime")) errors.push("README and package guide must document the scoped GitHub Packages distribution.");
 if (!readmeText.includes("Public npm package: `vfx-ui-anime@0.1.0`") || !readmeText.includes("npm install vfx-ui-anime")) errors.push("README must describe the published npm v0.1.0 package and its install command.");
