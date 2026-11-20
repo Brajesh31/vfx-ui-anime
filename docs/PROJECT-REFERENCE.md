@@ -229,7 +229,7 @@ The repository currently includes:
 - Security reporting guidance.
 - Support guidance.
 - Citation metadata.
-- GitHub Actions workflows for validation, deployment, CodeQL and Scorecard.
+- GitHub Actions workflows for validation, GitHub Pages deployment, CodeQL, OpenSSF Scorecard, source pre-releases and npm OIDC staged publishing.
 
 The MIT license file attributes copyright to Brajesh Kumar. The package is publicly released as `vfx-ui-anime@0.1.0`; the license terms apply independently of the npm distribution.
 
