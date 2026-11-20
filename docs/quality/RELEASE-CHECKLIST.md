@@ -1,70 +1,63 @@
 # 🚦 Release checklist
 
-Use this as the final go/no-go checklist. A checked source audit item is not a substitute for executed tests or human sign-off.
+Use this checklist as the final go/no-go record. A completed source audit or green automated run does not replace human sign-off.
 
 ## Source and repository structure
 
 - [x] Inventory contains 82 component folders.
 - [x] Build and validator lists cover the same 82 component names.
-- [x] Each component folder includes source, standalone demo and API README.
-- [x] Registry contains 82 component entries.
-- [x] Gallery contains 83 unique demo IDs and coverage for all 82 component tags.
-- [x] Generated shared-runtime copies are checked against `core.js`.
-- [x] Required GitHub Actions workflow definitions are present.
-- [x] GitHub Pages uses separate build/upload and dependent deploy jobs, allowing deploy retries without re-uploading the artifact.
-- [x] All 15 phase-specific reports have been consolidated into the project reference and removed.
+- [x] Each component includes source and its API README.
+- [x] Generated runtime copies match the shared source.
+- [x] Registry and gallery examples are consistent.
+- [x] The 14-stage component implementation roadmap is complete in scope.
+- [x] Component regressions discovered during the integrated audit are corrected.
+- [x] Application component implementations, APIs and runtime remain unchanged by the package-only release work.
 
-## Automated verification on the latest package merge commit
+## Automated checks
 
-Verified on package merge commit `5a5a6dbbf6290cb0427f5bae5e75df2cbcaee323`:
+- [x] Structural validation and generated-build checks passed on release candidate commit `72748136c9eddf1cf160d1d41f92841e59d1f557`.
+- [x] Full Chromium interaction and regression suite passed on the exact release candidate.
+- [x] npm tarball allowlist and contents inspection are covered by `npm run test:package`.
+- [x] Clean offline consumer install and all 82 package export resolutions are covered.
+- [x] Aggregate and isolated component browser imports are covered.
+- [x] CodeQL passed on the release candidate.
+- [ ] Confirm all newly triggered main-branch workflows are complete and green on the current `main` commit.
 
-- [x] `npm test` passes. [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
-- [x] `npm run check` passes. [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
-- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
-- [x] CodeQL passes. [CodeQL run 44642048581](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642048581)
-- [x] GitHub Pages deployment succeeds. [Pages run 44642046915](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642046915)
-- [x] OpenSSF Scorecard succeeds. [Scorecard run 44642046769](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642046769)
+## Manual QA
 
-The Validate browser log for the verified implementation commit records 210 successful checks, zero failures and zero page-side exception lines, including Color Palette roving focus/Enter/Space and Audio Player metadata/seek coverage.
+- [ ] Visual review at mobile, tablet and desktop widths.
+- [ ] Keyboard-only review with focus entry, movement, dismissal and restoration.
+- [ ] Screen-reader review for accessible names, roles, values, status updates and dynamic content.
+- [ ] Reduced-motion review, including runtime preference changes.
+- [ ] Real-device touch and coarse-pointer review.
+- [ ] Contrast and focus-indicator review.
+- [ ] Browser console and failed network request review.
+- [ ] Current Chromium, Firefox and Safari spot checks.
+- [ ] Record tester, browser/device, date, findings and remediation.
 
-## Human QA
+## npm and GitHub release
 
-- [ ] Visual review at 390 px, 768 px and desktop widths.
-- [ ] Keyboard-only review of controls, menus, dialogs, editors, cards and overlays.
-- [ ] Screen-reader review of names, roles, values, status announcements, focus management and dynamic content.
-- [ ] Reduced-motion review at initial load and when the preference changes during runtime.
-- [ ] Touch/coarse-pointer review on a real device.
-- [ ] Cross-browser review in Chromium, Firefox and Safari.
-- [ ] Browser console review for uncaught exceptions and failed asset requests.
-- [ ] Contrast and focus-visible review for relevant interactive states.
+- [x] Browser-only package manifest and aggregate entry point committed to `main`.
+- [x] Individual import subpaths defined for all 82 custom elements.
+- [x] Browser-only behavior and SSR limitations documented.
+- [x] Restricted npm tarball allowlist defined.
+- [x] Tarball, clean consumer and browser smoke test added to CI.
+- [x] First-publish bootstrap workflow requires manual dispatch and protected `NPM_TOKEN`.
+- [x] Later publish workflow uses npm Trusted Publisher OIDC and staged publication with provenance.
+- [ ] Complete manual QA.
+- [ ] Add a short-lived npm granular token as protected repository Actions secret `NPM_TOKEN`.
+- [ ] Dispatch the bootstrap workflow from `main` for version `0.1.0`.
+- [ ] Verify npm registry installation and package metadata.
+- [ ] Configure npm Trusted Publisher for workflow `publish.yml`.
+- [ ] Revoke/remove the bootstrap token and retire the bootstrap workflow after trusted publishing is verified.
+- [ ] Confirm stable GitHub Release `v0.1.0` and attached npm `.tgz` asset exist after successful publication.
 
-## Package and release
+## Deployment
 
-- [x] Browser-only aggregate entry point registers all 82 elements.
-- [x] Per-component subpath exports are defined for all 82 elements.
-- [x] Package file allowlist includes component scripts and API READMEs.
-- [x] `npm pack --dry-run` contents inspected, with no gallery or development tooling in the tarball.
-- [x] Tarball installed offline in a clean consumer project.
-- [x] All 82 component subpaths resolve and aggregate/single-component imports pass in Chromium.
-- [x] Package smoke test passes in the main Validate run. [Run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
-- [x] OIDC npm staged-publishing workflow is configured with provenance and stable-tag checks.
-- [x] One-time initial-publish workflow includes a protected token mapping and refuses to overwrite an existing npm package name.
-- [ ] Bootstrap the initial npm publish with the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow and protected `NPM_TOKEN` repository Actions secret.
-- [ ] Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime`, workflow `publish.yml`, after the initial package exists, then remove the bootstrap token/workflow. Later staged versions require npm 2FA approval.
-- [ ] Publish stable npm `v0.1.0` from a reviewed `v0.1.0` tag and verify registry installation.
-- [x] Publish source-only GitHub pre-release `v0.1.0-rc.1` after source, structure and Chromium checks pass on the release commit. See [the release workflow](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/release.yml).
-- [x] Public browser-only API and browser/CDN consumption model documented.
-- [x] Package entry points/exports contract finalized.
-- [x] Package published-file allowlist reviewed.
-- [x] `npm pack --dry-run` output inspected.
-- [x] Clean consumer project installation and usage tested.
-- [x] Changelog, package guide, and source release notes prepared.
-- [x] Version `0.1.0` selected in the package manifest.
-- [x] `private: true` removed from the package manifest.
-- [ ] Add npm granular publish token as GitHub Actions secret `NPM_TOKEN` and run the bootstrap workflow.
-- [ ] Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime`, workflow `publish.yml`, after the first package exists; then remove the bootstrap token and workflow.
-- [ ] Verify public registry install of `vfx-ui-anime@0.1.0`.
+- [x] Static gallery deployment uses GitHub Pages.
+- [x] Vercel deployment integration is not part of the active deployment path.
+- [ ] Confirm the current main-branch Pages deployment workflow completes successfully.
 
-## Current decision
+## Go/no-go
 
-**Source-only GitHub pre-release `v0.1.0-rc.1` is available. Package `0.1.0` and consumer tests are ready and pass on `main`. The npm registry publication remains pending a protected npm token and one manual workflow run. Manual real-device, screen-reader and cross-browser QA is still outstanding.**
+**Current status: package implementation and automated smoke-test coverage are complete. Stable public release remains gated by manual QA and first-publish npm authorization. Do not mark this checklist fully complete until every required item above is verified.**
