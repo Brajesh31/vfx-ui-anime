@@ -70,7 +70,7 @@ The first stable package release is live:
 - GitHub: [stable release v0.1.0](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0)
 - Attached package archive: `vfx-ui-anime-0.1.0.tgz`
 
-The bootstrap workflow completed source checks, the full Chromium suite, the package smoke test, tarball creation, npm publication and GitHub release creation. The one-time bootstrap workflow is no longer required for publishing the first version.
+The one-time bootstrap workflow completed source checks, the full Chromium suite, the package smoke test, tarball creation, npm publication and GitHub release creation. It has been removed from the repository because the first stable release is complete.
 
 ### Configure Trusted Publisher for future releases
 
@@ -87,13 +87,7 @@ The repository already contains `.github/workflows/publish.yml`. Before future v
 
 The workflow uses `npm stage publish`. npm allows this action by default for a trusted publisher. Leave **Allow npm publish** and **Allow npm dist-tag** unchecked because the workflow does not call those commands. The environment field must remain empty because the workflow does not declare a GitHub Actions environment.
 
-After saving the connection, confirm it appears under the npm package's Trusted Publisher settings. Then:
-
-1. Delete the repository Actions secret `NPM_TOKEN`.
-2. Revoke the temporary npm granular access token in npm account settings.
-3. Retire the one-time `.github/workflows/bootstrap-publish.yml` workflow.
-4. Use a real planned release tag to trigger `publish.yml`. It reruns repository, Chromium and clean-consumer checks, then submits the package to npm staging through OIDC.
-5. Review each staged version and approve it with 2FA before it becomes publicly installable.
+After saving the connection, confirm it appears under the npm package's Trusted Publisher settings. The one-time bootstrap workflow has already been removed because `v0.1.0` is published. The bootstrap credential is no longer needed: delete the repository Actions secret `NPM_TOKEN` and revoke the temporary npm granular access token in npm account settings. Use a real planned release tag to trigger `publish.yml`; it reruns repository, Chromium and clean-consumer checks, then submits the package to npm staging through OIDC. Review each staged version and approve it with 2FA before it becomes publicly installable.
 
 Do not create a fake patch release merely to test OIDC. The first `v0.1.0` release is already published; subsequent release testing belongs on the next legitimate package version.
 
