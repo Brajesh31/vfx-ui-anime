@@ -108,6 +108,7 @@ jobs:
           const manifest = JSON.parse(readFileSync(file, 'utf8'));
           if (manifest.version !== process.env.VERSION) throw new Error('Packed package version mismatch.');
           manifest.name = name;
+          manifest.repository = { type: 'git', url: 'https://github.com/Brajesh31/vfx-ui-anime.git' };
           manifest.publishConfig = { registry };
           writeFileSync(file, JSON.stringify(manifest, null, 2) + '\n');
           NODE
