@@ -20,6 +20,7 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] npm tarball allowlist and contents inspection are covered by `npm run test:package`.
 - [x] Clean offline consumer install and all 82 package export resolutions are covered.
 - [x] Aggregate and isolated component browser imports are covered.
+- [x] Main-branch Validate runs retain the verified `vfx-ui-anime-0.1.0.tgz` as a 30-day GitHub Actions artifact.
 - [x] CodeQL passed on the release candidate.
 - [ ] Confirm all newly triggered main-branch workflows are complete and green on the current `main` commit.
 
