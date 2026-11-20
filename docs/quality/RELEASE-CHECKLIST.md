@@ -16,7 +16,8 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 ## Automated checks
 
 - [x] Current main commit `cb1421b26f99a6188ddea31f62531e1fdac508aa` passed Validate run `44680747787`.
-- [x] Current main CodeQL run `44680748109` passed, and alert-inventory run `44680747893` exported `[]` (zero open alerts).
+- [x] Current main CodeQL run `44681252024` passed.
+- [x] Post-CodeQL alert-inventory run `44681282300` exported `[]` (zero open code-scanning alerts).
 - [x] Structural validation and generated-build checks passed on release candidate commit `72748136c9eddf1cf160d1d41f92841e59d1f557`.
 - [x] Full Chromium interaction and regression suite passed on the exact release candidate.
 - [x] npm tarball allowlist and contents inspection are covered by `npm run test:package`.
@@ -27,7 +28,7 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] Confirm the first-publication workflow completed successfully, including source checks, Chromium tests, clean-consumer package tests, npm publication and GitHub release creation.
 - [x] Latest main Validate run `44655153867` passed source checks, full Chromium interactions, package tarball/consumer smoke tests and uploaded the 30-day npm archive artifact.
 - [x] Latest main CodeQL run `44680748109` passed on `cb1421b26f99a6188ddea31f62531e1fdac508aa`.
-- [x] Latest main OpenSSF Scorecard run `44680747961` passed.
+- [x] Latest main OpenSSF Scorecard run `44681251984` passed.
 
 ## Manual QA
 
@@ -72,8 +73,8 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 
 - [x] Static gallery deployment uses GitHub Pages.
 - [x] Vercel deployment integration is not part of the active deployment path.
-- [x] Confirm the current main-branch Pages deployment workflow completes successfully on commit `cb1421b26f99a6188ddea31f62531e1fdac508aa` (run `44680747792`).
+- [x] Confirm the current main-branch Pages deployment workflow completes successfully on commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead` (run `44681252151`).
 
 ## Go/no-go
 
-**Current status: v0.1.0 is published on npm and GitHub. The latest main Validate, CodeQL, Scorecard and GitHub Pages checks passed, and the CodeQL alert inventory returned zero open alerts. The scoped GitHub Packages workflow is configured but its first publication has not yet been run. npm Trusted Publisher setup/credential cleanup and manual QA remain open. Do not call the package production-certified until human QA is complete.**
+**Current status: v0.1.0 is published on npm and GitHub. Validate, CodeQL, Scorecard and GitHub Pages all passed on main commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`; a post-CodeQL alert inventory completed with `[]` (zero open alerts). The scoped GitHub Packages workflow is configured but its first publication has not yet been run. npm Trusted Publisher setup/credential cleanup and manual QA remain open. Do not call the package production-certified until human QA is complete.**
