@@ -1,0 +1,85 @@
+name: Repair v0.1.0 GitHub release notes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/repair-v0.1.0-release-notes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-release:
+    name: Restore complete v0.1.0 release instructions
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Update stable GitHub release description
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: v0.1.0
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/release-notes.md" <<'NOTES'
+          # VFX UI Anime v0.1.0
+
+          **The first stable public npm release of VFX UI Anime.**
+
+          ## Install
+
+          ```bash
+          npm install vfx-ui-anime
+          ```
+
+          To pin the exact release:
+
+          ```bash
+          npm install vfx-ui-anime@0.1.0
+          ```
+
+          ## Import all 82 components
+
+          ```js
+          import 'vfx-ui-anime';
+          ```
+
+          ## Import one component
+
+          ```js
+          import 'vfx-ui-anime/button';
+          ```
+
+          The package registers browser-native custom elements. It does not provide React/Vue wrappers or named component classes. Load it only after the browser DOM environment exists.
+
+          ## Package contents
+
+          - 82 dependency-free Web Components
+          - One aggregate browser entry point
+          - 82 individual component import subpaths
+          - 83 interactive gallery examples and 82 standalone component demos
+          - MIT license
+          - No runtime dependencies
+
+          ## Verification
+
+          The release workflow passed repository validation, the complete Chromium interaction suite, the npm tarball inspection, clean offline consumer installation, all 82 subpath resolutions, and aggregate/single-component browser import checks.
+
+          Manual screen-reader, real-device touch, Firefox, Safari, visual and full accessibility certification remain separate QA tasks. Automated checks do not certify full WCAG conformance.
+
+          ## Links
+
+          - npm: https://www.npmjs.com/package/vfx-ui-anime
+          - Source: https://github.com/Brajesh31/vfx-ui-anime
+          - Live gallery: https://brajesh31.github.io/vfx-ui-anime/
+          - Component index: https://github.com/Brajesh31/vfx-ui-anime/blob/main/docs/COMPONENTS.md
+          - Package guide: https://github.com/Brajesh31/vfx-ui-anime/blob/main/docs/PACKAGE.md
+          NOTES
+
+          gh release edit "$RELEASE_TAG" \
+            --title "VFX UI Anime v0.1.0" \
+            --notes-file "$RUNNER_TEMP/release-notes.md"
+          gh release view "$RELEASE_TAG" --json tagName,name,isDraft,isPrerelease,url
