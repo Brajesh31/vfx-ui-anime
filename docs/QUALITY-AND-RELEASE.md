@@ -8,9 +8,9 @@
 
 ## Current decision
 
-**The v0.1.0 npm package contract and automated package smoke tests are committed to `main`. The stable npm publication and stable GitHub Release are not complete.** The first npm publication requires an authorized maintainer-created npm credential stored as the protected repository Actions secret `NPM_TOKEN` and a manual workflow dispatch. In addition, real-device, assistive-technology and cross-browser QA remain outstanding.
+**The stable `vfx-ui-anime@0.1.0` package is published on npm, and GitHub Release `v0.1.0` is published with the `.tgz` archive attached.** The `latest` npm dist-tag resolves to `0.1.0`. The first-publish workflow completed successfully. Remaining work is npm Trusted Publisher setup/credential cleanup and human QA for accessibility, real-device behavior and cross-browser compatibility.
 
-The 14-stage component roadmap is complete in scope. The regressions found during the integrated audit have been repaired. The full Chromium suite and npm tarball/consumer checks passed on the release work branch before that commit was fast-forwarded to `main`. Main-branch CI has been triggered again on the current commit; use the live [Actions runs](https://github.com/Brajesh31/vfx-ui-anime/actions) for their final conclusion.
+The 14-stage component roadmap is complete in scope. The regressions found during the integrated audit have been repaired. The successful first-publication run on `eda39329832fe722cfbd4073a5472fd515df2629` passed the structural/source checks, full Chromium component suite and npm tarball/consumer smoke test before publishing the package and creating the GitHub Release. The archive contains 170 files.
 
 Automated success does not certify visual quality, screen-reader behavior, real-device touch behavior or full WCAG conformance.
 
@@ -55,27 +55,28 @@ Complete and record these checks before describing the package as production-cer
 
 Use [ACCESSIBILITY.md](ACCESSIBILITY.md) for the detailed review matrix. Automated DOM assertions are not a substitute for assistive-technology testing.
 
-## 4. npm package contract and publication
+## 4. npm package and publication status
 
-The browser-only npm package is `vfx-ui-anime@0.1.0`. It exposes one aggregate entry point and one direct subpath for each of the 82 custom elements. It has no runtime dependencies and does not provide React/Vue wrappers or named component classes.
+The browser-only npm package `vfx-ui-anime@0.1.0` is publicly published. It exposes one aggregate entry point and one direct subpath for each of the 82 custom elements. It has no runtime dependencies and does not provide React/Vue wrappers or named component classes.
 
 - [x] Freeze the browser-only API: aggregate import, per-component side-effect subpaths, and exported component metadata.
 - [x] Document browser/CDN usage and server-side rendering limitations.
 - [x] Define the package entry point, exports map and restricted file allowlist.
 - [x] Add a tarball/consumer/Chromium package smoke test.
 - [x] Commit the package contract and publication workflows to `main`.
-- [ ] Complete manual QA above.
-- [ ] Create an npm granular publish token with minimum viable scope and expiry; store it only as the protected GitHub Actions secret `NPM_TOKEN`.
-- [ ] Run [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) on `main`, selecting `0.1.0`. The workflow reruns package tests and refuses to overwrite an existing package.
-- [ ] Verify `vfx-ui-anime@0.1.0` is installable from npm.
-- [ ] Configure npm Trusted Publisher for owner `Brajesh31`, repository `vfx-ui-anime`, workflow `publish.yml`; then revoke/delete the bootstrap token and retire the one-time bootstrap workflow.
-- [ ] Confirm npm provenance for subsequent OIDC staged publishes. A maintainer must review each staged package and approve it with 2FA.
-- [ ] Verify the stable GitHub Release and its actual npm `.tgz` asset after the first publication succeeds.
+- [x] Publish `vfx-ui-anime@0.1.0` to npm.
+- [x] Verify the npm version endpoint resolves and the `latest` dist-tag points to `0.1.0`.
+- [x] Publish GitHub Release `v0.1.0` and attach `vfx-ui-anime-0.1.0.tgz`.
+- [ ] Complete and record manual QA above.
+- [ ] Create and verify npm Trusted Publisher for GitHub Actions, owner/user `Brajesh31`, repository `vfx-ui-anime`, workflow filename `publish.yml`, with no environment name.
+- [ ] After OIDC setup is verified, delete the repository `NPM_TOKEN` secret and revoke the temporary npm granular token.
+- [ ] Retire the one-time bootstrap workflow after credential cleanup.
+- [ ] Use the next legitimate package release to verify OIDC staging, provenance and 2FA approval.
+- [ ] Correct the stale pre-publication status sentence in the npm-hosted README in the next legitimate version. The GitHub README has been corrected on `main`.
 
-Do not put `NPM_TOKEN` in Git, workflow YAML, issues, logs or chat. The first-publish token requires broad access because the npm package does not exist yet and therefore cannot be scoped to that package; use the shortest expiry offered, keep it protected, and revoke it immediately after first publication.
+The published npm `0.1.0` page is live, but its README was packed before the first publication completed and still contains stale pre-publication wording. This does not change the package tarball's installability or entry points.
 
 ## 5. Release decision
 
-**Repository package preparation: complete. Stable public release: blocked by maintainer-controlled npm authorization and manual QA.**
+**Stable package release: published. Repository release documentation: being reconciled. Production quality sign-off: still open.** Do not describe the package as fully production-certified until the manual visual, keyboard, screen-reader, reduced-motion, real-device touch, contrast/focus and Firefox/Safari checks have been completed and recorded.
 
-The source-only GitHub pre-release [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1) remains available. The gallery is deployed through [GitHub Pages](https://brajesh31.github.io/vfx-ui-anime/). Do not claim that npm `0.1.0` has been published or that manual accessibility/cross-browser certification is complete until the unchecked items above have actually been performed.
