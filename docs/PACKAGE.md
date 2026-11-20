@@ -61,14 +61,14 @@ Each `components/<name>/index.js` file is standalone and already contains its sh
 
 ## GitHub Packages registry
 
-The project keeps its existing unscoped npmjs release and publishes a second, scoped package to GitHub Packages:
+The project keeps its existing unscoped npmjs release and is configured to publish a second, scoped package to GitHub Packages:
 
 - npmjs: `vfx-ui-anime@0.1.0`
 - GitHub Packages: `@brajesh31/vfx-ui-anime@0.1.0`
 - GitHub Packages registry: `https://npm.pkg.github.com`
 - GitHub Actions workflow: [`.github/workflows/publish-github-package.yml`](../.github/workflows/publish-github-package.yml)
 
-The source `package.json` intentionally remains named `vfx-ui-anime` and continues publishing to npmjs. The GitHub Packages workflow creates a verified tarball, changes only the temporary copy's package name to `@brajesh31/vfx-ui-anime`, points that copy at GitHub Packages, and publishes it with the repository-scoped `GITHUB_TOKEN`. It does not rename, overwrite, or republish the npmjs package.
+The first GitHub Packages publication is not complete until the workflow below runs successfully. The source `package.json` intentionally remains named `vfx-ui-anime` and continues publishing to npmjs. The GitHub Packages workflow creates a verified tarball, changes only the temporary copy's package name to `@brajesh31/vfx-ui-anime`, points that copy at GitHub Packages, and publishes it with the repository-scoped `GITHUB_TOKEN`. It does not rename, overwrite, or republish the npmjs package.
 
 ### First GitHub Packages publication
 
