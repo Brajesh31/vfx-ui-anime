@@ -9,7 +9,7 @@ VFX UI Anime is a collection of **82 dependency-free Web Components** with a sha
 - **82 standalone component demos**
 - **No runtime framework or third-party component dependency**
 - **MIT licensed**
-- **Not yet published to npm**
+- **npm package v0.1.0 prepared; first publication pending account authorization**
 
 [Explore the live gallery](https://brajesh31.github.io/vfx-ui-anime/) · [Browse the source](https://github.com/Brajesh31/vfx-ui-anime) · [Read the component index](docs/COMPONENTS.md)
 
@@ -152,16 +152,27 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 | [Code of Conduct](CODE_OF_CONDUCT.md) | Community participation standards |
 | [Support](SUPPORT.md) | Troubleshooting and usage support |
 
-## 📦 Package and release status
+## 📦 Install and use as an npm package
 
-The source repository is MIT-licensed. The npm package is **not published**. The current `package.json` intentionally retains `"private": true`.
+The browser-only npm package is prepared as `vfx-ui-anime@0.1.0`. It has one aggregate browser entry point and individual subpaths for all 82 custom elements.
 
-The complete integrated validation suite, CodeQL, GitHub Pages deployment and OpenSSF Scorecard all passed on current `main` head `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`. See [the exact run links and remaining release gates](docs/QUALITY-AND-RELEASE.md).
+```bash
+npm install vfx-ui-anime
+```
 
-The source gallery is deployed through GitHub Pages, but no versioned GitHub Release or npm package has been published. The package is not release-approved. Manual visual, keyboard-only, touch, screen-reader and cross-browser review remains outstanding, as do package tarball inspection and a clean consumer installation test. Do not use an npm install command as though a public version already exists.
+Register every custom element:
 
-## 📄 License
+```js
+import 'vfx-ui-anime';
+```
 
-VFX UI Anime is distributed under the [MIT License](LICENSE).
+Or register one element only:
 
-Copyright © 2026 Brajesh Kumar.
+```js
+import 'vfx-ui-anime/button';
+```
+
+The project uses browser-native Web Components, not named React/Vue classes. The package must be loaded after the DOM exists. See [the package guide](docs/PACKAGE.md) for all component paths, CDN usage, SSR limitations, exact tarball contents, and publication instructions.
+
+**Publication status:** Package tarball creation, clean offline consumer installation, all 82 component subpath resolutions, and aggregate/single-component Chromium imports pass in CI. The package is not yet published to npm. The initial publish needs a protected GitHub Actions secret named `NPM_TOKEN` and the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow. After the package exists, configure npm Trusted Publisher for `publish.yml` and remove the bootstrap token. Later versions are staged through OIDC and require a maintainer's npm 2FA approval. The source-only GitHub pre-release `v0.1.0-rc.1` remains available [here](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
+

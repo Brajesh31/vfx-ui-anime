@@ -1,0 +1,132 @@
+name: Source pre-release
+
+on:
+  push:
+    branches:
+      - "release/v*"
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-prerelease-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-and-release:
+    name: Verify and publish source pre-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'release/v'))
+    steps:
+      - name: Check out exact release candidate
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Validate source, generated runtime and registry
+        run: |
+          npm test
+          npm run check
+
+      - name: Start local gallery server
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/vfx-ui-anime-http.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:8000/gallery/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/vfx-ui-anime-http.log
+          exit 1
+
+      - name: Run full Chromium interaction suite
+        run: npm run test:browser
+
+      - name: Create or update verified GitHub source pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          RELEASE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          TAG="${RELEASE_REF#release/}"
+          CANDIDATE_SHA="$RELEASE_SHA"
+          TAG_SHA=""
+
+          if [[ ! "$TAG" =~ ^v0\.1\.0-rc\.[0-9]+$ ]]; then
+            echo "Refusing unexpected prerelease tag: $TAG"
+            exit 1
+          fi
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            TAG_SHA="$(git rev-parse "${TAG}^{commit}")"
+            if ! git merge-base --is-ancestor "$TAG_SHA" "$CANDIDATE_SHA"; then
+              echo "Existing release $TAG points to $TAG_SHA, which is not an ancestor of $CANDIDATE_SHA."
+              exit 1
+            fi
+
+            while IFS= read -r path; do
+              case "$path" in
+                README.md|CHANGELOG.md|docs/*|.github/workflows/release.yml) ;;
+                *)
+                  echo "Refusing to reuse $TAG after a non-documentation source change: $path"
+                  exit 1
+                  ;;
+              esac
+            done < <(git diff --name-only "$TAG_SHA" "$CANDIDATE_SHA")
+
+            RELEASE_NOTES_SHA="$TAG_SHA"
+          else
+            RELEASE_NOTES_SHA="$CANDIDATE_SHA"
+          fi
+
+          cat > release-notes.md <<EOF
+          # VFX UI Anime $TAG
+
+          **Source-only pre-release. This is not a stable release and is not an npm package publication.**
+
+          This candidate contains 82 dependency-free Web Components, 82 standalone demos and 83 gallery examples.
+
+          ## Verification
+
+          The tag points to source commit $RELEASE_NOTES_SHA. The release was published only after these checks passed on that exact commit:
+
+          - npm test
+          - npm run check
+          - Full Chromium touch, keyboard, form and lifecycle interaction suite
+
+          ## Known release limitations
+
+          - Manual visual, keyboard-only, screen-reader, touch-device and Firefox/Safari review is still required.
+          - Full WCAG conformance has not been certified.
+          - The npm package `0.1.0` is prepared but not yet published. The first public publication requires maintainer npm authorization and the protected-token bootstrap workflow.
+
+          Use this pre-release to inspect the source and provide feedback. Do not treat it as a stable production release.
+          EOF
+
+          if [[ -n "$TAG_SHA" ]]; then
+            gh release edit "$TAG" \
+              --title "VFX UI Anime $TAG" \
+              --notes-file release-notes.md \
+              --prerelease
+            echo "Reused the verified source pre-release $TAG at its actual tag commit $TAG_SHA. Documentation-only changes were checked and no tag was moved."
+            exit 0
+          fi
+
+          gh release create "$TAG" \
+            --target "$CANDIDATE_SHA" \
+            --title "VFX UI Anime $TAG" \
+            --notes-file release-notes.md \
+            --prerelease

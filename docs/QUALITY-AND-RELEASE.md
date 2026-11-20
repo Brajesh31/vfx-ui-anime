@@ -92,12 +92,12 @@ The package now has an aggregate browser entry point (`index.js`), a direct impo
 - [ ] Complete all manual QA items above.
 - [x] Prepare the `0.1.0` package version, changelog, release notes, and package guide.
 - [x] Remove `"private": true` and set package version `0.1.0` on the package branch.
-- [x] Add a version-tagged npm publishing workflow using GitHub OIDC and provenance.
+- [x] Add a version-tagged npm staged-publishing workflow using GitHub OIDC and provenance; each version requires a maintainer's 2FA approval.
 - [ ] Bootstrap the first npm publication with the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow and a protected npm granular token stored as the repository Actions secret `NPM_TOKEN` (do not commit or paste the token into chat).
 - [ ] After the first package exists, configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`, then remove the bootstrap token and one-time bootstrap workflow.
 - [ ] Create stable tag `v0.1.0` only after package smoke tests and the npm publisher configuration are verified.
 
-The GitHub Pages gallery is deployed, and the source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). The npm package `0.1.0` is prepared and its tarball/consumer/browser smoke tests pass on `main`. It is **not yet published to npm**. The bootstrap workflow will refuse to publish if `vfx-ui-anime` is already claimed, and it requires an authorized npm granular token stored as the GitHub Actions secret `NPM_TOKEN`. After first publication, configure npm Trusted Publisher for `publish.yml`, remove the token, and use OIDC/provenance for future tags.
+The GitHub Pages gallery is deployed, and the source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). The npm package `0.1.0` is prepared and its tarball/consumer/browser smoke tests pass on `main`. It is **not yet published to npm**. The bootstrap workflow will refuse to publish if `vfx-ui-anime` is already claimed, and it requires an authorized npm granular token stored as the GitHub Actions secret `NPM_TOKEN`. After first publication, configure npm Trusted Publisher for `publish.yml`, remove the token, and use OIDC/provenance to stage future tags. Each staged version must be reviewed and approved in npm with 2FA.
 
 ## 6. Release decision
 

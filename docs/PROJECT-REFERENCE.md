@@ -6,7 +6,7 @@ This document is the consolidated record of the repository architecture, impleme
 
 VFX UI Anime is a browser-native library of 82 custom elements and 83 gallery examples. Each component is implemented as a standalone JavaScript Web Component with a per-component HTML demo and API reference.
 
-The current distribution is source-first:
+The current distribution includes standalone browser scripts and a browser-only npm package contract:
 - No application framework is required.
 - There is no runtime dependency install for the component library itself.
 - Each component script registers its custom element and embeds the shared VFX runtime.
@@ -30,10 +30,16 @@ The live gallery is published at https://brajesh31.github.io/vfx-ui-anime/.
 | `tools/build.mjs` | Synchronizes the shared runtime into standalone components |
 | `tools/validate.mjs` | Structural, syntax, registry, demo and generated-runtime checks |
 | `tools/test.mjs` | Chromium browser interaction suite |
+| `tools/package-smoke.mjs` | npm tarball, offline consumer install, export-resolution and Chromium import smoke tests |
+| `index.js` | Aggregate browser entry point registering all 82 custom elements |
 | `.github/workflows/validate.yml` | Validation workflow |
 | `.github/workflows/deploy-pages.yml` | Separate GitHub Pages build/artifact and dependent deployment jobs |
 | `.github/workflows/codeql.yml` | CodeQL static analysis workflow |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard workflow |
+| `.github/workflows/release.yml` | Source-only pre-release workflow gated on exact candidate verification |
+| `.github/workflows/bootstrap-publish.yml` | One-time first npm publication with a protected token |
+| `.github/workflows/publish.yml` | Later npm releases using OIDC trusted publishing and provenance |
+| `docs/PACKAGE.md` | npm installation, imports, CDN usage and publication instructions |
 | `docs/COMPONENTS.md` | Component directory and category index |
 | `docs/QUALITY-AND-RELEASE.md` | Current automated evidence and release decision |
 | `docs/quality/ANIMATION-DESIGN-SYSTEM.md` | Visual system and motion specification |
@@ -167,7 +173,7 @@ The current exact outcomes and failures are documented in [QUALITY-AND-RELEASE.m
 
 ## 8. Continuous integration and deployment
 
-The repository contains four GitHub Actions workflows:
+The repository contains seven GitHub Actions workflows:
 
 | Workflow | Purpose |
 |---|---|
@@ -175,6 +181,9 @@ The repository contains four GitHub Actions workflows:
 | Deploy to GitHub Pages | Validate, upload the static site, and publish it to GitHub Pages |
 | CodeQL | Static security analysis |
 | OSSF Scorecard | Repository security posture analysis |
+| Source pre-release | Verified source-only prereleases |
+| Bootstrap npm publication | One-time first npm publish with a protected token |
+| Publish npm package | Subsequent version tags with OIDC and provenance |
 
 GitHub Pages is the configured live-site deployment target. Its workflow validates the source and uploads the static-site artifact in a `build` job, then deploys that artifact in a dependent `deploy` job. This separation allows a deployment-only retry without creating a second `github-pages` artifact. The workflow does not cancel an in-progress deployment when a new main-branch push arrives.
 

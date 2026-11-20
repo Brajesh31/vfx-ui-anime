@@ -1,8 +1,13 @@
 # Changelog
 
-This project has not received a versioned release yet. Changes are recorded under **Unreleased** until the public API, distribution model and release gates are approved.
+This project has a source-only GitHub pre-release (`v0.1.0-rc.1`). The npm package contract is prepared at `0.1.0`; the first public npm publication is pending account authorization.
 
 ## Unreleased
+
+- Restored the browser-only `vfx-ui-anime@0.1.0` package manifest, aggregate entry point, and component subpath exports.
+- Restored package tarball, clean offline consumer, 82 component export-resolution, and Chromium package smoke tests in CI.
+- Restored the one-time protected-token npm bootstrap, OIDC/provenance workflow for subsequent releases, and source pre-release workflow.
+- Added the package `.tgz` as an asset to the first stable GitHub Release after npm accepts the initial publication.
 
 - Completed the 14-stage implementation roadmap across all 82 Web Component types.
 - Consolidated the former phase reports into the project reference and removed the 15 phase-specific report files.

@@ -47,10 +47,10 @@ The Validate browser log for the verified implementation commit records 210 succ
 - [x] Tarball installed offline in a clean consumer project.
 - [x] All 82 component subpaths resolve and aggregate/single-component imports pass in Chromium.
 - [x] Package smoke test passes in the main Validate run. [Run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
-- [x] OIDC npm publish workflow is configured with provenance and stable-tag checks.
+- [x] OIDC npm staged-publishing workflow is configured with provenance and stable-tag checks.
 - [x] One-time initial-publish workflow includes a protected token mapping and refuses to overwrite an existing npm package name.
 - [ ] Bootstrap the initial npm publish with the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow and protected `NPM_TOKEN` repository Actions secret.
-- [ ] Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime`, workflow `publish.yml`, after the initial package exists, then remove the bootstrap token/workflow.
+- [ ] Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime`, workflow `publish.yml`, after the initial package exists, then remove the bootstrap token/workflow. Later staged versions require npm 2FA approval.
 - [ ] Publish stable npm `v0.1.0` from a reviewed `v0.1.0` tag and verify registry installation.
 - [x] Publish source-only GitHub pre-release `v0.1.0-rc.1` after source, structure and Chromium checks pass on the release commit. See [the release workflow](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/release.yml).
 - [x] Public browser-only API and browser/CDN consumption model documented.
