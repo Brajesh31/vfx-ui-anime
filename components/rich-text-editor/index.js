@@ -286,8 +286,13 @@ class VfxRichTextEditor extends Base {
   this.editor.addEventListener('paste',e=>{
    e.preventDefault(); if(this._blocked())return;
    const html=e.clipboardData?.getData('text/html')||'',text=e.clipboardData?.getData('text/plain')||'';
-   const safe=html?VfxRichTextEditor.sanitize(html):esc(text).replace(/\r?\n/g,'<br>');
-   document.execCommand('insertHTML',false,safe);this._update(true,'input');
+   const fragment=html?VfxRichTextEditor.sanitizeToFragment(html):VfxRichTextEditor.textToFragment(text);
+   const selection=this.editor.ownerDocument.getSelection();
+   if(selection?.rangeCount&&this.editor.contains(selection.getRangeAt(0).commonAncestorContainer)){
+    const range=selection.getRangeAt(0);range.deleteContents();range.insertNode(fragment);range.collapse(false);
+    selection.removeAllRanges();selection.addRange(range);
+   }else this.editor.append(fragment);
+   this._update(true,'input');
   });
   this.editor.addEventListener('drop',e=>{
    e.preventDefault(); if(this._blocked())return;
@@ -331,28 +336,50 @@ class VfxRichTextEditor extends Base {
   const p=at(this.editor);if(!this.calm)burst(p.x,p.y,{r:11,spikes:6});
   return ok;
  }
- static sanitize(html) {
-  const doc=new DOMParser().parseFromString(String(html??''),'text/html');
+ static sanitizeToFragment(html) {
+  const parsed=new DOMParser().parseFromString(String(html??''),'text/html');
   const allowed=new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','BLOCKQUOTE','H2','H3','CODE','A']);
-  const clean=node=>{
-   for(const child of [...node.childNodes]){
-    if(child.nodeType===3)continue;
-    if(child.nodeType!==1){child.remove();continue;}
-    clean(child);
-    if(!allowed.has(child.tagName)){child.replaceWith(...child.childNodes);continue;}
-    const href=child.tagName==='A'?child.getAttribute('href'):null;
-    for(const attr of [...child.attributes])child.removeAttribute(attr.name);
-    if(child.tagName==='A'){
-     let safe='';try{const u=new URL(href||'',document.baseURI);if(['http:','https:','mailto:'].includes(u.protocol))safe=u.href;}catch{}
-     if(safe){child.setAttribute('href',safe);child.setAttribute('rel','noopener noreferrer');}
-     else child.replaceWith(...child.childNodes);
-    }
+  const discarded=new Set(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','SVG','MATH','TEMPLATE','NOSCRIPT','NOEMBED','NOFRAMES','XMP','PLAINTEXT','BASE','META','LINK','FORM','INPUT','BUTTON','TEXTAREA','SELECT','OPTION','IMG','VIDEO','AUDIO','SOURCE','TRACK','CANVAS']);
+  const copyNode=node=>{
+   if(node.nodeType===Node.TEXT_NODE)return document.createTextNode(node.data);
+   if(node.nodeType!==Node.ELEMENT_NODE)return null;
+   const tag=node.tagName;
+   if(discarded.has(tag))return null;
+   const children=copyChildren(node);
+   if(!allowed.has(tag))return children;
+   let safeHref='';
+   if(tag==='A'){
+    try{const url=new URL(node.getAttribute('href')||'',document.baseURI);if(['http:','https:','mailto:'].includes(url.protocol))safeHref=url.href;}catch{}
+    if(!safeHref)return children;
    }
+   const safe=document.createElement(tag.toLowerCase());
+   if(tag==='A'){safe.setAttribute('href',safeHref);safe.setAttribute('rel','noopener noreferrer');}
+   safe.append(children);
+   return safe;
   };
-  clean(doc.body);return doc.body.innerHTML;
+  const copyChildren=node=>{
+   const fragment=document.createDocumentFragment();
+   for(const child of [...node.childNodes]){
+    const safe=copyNode(child);
+    if(safe)fragment.append(safe);
+   }
+   return fragment;
+  };
+  return copyChildren(parsed.body);
+ }
+ static textToFragment(text) {
+  const fragment=document.createDocumentFragment();
+  const lines=String(text??'').split(/\r?\n/);
+  lines.forEach((line,index)=>{if(index)fragment.append(document.createElement('br'));fragment.append(document.createTextNode(line));});
+  return fragment;
+ }
+ static sanitize(html) {
+  const container=document.createElement('div');
+  container.append(VfxRichTextEditor.sanitizeToFragment(html));
+  return container.innerHTML;
  }
  get value() { return VfxRichTextEditor.sanitize(this.editor?.innerHTML||''); }
- set value(v) { if(this.editor){this.editor.innerHTML=VfxRichTextEditor.sanitize(v||'');this._update(false);} }
+ set value(v) { if(this.editor){this.editor.replaceChildren(VfxRichTextEditor.sanitizeToFragment(v||''));this._update(false);} }
  get text() { return this.editor?.innerText||''; }
  focus() { this.editor?.focus(); }
  clear() { if(!this.editor||this._blocked())return false;this.editor.innerHTML='';this._update(true,'input');return true; }

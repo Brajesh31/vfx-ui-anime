@@ -439,6 +439,10 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   const required=await ev("!window.__phase8EditorForm.checkValidity()");
   await ev("document.querySelector('#phase8-editor').value='<p>Hello <strong>world</strong></p><img src=x onerror=alert(1)><script>alert(1)</script><a href=\"javascript:alert(1)\" onclick=\"x()\">Unsafe link</a><a href=\"https://example.com\" onclick=\"x()\">Safe link</a>'");
   const sanitised=await ev("(() => {const el=document.querySelector('#phase8-editor'),v=el.value;return v.includes('<strong>world</strong>')&&!v.includes('<script')&&!v.includes('<img')&&!v.includes('javascript:')&&!v.includes('onclick')&&v.includes('rel=\"noopener noreferrer\"')&&new FormData(window.__phase8EditorForm).get('description')===v;})()");
+  await ev("document.querySelector('#phase8-editor').value='<p>Safe</p><svg onload=alert(1)><script>alert(2)</script></svg><style>body{display:none}</style><iframe srcdoc=\"<script>alert(3)</script>\"></iframe><a href=\"//example.com\">protocol-relative</a>'");
+  const dangerousMarkupRemoved=await ev("(() => {const v=document.querySelector('#phase8-editor').value;return v.includes('Safe')&&!/<svg|<script|<style|<iframe/i.test(v)&&!v.includes('onload')&&v.includes('https://example.com/');})()");
+  const pasteCleaned=await ev("(() => {const el=document.querySelector('#phase8-editor'),editor=el.shadowRoot.querySelector('.editor');editor.focus();const range=document.createRange();range.selectNodeContents(editor);range.collapse(false);const selection=document.getSelection();selection.removeAllRanges();selection.addRange(range);const data=new DataTransfer();data.setData('text/html','<p><strong>Pasted</strong><img src=x onerror=alert(4)><a href=\"javascript:alert(5)\">unsafe</a></p>');const event=new ClipboardEvent('paste',{clipboardData:data,bubbles:true,cancelable:true});editor.dispatchEvent(event);const value=el.value;return value.includes('<strong>Pasted</strong>')&&!value.includes('<img')&&!value.includes('onerror')&&!value.includes('javascript:');})()");
+  check('phase 8: Rich Text Editor drops dangerous subtrees, reconstructs allowlisted DOM nodes, normalizes safe URLs and sanitizes clipboard paste without HTML-string insertion',dangerousMarkupRemoved&&pasteCleaned,{dangerousMarkupRemoved,pasteCleaned});
   const text=await ev("document.querySelector('#phase8-editor').text.includes('Hello world')");
   await ev("document.querySelector('#phase8-editor').setAttribute('readonly','')");
   const readonly=await ev("(() => {const el=document.querySelector('#phase8-editor');return el.shadowRoot.querySelector('.editor').contentEditable==='false'&&[...el.shadowRoot.querySelectorAll('.tool')].every(b=>b.disabled)&&el.clear()===false;})()");
@@ -972,6 +976,30 @@ check('one shared core', (await ev('window.VFXAnimeFX.version')) === 1);
   await ev("document.querySelector('#phase13-confetti').remove()");
 }
 
+{
+ const idSafety=await ev(`(() => {
+  const specs=[
+   ['vfx-date-picker','.popup','.trigger','aria-controls'],
+   ['vfx-command-palette','.list','input','aria-controls'],
+   ['vfx-drawer','.title','dialog','aria-labelledby'],
+   ['vfx-select','.list','.trigger','aria-controls'],
+   ['vfx-search','.suggestions','input','aria-controls'],
+   ['vfx-menu','.panel','.trigger','aria-controls'],
+   ['vfx-dialog','.title','dialog','aria-labelledby']
+  ];
+  const results=[];
+  for(const [tag,target,reference,attribute] of specs){
+   const a=document.createElement(tag),b=document.createElement(tag);
+   document.body.append(a,b);
+   const inspect=el=>{const root=el.shadowRoot,id=root.querySelector(target)?.id,ref=root.querySelector(reference)?.getAttribute(attribute);return !!id&&id===ref?id:'';};
+   const first=inspect(a),second=inspect(b);
+   results.push(!!first&&!!second&&first!==second);
+   a.remove();b.remove();
+  }
+  return results.every(Boolean);
+ })()`);
+ check('security: generated IDs are unique and each ARIA reference resolves within its component instance',idSafety,idSafety);
+}
 check('no horizontal scroll at 390', (await ev('document.documentElement.scrollWidth')) <= 390, await ev('document.documentElement.scrollWidth'));
 if (logs.length) { console.log(logs.join('\n')); fails++; }
 ws.close(); chrome.kill(); await sleep(300); try { rmSync(PROFILE, { recursive: true, force: true }); } catch {} process.exit(fails ? 1 : 0);

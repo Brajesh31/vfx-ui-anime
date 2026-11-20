@@ -262,6 +262,8 @@ const api = window.VFXAnimeFX = {
 'use strict';
 const fx = window.VFXAnimeFX;
 const { Base, Spring, at, puff, burst, ticks, sfx } = fx;
+let uidSequence = 0;
+const createUniqueDomId = (prefix) => `${prefix}-${globalThis.crypto?.randomUUID?.() || (++uidSequence).toString(36)}`;
 class VfxSelect extends Base {
   static formAssociated = true;
   static observedAttributes = ['disabled', 'value'];
@@ -273,7 +275,7 @@ class VfxSelect extends Base {
     if(!this.items.length)this.items=(this.getAttribute('options')||'').split('|').filter(Boolean).map(v=>({value:v,label:v,disabled:false,selected:false}));
     const chosen=this.items.find(x=>x.selected)||this.items.find(x=>x.value===(this.getAttribute('value')||''))||this.items[0];
     this._value=chosen?chosen.value:'';
-    this.uid='vfx-select-'+Math.random().toString(36).slice(2,9);
+    this.uid=createUniqueDomId('vfx-select');
     return '<button class="trigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="'+this.uid+'-list"><span class="value"></span><span class="arrow" aria-hidden="true">⌄</span></button><div class="panel" hidden><div class="list" id="'+this.uid+'-list" role="listbox" tabindex="-1"></div></div>';
   }
   setup(){

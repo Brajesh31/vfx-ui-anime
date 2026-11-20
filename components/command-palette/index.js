@@ -262,6 +262,8 @@ const api = window.VFXAnimeFX = {
 (() => {
 'use strict';
 const fx=window.VFXAnimeFX,{Base,at,burst,lines,ticks}=fx;
+let uidSequence = 0;
+const createUniqueDomId = (prefix) => `${prefix}-${globalThis.crypto?.randomUUID?.() || (++uidSequence).toString(36)}`;
 class VfxCommandPalette extends Base{
  static observedAttributes=['commands','placeholder','disabled'];
  static css=`
@@ -272,7 +274,7 @@ class VfxCommandPalette extends Base{
  .list{max-height:48vh;overflow:auto;padding:8px}.command{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 12px;border:1.5px solid transparent;border-radius:10px;background:transparent;color:var(--vfx-ink);font:700 13px system-ui;text-align:left;cursor:pointer}
  .command:hover,.command[aria-selected=true]{border-color:var(--vfx-ink);background:var(--vfx-soft);box-shadow:2px 3px 0 var(--vfx-acc)}.empty{padding:24px 12px;color:var(--vfx-dim);font-size:13px;text-align:center}
  .key{padding:3px 6px;border:1px solid var(--vfx-track);border-radius:5px;color:var(--vfx-dim);font:700 10px system-ui}.foot{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-top:1px solid var(--vfx-track);color:var(--vfx-dim);font-size:10px}`;
- render(){this.uid='vfx-command-'+Math.random().toString(36).slice(2,9);return `<div class="backdrop" hidden><section class="panel" role="dialog" aria-modal="true" aria-label="Command palette"><label class="search"><span class="mark" aria-hidden="true">⌕</span><input type="text" autocomplete="off" spellcheck="false" placeholder="${fx.esc(this.getAttribute('placeholder')||'Type a command…')}" aria-label="Search commands" aria-controls="${this.uid}-list"></label><div class="list" id="${this.uid}-list" role="listbox"></div><footer class="foot"><span>↑ ↓ Navigate</span><span>↵ Select</span><span>Esc Close</span></footer></section></div>`;}
+ render(){this.uid=createUniqueDomId('vfx-command');return `<div class="backdrop" hidden><section class="panel" role="dialog" aria-modal="true" aria-label="Command palette"><label class="search"><span class="mark" aria-hidden="true">⌕</span><input type="text" autocomplete="off" spellcheck="false" placeholder="${fx.esc(this.getAttribute('placeholder')||'Type a command…')}" aria-label="Search commands" aria-controls="${this.uid}-list"></label><div class="list" id="${this.uid}-list" role="listbox"></div><footer class="foot"><span>↑ ↓ Navigate</span><span>↵ Select</span><span>Esc Close</span></footer></section></div>`;}
  setup(){this.backdrop=this.$('.backdrop');this.input=this.$('input');this.list=this.$('.list');this.active=0;
  this.onGlobal=e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'&&!this.hasAttribute('disabled')){e.preventDefault();this.show();}else if(e.key==='Escape'&&this.opened){e.preventDefault();this.hide();}else if(e.key==='Tab'&&this.opened){e.preventDefault();this.input.focus();}};
  this.onOutside=e=>{if(e.target===this.backdrop)this.hide();};this.backdrop.addEventListener('pointerdown',this.onOutside);
