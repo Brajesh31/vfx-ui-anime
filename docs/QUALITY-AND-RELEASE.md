@@ -4,7 +4,7 @@
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
 **Package implementation commit:** `72748136c9eddf1cf160d1d41f92841e59d1f557`  
-**Latest documentation commit before this report update:** `f0f11646af0aec8f981663b5cec31c8d1b02bdec`
+**Latest main commit verified by this report:** `80101b47361d04f5b3e3165f630eef7f45d060d3`
 
 ## Current decision
 
@@ -16,14 +16,21 @@ Automated success does not certify visual quality, screen-reader behavior, real-
 
 ## 1. Post-update automated verification
 
-The exact release candidate commit `72748136c9eddf1cf160d1d41f92841e59d1f557` passed:
+The first stable release candidate commit `72748136c9eddf1cf160d1d41f92841e59d1f557` passed:
 
 - [Validate on the release branch](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44646096871)
 - [CodeQL on the release branch](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44646096770)
 
-The same commit was fast-forwarded to `main`. New main-branch runs were started for Validate, CodeQL, OpenSSF Scorecard and GitHub Pages deployment. Their live status is available in [GitHub Actions](https://github.com/Brajesh31/vfx-ui-anime/actions).
+The latest verified `main` commit at the time of this report is `80101b47361d04f5b3e3165f630eef7f45d060d3`. All four main-branch workflow checks passed on that exact commit:
 
-The existing validation suite covers source structure, generated runtime parity, registry/gallery consistency, all 82 component registrations, browser interaction/regression groups, keyboard/touch-emulated/form/lifecycle behavior and the 390 px overflow guard. The package test inspects the npm tarball, installs the archive offline in a clean consumer, resolves all 82 subpaths, and checks aggregate plus isolated component imports in Chromium.
+- [Validate](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153867): passed structural/source checks, the full Chromium interaction suite, the npm tarball/consumer smoke test, archive creation and artifact upload.
+- [CodeQL](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153605): passed.
+- [OpenSSF Scorecard](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153614): passed.
+- [GitHub Pages deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153665): build and deployment passed.
+
+The Validate run retained the verified `vfx-ui-anime-0.1.0.tgz` package archive as artifact `vfx-ui-anime-npm-v0.1.0` (artifact ID `14591669762`), with 30-day retention ending 20 December 2026.
+
+The validation suite covers source structure, generated runtime parity, registry/gallery consistency, all 82 component registrations, browser interaction/regression groups, keyboard/touch-emulated/form/lifecycle behavior and the 390 px overflow guard. The package test inspects the npm tarball, installs the archive offline in a clean consumer, resolves all 82 subpaths, and checks aggregate plus isolated component imports in Chromium.
 
 ## 2. Component regressions corrected
 
