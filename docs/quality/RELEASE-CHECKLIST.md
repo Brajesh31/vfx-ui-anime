@@ -23,6 +23,9 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] Main-branch Validate runs retain the verified `vfx-ui-anime-0.1.0.tgz` as a 30-day GitHub Actions artifact.
 - [x] CodeQL passed on the release candidate.
 - [x] Confirm the first-publication workflow completed successfully, including source checks, Chromium tests, clean-consumer package tests, npm publication and GitHub release creation.
+- [x] Latest main Validate run `44655153867` passed source checks, full Chromium interactions, package tarball/consumer smoke tests and uploaded the 30-day npm archive artifact.
+- [x] Latest main CodeQL run `44655153605` passed.
+- [x] Latest main OpenSSF Scorecard run `44655153614` passed.
 
 ## Manual QA
 
@@ -56,7 +59,7 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 
 - [x] Static gallery deployment uses GitHub Pages.
 - [x] Vercel deployment integration is not part of the active deployment path.
-- [ ] Confirm the current main-branch Pages deployment workflow completes successfully.
+- [x] Confirm the current main-branch Pages deployment workflow completes successfully on commit `80101b47361d04f5b3e3165f630eef7f45d060d3` (run `44655153665`).
 
 ## Go/no-go
 
