@@ -154,7 +154,7 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 
 ## 📦 Install and use as an npm package
 
-The browser-only npm package is prepared as `vfx-ui-anime@0.1.0`. It has one aggregate browser entry point and individual subpaths for all 82 custom elements.
+The browser-only npm package `vfx-ui-anime@0.1.0` is publicly available. It has one aggregate browser entry point and individual subpaths for all 82 custom elements.
 
 ```bash
 npm install vfx-ui-anime
