@@ -9,7 +9,7 @@ const expected = [
   "components/toggle/frames.webp","tools/build.mjs","tools/shot.mjs","tools/test.mjs","tools/trace.py",
   ".github/workflows/validate.yml",".github/workflows/deploy-pages.yml",
   ".github/workflows/codeql.yml",".github/workflows/scorecard.yml",".github/workflows/publish.yml",
-  ".github/workflows/bootstrap-publish.yml",".github/workflows/release.yml",
+  ".github/workflows/release.yml",
   "index.js","docs/PACKAGE.md","tools/package-smoke.mjs"
 ];
 const errors = [];
@@ -20,12 +20,12 @@ for (const path of expected) {
   catch { errors.push("Missing required repository file: " + path); }
 }
 
-const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow, publishWorkflow, bootstrapWorkflow, packageIndex, packageDocs, packageSmoke] = await Promise.all([
+const [gallery, home, core, registryText, packageText, buildSource, validateWorkflow, pagesWorkflow, codeqlWorkflow, scorecardWorkflow, publishWorkflow, packageIndex, packageDocs, packageSmoke] = await Promise.all([
   read("gallery/index.html"), read("index.html"), read("core.js"),
   read("registry.json"), read("package.json"), read("tools/build.mjs"),
   read(".github/workflows/validate.yml"), read(".github/workflows/deploy-pages.yml"),
   read(".github/workflows/codeql.yml"), read(".github/workflows/scorecard.yml"),
-  read(".github/workflows/publish.yml"), read(".github/workflows/bootstrap-publish.yml"), read("index.js"), read("docs/PACKAGE.md"), read("tools/package-smoke.mjs")
+  read(".github/workflows/publish.yml"), read("index.js"), read("docs/PACKAGE.md"), read("tools/package-smoke.mjs")
 ]);
 let registry;
 let pkg;
@@ -167,7 +167,6 @@ if (!pagesWorkflow.includes("npm test") || !pagesWorkflow.includes("npm run chec
   errors.push("The Pages workflow must validate the repository before deployment.");
 }
 if (!publishWorkflow.includes("id-token: write") || !publishWorkflow.includes("npm stage publish") || !publishWorkflow.includes("npm install --global npm@latest") || !publishWorkflow.includes("tags:")) errors.push("npm publishing workflow must stage releases through OIDC, use current npm CLI, and run on version tags.");
-if (!bootstrapWorkflow.includes("workflow_dispatch") || !bootstrapWorkflow.includes("secrets.NPM_TOKEN") || !bootstrapWorkflow.includes("npm publish --access public") || bootstrapWorkflow.includes("id-token: write")) errors.push("Initial npm bootstrap workflow must require manual dispatch and a protected NPM_TOKEN, without pretending OIDC is configured before the package exists.");
 for (const [name, workflow] of [["Validate", validateWorkflow], ["Pages", pagesWorkflow], ["CodeQL", codeqlWorkflow], ["Scorecard", scorecardWorkflow]]) {
   if (!/push:\s*\n\s*branches:\s*\[main\]/.test(workflow)) errors.push(name + " workflow must run on pushes to main.");
 }
