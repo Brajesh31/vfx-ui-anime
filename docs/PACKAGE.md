@@ -59,17 +59,45 @@ Each `components/<name>/index.js` file is standalone and already contains its sh
 - No React/Vue wrappers, CommonJS entry point, or named component classes are provided.
 - CI verifies the package in Chromium. Screen-reader, real-device touch, Firefox, and Safari manual certification remain separate QA tasks.
 
-## First public publication and trusted publishing
+## Publication status and trusted publishing
 
-The npm package must exist before npm can attach a Trusted Publisher. The initial publication is therefore bootstrapped once using a protected GitHub Actions secret:
+The first stable package release is live:
 
-1. In npm account settings, create a **one-day granular access token** with **Packages and scopes → All Packages → Read and write**. Because `vfx-ui-anime` does not exist until its first publication, npm cannot scope this initial token to that package yet. This temporarily gives the token write access to all packages on your account, so use the minimum one-day expiry, enable **Bypass 2FA** only if your account policy permits CI publishing, and revoke the token immediately after the first publish. npm removed legacy access tokens in November 2025, so use a granular token. [npm access-token documentation](https://docs.npmjs.com/about-access-tokens/) and [token creation steps](https://docs.npmjs.com/creating-and-viewing-access-tokens/).
-2. In GitHub, open [repository Actions secrets](https://github.com/Brajesh31/vfx-ui-anime/settings/secrets/actions) and create the repository secret `NPM_TOKEN`. Never commit it or send it in a chat.
-3. Open [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml), choose `main`, select version `0.1.0`, and run the workflow. It reruns source, browser, tarball and clean-consumer tests before the first public publish. It creates the stable `v0.1.0` GitHub release only after npm accepts the package.
-4. Once the package exists, open [npm package access settings](https://www.npmjs.com/package/vfx-ui-anime/access) and configure **Trusted Publisher** with GitHub Actions, user/organization `Brajesh31`, repository `vfx-ui-anime`, and workflow filename `publish.yml`. This workflow stages later versions through npm OIDC rather than publishing them directly. npm requires npm CLI 11.15.0 or newer and Node.js 22.14 or newer for staged publishing with trusted publishers. [npm Trusted Publishers documentation](https://docs.npmjs.com/trusted-publishers/).
-5. Verify the trusted publisher is saved, then delete the `NPM_TOKEN` Actions secret and revoke the granular token in npm account settings. The first token-based publish does not use npm OIDC provenance. Later versions are staged by `publish.yml` using npm OIDC and provenance. A maintainer must review each staged version in npm's Staged Packages tab and approve it with 2FA before it becomes publicly installable. Remove the one-time bootstrap workflow after the first publication is complete.
+- npm: [`vfx-ui-anime@0.1.0`](https://www.npmjs.com/package/vfx-ui-anime/v/0.1.0)
+- Install: `npm install vfx-ui-anime`
+- Explicit version: `npm install vfx-ui-anime@0.1.0`
+- Registry `latest` dist-tag: `0.1.0`
+- GitHub: [stable release v0.1.0](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0)
+- Attached package archive: `vfx-ui-anime-0.1.0.tgz`
 
-Later stable version tags use `.github/workflows/publish.yml` to stage the package with npm OIDC and provenance. Each staged version requires maintainer review and 2FA approval. The bootstrap workflow is only for the first package publication.
+The bootstrap workflow completed source checks, the full Chromium suite, the package smoke test, tarball creation, npm publication and GitHub release creation. The one-time bootstrap workflow is no longer required for publishing the first version.
+
+### Configure Trusted Publisher for future releases
+
+The repository already contains `.github/workflows/publish.yml`. Before future version tags can use OIDC, create the npm Trusted Publisher connection with these exact values:
+
+| npm field | Value |
+|---|---|
+| Publisher | GitHub Actions |
+| Label | VFX UI Anime GitHub Actions Publisher |
+| Organization or user | `brajesh31` |
+| Repository | `vfx-ui-anime` |
+| Workflow filename | `publish.yml` |
+| Environment name | Leave empty |
+
+The workflow uses `npm stage publish`. npm allows this action by default for a trusted publisher. Leave **Allow npm publish** and **Allow npm dist-tag** unchecked because the workflow does not call those commands. The environment field must remain empty because the workflow does not declare a GitHub Actions environment.
+
+After saving the connection, confirm it appears under the npm package's Trusted Publisher settings. Then:
+
+1. Delete the repository Actions secret `NPM_TOKEN`.
+2. Revoke the temporary npm granular access token in npm account settings.
+3. Retire the one-time `.github/workflows/bootstrap-publish.yml` workflow.
+4. Use a real planned release tag to trigger `publish.yml`. It reruns repository, Chromium and clean-consumer checks, then submits the package to npm staging through OIDC.
+5. Review each staged version and approve it with 2FA before it becomes publicly installable.
+
+Do not create a fake patch release merely to test OIDC. The first `v0.1.0` release is already published; subsequent release testing belongs on the next legitimate package version.
+
+**Known README correction:** the README snapshot included in npm `0.1.0` still contains pre-publication wording. The GitHub README and repository release documents have been corrected. npm's versioned README cannot be changed retroactively in the immutable `0.1.0` artifact; include the corrected wording in the next legitimate package release.
 
 ## Verification
 
