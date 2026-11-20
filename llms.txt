@@ -175,7 +175,7 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 ## npm release and maintenance
 - Stable release: `vfx-ui-anime@0.1.0`, publicly available from npm.
 - GitHub release: `v0.1.0`, with `vfx-ui-anime-0.1.0.tgz` attached.
-- `.github/workflows/publish.yml` stages future version tags through npm Trusted Publishing (OIDC); maintainers approve each staged version with 2FA.
-- Verify the npm Trusted Publisher connection for user `brajesh31`, repository `vfx-ui-anime`, workflow filename `publish.yml`, and no environment name before relying on OIDC for a future release.
+- `.github/workflows/publish.yml` is configured to stage future version tags through npm Trusted Publishing (OIDC) after the matching Trusted Publisher connection is saved in npm account settings; maintainers approve each staged version with 2FA.
+- Required trust fields: GitHub Actions, user `brajesh31`, repository `vfx-ui-anime`, workflow filename `publish.yml`, no environment name. Confirm the connection is saved before relying on OIDC for a future release.
 - The one-time token bootstrap workflow was removed after the first stable publication. Remove the no-longer-needed GitHub Actions secret `NPM_TOKEN` and revoke the temporary npm granular token.
 - The README snapshot included in npm `0.1.0` contains pre-publication wording. The GitHub README is current; refresh the npm-hosted README with the next legitimate package version.
