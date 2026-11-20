@@ -15,9 +15,9 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 
 ## Automated checks
 
-- [x] Current main commit `cb1421b26f99a6188ddea31f62531e1fdac508aa` passed Validate run `44680747787`.
-- [x] Current main CodeQL run `44681252024` passed.
-- [x] Post-CodeQL alert-inventory run `44681282300` exported `[]` (zero open code-scanning alerts).
+- [x] Final verified main commit `87475f1acba1aa4734199b1de323d4866c4e2b5f` passed Validate run `44683131903`.
+- [x] CodeQL run `44683131836` passed on the same commit.
+- [x] Post-CodeQL alert-inventory run `44683282248` exported `[]` (zero open code-scanning alerts); artifact `14605600685` was downloaded and inspected.
 - [x] Structural validation and generated-build checks passed on release candidate commit `72748136c9eddf1cf160d1d41f92841e59d1f557`.
 - [x] Full Chromium interaction and regression suite passed on the exact release candidate.
 - [x] npm tarball allowlist and contents inspection are covered by `npm run test:package`.
@@ -26,9 +26,9 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] Main-branch Validate runs retain the verified `vfx-ui-anime-0.1.0.tgz` as a 30-day GitHub Actions artifact.
 - [x] CodeQL passed on the release candidate.
 - [x] Confirm the first-publication workflow completed successfully, including source checks, Chromium tests, clean-consumer package tests, npm publication and GitHub release creation.
-- [x] Latest main Validate run `44655153867` passed source checks, full Chromium interactions, package tarball/consumer smoke tests and uploaded the 30-day npm archive artifact.
-- [x] Latest main CodeQL run `44680748109` passed on `cb1421b26f99a6188ddea31f62531e1fdac508aa`.
-- [x] Latest main OpenSSF Scorecard run `44681251984` passed.
+- [x] Latest main Validate run `44683131903` passed source checks, full Chromium interactions, package tarball/consumer smoke tests and uploaded the 30-day npm archive artifact.
+- [x] Latest main CodeQL run `44683131836` passed.
+- [x] Latest main OpenSSF Scorecard run `44683131863` passed.
 
 ## Manual QA
 
@@ -80,8 +80,8 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 
 - [x] Static gallery deployment uses GitHub Pages.
 - [x] Vercel deployment integration is not part of the active deployment path.
-- [x] Confirm the current main-branch Pages deployment workflow completes successfully on commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead` (run `44681252151`).
+- [x] Confirm the current main-branch Pages deployment workflow completes successfully on commit `87475f1acba1aa4734199b1de323d4866c4e2b5f` (run `44683131822`).
 
 ## Go/no-go
 
-**Current status: `vfx-ui-anime@0.1.0` is published on npm, GitHub Release `v0.1.0` is live, and `@brajesh31/vfx-ui-anime@0.1.0` was published to GitHub Packages by successful workflow run `44682012502`. Validate, CodeQL, Scorecard and GitHub Pages passed on main commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`, and the post-CodeQL alert inventory returned `[]`. GitHub Packages visibility still needs a settings review. npm Trusted Publisher setup/credential cleanup, GitHub Packages visibility review and manual QA remain open. All non-main branches have been deleted. Do not call the package production-certified until human QA is complete.**
+**Current status: `vfx-ui-anime@0.1.0` is published on npm, GitHub Release `v0.1.0` is live, and `@brajesh31/vfx-ui-anime@0.1.0` was published to GitHub Packages by successful workflow run `44682012502`. Validate, CodeQL, Scorecard and GitHub Pages passed on main commit `87475f1acba1aa4734199b1de323d4866c4e2b5f`, and the post-CodeQL alert inventory run `44683282248` returned `[]`. GitHub Packages visibility still needs a settings review. npm Trusted Publisher setup/credential cleanup, GitHub Packages visibility review and manual QA remain open. All non-main branches have been deleted. Do not call the package production-certified until human QA is complete.**
