@@ -60,9 +60,25 @@ await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 900, devi
 await send('Emulation.setTouchEmulationEnabled', { enabled: true });
 await send('Page.enable'); await send('Page.navigate', { url: URL_ }); await sleep(1800);
 
-// "tag >>> selector" reaches into the element's shadow root
-const find = (s) => { const [host, inner] = s.split(' >>> '); return inner ? `document.querySelector(${JSON.stringify(host)}).shadowRoot.querySelector(${JSON.stringify(inner)})` : `document.querySelector(${JSON.stringify(host)})`; };
-const at = async (s, fx = 0.5, fy = 0.5) => JSON.parse(await ev(`(() => { const e = ${find(s)}; e.scrollIntoView({ block: 'center' }); const b = e.getBoundingClientRect(); return JSON.stringify([b.left + b.width * ${fx}, b.top + b.height * ${fy}]); })()`));
+// "tag >>> selector" reaches into the element's shadow root.
+const escapeForRuntimeCode = (value) => JSON.stringify(String(value)).replace(/[<>/\u2028\u2029]/g, (character) => ({
+  '<': '\\u003C',
+  '>': '\\u003E',
+  '/': '\\u002F',
+  '\u2028': '\\u2028',
+  '\u2029': '\\u2029'
+})[character]);
+const find = (selector) => {
+  const [host, inner] = selector.split(' >>> ');
+  return inner
+    ? `document.querySelector(${escapeForRuntimeCode(host)}).shadowRoot.querySelector(${escapeForRuntimeCode(inner)})`
+    : `document.querySelector(${escapeForRuntimeCode(host)})`;
+};
+const at = async (selector, fx = 0.5, fy = 0.5) => {
+  const xFactor = Number(fx), yFactor = Number(fy);
+  if (!Number.isFinite(xFactor) || !Number.isFinite(yFactor)) throw new TypeError('Touch coordinates must be finite numbers.');
+  return JSON.parse(await ev(`(() => { const e = ${find(selector)}; e.scrollIntoView({ block: 'center' }); const b = e.getBoundingClientRect(); return JSON.stringify([b.left + b.width * ${xFactor}, b.top + b.height * ${yFactor}]); })()`));
+};
 const touch = (type, x, y) => send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
 const tap = async (s, fx, fy) => { const [x, y] = await at(s, fx, fy); await sleep(150); await touch('touchStart', x, y); await touch('touchEnd', x, y); };
 const key = async (k, virtualKeyCode) => { const code = k === ' ' ? 'Space' : k; await send('Input.dispatchKeyEvent', { type: 'keyDown', key: k, code, windowsVirtualKeyCode: virtualKeyCode }); await send('Input.dispatchKeyEvent', { type: 'keyUp', key: k, code, windowsVirtualKeyCode: virtualKeyCode }); };
