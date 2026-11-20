@@ -60,24 +60,39 @@ await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 900, devi
 await send('Emulation.setTouchEmulationEnabled', { enabled: true });
 await send('Page.enable'); await send('Page.navigate', { url: URL_ }); await sleep(1800);
 
-// "tag >>> selector" reaches into the element's shadow root.
-const escapeForRuntimeCode = (value) => JSON.stringify(String(value)).replace(/[<>/\u2028\u2029]/g, (character) => ({
-  '<': '\\u003C',
-  '>': '\\u003E',
-  '/': '\\u002F',
-  '\u2028': '\\u2028',
-  '\u2029': '\\u2029'
-})[character]);
-const find = (selector) => {
-  const [host, inner] = selector.split(' >>> ');
-  return inner
-    ? `document.querySelector(${escapeForRuntimeCode(host)}).shadowRoot.querySelector(${escapeForRuntimeCode(inner)})`
-    : `document.querySelector(${escapeForRuntimeCode(host)})`;
+// Keep selector values in the CDP argument channel, never in generated JavaScript source.
+const documentRemote = await send('Runtime.evaluate', { expression: 'document', returnByValue: false });
+const documentObjectId = documentRemote.result?.objectId;
+if (!documentObjectId) throw new Error('Chromium did not expose the page document object.');
+const callPage = async (functionDeclaration, values = []) => {
+  const response = await send('Runtime.callFunctionOn', {
+    objectId: documentObjectId,
+    functionDeclaration,
+    arguments: values.map((value) => ({ value })),
+    returnByValue: true,
+    awaitPromise: true
+  });
+  if (response.exceptionDetails) {
+    const detail = response.exceptionDetails.exception?.description || response.exceptionDetails.text || 'Unknown page function error';
+    throw new Error(`Runtime.callFunctionOn failed: ${detail}`);
+  }
+  return response.result?.value;
 };
 const at = async (selector, fx = 0.5, fy = 0.5) => {
+  const [host, inner] = selector.split(' >>> ');
   const xFactor = Number(fx), yFactor = Number(fy);
   if (!Number.isFinite(xFactor) || !Number.isFinite(yFactor)) throw new TypeError('Touch coordinates must be finite numbers.');
-  return JSON.parse(await ev(`(() => { const e = ${find(selector)}; e.scrollIntoView({ block: 'center' }); const b = e.getBoundingClientRect(); return JSON.stringify([b.left + b.width * ${xFactor}, b.top + b.height * ${yFactor}]); })()`));
+  return callPage(
+    `function(host, inner, xFactor, yFactor) {
+      const root = document.querySelector(host);
+      const element = inner ? root?.shadowRoot?.querySelector(inner) : root;
+      if (!element) throw new Error('Target element was not found: ' + host);
+      element.scrollIntoView({ block: 'center' });
+      const bounds = element.getBoundingClientRect();
+      return [bounds.left + bounds.width * xFactor, bounds.top + bounds.height * yFactor];
+    }`,
+    [host, inner || null, xFactor, yFactor]
+  );
 };
 const touch = (type, x, y) => send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
 const tap = async (s, fx, fy) => { const [x, y] = await at(s, fx, fy); await sleep(150); await touch('touchStart', x, y); await touch('touchEnd', x, y); };
