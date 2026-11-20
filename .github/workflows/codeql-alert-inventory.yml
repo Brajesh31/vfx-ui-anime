@@ -3,8 +3,6 @@ name: Temporary CodeQL alert inventory
 on:
   push:
     branches: [main]
-    paths:
-      - ".github/workflows/codeql-alert-inventory.yml"
 
 permissions:
   security-events: read
