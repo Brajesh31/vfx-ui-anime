@@ -15,6 +15,159 @@ const expected = [
 const errors = [];
 const read = (path) => readFile(join(root, path), "utf8").catch(() => "");
 
+const isHtmlSpace = (character) => character === " " || character === "\t" || character === "\n" || character === "\r" || character === "\f";
+const isTagNameCharacter = (character) => {
+  const code = character.charCodeAt(0);
+  return (code >= 65 && code <= 90) || (code >= 97 && code <= 122) ||
+    (code >= 48 && code <= 57) || character === "-" || character === ":";
+};
+
+function findHtmlTagEnd(markup, start) {
+  let quote = "";
+  for (let index = start + 1; index < markup.length; index++) {
+    const character = markup[index];
+    if (quote) {
+      if (character === quote) quote = "";
+    } else if (character === '"' || character === "'") {
+      quote = character;
+    } else if (character === ">") {
+      return index;
+    }
+  }
+  return -1;
+}
+
+function readHtmlTag(markup, start) {
+  let index = start + 1;
+  const closing = markup[index] === "/";
+  if (closing) index++;
+  const nameStart = index;
+  while (index < markup.length && isTagNameCharacter(markup[index])) index++;
+  if (index === nameStart) return null;
+  return { name: markup.slice(nameStart, index).toLowerCase(), closing, afterName: index };
+}
+
+function readHtmlAttributes(markup, start, end) {
+  const attributes = new Map();
+  let index = start;
+  while (index < end) {
+    while (index < end && (isHtmlSpace(markup[index]) || markup[index] === "/")) index++;
+    if (index >= end) break;
+
+    const nameStart = index;
+    while (index < end && !isHtmlSpace(markup[index]) &&
+      markup[index] !== "=" && markup[index] !== "/" && markup[index] !== ">") index++;
+    if (index === nameStart) {
+      index++;
+      continue;
+    }
+
+    const name = markup.slice(nameStart, index).toLowerCase();
+    while (index < end && isHtmlSpace(markup[index])) index++;
+    let value = "";
+    if (markup[index] === "=") {
+      index++;
+      while (index < end && isHtmlSpace(markup[index])) index++;
+      const quote = markup[index] === '"' || markup[index] === "'" ? markup[index++] : "";
+      const valueStart = index;
+      if (quote) {
+        while (index < end && markup[index] !== quote) index++;
+        value = markup.slice(valueStart, index);
+        if (markup[index] === quote) index++;
+      } else {
+        while (index < end && !isHtmlSpace(markup[index]) && markup[index] !== ">") index++;
+        value = markup.slice(valueStart, index);
+      }
+    }
+    if (!attributes.has(name)) attributes.set(name, value);
+  }
+  return attributes;
+}
+
+function findHtmlClosingTag(lowerMarkup, name, start) {
+  const marker = "</" + name;
+  let index = lowerMarkup.indexOf(marker, start);
+  while (index !== -1) {
+    const boundary = lowerMarkup[index + marker.length];
+    if (boundary === ">" || boundary === "/" || isHtmlSpace(boundary || "")) return index;
+    index = lowerMarkup.indexOf(marker, index + marker.length);
+  }
+  return -1;
+}
+
+function extractHtmlScripts(markup) {
+  const source = String(markup);
+  const lower = source.toLowerCase();
+  const scripts = [];
+  const rawTextElements = new Set(["style", "textarea", "title", "xmp", "iframe", "noembed", "noframes", "plaintext"]);
+  let cursor = 0;
+
+  while (cursor < source.length) {
+    const opening = source.indexOf("<", cursor);
+    if (opening === -1) break;
+
+    if (source.startsWith("<!--", opening)) {
+      const commentEnd = source.indexOf("-->", opening + 4);
+      if (commentEnd === -1) break;
+      cursor = commentEnd + 3;
+      continue;
+    }
+
+    if (source.startsWith("<!", opening) || source.startsWith("<?", opening)) {
+      const declarationEnd = findHtmlTagEnd(source, opening);
+      if (declarationEnd === -1) break;
+      cursor = declarationEnd + 1;
+      continue;
+    }
+
+    const tag = readHtmlTag(source, opening);
+    if (!tag) {
+      cursor = opening + 1;
+      continue;
+    }
+
+    const tagEnd = findHtmlTagEnd(source, opening);
+    if (tagEnd === -1) break;
+    if (tag.closing) {
+      cursor = tagEnd + 1;
+      continue;
+    }
+
+    if (tag.name === "script") {
+      const attributes = readHtmlAttributes(source, tag.afterName, tagEnd);
+      const contentStart = tagEnd + 1;
+      const closingStart = findHtmlClosingTag(lower, "script", contentStart);
+      if (closingStart === -1) {
+        scripts.push({ attributes, content: source.slice(contentStart), closed: false });
+        break;
+      }
+      const closingEnd = findHtmlTagEnd(source, closingStart);
+      scripts.push({
+        attributes,
+        content: source.slice(contentStart, closingStart),
+        closed: closingEnd !== -1
+      });
+      if (closingEnd === -1) break;
+      cursor = closingEnd + 1;
+      continue;
+    }
+
+    if (rawTextElements.has(tag.name)) {
+      if (tag.name === "plaintext") break;
+      const closingStart = findHtmlClosingTag(lower, tag.name, tagEnd + 1);
+      if (closingStart === -1) break;
+      const closingEnd = findHtmlTagEnd(source, closingStart);
+      if (closingEnd === -1) break;
+      cursor = closingEnd + 1;
+      continue;
+    }
+
+    cursor = tagEnd + 1;
+  }
+  return scripts;
+}
+
+
 for (const path of expected) {
   try { await access(join(root, path)); }
   catch { errors.push("Missing required repository file: " + path); }
@@ -108,15 +261,23 @@ for (const name of names) {
   if (!embedded) errors.push("Embedded core markers are missing or out of order in " + name + ".");
   else if (embedded[1].trim() !== core.trim()) errors.push("Embedded shared runtime is stale in " + name + ". Run node tools/build.mjs.");
 
-  if (!/<script\b[^>]*\bsrc=["'](?:\.\/)?index\.js["'][^>]*>/i.test(demo)) {
+  const scripts = extractHtmlScripts(demo);
+  if (!scripts.some((script) => {
+    const src = (script.attributes.get("src") || "").trim();
+    return src === "index.js" || src === "./index.js";
+  })) {
     errors.push("Standalone demo does not load its component script: " + base + "demo.html");
   }
-  const inlineScripts = [...demo.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
-  for (let index = 0; index < inlineScripts.length; index++) {
-    const attributes = inlineScripts[index][1];
-    const scriptType = attributes.match(/\btype\s*=\s*["']([^"']+)["']/i)?.[1]?.toLowerCase() || "";
-    const source = inlineScripts[index][2].trim();
-    if (!source || /\bsrc\s*=/.test(attributes) || (scriptType && !["text/javascript", "application/javascript"].includes(scriptType))) continue;
+  for (let index = 0; index < scripts.length; index++) {
+    const script = scripts[index];
+    const scriptType = (script.attributes.get("type") || "").trim().toLowerCase();
+    const source = script.content.trim();
+    if (script.attributes.has("src") || !source ||
+      (scriptType && !["text/javascript", "application/javascript"].includes(scriptType))) continue;
+    if (!script.closed) {
+      errors.push("Inline demo script element is not closed in " + base + "demo.html.");
+      continue;
+    }
     try { new Script(source, { filename: base + "demo.html#inline-script-" + (index + 1) }); }
     catch (error) { errors.push("Inline demo JavaScript syntax error in " + base + "demo.html: " + error.message); }
   }
