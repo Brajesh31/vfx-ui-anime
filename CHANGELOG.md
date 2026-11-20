@@ -32,6 +32,6 @@ The gallery is hosted through [GitHub Pages](https://brajesh31.github.io/vfx-ui-
 ## Follow-up work
 
 - Complete and record manual visual, keyboard-only, screen-reader, reduced-motion, real-device touch, contrast/focus and Firefox/Safari QA.
-- Finish npm Trusted Publisher setup for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`; then remove the repository `NPM_TOKEN` secret, revoke the temporary granular token, and retire the one-time bootstrap workflow.
+- Verify npm Trusted Publisher setup for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`; remove the no-longer-needed repository `NPM_TOKEN` secret and revoke the temporary granular token. The one-time bootstrap workflow has been removed.
 - Verify an OIDC-backed staged publication on the next planned package version. Do not create a throwaway version solely to test publishing.
 - Correct the publication-status text embedded in the already-published npm README in the next legitimate package release. The GitHub README and release documentation have been corrected on `main`.
