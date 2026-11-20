@@ -6,7 +6,7 @@ This document is the consolidated record of the repository architecture, impleme
 
 VFX UI Anime is a browser-native library of 82 custom elements and 83 gallery examples. Each component is implemented as a standalone JavaScript Web Component with a per-component HTML demo and API reference.
 
-The current distribution includes standalone browser scripts and a browser-only npm package contract:
+The current distribution includes standalone browser scripts and the public browser-only npm package `vfx-ui-anime@0.1.0`:
 - No application framework is required.
 - There is no runtime dependency install for the component library itself.
 - Each component script registers its custom element and embeds the shared VFX runtime.
@@ -172,7 +172,7 @@ The current exact outcomes and failures are documented in [QUALITY-AND-RELEASE.m
 
 ## 8. Continuous integration and deployment
 
-The repository contains seven GitHub Actions workflows:
+The repository contains six GitHub Actions workflows:
 
 | Workflow | Purpose |
 |---|---|
@@ -181,8 +181,7 @@ The repository contains seven GitHub Actions workflows:
 | CodeQL | Static security analysis |
 | OSSF Scorecard | Repository security posture analysis |
 | Source pre-release | Verified source-only prereleases |
-| Bootstrap npm publication | One-time first npm publish with a protected token |
-| Publish npm package | Subsequent version tags with OIDC and provenance |
+| Publish npm package | Future version tags staged through OIDC after Trusted Publisher setup, with maintainer approval |
 
 GitHub Pages is the configured live-site deployment target. Its workflow validates the source and uploads the static-site artifact in a `build` job, then deploys that artifact in a dependent `deploy` job. This separation allows a deployment-only retry without creating a second `github-pages` artifact. The workflow does not cancel an in-progress deployment when a new main-branch push arrives.
 
