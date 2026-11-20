@@ -32,3 +32,17 @@ jobs:
         run: npm run test:browser
       - name: Pack, install, and smoke-test the npm package
         run: npm run test:package
+      - name: Create the verified npm distribution archive
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p "$RUNNER_TEMP/npm-package"
+          npm pack --silent --pack-destination "$RUNNER_TEMP/npm-package"
+          test -s "$RUNNER_TEMP/npm-package/vfx-ui-anime-0.1.0.tgz"
+      - name: Upload the verified npm distribution archive
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: vfx-ui-anime-npm-v0.1.0
+          path: ${{ runner.temp }}/npm-package/vfx-ui-anime-0.1.0.tgz
+          if-no-files-found: error
+          retention-days: 30
