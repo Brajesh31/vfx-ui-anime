@@ -8,7 +8,7 @@
 
 ## Current decision
 
-**The stable `vfx-ui-anime@0.1.0` package is published on npm, and GitHub Release `v0.1.0` is published with the `.tgz` archive attached.** The `latest` npm dist-tag resolves to `0.1.0`. The first-publish workflow completed successfully and its one-time bootstrap workflow has been removed. Remaining work is verifying the npm Trusted Publisher account configuration, removing the obsolete `NPM_TOKEN` secret and revoking its granular token, plus human QA for accessibility, real-device behavior and cross-browser compatibility.
+**The stable `vfx-ui-anime@0.1.0` package is published on npm, and GitHub Release `v0.1.0` is published with the `.tgz` archive attached.** The `latest` npm dist-tag resolves to `0.1.0`. The first-publish workflow completed successfully and its one-time bootstrap workflow has been removed. The scoped GitHub Packages version `@brajesh31/vfx-ui-anime@0.1.0` is also published. All nine non-main branches have been deleted and GitHub now reports only `main`. Remaining work is reviewing GitHub Packages visibility, verifying npm Trusted Publisher account configuration, removing the obsolete `NPM_TOKEN` secret and revoking its granular token, plus human QA for accessibility, real-device behavior and cross-browser compatibility.
 
 The 14-stage component roadmap is complete in scope. The regressions found during the integrated audit have been repaired. The successful first-publication run on `eda39329832fe722cfbd4073a5472fd515df2629` passed the structural/source checks, full Chromium component suite and npm tarball/consumer smoke test before publishing the package and creating the GitHub Release. The archive contains 170 files.
 
@@ -96,6 +96,13 @@ The scoped GitHub Packages package `@brajesh31/vfx-ui-anime@0.1.0` has now been 
 - [ ] Verify public/private installation behavior according to the selected visibility.
 
 The publishing job reported `@brajesh31/vfx-ui-anime@0.1.0` and `npm publish` completed successfully. GitHub's first-publish default visibility is Private, so publication is complete but public visibility still requires a package-settings decision. The existing unscoped npmjs package is unchanged.
+
+### Repository branch cleanup
+
+- [x] Confirm `main` is the repository default branch.
+- [x] Delete all nine non-main branches on 20 November 2026.
+- [x] Verify GitHub branch API returns exactly one branch: `main`.
+- [x] Remove the temporary one-time branch cleanup workflow after successful verification.
 
 ## 5. Release decision
 
