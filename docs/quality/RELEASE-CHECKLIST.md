@@ -69,6 +69,13 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [ ] Review package association and set visibility to Public if public GitHub Packages access is intended.
 - [ ] Verify package installation and the repository Packages panel.
 
+## Repository branches
+
+- [x] Confirm `main` is the default branch.
+- [x] Delete all nine non-main branches.
+- [x] Verify the GitHub branch list contains exactly `main`.
+- [x] Remove the temporary branch-cleanup workflow after it completed successfully.
+
 ## Deployment
 
 - [x] Static gallery deployment uses GitHub Pages.
@@ -77,4 +84,4 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 
 ## Go/no-go
 
-**Current status: `vfx-ui-anime@0.1.0` is published on npm, GitHub Release `v0.1.0` is live, and `@brajesh31/vfx-ui-anime@0.1.0` was published to GitHub Packages by successful workflow run `44682012502`. Validate, CodeQL, Scorecard and GitHub Pages passed on main commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`, and the post-CodeQL alert inventory returned `[]`. GitHub Packages visibility still needs a settings review. npm Trusted Publisher setup/credential cleanup, manual QA and deletion of non-main branches remain open. Do not call the package production-certified until human QA is complete.**
+**Current status: `vfx-ui-anime@0.1.0` is published on npm, GitHub Release `v0.1.0` is live, and `@brajesh31/vfx-ui-anime@0.1.0` was published to GitHub Packages by successful workflow run `44682012502`. Validate, CodeQL, Scorecard and GitHub Pages passed on main commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`, and the post-CodeQL alert inventory returned `[]`. GitHub Packages visibility still needs a settings review. npm Trusted Publisher setup/credential cleanup, GitHub Packages visibility review and manual QA remain open. All non-main branches have been deleted. Do not call the package production-certified until human QA is complete.**
