@@ -4,7 +4,7 @@
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
 **Package implementation commit:** `72748136c9eddf1cf160d1d41f92841e59d1f557`  
-**Latest main commit verified by this report:** `80101b47361d04f5b3e3165f630eef7f45d060d3`
+**Latest main commit verified by this report:** `cb1421b26f99a6188ddea31f62531e1fdac508aa`
 
 ## Current decision
 
@@ -21,14 +21,15 @@ The first stable release candidate commit `72748136c9eddf1cf160d1d41f92841e59d1f
 - [Validate on the release branch](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44646096871)
 - [CodeQL on the release branch](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44646096770)
 
-The latest verified `main` commit at the time of this report is `80101b47361d04f5b3e3165f630eef7f45d060d3`. All four main-branch workflow checks passed on that exact commit:
+The latest verified `main` commit is `cb1421b26f99a6188ddea31f62531e1fdac508aa`. All five main-branch workflows completed successfully on that exact commit:
 
-- [Validate](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153867): passed structural/source checks, the full Chromium interaction suite, the npm tarball/consumer smoke test, archive creation and artifact upload.
-- [CodeQL](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153605): passed.
-- [OpenSSF Scorecard](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153614): passed.
-- [GitHub Pages deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44655153665): build and deployment passed.
+- [Validate](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747787): passed source and generated-file checks, the full Chromium interaction suite, the npm tarball/consumer smoke test, and verified archive upload.
+- [CodeQL](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680748109): passed.
+- [OpenSSF Scorecard](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747961): passed.
+- [GitHub Pages deployment](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747792): build and deployment passed.
+- [CodeQL alert inventory](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44680747893): exported an empty JSON list (`[]`), meaning zero open repository code-scanning alerts were returned.
 
-The Validate run retained the verified `vfx-ui-anime-0.1.0.tgz` package archive as artifact `vfx-ui-anime-npm-v0.1.0` (artifact ID `14591669762`), with 30-day retention ending 20 December 2026.
+The first-publish workflow on the earlier release commit also passed and published `vfx-ui-anime@0.1.0`. The latest main Validate run retained a fresh `vfx-ui-anime-0.1.0.tgz` artifact.
 
 The validation suite covers source structure, generated runtime parity, registry/gallery consistency, all 82 component registrations, browser interaction/regression groups, keyboard/touch-emulated/form/lifecycle behavior and the 390 px overflow guard. The package test inspects the npm tarball, installs the archive offline in a clean consumer, resolves all 82 subpaths, and checks aggregate plus isolated component imports in Chromium.
 
@@ -82,6 +83,19 @@ The browser-only npm package `vfx-ui-anime@0.1.0` is publicly published. It expo
 - [ ] Correct the stale pre-publication status sentence in the npm-hosted README in the next legitimate version. The GitHub README has been corrected on `main`.
 
 The published npm `0.1.0` page is live, but the README snapshot embedded in the tarball was packed before the first publication completed and still contains stale pre-publication wording. This does not change the package tarball's installability or entry points. The GitHub README is current; refresh the npm-hosted README with the next legitimate package version.
+
+### Additional GitHub Packages distribution
+
+The public unscoped npmjs package remains `vfx-ui-anime@0.1.0`. A separate scoped GitHub Packages distribution is configured as `@brajesh31/vfx-ui-anime` without changing the npmjs package name.
+
+- [x] Add repository `.npmrc` scope mapping for `@brajesh31` and environment-based `NODE_AUTH_TOKEN` authentication.
+- [x] Add `publish-github-package.yml` with `packages: write` and repository-scoped `GITHUB_TOKEN`.
+- [x] Verify and document the scoped package build, repository association and install instructions.
+- [ ] Run the GitHub Packages workflow once from `main` to publish the first scoped version.
+- [ ] Review the package settings, change first-publish visibility to Public if desired, and confirm it appears under this repository's Packages panel.
+- [ ] Verify installation from GitHub Packages using a classic PAT with `read:packages` for local private-package access.
+
+The GitHub Packages workflow has not yet been run. Until its first successful publication, the repository Packages panel can still say "No packages published". The existing npmjs package remains available independently.
 
 ## 5. Release decision
 
