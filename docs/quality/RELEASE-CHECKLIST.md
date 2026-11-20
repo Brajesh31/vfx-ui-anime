@@ -65,7 +65,7 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] Add `.npmrc` scope mapping and environment-based token substitution, with no credential committed.
 - [x] Add `.github/workflows/publish-github-package.yml` using `GITHUB_TOKEN` and `packages: write`.
 - [x] Document GitHub Packages authentication, scoped installation and first-publish visibility behavior.
-- [ ] Run **Publish GitHub Package** manually from `main` for the first `0.1.0` publication.
+- [x] Run **Publish GitHub Package** manually from `main` for the first `0.1.0` publication. Run `44682012502` succeeded and published `@brajesh31/vfx-ui-anime@0.1.0`.
 - [ ] Review package association and set visibility to Public if public GitHub Packages access is intended.
 - [ ] Verify package installation and the repository Packages panel.
 
@@ -77,4 +77,4 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 
 ## Go/no-go
 
-**Current status: v0.1.0 is published on npm and GitHub. Validate, CodeQL, Scorecard and GitHub Pages all passed on main commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`; a post-CodeQL alert inventory completed with `[]` (zero open alerts). The scoped GitHub Packages workflow is configured but its first publication has not yet been run. npm Trusted Publisher setup/credential cleanup and manual QA remain open. Do not call the package production-certified until human QA is complete.**
+**Current status: `vfx-ui-anime@0.1.0` is published on npm, GitHub Release `v0.1.0` is live, and `@brajesh31/vfx-ui-anime@0.1.0` was published to GitHub Packages by successful workflow run `44682012502`. Validate, CodeQL, Scorecard and GitHub Pages passed on main commit `e42c805f01e9ef7ec27ce82cbe08fd7091270ead`, and the post-CodeQL alert inventory returned `[]`. GitHub Packages visibility still needs a settings review. npm Trusted Publisher setup/credential cleanup, manual QA and deletion of non-main branches remain open. Do not call the package production-certified until human QA is complete.**
