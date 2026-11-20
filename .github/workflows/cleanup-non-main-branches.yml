@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Verify main is the default branch and delete all other branches
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
@@ -31,12 +31,12 @@ jobs:
 
           mapfile -t branches < <(gh api --paginate "repos/$GITHUB_REPOSITORY/branches?per_page=100" --jq '.[].name')
 
-          if ! printf '%s\n' "\${branches[@]}" | grep -Fxq "main"; then
+          if ! printf '%s\n' "${branches[@]}" | grep -Fxq "main"; then
             echo "Refusing cleanup: main was not returned by the branch API."
             exit 1
           fi
 
-          for branch in "\${branches[@]}"; do
+          for branch in "${branches[@]}"; do
             if [[ "$branch" == "main" ]]; then
               echo "Keeping default branch: main"
               continue
@@ -48,8 +48,8 @@ jobs:
 
           mapfile -t remaining < <(gh api --paginate "repos/$GITHUB_REPOSITORY/branches?per_page=100" --jq '.[].name')
 
-          if [[ "\${#remaining[@]}" -ne 1 || "\${remaining[0]}" != "main" ]]; then
-            printf 'Unexpected remaining branches:\n%s\n' "\${remaining[@]}"
+          if [[ "${#remaining[@]}" -ne 1 || "${remaining[0]}" != "main" ]]; then
+            printf 'Unexpected remaining branches:\n%s\n' "${remaining[@]}"
             exit 1
           fi
 
