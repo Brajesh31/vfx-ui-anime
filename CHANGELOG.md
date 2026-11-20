@@ -8,7 +8,8 @@ VFX UI Anime `v0.1.0` was published to the public npm registry and released on G
 - Added npm tarball inspection, clean offline consumer installation, all 82 component export-resolution checks, and aggregate/single-component Chromium import smoke tests.
 - Published `vfx-ui-anime@0.1.0` to npm. The registry reports 170 package files and the `latest` dist-tag resolves to `0.1.0`.
 - Published stable GitHub Release `v0.1.0` with `vfx-ui-anime-0.1.0.tgz` attached.
-- Added an OIDC/staged-publishing workflow for future releases; the npm Trusted Publisher connection still needs to be verified in account settings.
+- Added an OIDC/staged-publishing workflow for future npmjs releases; the npm Trusted Publisher connection still needs to be verified in account settings.
+- Added a separate scoped GitHub Packages workflow for `@brajesh31/vfx-ui-anime`, using `GITHUB_TOKEN` without renaming the existing npmjs package. Its first manual publication remains pending.
 - Removed obsolete Vercel deployment integration references; GitHub Pages is the static gallery deployment target.
 
 - Completed the 14-stage implementation roadmap across all 82 Web Component types.
@@ -32,6 +33,7 @@ The gallery is hosted through [GitHub Pages](https://brajesh31.github.io/vfx-ui-
 ## Follow-up work
 
 - Complete and record manual visual, keyboard-only, screen-reader, reduced-motion, real-device touch, contrast/focus and Firefox/Safari QA.
+- Run the first GitHub Packages publication from the `Publish GitHub Package` workflow and set package visibility as intended.
 - Verify npm Trusted Publisher setup for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`; remove the no-longer-needed repository `NPM_TOKEN` secret and revoke the temporary granular token. The one-time bootstrap workflow has been removed.
 - Verify an OIDC-backed staged publication on the next planned package version. Do not create a throwaway version solely to test publishing.
 - Correct the publication-status text embedded in the already-published npm README in the next legitimate package release. The GitHub README and release documentation have been corrected on `main`.
