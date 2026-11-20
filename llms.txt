@@ -171,10 +171,6 @@ Run `node tools/build.mjs --check`, `npm test`, and `npm run test:browser` befor
 - Workflow: `.github/workflows/deploy-pages.yml`, triggered by pushes to `main` and manual workflow dispatch.
 - The workflow validates the source, uploads the repository root and deploys through GitHub Pages.
 
-## Deployment
-- Live hosting: GitHub Pages.
-- Workflow: `.github/workflows/deploy-pages.yml`, triggered by pushes to `main` and manual workflow dispatch.
-- The workflow validates the source, uploads the repository root and deploys through GitHub Pages.
 
 ## npm release and maintenance
 - Stable release: `vfx-ui-anime@0.1.0`, publicly available from npm.
