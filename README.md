@@ -174,5 +174,17 @@ import 'vfx-ui-anime/button';
 
 The project uses browser-native Web Components, not named React/Vue classes. The package must be loaded after the DOM exists. See [the package guide](docs/PACKAGE.md) for all component paths, CDN usage, SSR limitations, exact tarball contents, and publication instructions.
 
+### GitHub Packages registry
+
+A scoped mirror is provided as `@brajesh31/vfx-ui-anime` on GitHub Packages. The existing `vfx-ui-anime` npmjs package remains unchanged.
+
+```bash
+npm install @brajesh31/vfx-ui-anime
+```
+
+The repository [`.npmrc`](.npmrc) routes only the `@brajesh31` scope to GitHub Packages and reads authentication from `NODE_AUTH_TOKEN`. For local installs of a private package, use a GitHub personal access token (classic) with `read:packages`. GitHub Actions publishing uses the repository's `GITHUB_TOKEN` with `packages: write`.
+
+The [GitHub Packages publishing workflow](.github/workflows/publish-github-package.yml) must be run once from Actions to create the first package. GitHub makes first-published packages private by default; change the package visibility to Public in package settings if public GitHub Packages access is intended. See [the package guide](docs/PACKAGE.md) for the exact authentication and publishing steps.
+
 **Publication status:** `vfx-ui-anime@0.1.0` is publicly available on npm. Install it with `npm install vfx-ui-anime` or pin `npm install vfx-ui-anime@0.1.0`. The `latest` distribution tag resolves to `0.1.0`. The stable [GitHub Release v0.1.0](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0) includes the package tarball. For future versions, `.github/workflows/publish.yml` is configured to stage packages through npm Trusted Publishing (OIDC) once the Trusted Publisher connection is saved for this repository; each staged release requires maintainer review and 2FA approval. Confirm the connection in npm settings, then remove the no-longer-needed `NPM_TOKEN` GitHub Actions secret and revoke the temporary granular token.
 
