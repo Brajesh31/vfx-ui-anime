@@ -49,8 +49,7 @@ Use this checklist as the final go/no-go record. A completed source audit or gre
 - [x] Stable GitHub Release `v0.1.0` exists with `vfx-ui-anime-0.1.0.tgz` attached.
 - [ ] Complete manual QA.
 - [ ] Create and verify the npm Trusted Publisher connection for `brajesh31/vfx-ui-anime`, workflow filename `publish.yml`, no environment name.
-- [ ] After OIDC verification, remove the repository `NPM_TOKEN` secret and revoke the temporary granular token.
-- [ ] Retire the one-time bootstrap workflow after credential cleanup.
+- [ ] Remove the no-longer-needed repository `NPM_TOKEN` secret and revoke the temporary granular token. The one-time bootstrap workflow has already been removed.
 - [ ] Use the next planned package version to verify OIDC staging, provenance and 2FA approval.
 
 ## Deployment
