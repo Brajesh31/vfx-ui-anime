@@ -9,7 +9,7 @@ VFX UI Anime is a collection of **82 dependency-free Web Components** with a sha
 - **82 standalone component demos**
 - **No runtime framework or third-party component dependency**
 - **MIT licensed**
-- **npm package v0.1.0 prepared; first publication pending account authorization**
+- **Public npm package: `vfx-ui-anime@0.1.0`**
 
 [Explore the live gallery](https://brajesh31.github.io/vfx-ui-anime/) · [Browse the source](https://github.com/Brajesh31/vfx-ui-anime) · [Read the component index](docs/COMPONENTS.md)
 
@@ -174,5 +174,5 @@ import 'vfx-ui-anime/button';
 
 The project uses browser-native Web Components, not named React/Vue classes. The package must be loaded after the DOM exists. See [the package guide](docs/PACKAGE.md) for all component paths, CDN usage, SSR limitations, exact tarball contents, and publication instructions.
 
-**Publication status:** Package tarball creation, clean offline consumer installation, all 82 component subpath resolutions, and aggregate/single-component Chromium imports pass in CI. The package is not yet published to npm. The initial publish needs a protected GitHub Actions secret named `NPM_TOKEN` and the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow. After the package exists, configure npm Trusted Publisher for `publish.yml` and remove the bootstrap token. Later versions are staged through OIDC and require a maintainer's npm 2FA approval. The source-only GitHub pre-release `v0.1.0-rc.1` remains available [here](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
+**Publication status:** `vfx-ui-anime@0.1.0` is publicly available on npm. Install it with `npm install vfx-ui-anime` or pin `npm install vfx-ui-anime@0.1.0`. The `latest` distribution tag resolves to `0.1.0`. The stable [GitHub Release v0.1.0](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0) includes the package tarball. For future versions, `.github/workflows/publish.yml` stages packages through npm Trusted Publishing (OIDC); each staged release requires maintainer review and 2FA approval. The npm Trusted Publisher connection and removal of the one-time `NPM_TOKEN` bootstrap credential remain account-administration tasks.
 
