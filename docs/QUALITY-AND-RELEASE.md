@@ -8,7 +8,7 @@
 
 ## Current decision
 
-**The stable `vfx-ui-anime@0.1.0` package is published on npm, and GitHub Release `v0.1.0` is published with the `.tgz` archive attached.** The `latest` npm dist-tag resolves to `0.1.0`. The first-publish workflow completed successfully. Remaining work is npm Trusted Publisher setup/credential cleanup and human QA for accessibility, real-device behavior and cross-browser compatibility.
+**The stable `vfx-ui-anime@0.1.0` package is published on npm, and GitHub Release `v0.1.0` is published with the `.tgz` archive attached.** The `latest` npm dist-tag resolves to `0.1.0`. The first-publish workflow completed successfully and its one-time bootstrap workflow has been removed. Remaining work is verifying the npm Trusted Publisher account configuration, removing the obsolete `NPM_TOKEN` secret and revoking its granular token, plus human QA for accessibility, real-device behavior and cross-browser compatibility.
 
 The 14-stage component roadmap is complete in scope. The regressions found during the integrated audit have been repaired. The successful first-publication run on `eda39329832fe722cfbd4073a5472fd515df2629` passed the structural/source checks, full Chromium component suite and npm tarball/consumer smoke test before publishing the package and creating the GitHub Release. The archive contains 170 files.
 
@@ -69,12 +69,12 @@ The browser-only npm package `vfx-ui-anime@0.1.0` is publicly published. It expo
 - [x] Publish GitHub Release `v0.1.0` and attach `vfx-ui-anime-0.1.0.tgz`.
 - [ ] Complete and record manual QA above.
 - [ ] Create and verify npm Trusted Publisher for GitHub Actions, owner/user `Brajesh31`, repository `vfx-ui-anime`, workflow filename `publish.yml`, with no environment name.
-- [ ] After OIDC setup is verified, delete the repository `NPM_TOKEN` secret and revoke the temporary npm granular token.
-- [ ] Retire the one-time bootstrap workflow after credential cleanup.
+- [ ] Delete the no-longer-needed repository `NPM_TOKEN` secret and revoke the temporary npm granular token. The bootstrap workflow has already been removed.
+
 - [ ] Use the next legitimate package release to verify OIDC staging, provenance and 2FA approval.
 - [ ] Correct the stale pre-publication status sentence in the npm-hosted README in the next legitimate version. The GitHub README has been corrected on `main`.
 
-The published npm `0.1.0` page is live, but its README was packed before the first publication completed and still contains stale pre-publication wording. This does not change the package tarball's installability or entry points.
+The published npm `0.1.0` page is live, but the README snapshot embedded in the tarball was packed before the first publication completed and still contains stale pre-publication wording. This does not change the package tarball's installability or entry points. The GitHub README is current; refresh the npm-hosted README with the next legitimate package version.
 
 ## 5. Release decision
 
