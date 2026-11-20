@@ -349,7 +349,7 @@ class VfxRichTextEditor extends Base {
    if(!allowed.has(tag))return children;
    let safeHref='';
    if(tag==='A'){
-    try{const url=new URL(node.getAttribute('href')||'',document.baseURI);if(['http:','https:','mailto:'].includes(url.protocol))safeHref=url.href;}catch{}
+    try{const rawHref=node.getAttribute('href')||'';const normalizedHref=rawHref.startsWith('//')?'https:'+rawHref:rawHref;const url=new URL(normalizedHref,document.baseURI);if(['http:','https:','mailto:'].includes(url.protocol))safeHref=url.href;}catch{}
     if(!safeHref)return children;
    }
    const safe=document.createElement(tag.toLowerCase());
