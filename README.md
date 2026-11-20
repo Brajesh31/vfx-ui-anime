@@ -152,39 +152,13 @@ The browser command expects the gallery to be served at `http://localhost:8000/g
 | [Code of Conduct](CODE_OF_CONDUCT.md) | Community participation standards |
 | [Support](SUPPORT.md) | Troubleshooting and usage support |
 
-## 📦 Install and use as an npm package
+## 📦 Package and release status
 
-VFX UI Anime is packaged as a browser-only ES module library with 82 dependency-free custom elements.
+The source repository is MIT-licensed. The npm package is **not published**. The current `package.json` intentionally retains `"private": true`.
 
-```bash
-npm install vfx-ui-anime
-```
+The complete integrated validation suite, CodeQL, GitHub Pages deployment and OpenSSF Scorecard all passed on current `main` head `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`. See [the exact run links and remaining release gates](docs/QUALITY-AND-RELEASE.md).
 
-Register all elements from your client-side application entry:
-
-```js
-import 'vfx-ui-anime';
-```
-
-Or register one element only:
-
-```js
-import 'vfx-ui-anime/button';
-```
-
-Then use the custom element:
-
-```html
-<vfx-button>Save</vfx-button>
-```
-
-The root entry exports `version`, `componentNames`, and `componentTags`. Components are registered custom elements, not named React/Vue classes. See each component README for its attributes, methods, events, and form behavior.
-
-See [the package guide](docs/PACKAGE.md) for browser/CDN usage, subpath imports, package limitations, and verification. The package has no runtime dependencies.
-
-### Release status
-
-The npm distribution contract is verified by `npm run test:package`. The first publication requires a protected `NPM_TOKEN` Actions secret and the **Bootstrap first npm publication** workflow; after the package exists, configure npm Trusted Publisher for `publish.yml`, remove the token, and use OIDC/provenance for later releases. See [the package guide](docs/PACKAGE.md). The source-only GitHub pre-release `v0.1.0-rc.1` remains available [here](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1).
+The source gallery is deployed through GitHub Pages, but no versioned GitHub Release or npm package has been published. The package is not release-approved. Manual visual, keyboard-only, touch, screen-reader and cross-browser review remains outstanding, as do package tarball inspection and a clean consumer installation test. Do not use an npm install command as though a public version already exists.
 
 ## 📄 License
 

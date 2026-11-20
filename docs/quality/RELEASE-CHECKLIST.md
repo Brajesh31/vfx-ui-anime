@@ -14,16 +14,16 @@ Use this as the final go/no-go checklist. A checked source audit item is not a s
 - [x] GitHub Pages uses separate build/upload and dependent deploy jobs, allowing deploy retries without re-uploading the artifact.
 - [x] All 15 phase-specific reports have been consolidated into the project reference and removed.
 
-## Automated verification on the latest implementation commit
+## Automated verification on the latest package merge commit
 
-Verified on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`:
+Verified on package merge commit `5a5a6dbbf6290cb0427f5bae5e75df2cbcaee323`:
 
-- [x] `npm test` passes. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
-- [x] `npm run check` passes. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
-- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671)
-- [x] CodeQL passes. [CodeQL run 44627994531](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994531)
-- [x] GitHub Pages deployment succeeds. [Pages run 44627994707](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994707)
-- [x] OpenSSF Scorecard succeeds. [Scorecard run 44627994720](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994720)
+- [x] `npm test` passes. [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
+- [x] `npm run check` passes. [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
+- [x] Full Chromium touch, keyboard, form, lifecycle and 390 px overflow checks pass. [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
+- [x] CodeQL passes. [CodeQL run 44642048581](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642048581)
+- [x] GitHub Pages deployment succeeds. [Pages run 44642046915](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642046915)
+- [x] OpenSSF Scorecard succeeds. [Scorecard run 44642046769](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642046769)
 
 The Validate browser log for the verified implementation commit records 210 successful checks, zero failures and zero page-side exception lines, including Color Palette roving focus/Enter/Space and Audio Player metadata/seek coverage.
 
@@ -43,22 +43,28 @@ The Validate browser log for the verified implementation commit records 210 succ
 - [x] Browser-only aggregate entry point registers all 82 elements.
 - [x] Per-component subpath exports are defined for all 82 elements.
 - [x] Package file allowlist includes component scripts and API READMEs.
+- [x] `npm pack --dry-run` contents inspected, with no gallery or development tooling in the tarball.
+- [x] Tarball installed offline in a clean consumer project.
+- [x] All 82 component subpaths resolve and aggregate/single-component imports pass in Chromium.
+- [x] Package smoke test passes in the main Validate run. [Run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028)
 - [x] OIDC npm publish workflow is configured with provenance and stable-tag checks.
-- [ ] `npm run test:package` passes on the package branch and `main`.
+- [x] One-time initial-publish workflow includes a protected token mapping and refuses to overwrite an existing npm package name.
 - [ ] Bootstrap the initial npm publish with the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow and protected `NPM_TOKEN` repository Actions secret.
 - [ ] Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime`, workflow `publish.yml`, after the initial package exists, then remove the bootstrap token/workflow.
 - [ ] Publish stable npm `v0.1.0` from a reviewed `v0.1.0` tag and verify registry installation.
 - [x] Publish source-only GitHub pre-release `v0.1.0-rc.1` after source, structure and Chromium checks pass on the release commit. See [the release workflow](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/release.yml).
-- [ ] Public API and supported browser-script/CDN consumption model documented.
-- [ ] Package entry points/exports contract finalized.
-- [ ] Package published-file allowlist reviewed.
-- [ ] `npm pack --dry-run` output inspected.
-- [ ] Clean consumer project installation and usage tested.
-- [ ] Changelog and release notes prepared.
-- [ ] Version and tag selected after API/package freeze.
-- [ ] `private: true` removed only after explicit release approval.
-- [ ] GitHub Release and npm publication performed only after all gates pass.
+- [x] Public browser-only API and browser/CDN consumption model documented.
+- [x] Package entry points/exports contract finalized.
+- [x] Package published-file allowlist reviewed.
+- [x] `npm pack --dry-run` output inspected.
+- [x] Clean consumer project installation and usage tested.
+- [x] Changelog, package guide, and source release notes prepared.
+- [x] Version `0.1.0` selected in the package manifest.
+- [x] `private: true` removed from the package manifest.
+- [ ] Add npm granular publish token as GitHub Actions secret `NPM_TOKEN` and run the bootstrap workflow.
+- [ ] Configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime`, workflow `publish.yml`, after the first package exists; then remove the bootstrap token and workflow.
+- [ ] Verify public registry install of `vfx-ui-anime@0.1.0`.
 
 ## Current decision
 
-**Source-only GitHub pre-release `v0.1.0-rc.1` is available. The npm package contract and publishing workflows are prepared. Stable npm publication remains pending package smoke-test success and npm authorization. Manual cross-browser and assistive-technology QA is still outstanding.**
+**Source-only GitHub pre-release `v0.1.0-rc.1` is available. Package `0.1.0` and consumer tests are ready and pass on `main`. The npm registry publication remains pending a protected npm token and one manual workflow run. Manual real-device, screen-reader and cross-browser QA is still outstanding.**

@@ -30,17 +30,11 @@ The live gallery is published at https://brajesh31.github.io/vfx-ui-anime/.
 | `tools/build.mjs` | Synchronizes the shared runtime into standalone components |
 | `tools/validate.mjs` | Structural, syntax, registry, demo and generated-runtime checks |
 | `tools/test.mjs` | Chromium browser interaction suite |
-| `tools/package-smoke.mjs` | npm tarball, offline consumer install, export resolution, and Chromium import smoke tests |
-| `index.js` | Aggregate browser entry point registering all 82 custom elements |
 | `.github/workflows/validate.yml` | Validation workflow |
 | `.github/workflows/deploy-pages.yml` | Separate GitHub Pages build/artifact and dependent deployment jobs |
 | `.github/workflows/codeql.yml` | CodeQL static analysis workflow |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard workflow |
-| `.github/workflows/publish.yml` | Stable npm publishing from version tags using GitHub OIDC and npm provenance |
-| `.github/workflows/bootstrap-publish.yml` | One-time manual first publication using a protected `NPM_TOKEN` before Trusted Publisher can be configured |
-| `.github/workflows/release.yml` | Source-only pre-release workflow; gates version creation on source, structure and full Chromium checks |
 | `docs/COMPONENTS.md` | Component directory and category index |
-| `docs/PACKAGE.md` | npm install, aggregate/subpath usage, browser restrictions and package verification |
 | `docs/QUALITY-AND-RELEASE.md` | Current automated evidence and release decision |
 | `docs/quality/ANIMATION-DESIGN-SYSTEM.md` | Visual system and motion specification |
 
@@ -183,6 +177,8 @@ The repository contains four GitHub Actions workflows:
 | OSSF Scorecard | Repository security posture analysis |
 
 GitHub Pages is the configured live-site deployment target. Its workflow validates the source and uploads the static-site artifact in a `build` job, then deploys that artifact in a dependent `deploy` job. This separation allows a deployment-only retry without creating a second `github-pages` artifact. The workflow does not cancel an in-progress deployment when a new main-branch push arrives.
+
+Vercel integration status checks are separate from these repository workflows. A Vercel build-rate-limit status must not be interpreted as a GitHub Actions failure or success.
 
 Always record results against the exact release-candidate commit SHA. A green workflow from a prior phase or a different commit does not establish that the current candidate passes.
 

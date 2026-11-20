@@ -3,11 +3,11 @@
 **Last verified:** 20 November 2026  
 **Repository:** `Brajesh31/vfx-ui-anime`  
 **Branch:** `main`  
-**Verified implementation commit:** `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`
+**Verified implementation commit:** `5a5a6dbbf6290cb0427f5bae5e75df2cbcaee323`
 
 ## Current decision
 
-**Source-only GitHub pre-release: `v0.1.0-rc.1`. npm package contract and automated consumer verification are being added. Public npm publication is gated on the npm bootstrap authorization and subsequent Trusted Publisher setup.**
+**npm package `0.1.0` is packaged and passes the clean-consumer test on `main`. Public npm publication is prepared but awaiting the first npm account authorization. The source-only GitHub pre-release `v0.1.0-rc.1` remains available.**
 
 The 14-stage implementation roadmap is complete in scope. The component regressions discovered during the integrated audit have been repaired, and the complete source, browser, security, deployment and Scorecard workflows have passed on the merged `main` commit.
 
@@ -15,18 +15,18 @@ The remaining release work is human QA and package-consumer validation. Passing 
 
 ## 1. Post-merge verification on `main`
 
-All four required GitHub Actions workflows passed on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18`.
+All four required GitHub Actions workflows passed on package merge commit `5a5a6dbbf6290cb0427f5bae5e75df2cbcaee323`.
 
 | Check | Result | Evidence |
 |---|---|---|
-| `npm test` | Passed | [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671) |
-| `npm run check` | Passed | [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671) |
-| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44627994671](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994671) |
-| CodeQL | Passed | [CodeQL run 44627994531](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994531) |
-| GitHub Pages deployment | Passed | [Pages run 44627994707](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994707) |
-| OpenSSF Scorecard | Passed | [Scorecard run 44627994720](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44627994720) |
+| `npm test` | Passed | [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028) |
+| `npm run check` | Passed | [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028) |
+| Full Chromium touch, keyboard and form interaction suite | Passed | [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028) |
+| CodeQL | Passed | [CodeQL run 44642048581](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642048581) |
+| GitHub Pages deployment | Passed | [Pages run 44642046915](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642046915) |
+| OpenSSF Scorecard | Passed | [Scorecard run 44642046769](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642046769) |
 
-The Validate run on implementation commit `0197589d1186ae2d8dc6dd366cbe3f6ab09cdf18` contains **210 successful checks, zero failure lines and zero page-side exception lines**. It confirms all 82 custom elements are registered, the shared VFX runtime is present, all browser regression groups pass, and the 390 px horizontal-overflow guard reports a width of 390 px.
+The Validate run on package merge commit `5a5a6dbbf6290cb0427f5bae5e75df2cbcaee323` contains **210 successful checks, zero failures and zero page-side exceptions**. It confirms all 82 custom elements are registered, the shared runtime is present, all component regression groups pass, and the 390 px horizontal-overflow guard passes. The package stage also inspects the npm tarball, confirms all 82 component scripts and API READMEs are present without gallery/development tooling, installs the tarball offline into a clean consumer, resolves every component subpath, and verifies aggregate plus single-component imports in Chromium.
 
 
 The Chromium harness now allows up to 45 seconds for browser startup, selects a wider random debugging-port range, disables shared-memory pressure, and reports a specific launch/exit/timeout reason if DevTools does not become available. The assertions themselves were not weakened or skipped.
@@ -88,19 +88,19 @@ The package now has an aggregate browser entry point (`index.js`), a direct impo
 - [x] Freeze the browser-only API: an aggregate import, per-component side-effect subpaths, and exported component name/tag metadata.
 - [x] Document browser/CDN usage and the server-side rendering limitation.
 - [x] Define the package entry point, exports map, and file allowlist.
-- [ ] Pass `npm run test:package`, which inspects the tarball, installs it offline in a clean consumer, resolves every component subpath, and tests browser registration.
+- [x] Pass `npm run test:package` on `main`. [Validate run 44642047028](https://github.com/Brajesh31/vfx-ui-anime/actions/runs/44642047028).
 - [ ] Complete all manual QA items above.
-- [ ] Prepare release notes, changelog and version only after package contents and API are frozen.
+- [x] Prepare the `0.1.0` package version, changelog, release notes, and package guide.
 - [x] Remove `"private": true` and set package version `0.1.0` on the package branch.
 - [x] Add a version-tagged npm publishing workflow using GitHub OIDC and provenance.
 - [ ] Bootstrap the first npm publication with the [Bootstrap first npm publication](https://github.com/Brajesh31/vfx-ui-anime/actions/workflows/bootstrap-publish.yml) workflow and a protected npm granular token stored as the repository Actions secret `NPM_TOKEN` (do not commit or paste the token into chat).
 - [ ] After the first package exists, configure npm Trusted Publisher for `Brajesh31/vfx-ui-anime` and workflow `publish.yml`, then remove the bootstrap token and one-time bootstrap workflow.
 - [ ] Create stable tag `v0.1.0` only after package smoke tests and the npm publisher configuration are verified.
 
-The GitHub Pages gallery is deployed. The source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). The package tarball and clean-consumer installation are exercised by the new package smoke test. Public npm publication is not yet completed because the first publish needs npm authorization; npm Trusted Publisher can be configured after the initial package exists.
+The GitHub Pages gallery is deployed, and the source-only GitHub pre-release is [v0.1.0-rc.1](https://github.com/Brajesh31/vfx-ui-anime/releases/tag/v0.1.0-rc.1). The npm package `0.1.0` is prepared and its tarball/consumer/browser smoke tests pass on `main`. It is **not yet published to npm**. The bootstrap workflow will refuse to publish if `vfx-ui-anime` is already claimed, and it requires an authorized npm granular token stored as the GitHub Actions secret `NPM_TOKEN`. After first publication, configure npm Trusted Publisher for `publish.yml`, remove the token, and use OIDC/provenance for future tags.
 
 ## 6. Release decision
 
-**The source-only `v0.1.0-rc.1` pre-release exists. The npm package contract and publish workflows are prepared; stable npm publication remains gated on package smoke-test success and npm account authorization. Manual cross-browser/accessibility QA also remains outstanding.**
+**The package contract and tarball/consumer verification are complete on `main`. The public npm release is blocked only by npm account authorization and the one-time bootstrap action. Real-device, assistive-technology, Firefox/Safari and visual QA remain unperformed, so full WCAG or cross-browser certification is not claimed.**
 
 The component regressions are fixed and the complete integrated Chromium suite passed on the verified implementation commit. Do not describe the npm package as published or final-release-approved until the remaining checks above are completed.

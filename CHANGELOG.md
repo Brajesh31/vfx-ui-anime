@@ -2,17 +2,7 @@
 
 This project has not received a versioned release yet. Changes are recorded under **Unreleased** until the public API, distribution model and release gates are approved.
 
-## 0.1.0-rc.1 (source-only GitHub pre-release)
-
-- First versioned source pre-release for the 82 Web Component types, 82 standalone demos and 83 gallery examples.
-- The release workflow runs source validation, generated-runtime parity checks and the full Chromium touch/keyboard/form/lifecycle suite before creating the GitHub pre-release.
-- This candidate does not publish an npm package. The package remains private while its package contents and browser-script distribution contract are finalized.
-- Manual visual, keyboard-only, screen-reader, touch-device and cross-browser review remains required before a stable release.
-
 ## Unreleased
-
-- Added a browser-only npm package contract with an aggregate entry point and per-component subpath imports for all 82 custom elements.
-- Added an npm tarball, clean-consumer and Chromium smoke test, a one-time protected-token bootstrap workflow, and an OIDC trusted-publishing workflow with provenance.
 
 - Completed the 14-stage implementation roadmap across all 82 Web Component types.
 - Consolidated the former phase reports into the project reference and removed the 15 phase-specific report files.
@@ -31,5 +21,6 @@ This project has not received a versioned release yet. Changes are recorded unde
 ## Release gates still open
 
 - Manual visual, keyboard-only, screen-reader, reduced-motion, touch and cross-browser QA.
+- Resolve or explicitly retire the two linked Vercel build-status failures caused by the Hobby build-rate limit. GitHub Pages is the active site deployment.
 - Inspect the npm tarball, define the package contents and entry-point contract, and test installation in a clean consumer project.
 - Select and publish a version only after the release gates are signed off.

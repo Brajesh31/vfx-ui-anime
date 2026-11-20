@@ -1,62 +1,17 @@
 {
   "name": "vfx-ui-anime",
   "version": "0.1.0",
-  "description": "82 dependency-free anime-inspired animated Web Components for the browser",
+  "private": true,
+  "description": "VFX UI Anime, a collection of animated Web Components",
   "type": "module",
   "scripts": {
     "build": "node tools/build.mjs",
     "check": "node tools/build.mjs --check && node tools/validate.mjs",
     "test": "node tools/validate.mjs",
-    "test:browser": "node tools/test.mjs http://localhost:8000/gallery/",
-    "test:package": "node tools/package-smoke.mjs",
-    "prepublishOnly": "npm run check"
+    "test:browser": "node tools/test.mjs http://localhost:8000/gallery/"
   },
   "engines": {
     "node": ">=20"
   },
-  "license": "MIT",
-  "author": "Brajesh Kumar",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Brajesh31/vfx-ui-anime.git"
-  },
-  "homepage": "https://brajesh31.github.io/vfx-ui-anime/",
-  "bugs": {
-    "url": "https://github.com/Brajesh31/vfx-ui-anime/issues"
-  },
-  "keywords": [
-    "web-components",
-    "custom-elements",
-    "anime",
-    "animation",
-    "ui-components",
-    "browser",
-    "html",
-    "css",
-    "forms",
-    "accessibility",
-    "motion"
-  ],
-  "main": "./index.js",
-  "module": "./index.js",
-  "browser": "./index.js",
-  "exports": {
-    ".": "./index.js",
-    "./package.json": "./package.json",
-    "./components/*": "./components/*/index.js",
-    "./*": "./components/*/index.js"
-  },
-  "sideEffects": true,
-  "files": [
-    "index.js",
-    "components/*/index.js",
-    "components/*/README.md",
-    "README.md",
-    "LICENSE",
-    "docs/COMPONENTS.md"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  }
+  "license": "MIT"
 }

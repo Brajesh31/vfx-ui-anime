@@ -30,5 +30,3 @@ jobs:
           sleep 2
       - name: Run touch, keyboard, and form interaction tests
         run: npm run test:browser
-      - name: Pack, install, and smoke-test the npm package
-        run: npm run test:package
