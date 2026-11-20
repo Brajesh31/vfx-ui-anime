@@ -78,5 +78,5 @@ The published npm `0.1.0` page is live, but its README was packed before the fir
 
 ## 5. Release decision
 
-**Stable package release: published. Repository release documentation: being reconciled. Production quality sign-off: still open.** Do not describe the package as fully production-certified until the manual visual, keyboard, screen-reader, reduced-motion, real-device touch, contrast/focus and Firefox/Safari checks have been completed and recorded.
+**Stable package release: published. GitHub release notes and repository documentation: corrected. Production quality sign-off: still open.** Do not describe the package as fully production-certified until the manual visual, keyboard, screen-reader, reduced-motion, real-device touch, contrast/focus and Firefox/Safari checks have been completed and recorded.
 
