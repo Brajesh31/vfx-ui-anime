@@ -1,0 +1,50 @@
+name: Temporary CodeQL alert inventory
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/codeql-alert-inventory.yml"
+
+permissions:
+  security-events: read
+
+jobs:
+  inventory:
+    name: Export every open code-scanning alert
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read all open repository code-scanning alerts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/code-scanning/alerts?state=open&per_page=100" > "$RUNNER_TEMP/pages.json"
+          jq '[.[][] | {
+            number,
+            state,
+            rule_id: .rule.id,
+            title: .rule.description,
+            severity: .rule.severity,
+            security_severity_level: .rule.security_severity_level,
+            path: .most_recent_instance.location.path,
+            start_line: .most_recent_instance.location.start_line,
+            end_line: .most_recent_instance.location.end_line,
+            message: .most_recent_instance.message.text,
+            html_url
+          }]' "$RUNNER_TEMP/pages.json" > "$RUNNER_TEMP/open-alerts.json"
+          echo "Open code-scanning alert inventory:"
+          cat "$RUNNER_TEMP/open-alerts.json"
+          {
+            echo "## Open code-scanning alerts"
+            echo ""
+            jq -r 'if length == 0 then "No open alerts." else "| Alert | Severity | Rule | File | Lines |\n|---:|---|---|---|---:|" end' "$RUNNER_TEMP/open-alerts.json"
+            jq -r '.[] | "| [#\(.number)](\(.html_url)) | \(.severity // .security_severity_level // "unknown") | \(.title // .rule_id) | \(.path // "unknown") | \(.start_line // "?")–\(.end_line // "?") |"' "$RUNNER_TEMP/open-alerts.json"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload alert inventory for evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: codeql-open-alert-inventory
+          path: ${{ runner.temp }}/open-alerts.json
+          retention-days: 7
