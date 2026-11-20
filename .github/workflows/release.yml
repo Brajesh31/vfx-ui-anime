@@ -111,7 +111,7 @@ jobs:
 
           - Manual visual, keyboard-only, screen-reader, touch-device and Firefox/Safari review is still required.
           - Full WCAG conformance has not been certified.
-          - The npm package `0.1.0` is prepared but not yet published. The first public publication requires maintainer npm authorization and the protected-token bootstrap workflow.
+          - Stable npm package `vfx-ui-anime@0.1.0` is already published. This workflow only creates source-only pre-release snapshots; it does not publish npm packages. Future stable npm versions use `publish.yml` with npm Trusted Publishing (OIDC) and maintainer approval.
 
           Use this pre-release to inspect the source and provide feedback. Do not treat it as a stable production release.
           EOF
