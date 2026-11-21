@@ -81,6 +81,9 @@ Use GitHub Discussions for open-ended conversation, Issues for actionable defect
 
 ## Day 1: ready-to-publish GitHub Discussion
 
+**Standalone publication draft:** [DAY-01-LAUNCH-ANNOUNCEMENT.md](DAY-01-LAUNCH-ANNOUNCEMENT.md). Use that file for the final title, copy-ready body and exact maintainer publication steps. The activity remains pending until the canonical GitHub Discussion URL is recorded in the progress tracker.
+
+
 **Suggested title:** ✨ Introducing VFX UI Anime: 82 Animated Web Components
 
 **Body:**
