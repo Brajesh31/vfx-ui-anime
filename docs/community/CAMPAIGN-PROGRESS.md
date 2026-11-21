@@ -10,7 +10,7 @@ This file records actual campaign execution. A day must remain unchecked until i
 
 | Day | Activity | Status | Evidence / result |
 |---:|---|---|---|
-| 1 | Official launch announcement | Not started | — |
+| 1 | Official launch announcement | Draft committed, publication pending | [Day 1 draft](DAY-01-LAUNCH-ANNOUNCEMENT.md), commit `d0a8430c293c9c35cfd8df63e507e8cfad228eb1`. No public Discussion URL yet. |
 | 2 | Interactive gallery tour | Not started | — |
 | 3 | Button showcase | Not started | — |
 | 4 | npm quickstart | Not started | — |
@@ -47,11 +47,11 @@ Record actual metrics and the date/time collected. Do not estimate missing value
 
 | Metric | Baseline | Day 7 | Day 14 | Day 21 | Day 30 |
 |---|---:|---:|---:|---:|---:|
-| GitHub stars | Not recorded | — | — | — | — |
-| Forks | Not recorded | — | — | — | — |
-| Repository visitors (14-day window) | Not recorded | — | — | — | — |
-| Repository clones (14-day window) | Not recorded | — | — | — | — |
-| npm downloads (period noted) | Not recorded | — | — | — | — |
+| GitHub stars | 0 (21 Nov 2026, 16:12 IST) | — | — | — | — |
+| Forks | 0 (21 Nov 2026, 16:12 IST) | — | — | — | — |
+| Repository visitors (14-day window) | Not available in this run; owner-only Traffic endpoint not exposed by connected GitHub action | — | — | — | — |
+| Repository clones (14-day window) | Not available in this run; owner-only Traffic endpoint not exposed by connected GitHub action | — | — | — | — |
+| npm downloads (period noted) | Not verified; official npm Downloads API could not be read in this run | — | — | — | — |
 | Discussions opened | 0 confirmed | — | — | — | — |
 | Substantive external replies | 0 confirmed | — | — | — | — |
 | First-time contributors | 0 confirmed | — | — | — | — |
@@ -71,5 +71,9 @@ Record actual metrics and the date/time collected. Do not estimate missing value
 
 - Campaign plan committed to the repository.
 - README links to the campaign guide and GitHub Discussions.
-- Day 1 announcement is drafted in the campaign guide, but has **not** been published as a GitHub Discussion.
-- No campaign analytics baseline has been recorded yet.
+- Day 1 announcement draft is committed at [docs/community/DAY-01-LAUNCH-ANNOUNCEMENT.md](DAY-01-LAUNCH-ANNOUNCEMENT.md), commit `d0a8430c293c9c35cfd8df63e507e8cfad228eb1`.
+- Day 1 remains pending because the GitHub Discussion has **not** been published; record its canonical URL before marking the day complete.
+- Repository snapshot collected 21 November 2026 at 16:12 IST: 0 stars, 0 forks, 0 open issues, and Discussions enabled. These are point-in-time repository metadata, not traffic or adoption metrics.
+- GitHub's owner-only 14-day traffic views/clones were not available through the connected GitHub actions in this run.
+- Official npm download counts were not verified in this run. Do not substitute third-party directory estimates.
+- Repository topics currently include the combined topic `animeweb-animations`; the intended separate topics `anime` and `web-animations` are not both present. Correct this in the repository About settings when convenient.
